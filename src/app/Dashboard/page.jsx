@@ -9,9 +9,9 @@ const montserrat = Montserrat({
 
 function Dashboard() {
   return (
-    <nav className="bg-[#F4F4FF] py-4">
+    <nav className="bg-[#F4F4FF] py-4 h-[90px] flex items-center justify-center">
       <div className="container mx-auto flex justify-between items-center">
-        <div className="text-blue font-bold text-xl">LOGO</div>
+        <div className="text-blue font-bold text-xl">LOGO</div> 
         <div className="relative">
           <input
             type="text"
