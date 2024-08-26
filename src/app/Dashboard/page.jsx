@@ -9,13 +9,15 @@ const montserrat = Montserrat({
 
 function Dashboard() {
   return (
-    <nav className={`bg-[#F4F4FF] py-4 h-[90px] flex items-center ${montserrat.className}`}>
-      <div className="container mx-auto flex justify-between">
+    <nav
+      className={`bg-[#F4F4FF] py-4 h-[90px] flex items-center ${montserrat.className}`}
+    >
+      <div className="flex justify-end flex-auto gap-5 mr-10">
         <div className="relative">
           <input
             type="text"
             placeholder="Search..."
-            className="py-2 px-10 rounded-full bg-[#]text-white focus:outline-none focus:ring-2 focus:ring-[#3CDCDE5]"
+            className="py-3 px-10 rounded-full bg-[#CDCDE5] text-white focus:outline-none focus:ring-2 focus:ring-[#3CDCDE5]"
           />
           <svg
             className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400"
@@ -31,7 +33,16 @@ function Dashboard() {
             />
           </svg>
         </div>
-        <div className="flex items-center border-2 border-solid border-transparent outline-2 outline-[#505F98] rounded-full">
+        <div>
+          <Image
+            className="w-9 h-12 flex items-center justify-center ml-8"
+            src="/images/notification.svg"
+            alt="Notification"
+            width="20"
+            height="20"
+          />
+        </div>
+        <div className="flex items-center justify-center w-12 h-12 rounded-full bg-white text-white">
           <Image
             id="avatarButton"
             type="button"
@@ -46,7 +57,6 @@ function Dashboard() {
           <div
             id="userDropdown"
             className="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700 dark:divide-gray-600 "
-            
           >
             <div className="px-4 py-3 text-sm text-gray-900 dark:text-white"></div>
             <ul
