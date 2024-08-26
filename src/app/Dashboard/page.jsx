@@ -9,8 +9,8 @@ const montserrat = Montserrat({
 
 function Dashboard() {
   return (
-    <nav className="bg-[#F4F4FF] py-4 h-[90px] flex items-center justify-center">
-      <div className="container mx-auto flex justify-between items-center">
+    <nav className="bg-[#F4F4FF] py-4 h-[90px] flex items-center">
+      <div className="container mx-auto flex justify-between">
         <div className="text-blue font-bold text-xl">LOGO</div> 
         <div className="relative">
           <input
@@ -32,7 +32,7 @@ function Dashboard() {
             />
           </svg>
         </div>
-        <div className="flex items-center">
+        <div className="flex items-center border-2 border-solid border-transparent outline-2 outline-[#505F98] rounded-full">
           <Image
             id="avatarButton"
             type="button"
@@ -46,7 +46,7 @@ function Dashboard() {
           />
           <div
             id="userDropdown"
-            class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700 dark:divide-gray-600"
+            class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700 dark:divide-gray-600 "
             
           >
             <div class="px-4 py-3 text-sm text-gray-900 dark:text-white"></div>
