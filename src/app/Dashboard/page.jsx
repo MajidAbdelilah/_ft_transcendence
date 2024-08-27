@@ -14,7 +14,7 @@ function Dashboard() {
   const [userDropdown, setUserDropdown] = useState(false);
   const [notificationDropdown, setNotificationDropdown] = useState(false);
   return (
-    <div className="h-[100vh]">
+    <div className="flex flex-col h-screen">
       <nav
         className={`bg-[#F4F4FF] py-4 h-[90px] flex items-center ${montserrat.className}`}
       >
