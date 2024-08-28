@@ -15,7 +15,7 @@ function login_page() {
             <div className="w-full flex justify-center">
                 <Image src="images/logo.svg" alt="Logo" width="100" height="100"/>    
             </div>
-            <h1 class="text-4xl text-center text-[#111B47] font-bold">Login to your account</h1>
+            <h1 class="sm:text-4xl  text-xl text-center text-[#111B47] font-bold">Login to your account</h1>
                 <div class="mb-5 mt-8 max-w-[350px] w-full flex flex-col justify-center items-center">
                     <div className='max-w-[350px] w-full'>
                         <label for="email" class="block mb-2 text-lg font-bold text-gray-900 text-[#111B47]">Email</label>
@@ -25,7 +25,7 @@ function login_page() {
                         <button type="submit" class="text-white bg-[#111B47] focus:ring-4 focus:outline-none font-semibold rounded-[10px] text-lg w-full px-20 py-3 text-center dark:bg-blue-600 dark:hover:bg-blue-600 dark:focus:ring-blue-800 mb-5 transition-transform duration-300 ease-in-out transform hover:scale-105">Login</button>
                     </div>
                 <p className="font-medium text-[#111B47] pb-2  flex justify-center">Don&apos;t have an account? <span className="font-semibold transition-transform duration-300 ease-in-out transform hover:scale-110">&nbsp; <Link href="/signup">Sign up</Link></span></p>
-                    <button type="submit" class=" flex itemes-center justify-center gap-4 text-black bg-[#BFD5F6] focus:ring-4 focus:outline-none focus:ring-blue-300 w-[80%] font-semibold rounded-[10px] text-lg px-10 py-3 text-center dark:bg-blue-600 mt-5 mb-2 transition-transform duration-300 ease-in-out transform hover:scale-105"> <Image src="images/42_Logo 1.svg" alt="Logo" width="40" height="40" /> Login Intra</button>            </div>
+                    <button type="submit" class=" flex itemes-center justify-center gap-4 text-black bg-[#BFD5F6] focus:ring-4 focus:outline-none focus:ring-blue-300 sm:w-[80%] w-[70%] font-semibold rounded-[10px] text-base sm:px-10 sm:py-3 px-5 py-5 text-center dark:bg-blue-600 mt-5 mb-2 transition-transform duration-300 ease-in-out transform hover:scale-105"> <Image src="images/42_Logo 1.svg" alt="Logo" width="40" height="40" /> Login Intra</button>            </div>
             </form>
         </div>
     )

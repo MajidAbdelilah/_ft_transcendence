@@ -15,7 +15,7 @@ function signup_page() {
         <div className="w-full flex justify-center">
             <Image src="images/logo.svg" alt="Logo" width="100" height="100"/>    
         </div>
-        <h1 class="text-4xl text-center text-[#111B47] font-bold">Create your account</h1>
+        <h1 class="sm:text-4xl text-xl text-center text-[#111B47] font-bold">Create your account</h1>
             <div class="mb-5 mt-8 max-w-[350px] w-full flex flex-col justify-center items-center">
                 <div className='max-w-[350px] w-full'>
                     <label for="username" class="block mb-2 text-lg font-bold text-gray-900 text-[#111B47]">Username</label>
