@@ -4,6 +4,7 @@ import Image from "next/image";
 import { Inter, Montserrat } from 'next/font/google'
 import './styles.css';
 import { useRouter } from "next/navigation";
+import { useState, useEffect } from 'react'
 
 
 const montserrat = Montserrat({
@@ -13,6 +14,22 @@ const montserrat = Montserrat({
 
 
 export default function App() {
+
+  const [isScrolled, setIsScrolled] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.scrollY > 0) {
+        setIsScrolled(true);
+      } else {
+        setIsScrolled(false);
+      }
+    }
+    window.addEventListener('scroll', handleScroll);
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    }
+  })
 
   const router = useRouter();
   const handleLogin = () => {
@@ -24,7 +41,9 @@ export default function App() {
   return (
     <body>
       <div className={` h-[100vh]${montserrat.className}`}>
-        <nav className="flex justify-between sm:pl-20 sm:pt-18 sm:pr-20 w-full sm:items-center sm:h-[200px] fixed  pt-5">
+      <nav className={`flex justify-between sm:pl-20 sm:pt-18 sm:pr-20 w-full sm:items-center sm:h-[200px] fixed pt-5 transition-all duration-300 ${
+          isScrolled ? 'bg-white bg-opacity-15 backdrop-blur-md shadow-md' : 'bg-transparent'
+        }`}>
           <Image src="images/logo.svg" alt="Logo" width={150} height={150} className="sm:h-[150px] sm:w-[150px] w-[80px] h-[80px]" />
           <div className="flex gap-2 pt-5">
             <button onClick={handleSignUp} type="button" className="text-white bg-[#111B47] hover:bg-[#0e1739] hover:ring-4 focus:ring-[#1d2f7a] font-bold rounded-full text-sm h-[50px] w-[90px] sm:text-lg sm:h-[70px] sm:w-[180px] text-center me-2 mb-2 transition duration-300 ease-in-out shadow-[rgba(50,50,93,0.25)_0px_6px_12px_-2px,_rgba(0,0,0,0.3)_0px_3px_7px_-3px] border-solid border-b-4 border-gray-600">Sign up</button>
