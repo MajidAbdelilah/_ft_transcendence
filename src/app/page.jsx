@@ -41,7 +41,7 @@ export default function App() {
   return (
     <body>
       <div className={` h-[100vh]${montserrat.className}`}>
-      <nav className={`flex justify-between sm:pl-20 sm:pt-18 sm:pr-20 w-full sm:items-center sm:h-[200px] fixed pt-5 transition-all duration-300 ${
+      <nav className={`flex justify-between sm:pl-20 sm:pt-18 sm:pr-20 w-full sm:items-center sm:h-[200px] fixed  transition-all duration-300 ${
           isScrolled ? 'bg-white bg-opacity-15 backdrop-blur-md shadow-md' : 'bg-transparent'
         }`}>
           <Image src="images/logo.svg" alt="Logo" width={150} height={150} className="sm:h-[150px] sm:w-[150px] w-[80px] h-[80px]" />
