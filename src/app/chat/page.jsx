@@ -1,10 +1,19 @@
 
 
+
+
+import Sidebar_test from "./components/sidebar";// import the real one as a componant later
+import Navbar_test from "./components/navbar";// import the real one as a componant later
+
+
+
+
+
+import './style.css';
+
 // // import Image from 'next/image';
 // // import Link from 'next/link';
-import Sidebar from "../Dashboard/sidebar";
-import Navbar from "./components/navbar";
-import './style.css';
+
 // import { Sidebar } from '../Dashboard/sidebar';
 
 // import { Inter, Montserrat } from 'next/font/google'
@@ -13,20 +22,52 @@ import './style.css';
 //     variable: '--font-montserrat',
 //   })
 
-function chat_page() {
+
+
+
+
+
+// // or w-full h-full  flex gap-4 
+
+
+// h-full
+// h-screen: 100% of the viewport height.
+// h-1/2: 50% of the parent height.
+// h-auto: Height adjusts based on content.
+// h-[size]: Custom height (e.g., h-64 for 16rem).
+
+
+
+export default function ChatPage() {
     return (
         <div className="flex flex-col h-screen">
-            <Navbar />
-            <div className="w-full h-full  flex gap-4">
-                <Sidebar className="bg-[#F4F4FF]"/>
-                <div>
-                    dfghdg
-                    <h1>Chat Pdfdfgdfhdfgdfage</h1>
+            <Navbar_test />
+            <div className="flex flex-1">
+                <Sidebar_test />  
+
+
+                <div className="flex-1 p-10 bg-[#dcf80f]">{/* efewg */}
+                    <div className="boxes bg-[#0ffc66]">
+
+                        <h2>hellow world</h2>
+                        <div className="h-full  bg-[#F4F4FF] border border-[#C6C6E1] rounded-md">
+                            <h2>hellow world</h2>
+                        </div> 
+                    </div>
                 </div>
+
+
+
+
+
+
+
+
+
             </div>
         </div>
-    )
+    );
 }
 
 
-export default chat_page
+
