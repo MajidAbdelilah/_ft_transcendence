@@ -18,12 +18,12 @@ function Dashboard() {
       <nav
         className={`bg-[#F4F4FF] py-4 h-[90px] flex items-center ${montserrat.className}`}
       >
-        <div className="flex justify-end flex-auto sm:gap-5 gap-3 sm:mr-10 ">
+        <div className="flex justify-end flex-auto sm:gap-5 gap-3 sm:mr-10 ml-5">
           <div className="relative">
             <input
               type="text"
               placeholder="Search..."
-              className="sm:py-3 sm:px-10 py-2 px-[5px] pl-8 rounded-full bg-[#ECECEC] text-black focus:outline-none focus:ring-2 focus:ring-[#3CDCDE5]"
+              className="sm:py-3 sm:w-[280px] py-[8px] w-[200px] pl-[2.5rem] rounded-full bg-[#ECECEC] text-black focus:outline-none focus:ring-2 focus:ring-[#3CDCDE5]"
             />
             <svg
               className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400"
@@ -41,7 +41,7 @@ function Dashboard() {
           </div>
           <div>
             <Image onClick={() => setNotificationDropdown(!notificationDropdown)}
-              className="sm:w-8 sm:h-8 w-7 h-7 flex items-center justify-center sm:ml-5 mt-2 cursor-pointer"
+              className="sm:w-8 sm:h-8 w-7 h-7 flex items-center justify-center sm:ml-5 mt-2 ml-2 cursor-pointer"
               src="/images/notification.svg"
               alt="Notification"
               width="20"
@@ -49,7 +49,7 @@ function Dashboard() {
             />
           </div>
           <div
-            className="flex items-center justify-center sm:w-12 sm:h-12 w-10 h-10 rounded-full bg-white text-white relative cursor-pointer"
+            className="flex items-center justify-center sm:w-12 sm:h-12 w-10 h-10 rounded-full bg-white text-white relative mr-2 cursor-pointer"
             onClick={() => setUserDropdown(!userDropdown)}
           >
             <Image
