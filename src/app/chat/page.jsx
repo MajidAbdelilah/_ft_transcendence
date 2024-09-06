@@ -46,14 +46,22 @@ export default function ChatPage() {
                 <Sidebar_test />  
 
 
-                <div className="flex-1 p-10 bg-[#dcf80f]">{/* efewg */}
-                    <div className="boxes bg-[#0ffc66]">
+                <div className="flex-1 p-10 ]">{/* for the padding to make chlids far from the bar and the sidebar */}
 
-                        <h2>hellow world</h2>
-                        <div className="h-full  bg-[#F4F4FF] border border-[#C6C6E1] rounded-md">
+                    <div className="Boxes flex h-full w-full border-2 border-[#C6C6E1] bg-[#F4F4FF] rounded-xl flex-row-revers">
+
+                        
+                        {/* <div className="Boxe1 h-full rounded-tl-xl rounded-bl-xl p-10 flex-1 bg-[#555555] ">
                             <h2>hellow world</h2>
                         </div> 
+
+                        <div className="Boxe2 h-full rounded-tr-xl rounded-br-xl flex-2 p-10 bg-[#f4ffff]">
+                            <h2>hellow world</h2>
+                        </div>  */}
                     </div>
+
+
+                    
                 </div>
 
 
