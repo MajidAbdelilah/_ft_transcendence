@@ -82,7 +82,16 @@ function Dashboard() {
           </div>
         </div>
       </nav>
-      <Sidebar />
+      <div className="flex flex-1 overflow-hidden">
+        <Sidebar />
+        <div className="flex-1 overflow-y-auto p-4">
+          <div className="border-2 border-solid rounded-2xl border-[#BCBCC9] bg-[#F4F4FF] w-[30%] h-[30%] ml-[5%] mt-[50px]">
+            <div className="flex justify-content items-center border-2 border-solid rounded-xl border-[#BCBCC9] ml-[5%] bg-[#F4F4FF] w-[30%] h-[100%]"> 
+
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
