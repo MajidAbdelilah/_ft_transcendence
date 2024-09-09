@@ -92,21 +92,45 @@ function Dashboard() {
           </div>
         </div>
       </nav>
-      <div className="flex flex-1 overflow-hidden">
+      <div className="flex flex-1 overflow-hidden flex-wrap">
         <Sidebar />
-        <div className="flex-1 overflow-y-auto p-4">
-          <div className="border-2 border-solid rounded-3xl border-[#BCBCC9] bg-[#F4F4FF] md:w-[70%] md:h-[48%] lg:w-[800px] lg:h-[500px] w-[90%] h-[48%] ml-[5%] mt-[50px] relative p-4 flex flex-col justify-center items-center">
-            <div className="w-full h-[80%] relative mb-4">
-              <Image
-                src="/images/gamePic.svg"
-                alt="Game Image"
-                fill
-                className="object-contain rounded-xl"
-              />
+        < div className="flex-1 overflow-y-auto p-4 flex flex-wrap justify-between">
+            <div className={` ${!isMobile ? "bg-[#F4F4FF] drop-shadow-md border-2  rounded-3xl border-[#BCBCC9] mt-10 md:w-[70%] md:h-[48%] lg:w-[800px] lg:h-[500px] " : 'min-h-[235px]' } w-[90%] h-[25%] ml-[5%] relative p-4 flex flex-col justify-center items-center`}>
+              <div className="w-full h-[80%] relative mb-4">
+                <Image
+                  src="/images/gamePic.svg"
+                  alt="Game Image"
+                  fill
+                  className="object-contain rounded-xl"
+                />
+              </div>
+              <button className="bg-[#242F5C] drop-shadow-lg text-[#E0E0FF] hover:bg-blue-700 font-extrabold md:py-2 md:px-4 lg:py-3 lg:px-5 py-2 px-4 text-sm rounded-3xl absolute md:bottom-[7%] lg:bottom-[5%] bottom-2 lg:right-[4%] right-[8%] transition-transform duration-300 ease-in-out transform hover:scale-110">
+                PLAY NOW
+              </button>
             </div>
-            <button className="bg-[#242F5C] text-[#E0E0FF] hover:bg-blue-700 font-extrabold md:py-2 md:px-4 lg:py-3 lg:px-5 py-2 px-3 rounded-3xl absolute md:bottom-[7%] lg:bottom-[5%] bottom-4 lg:right-[4%] right-[7%] transition-transform duration-300 ease-in-out transform hover:scale-110">
-              PLAY NOW
-            </button>
+          <div className={`${!isMobile ? "border-2 border-solid rounded-3xl border-[#BCBCC9] bg-[#F4F4FF] md:w-[70%] md:h-[48%] lg:w-[800px] lg:h-[500px] w-[90%] h-[48%] ml-[5%] mt-[50px] mr-[5%]" : "border-2 border-[#BCBCC9]/25 border-solid bg-[#F4F4FF]/75 rounded-3xl border-[#BCBCC9] bg-[#F4F4FF]md:w-[70%] md:h-[48%] lg:w-[800px] lg:h-[500px] w-[90%] h-[48%] ml-[5%] mt-[50px] mr-[5%]"}`}>
+            <h1 className="text-[#444E74] h-[18%] font-black text-center pt-5 tracking-wider lg:text-4xl md:text-3xl text-2xl">ACHIEVEMENTS</h1>
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-4 md:gap-6 lg:gap-8 justify-items-center  max-h-[80%] overflow-y-auto overflow-hidden custom-scrollbar">
+              <div className="w-full aspect-square flex items-center justify-center">
+                <Image src="/images/achvRockie.svg" alt="achvRockie" width={100} height={100} className="w-[80%] max-w-[80px] md:max-w-[90px] lg:max-w-[100px] object-contain" />
+              </div>
+              <div className="w-full aspect-square flex items-center justify-center">
+                <Image src="/images/achvRockie.svg" alt="achvRockie" width={100} height={100} className="w-[80%] max-w-[80px] md:max-w-[90px] lg:max-w-[100px] object-contain" />
+              </div>
+              <div className="w-full aspect-square flex items-center justify-center">
+                <Image src="/images/achvRockie.svg" alt="achvRockie" width={100} height={100} className="w-[80%] max-w-[80px] md:max-w-[90px] lg:max-w-[100px] object-contain" />
+              </div>
+              <div className="w-full aspect-square flex items-center justify-center">
+                <Image src="/images/achvRockie.svg" alt="achvRockie" width={100} height={100} className="w-[80%] max-w-[80px] md:max-w-[90px] lg:max-w-[100px] object-contain" />
+              </div>
+              <div className="w-full aspect-square flex items-center justify-center">
+                <Image src="/images/achvRockie.svg" alt="achvRockie" width={100} height={100} className="w-[80%] max-w-[80px] md:max-w-[90px] lg:max-w-[100px] object-contain" />
+              </div>
+              {/* Add more images as needed */}
+            </div>
+        </div>
+          <div className="border-2 border-solid rounded-3xl border-[#BCBCC9] bg-[#F4F4FF] md:w-[70%] md:h-[48%] lg:w-full lg:h-[500px] w-[90%] h-[48%] ml-[5%] mt-[50px] mr-[5%]">
+
           </div>
         </div>
       </div>
