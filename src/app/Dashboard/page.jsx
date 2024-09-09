@@ -95,7 +95,7 @@ function Dashboard() {
       <div className="flex flex-1 overflow-hidden">
         <Sidebar />
         <div className="flex-1 overflow-y-auto p-4">
-          <div className="border-2 border-solid rounded-3xl border-[#BCBCC9] bg-[#F4F4FF] md:w-[70%] md:h-[30%] lg:w-[30%] lg:h-[38%] w-[90%] h-[32%] ml-[5%] mt-[50px] relative p-4 flex flex-col justify-center items-center">
+          <div className="border-2 border-solid rounded-3xl border-[#BCBCC9] bg-[#F4F4FF] md:w-[70%] md:h-[48%] lg:w-[800px] lg:h-[500px] w-[90%] h-[48%] ml-[5%] mt-[50px] relative p-4 flex flex-col justify-center items-center">
             <div className="w-full h-[80%] relative mb-4">
               <Image
                 src="/images/gamePic.svg"
@@ -104,7 +104,7 @@ function Dashboard() {
                 className="object-contain rounded-xl"
               />
             </div>
-            <button className="bg-[#242F5C] text-[#E0E0FF] font-extrabold md:py-2 md:px-4 lg:py-3 lg:px-4 py-2 px-3 rounded-3xl absolute bottom-4 right-[7%]">
+            <button className="bg-[#242F5C] text-[#E0E0FF] hover:bg-blue-700 font-extrabold md:py-2 md:px-4 lg:py-3 lg:px-5 py-2 px-3 rounded-3xl absolute md:bottom-[7%] lg:bottom-[5%] bottom-4 lg:right-[4%] right-[7%] transition-transform duration-300 ease-in-out transform hover:scale-110">
               PLAY NOW
             </button>
           </div>
