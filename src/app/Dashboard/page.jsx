@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import Sidebar from "./sidebar";
 import { useState, useEffect } from "react";
+import { useClickAway } from "@uidotdev/usehooks";
 
 const montserrat = Montserrat({
   subsets: ["latin"],
@@ -14,6 +15,14 @@ function Dashboard() {
   const [userDropdown, setUserDropdown] = useState(false);
   const [notificationDropdown, setNotificationDropdown] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
+
+  const userDropdownRef = useClickAway(() => {
+    setUserDropdown(false);
+  });
+
+  const notificationRef = useClickAway(() => {
+    setNotificationDropdown(false);
+  });
 
   useEffect(() => {
     const handleResize = () => {
@@ -26,14 +35,14 @@ function Dashboard() {
   return (
     <div className="flex flex-col h-screen">
       <nav
-        className={`bg-[#F4F4FF] py-4 h-[90px] flex items-center ${montserrat.className}`}
+        className={`bg-[#F4F4FF] py-4 h-[90px] flex items-center shadow-md shadow-[#BCBCC9] ${montserrat.className}`}
       >
         <div className="flex justify-end flex-auto sm:gap-5 gap-3 sm:mr-10 ml-5">
           <div className="relative">
             <input
               type="text"
               placeholder="Search..."
-              className="sm:py-3 sm:w-[280px] py-[8px] w-[200px] pl-[2.5rem] rounded-full bg-[#ECECEC] text-black focus:outline-none focus:ring-2 focus:ring-[#3CDCDE5]"
+              className="sm:py-3 shadow-sm shadow-[#BCBCC9] sm:w-[280px] py-[8px] w-[200px] pl-[2.5rem] rounded-full bg-[#ECECEC] text-black focus:outline-none focus:ring-2 focus:ring-[#3CDCDE5]"
             />
             <svg
               className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400"
@@ -68,7 +77,7 @@ function Dashboard() {
               type="button"
               data-dropdown-toggle="userDropdown"
               data-dropdown-placement="bottom-start"
-              className="sm:w-10 sm:h-10 w-8 h-8 rounded-full cursor-pointer"
+              className="sm:w-10 sm:h-10 w-8 h-8 rounded-full cursor-pointer "
               src="/images/avatar.svg"
               alt="User dropdown"
               width="100"
@@ -85,10 +94,10 @@ function Dashboard() {
               height="50"
             />
             {userDropdown && (
-              <div className="w-[200px] h-[200px] bg-[#EAEAFF] absolute bottom-[-210px] right-[3px] z-[10] rounded-[5px]"></div>
+              <div ref={userDropdownRef} className="w-[200px] h-[200px] bg-[#EAEAFF] absolute bottom-[-210px] right-[3px] z-[10] rounded-[5px]"></div>
             )}
             {notificationDropdown && (
-              <div className="w-[400px] h-[200px] bg-[#EAEAFF] absolute bottom-[-210px] right-[70px] z-[10] rounded-[5px]"></div>
+              <div ref={notificationRef} className="w-[400px] h-[200px] bg-[#EAEAFF] absolute bottom-[-210px] right-[70px] z-[10] rounded-[5px]"></div>
             )}
           </div>
         </div>
@@ -99,7 +108,7 @@ function Dashboard() {
           <div
             className={` ${
               !isMobile
-                ? "bg-[#F4F4FF] drop-shadow-md border-2  rounded-3xl border-[#BCBCC9] mt-10 md:w-[70%] md:h-[48%] lg:w-[800px] lg:h-[500px] "
+                ? "bg-[#F4F4FF] drop-shadow-md   rounded-3xl border-[#BCBCC9] mt-10 md:w-[70%] shadow-md shadow-[#BCBCC9] md:h-[48%] lg:w-[800px] lg:h-[500px] "
                 : "min-h-[235px]"
             } w-[90%] h-[25%] ml-[5%] relative p-4 flex flex-col justify-center items-center`}
           >
@@ -118,8 +127,8 @@ function Dashboard() {
           <div
             className={`${
               !isMobile
-                ? "border-2 border-solid rounded-3xl border-[#BCBCC9] bg-[#F4F4FF] md:w-[70%] md:h-[48%] lg:w-[800px] lg:h-[500px] w-[90%] h-[48%] ml-[5%] mt-[50px] mr-[5%]"
-                : "border-2 border-[#BCBCC9]/25 border-solid bg-[#F4F4FF]/75 rounded-3xl border-[#BCBCC9] bg-[#F4F4FF]md:w-[70%] md:h-[48%] lg:w-[800px] lg:h-[500px] w-[90%] h-[48%] ml-[5%] mt-[50px] mr-[5%]"
+                ? "shadow-md shadow-[#BCBCC9] rounded-3xl border-[#BCBCC9] bg-[#F4F4FF] md:w-[70%] md:h-[48%] lg:w-[800px] lg:h-[500px] w-[90%] h-[48%] ml-[5%] mt-[50px] mr-[5%]"
+                : "shadow-md shadow-[#BCBCC9] border-[#BCBCC9]/25 border-solid bg-[#F4F4FF]/75 rounded-3xl border-[#BCBCC9] bg-[#F4F4FF]md:w-[70%] md:h-[48%] lg:w-[800px] lg:h-[500px] w-[90%] h-[48%] ml-[5%] mt-[50px] mr-[5%]"
             }`}
           >
             <h1 className="text-[#444E74] h-[18%] font-black text-center pt-5 tracking-wider lg:text-4xl md:text-3xl text-lg md:text-xl lg:text-2xl">
@@ -221,8 +230,8 @@ function Dashboard() {
           <div
             className={`${
               !isMobile
-                ? "border-2 border-solid rounded-3xl border-[#BCBCC9] bg-[#F4F4FF] w-[90%] md:w-[70%] h-[48%] md:h-[400px] lg:w-full lg:h-[500px] ml-[5%] mt-[50px] mr-[5%]"
-                : "border-2 rounded-3xl bg-[#F4F4FF]/75 border-[#BCBCC9]/25 bg-[#F4F4FF] w-[90%] h-[48%] ml-[5%] mt-[50px] mr-[5%]"
+                ? "shadow-md shadow-[#BCBCC9] rounded-3xl border-[#BCBCC9] bg-[#F4F4FF] w-[90%] md:w-[70%] h-[48%] md:h-[400px] lg:w-full lg:h-[500px] ml-[5%] mt-[50px] mr-[5%]"
+                : "shadow-md shadow-[#BCBCC9] rounded-3xl bg-[#F4F4FF]/75 border-[#BCBCC9]/25 bg-[#F4F4FF] w-[90%] h-[48%] ml-[5%] mt-[50px] mr-[5%]"
             }`}
           >
             <h1 className="text-[#444E74] h-[18%] font-black text-center pt-5 tracking-wider lg:text-4xl md:text-3xl text-lg md:text-xl lg:text-2xl">
@@ -246,7 +255,7 @@ function Dashboard() {
                     <h1 className="w-[10%] text-center font-semibold text-sm md:text-lg lg:text-xl text-[#4E5981]">Map</h1>
                   </div>}
                 <div className="flex flex-row justify-center w-[100%] ml-2 md:ml-3  bg-yellow-500">
-                  <div className="w-[100%]">
+                  <div className="flex flex-row justify-between">
                     <Image
                       src="/images/avatar1.svg"
                       alt="avatar"
@@ -254,9 +263,9 @@ function Dashboard() {
                       height={50}
                       className="w-[32%] max-w-[32px] md:max-w-[40px] lg:max-w-[62px] object-contain"
                       />
+                    <h1 className="text-center font-semibold text-sm md:text-lg lg:text-xl text-[#4E5981]">Name</h1>
                   </div>
                   <div className="flex flex-row justify-between w-[100%]">
-                    <h1 className="text-center font-semibold text-sm md:text-lg lg:text-xl text-[#4E5981]">Name</h1>
                     <h1 className="text-center font-semibold text-sm md:text-lg lg:text-xl text-[#4E5981]">Date</h1>
                     <h1 className="text-center font-semibold text-sm md:text-lg lg:text-xl text-[#4E5981]">Score</h1>
                     <h1 className="text-center font-semibold text-sm md:text-lg lg:text-xl text-[#4E5981]">Win/Loss</h1>
