@@ -57,7 +57,7 @@ export default function ChatPage() {
                 </div>
 
 
-                <h2 className="text-center text-2xl my-8 py-2 rounded-full bg-[#9191D6] bg-opacity-20 text-[#242F5C] ">Conversations</h2>
+                <h2 className="text-center text-2xl my-8 py-2 rounded-full bg-[#9191D6] bg-opacity-20 text-[#242F5C] overflow-hidden">Conversations</h2>
 
 
 
@@ -71,13 +71,10 @@ export default function ChatPage() {
                       height={50}
                       className="left-0 top-0 "
                     />
-                    <div className=" ml-2">
+                    <div className=" ml-2 ">
                       <h3 className="text-2xl top-0 left-0 text-[#242F5C]">John Wick</h3>
                       <p className="text-xs text-[#302FA5] overflow-hidden">Graet Game! Rematch tomorrow?</p>
                     </div>
-
-
-                    
                     <span className="text-xs ml-auto">2:15 AM</span>
                    
 
