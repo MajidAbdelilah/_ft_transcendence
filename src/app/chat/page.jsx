@@ -36,7 +36,7 @@ export default function ChatPage() {
           {/* for the padding to make chlids far from the bar and the sidebar */}
           <div className="boxes flex h-full w-full border-2 border-[#C6C6E1] bg-[#F4F4FF] rounded-xl flex-row-revers">
             {/* friendsBox ------------------------------------------------------- */}
-            <div className="friendsBox h-full w-1/4 rounded-tl-xl rounded-bl-xl flex-1 p-4 border-r-2 border-[#C6C6E1] bg-[#F4F4FF] ">
+            <div className="friendsBox h-full w-1/4 rounded-tl-xl rounded-bl-xl flex-1 p-4 border-r-2 border-[#C6C6E1] bg-[#F4F4FF] bg-[#9191D6] bg-opacity-5 ">
             
               <div className="menuList p-5 hidden lg:block">
 
@@ -61,7 +61,7 @@ export default function ChatPage() {
 
 
 
-                <div className="MessagesList bg-red-50 w-full flex flex-col items-center overflow-hidden">
+                <div className="MessagesList w-full flex flex-col items-center overflow-hidden">
                   
                   <div className="friendInfo my-2 w-full flex flex-rowitems-center overflow-hidden">
                     <Image
