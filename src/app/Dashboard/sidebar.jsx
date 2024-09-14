@@ -10,7 +10,7 @@ const montserrat = Montserrat({
   })
 
 
-  function Sidebar() {
+  function Sidebar_test() {
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
     const [isMobile, setIsMobile] = useState(false);
   
@@ -93,4 +93,4 @@ const montserrat = Montserrat({
   }
   
   
-  export default Sidebar;
+  export default Sidebar_test;
