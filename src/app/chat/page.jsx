@@ -15,62 +15,63 @@ const montserrat = Montserrat({
 
 export default function ChatPage() {
   
-  function ProfileInfo () {
+  
+  function ProfileInfo ({path, name, status}) {
     return (
       <div className="profileInfo w-full flex items-center overflow-hidden">
         <Image
-          src="/images/avatarprofile.svg"
+          src={path}
           alt="avatarprofile"
           width={75}
           height={75}
           className="left-0 top-0 "
         />
         <div className=" ml-4  ">
-            <h3 className="text-3xl  top-0 left-0 text-[#242F5C] ">John Doe</h3>
-            <p className="text-sm text-[#302FA5] left">Online</p>
+            <h3 className="text-3xl  top-0 left-0 text-[#242F5C] ">{name}</h3>
+            <p className="text-sm text-[#302FA5] left">{status}</p>
         </div>
       </div>
     );
 
   }
-  function FriendInfo() {
+
+  function FriendInfo({path, name, lastMsg, time}) {
     return (
       <div className="friendInfo my-3 w-full flex flex-row items-center overflow-hidden">
         <Image
-          src="/images/avatarprofile.svg"
+          src={path}
           alt="avatarprofile"
           width={50}
           height={50}
           className="left-0 top-0 "
         />
         <div className=" ml-2 ">
-          <h3 className="text-2xl top-0 left-0 text-[#242F5C]">John Wick</h3>
-          <p className="text-xs text-[#302FA5] overflow-hidden ">Graet Game! Rematch tomorrow?</p>
+          <h3 className="text-2xl top-0 left-0 text-[#242F5C]">{name}</h3>
+          <p className="text-xs text-[#302FA5] overflow-hidden ">{lastMsg}</p>
         </div>
-        <span className="text-xs text-[#242F5C] ml-auto">2:15 AM</span>
+        <span className="text-xs text-[#242F5C] ml-auto">{time}</span>
      </div>
     );
   }
-
-  function FriendChatInfo() {
+  function FriendChatInfo({path, name, status}) {
     return (
       <div className="friendChatInfo p-5 flex items-center" >
 
         <div className="hisProfile w-full flex items-center overflow-hidden">
           <Image
-            src="/images/avatarprofile.svg"
+            src={path}
             alt="avatarprofile"
             width="75"
             height="75"
             className="left-0 top-0 "
             />
             <div className=" ml-4  ">
-              <h3 className="text-3xl  top-0 left-0 text-[#242F5C] ">John Wick</h3>
-              <p className="text-sm text-[#302FA5] left">Online</p>
+              <h3 className="text-3xl  top-0 left-0 text-[#242F5C] ">{name}</h3>
+              <p className="text-sm text-[#302FA5] left">{status}</p>
           </div>
 
         </div>
-        {/* edit later----------------- */}
+        {/* button - edit later change later -------------------------------------------------------------- */}
         <div className="dropDownIcon" >
           <FaAngleDown className="bottomIcon text-3xl ml-auto mr-8" />
         </div>
@@ -86,6 +87,7 @@ export default function ChatPage() {
       </div>  
     );
   }
+
   function MyMsgBox ({time, msg}) {
     return (
       <div className="myMsgBox my-1 mr-8 ml-auto flex flex-col">
@@ -108,6 +110,7 @@ export default function ChatPage() {
         </div>
         
         <div className="chattSection flex-1 p-10">
+
           <div className="boxes flex h-full w-full border-2 border-[#C6C6E1] rounded-xl flex-row-revers bg-[#9191D6] bg-opacity-10">
             {/* friendsBox ------------------------------------------------------- */}
             <div className="friendsBox h-full w-1/4 rounded-tl-xl rounded-bl-xl flex-1 p-4 border-r-2 border-[#C6C6E1]  ">
@@ -115,34 +118,17 @@ export default function ChatPage() {
               <div className="menuList p-5 hidden md:block">
 
 
-              <ProfileInfo />
+              < ProfileInfo path="/images/avatarprofile.svg" name="John Doe" status="Online"/>
 
                 <h2 className="text-center text-2xl my-8 py-2 rounded-full bg-[#9191D6] bg-opacity-20 text-[#242F5C] overflow-hidden">Conversations</h2>
 
                 <div className="MessagesList w-full flex flex-col items-center overflow-hidden">
 
-                  <FriendInfo />
-                  <FriendInfo />
-                  <FriendInfo />
-                  <FriendInfo />
-                  <FriendInfo />
-                  <FriendInfo />
-                  <FriendInfo />
-                  <FriendInfo />
-                  <FriendInfo />
-
-
-
-
- 
+                <FriendInfo path="/images/avatarprofile.svg" name="John Wick" lastMsg="Graet Game! Rematch tomorrow?" time="2:15 AM"/>
+                <FriendInfo path="/images/avatarprofile.svg" name="lucy smith" lastMsg="hello dear" time="20:15 AM"/>
+                <FriendInfo path="/images/avatarprofile.svg" name="henry civil" lastMsg="hi john how are yaa?" time="20:15 AM"/>
+                
                   </div>
-              
-              
-              
-              
-              
-              
-              
               
               </div>
             </div>
@@ -152,7 +138,7 @@ export default function ChatPage() {
             
             <div className="messagesBox h-full w-3/4 rounded-tr-xl rounded-br-xl flex-2 p-4 bg-[#F4F4FF ]">
               
-              <FriendChatInfo />
+              <FriendChatInfo path="/images/avatarprofile.svg" name="John Wick" status="Online"/>
 
               {/* emplimenting peerToPeer */}
               <div className="peerToPeer flex flex-col">
@@ -165,27 +151,11 @@ export default function ChatPage() {
                 <FriendMsgBox time="02:22 PM" msg="Hi John, up for a ping pong match this evening?"/>
                 <MyMsgBox time="02:23 PM" msg="Sure, I'm in!"/>
 
-
-
-
-
-
-
               </div>
               {/* emplimenting SendMsg */}
             
             
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
+
             
             </div>
           </div>
