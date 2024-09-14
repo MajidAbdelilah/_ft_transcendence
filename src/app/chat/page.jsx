@@ -1,7 +1,7 @@
 import Sidebar_test from "./components/sidebar"; // import the real one as a componant later
 import Navbar_test from "./components/navbar"; // import the real one as a componant later
 import Image from "next/image";
-
+import { FaAngleDown } from "react-icons/fa";
 
 
 import "./style.css";
@@ -17,7 +17,7 @@ export default function ChatPage() {
   
   function ProfileInfo () {
     return (
-      <div className="profileInfo w-full flex items-center  overflow-hidden">
+      <div className="profileInfo w-full flex items-center overflow-hidden">
         <Image
           src="/images/avatarprofile.svg"
           alt="avatarprofile"
@@ -35,7 +35,7 @@ export default function ChatPage() {
   }
   function FriendInfo() {
     return (
-      <div className="friendInfo my-3 w-full flex flex-rowitems-center overflow-hidden">
+      <div className="friendInfo my-3 w-full flex flex-row items-center overflow-hidden">
         <Image
           src="/images/avatarprofile.svg"
           alt="avatarprofile"
@@ -52,6 +52,31 @@ export default function ChatPage() {
     );
   }
 
+  function FriendChatInfo() {
+    return (
+      <div className="friendChatInfo p-5 flex items-center" >
+
+        <div className="hisProfile w-full flex items-center overflow-hidden">
+          <Image
+            src="/images/avatarprofile.svg"
+            alt="avatarprofile"
+            width="75"
+            height="75"
+            className="left-0 top-0 "
+            />
+            <div className=" ml-4  ">
+              <h3 className="text-3xl  top-0 left-0 text-[#242F5C] ">John Wick</h3>
+              <p className="text-sm text-[#302FA5] left">Online</p>
+          </div>
+
+        </div>
+        {/* edit later----------------- */}
+        <div className="dropDownIcon" >
+          <FaAngleDown className="bottomIcon text-3xl ml-auto mr-8" />
+        </div>
+      </div>
+    )
+  }
 
   return (
 
@@ -67,7 +92,6 @@ export default function ChatPage() {
         </div>
         
         <div className="chattSection flex-1 p-10">
-          {/* for the padding to make chlids far from the bar and the sidebar */}
           <div className="boxes flex h-full w-full border-2 border-[#C6C6E1] bg-[#F4F4FF] rounded-xl flex-row-revers">
             {/* friendsBox ------------------------------------------------------- */}
             <div className="friendsBox h-full w-1/4 rounded-tl-xl rounded-bl-xl flex-1 p-4 border-r-2 border-[#C6C6E1] bg-[#9191D6] bg-opacity-10 ">
@@ -105,18 +129,33 @@ export default function ChatPage() {
               
               
               </div>
-
-
-          
-        
-
-              
-              
-              
             </div>
             {/* messagesBox ------------------------------------------ */}
+            
+            
+            
             <div className="messagesBox h-full w-3/4 rounded-tr-xl rounded-br-xl flex-2 p-4 bg-[#F4F4FF ]">
-              <h2>hellow world</h2>
+              
+              <FriendChatInfo />
+
+
+              {/* emplimenting peerToPeer */}
+              
+              {/* emplimenting SendMsg */}
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
             </div>
           </div>
         </div>
