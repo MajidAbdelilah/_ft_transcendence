@@ -78,11 +78,19 @@ export default function ChatPage() {
     )
   }
 
-  function FriendMsgBox () {
+  function FriendMsgBox ({time, msg}) {
     return (
       <div className="friendMsgBox ml-8 my-1">
-        <span className="msgTime text-sm pl-5 text-[#3D3D3D] block">02:22 PM</span>
-        <p className="msgConetnt text-xl py-3 px-6 inline-block text-[#FFFFFF] bg-[#2C3E86] bg-opacity-80 rounded-3xl ">Hi john, up for a ping pong match this evening?</p>
+        <span className="msgTime text-sm pl-5 text-[#3D3D3D] block">{time}</span>
+        <p className="msgConetnt text-xl py-3 px-6 inline-block text-[#FFFFFF] bg-[#2C3E86] bg-opacity-80 rounded-3xl ">{msg}</p>
+      </div>  
+    );
+  }
+  function MyMsgBox ({time, msg}) {
+    return (
+      <div className="myMsgBox my-1 mr-8 ml-auto flex flex-col">
+        <span className="msgTime text-sm pr-5 text-[#3D3D3D] ml-auto">{time}</span>
+        <p className="msgConetnt text-xl py-3 px-6 inline-block text-[#000000] bg-[#9191D6] bg-opacity-40 rounded-3xl ">{msg}</p>
       </div>  
     );
   }
@@ -94,15 +102,15 @@ export default function ChatPage() {
   
     <div className={`flex flex-col h-screen ${montserrat.className}`}>
       <Navbar_test />
-      <div className="parent flex flex-1 whitespace-nowrap ">
+      <div className="parent flex flex-1  ">
         <div className="sidebar hidden md:block">
         <Sidebar_test className="hidden md:block"/>
         </div>
         
         <div className="chattSection flex-1 p-10">
-          <div className="boxes flex h-full w-full border-2 border-[#C6C6E1] bg-[#F4F4FF] rounded-xl flex-row-revers">
+          <div className="boxes flex h-full w-full border-2 border-[#C6C6E1] rounded-xl flex-row-revers bg-[#9191D6] bg-opacity-10">
             {/* friendsBox ------------------------------------------------------- */}
-            <div className="friendsBox h-full w-1/4 rounded-tl-xl rounded-bl-xl flex-1 p-4 border-r-2 border-[#C6C6E1] bg-[#9191D6] bg-opacity-10 ">
+            <div className="friendsBox h-full w-1/4 rounded-tl-xl rounded-bl-xl flex-1 p-4 border-r-2 border-[#C6C6E1]  ">
 
               <div className="menuList p-5 hidden md:block">
 
@@ -146,16 +154,16 @@ export default function ChatPage() {
               
               <FriendChatInfo />
 
-
               {/* emplimenting peerToPeer */}
-              <div className="peerToPeer">
-                <FriendMsgBox />
-                <FriendMsgBox />
-                <FriendMsgBox />
-                <FriendMsgBox />
-                <FriendMsgBox />
-                <FriendMsgBox />
-                <FriendMsgBox />
+              <div className="peerToPeer flex flex-col">
+
+
+                <FriendMsgBox time="02:22 PM" msg="Hi John, up for a ping pong match this evening?"/>
+                <MyMsgBox time="02:23 PM" msg="Sure, I'm in!"/>
+                <FriendMsgBox time="02:22 PM" msg="Hi John, up for a ping pong match this evening?"/>
+                <MyMsgBox time="02:23 PM" msg="Sure, I'm in!"/>
+                <FriendMsgBox time="02:22 PM" msg="Hi John, up for a ping pong match this evening?"/>
+                <MyMsgBox time="02:23 PM" msg="Sure, I'm in!"/>
 
 
 
