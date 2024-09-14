@@ -47,7 +47,7 @@ export default function ChatPage() {
           <h3 className="text-2xl top-0 left-0 text-[#242F5C]">John Wick</h3>
           <p className="text-xs text-[#302FA5] overflow-hidden ">Graet Game! Rematch tomorrow?</p>
         </div>
-        <span className="text-xs ml-auto">2:15 AM</span>
+        <span className="text-xs text-[#242F5C] ml-auto">2:15 AM</span>
      </div>
     );
   }
@@ -78,6 +78,14 @@ export default function ChatPage() {
     )
   }
 
+  function FriendMsgBox () {
+    return (
+      <div className="friendMsgBox ml-8 my-1">
+        <span className="msgTime text-sm pl-5 text-[#3D3D3D] block">02:22 PM</span>
+        <p className="msgConetnt text-xl py-3 px-6 inline-block text-[#FFFFFF] bg-[#2C3E86] bg-opacity-80 rounded-3xl ">Hi john, up for a ping pong match this evening?</p>
+      </div>  
+    );
+  }
   return (
 
 
@@ -114,7 +122,7 @@ export default function ChatPage() {
                   <FriendInfo />
                   <FriendInfo />
                   <FriendInfo />
-                  <FriendInfo />
+
 
 
 
@@ -140,7 +148,22 @@ export default function ChatPage() {
 
 
               {/* emplimenting peerToPeer */}
-              
+              <div className="peerToPeer">
+                <FriendMsgBox />
+                <FriendMsgBox />
+                <FriendMsgBox />
+                <FriendMsgBox />
+                <FriendMsgBox />
+                <FriendMsgBox />
+                <FriendMsgBox />
+
+
+
+
+
+
+
+              </div>
               {/* emplimenting SendMsg */}
             
             
