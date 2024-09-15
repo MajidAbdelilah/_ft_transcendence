@@ -102,11 +102,11 @@ export default function ChatPage() {
 
 
   
-    <div className={`flex flex-col h-screen ${montserrat.className}`}>
+    <div className={`flex flex-col h-full w-full ${montserrat.className}`}>
       <Navbar_test />
       <div className="parent flex flex-1  ">
         
-        <div className="sidebar hidden md:block">
+        <div className="sidebar hidden lg:block">
         <Sidebar_test />
         </div>
         
@@ -115,29 +115,39 @@ export default function ChatPage() {
           <div className="boxes flex h-full w-full border-2 border-[#C6C6E1] rounded-xl flex-row-revers bg-[#9191D6] bg-opacity-10">
             {/* friendsBox ------------------------------------------------------- */}
             
-            {/* add later     ----   md:w-1/4 hidden md:block */}
-            <div className="menuList md:w-1/4 hidden md:block">
-
             
-            <div className="friendsBox p-3 h-full rounded-tl-xl rounded-bl-xl  border-r-2  border-[#C6C6E1]  flex flex-col  ">
-
-              
-
-                < ProfileInfo path="/images/avatarprofile.svg" name="John Doe" status="Online"/>
-                <h2 className="text-center text-2xl my-8 py-2 rounded-full bg-[#9191D6] bg-opacity-20 text-[#242F5C] overflow-hidden">Conversations</h2>
-
-
-                <div className="MessagesList  flex flex-col flex-grow overflow-y-auto">
-
-                    <FriendInfo path="/images/avatarprofile.svg" name="John Wick" lastMsg="Graet Game! Rematch tomorrow?" time="2:15 AM"/>
-                    <FriendInfo path="/images/avatarprofile.svg" name="lucy smith" lastMsg="hello dear" time="20:15 AM"/>
-                    <FriendInfo path="/images/avatarprofile.svg" name="henry civil" lastMsg="hi john how are yaa?" time="20:15 AM"/>
-                    <FriendInfo path="/images/avatarprofile.svg" name="henry civil" lastMsg="hi john how are yaa?" time="20:15 AM"/>
-                    <FriendInfo path="/images/avatarprofile.svg" name="henry civil" lastMsg="hi john how are yaa?" time="20:15 AM"/>
+            <div className="menuList md:w-1/4 hidden md:block h-full flex-col">
+              <div className="friendsBox p-3 rounded-tl-xl rounded-bl-xl  border-r-2  border-[#C6C6E1] h-full  flex-col flex-grow overflow-y-auto">
 
                 
+
+                  < ProfileInfo path="/images/avatarprofile.svg" name="John Doe" status="Online"/>
+                  <h2 className="text-center text-2xl my-8 py-2 rounded-full bg-[#9191D6] bg-opacity-20 text-[#242F5C] overflow-hidden">Conversations</h2>
+
+
+                  <div className="MessagesList flex flex-col ">
+
+                      <FriendInfo path="/images/avatarprofile.svg" name="John Wick" lastMsg="Graet Game! Rematch tomorrow?" time="2:15 AM"/>
+                      <FriendInfo path="/images/avatarprofile.svg" name="lucy smith" lastMsg="hello dear" time="20:15 AM"/>
+                      <FriendInfo path="/images/avatarprofile.svg" name="henry civil" lastMsg="hi john how are yaa?" time="20:15 AM"/>
+                      <FriendInfo path="/images/avatarprofile.svg" name="henry civil" lastMsg="hi john how are yaa?" time="20:15 AM"/>
+                      <FriendInfo path="/images/avatarprofile.svg" name="henry civil" lastMsg="hi john how are yaa?" time="20:15 AM"/>
+                      <FriendInfo path="/images/avatarprofile.svg" name="henry civil" lastMsg="hi john how are yaa?" time="20:15 AM"/>
+                      <FriendInfo path="/images/avatarprofile.svg" name="henry civil" lastMsg="hi john how are yaa?" time="20:15 AM"/>
+                      <FriendInfo path="/images/avatarprofile.svg" name="henry civil" lastMsg="hi john how are yaa?" time="20:15 AM"/>
+                      <FriendInfo path="/images/avatarprofile.svg" name="henry civil" lastMsg="hi john how are yaa?" time="20:15 AM"/>
+                      <FriendInfo path="/images/avatarprofile.svg" name="henry civil" lastMsg="hi john how are yaa?" time="20:15 AM"/>
+                      <FriendInfo path="/images/avatarprofile.svg" name="henry civil" lastMsg="hi john how are yaa?" time="20:15 AM"/>
+                      <FriendInfo path="/images/avatarprofile.svg" name="henry civil" lastMsg="hi john how are yaa?" time="20:15 AM"/>
+                      <FriendInfo path="/images/avatarprofile.svg" name="henry civil" lastMsg="hi john how are yaa?" time="20:15 AM"/>
+                      <FriendInfo path="/images/avatarprofile.svg" name="henry civil" lastMsg="hi john how are yaa?" time="20:15 AM"/>
+                      <FriendInfo path="/images/avatarprofile.svg" name="henry civil" lastMsg="hi john how are yaa?" time="20:15 AM"/>
+                      <FriendInfo path="/images/avatarprofile.svg" name="henry civil" lastMsg="hi john how are yaa?" time="20:15 AM"/>
+                      <FriendInfo path="/images/avatarprofile.svg" name="henry civil" lastMsg="hi john how are yaa?" time="20:15 AM"/>
+
+                  
+                </div>
               </div>
-            </div>
             </div>
 
             {/* messagesBox ------------------------------------------ */}
