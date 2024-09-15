@@ -1,7 +1,10 @@
 import Sidebar_test from "./components/sidebar"; // import the real one as a componant later
 import Navbar_test from "./components/navbar"; // import the real one as a componant later
 import Image from "next/image";
+
 import { FaAngleDown } from "react-icons/fa";
+import { RiSendPlaneLine } from "react-icons/ri";
+
 
 
 import "./style.css";
@@ -67,13 +70,13 @@ export default function ChatPage() {
             />
             <div className=" ml-4  ">
               <h3 className="text-3xl  top-0 left-0 text-[#242F5C] ">{name}</h3>
-              <p className="text-sm text-[#302FA5] left">{status}</p>
+              <p className="text-sm text-[#302FA5] left ">{status}</p>
           </div>
 
         </div>
         {/* button - edit later change later -------------------------------------------------------------- */}
         <div className="dropDownIcon" >
-          <FaAngleDown className="bottomIcon text-3xl ml-auto mr-8" />
+          <FaAngleDown className="bottomIcon text-3xl ml-auto mr-8 text-[#242F5C]" />
         </div>
       </div>
     )
@@ -136,7 +139,7 @@ export default function ChatPage() {
             
             
             
-            <div className="messagesBox h-full w-3/4 rounded-tr-xl rounded-br-xl flex-2 p-4 bg-[#F4F4FF ]">
+            <div className="messagesBox h-full w-3/4 rounded-tr-xl rounded-br-xl flex-2 p-4 bg-[#F4F4FF ] ">
               
               <FriendChatInfo path="/images/avatarprofile.svg" name="John Wick" status="Online"/>
 
@@ -144,16 +147,18 @@ export default function ChatPage() {
               <div className="peerToPeer flex flex-col">
 
 
-                <FriendMsgBox time="02:22 PM" msg="Hi John, up for a ping pong match this evening?"/>
-                <MyMsgBox time="02:23 PM" msg="Sure, I'm in!"/>
-                <FriendMsgBox time="02:22 PM" msg="Hi John, up for a ping pong match this evening?"/>
+                <FriendMsgBox time="02:22 PM" msg="Hi John, up for a ping pong match this evening? "/>
                 <MyMsgBox time="02:23 PM" msg="Sure, I'm in!"/>
                 <FriendMsgBox time="02:22 PM" msg="Hi John, up for a ping pong match this evening?"/>
                 <MyMsgBox time="02:23 PM" msg="Sure, I'm in!"/>
 
+                
               </div>
               {/* emplimenting SendMsg */}
-            
+              <div className="sendMsg mx-8 my-5 relative " >
+                <input type="text" placeholder="Message" className="text-xl bg-[#9191D6] bg-opacity-20 py-3 pl-6 pr-16 w-full rounded-full" />
+                <RiSendPlaneLine className="text-3xl absolute right-4 top-3  text-[#2C3E86] text-opacity-80 "/>
+              </div>
             
 
             
