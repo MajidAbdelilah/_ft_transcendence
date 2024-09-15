@@ -112,26 +112,26 @@ export default function ChatPage() {
         <Sidebar_test className="hidden md:block"/>
         </div>
         
-        <div className="chattSection flex-1 p-10">
+        <div className="chattSection flex-1 p-10 h-screen">
 
           <div className="boxes flex h-full w-full border-2 border-[#C6C6E1] rounded-xl flex-row-revers bg-[#9191D6] bg-opacity-10">
             {/* friendsBox ------------------------------------------------------- */}
             <div className="friendsBox h-full w-1/4 rounded-tl-xl rounded-bl-xl flex-1 p-4 border-r-2 border-[#C6C6E1]  ">
 
-              <div className="menuList p-5 hidden md:block">
+              <div className="menuList p-5  hidden md:block">
 
 
               < ProfileInfo path="/images/avatarprofile.svg" name="John Doe" status="Online"/>
 
-                <h2 className="text-center text-2xl my-8 py-2 rounded-full bg-[#9191D6] bg-opacity-20 text-[#242F5C] overflow-hidden">Conversations</h2>
+              <h2 className="text-center text-2xl my-8 py-2 rounded-full bg-[#9191D6] bg-opacity-20 text-[#242F5C] overflow-hidden">Conversations</h2>
 
-                <div className="MessagesList w-full flex flex-col items-center overflow-hidden">
+              <div className="MessagesList w-full flex flex-col items-center ">
 
-                <FriendInfo path="/images/avatarprofile.svg" name="John Wick" lastMsg="Graet Game! Rematch tomorrow?" time="2:15 AM"/>
-                <FriendInfo path="/images/avatarprofile.svg" name="lucy smith" lastMsg="hello dear" time="20:15 AM"/>
-                <FriendInfo path="/images/avatarprofile.svg" name="henry civil" lastMsg="hi john how are yaa?" time="20:15 AM"/>
-                
-                  </div>
+                  <FriendInfo path="/images/avatarprofile.svg" name="John Wick" lastMsg="Graet Game! Rematch tomorrow?" time="2:15 AM"/>
+                  <FriendInfo path="/images/avatarprofile.svg" name="lucy smith" lastMsg="hello dear" time="20:15 AM"/>
+                  <FriendInfo path="/images/avatarprofile.svg" name="henry civil" lastMsg="hi john how are yaa?" time="20:15 AM"/>
+
+                </div>
               
               </div>
             </div>
@@ -139,14 +139,30 @@ export default function ChatPage() {
             
             
             
-            <div className="messagesBox h-full w-3/4 rounded-tr-xl rounded-br-xl flex-2 p-4 bg-[#F4F4FF ] ">
+            <div className="messagesBox h-full w-3/4 rounded-tr-xl rounded-br-xl flex-2 p-4 bg-[#F4F4FF ] flex flex-col">
               
               <FriendChatInfo path="/images/avatarprofile.svg" name="John Wick" status="Online"/>
 
               {/* emplimenting peerToPeer */}
-              <div className="peerToPeer flex flex-col">
+              <div className="peerToPeer flex flex-col flex-grow overflow-y-auto">
 
 
+                <FriendMsgBox time="02:22 PM" msg="Hi John, up for a ping pong match this evening? "/>
+                <MyMsgBox time="02:23 PM" msg="Sure, I'm in!"/>
+                <FriendMsgBox time="02:22 PM" msg="Hi John, up for a ping pong match this evening?"/>
+                <MyMsgBox time="02:23 PM" msg="Sure, I'm in!"/>
+                <FriendMsgBox time="02:22 PM" msg="Hi John, up for a ping pong match this evening? "/>
+                <MyMsgBox time="02:23 PM" msg="Sure, I'm in!"/>
+                <FriendMsgBox time="02:22 PM" msg="Hi John, up for a ping pong match this evening?"/>
+                <MyMsgBox time="02:23 PM" msg="Sure, I'm in!"/>
+                <FriendMsgBox time="02:22 PM" msg="Hi John, up for a ping pong match this evening? "/>
+                <MyMsgBox time="02:23 PM" msg="Sure, I'm in!"/>
+                <FriendMsgBox time="02:22 PM" msg="Hi John, up for a ping pong match this evening?"/>
+                <MyMsgBox time="02:23 PM" msg="Sure, I'm in!"/>
+                <FriendMsgBox time="02:22 PM" msg="Hi John, up for a ping pong match this evening? "/>
+                <MyMsgBox time="02:23 PM" msg="Sure, I'm in!"/>
+                <FriendMsgBox time="02:22 PM" msg="Hi John, up for a ping pong match this evening?"/>
+                <MyMsgBox time="02:23 PM" msg="Sure, I'm in!"/>
                 <FriendMsgBox time="02:22 PM" msg="Hi John, up for a ping pong match this evening? "/>
                 <MyMsgBox time="02:23 PM" msg="Sure, I'm in!"/>
                 <FriendMsgBox time="02:22 PM" msg="Hi John, up for a ping pong match this evening?"/>
