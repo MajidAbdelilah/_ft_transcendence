@@ -21,7 +21,7 @@ export default function ChatPage() {
   
   function ProfileInfo ({path, name, status}) {
     return (
-      <div className="profileInfo w-full flex items-center overflow-hidden">
+      <div className="profileInfo pt-7 pl-7 w-full flex items-center overflow-hidden">
         <Image
           src={path}
           alt="avatarprofile"
@@ -37,7 +37,6 @@ export default function ChatPage() {
     );
 
   }
-
   function FriendInfo({path, name, lastMsg, time}) {
     return (
       <div className="friendInfo my-3 w-full flex flex-row items-center overflow-hidden">
@@ -81,7 +80,6 @@ export default function ChatPage() {
       </div>
     )
   }
-
   function FriendMsgBox ({time, msg}) {
     return (
       <div className="friendMsgBox ml-8 my-1">
@@ -90,7 +88,6 @@ export default function ChatPage() {
       </div>  
     );
   }
-
   function MyMsgBox ({time, msg}) {
     return (
       <div className="myMsgBox my-1 mr-8 ml-auto flex flex-col">
@@ -108,38 +105,46 @@ export default function ChatPage() {
     <div className={`flex flex-col h-screen ${montserrat.className}`}>
       <Navbar_test />
       <div className="parent flex flex-1  ">
+        
         <div className="sidebar hidden md:block">
-        <Sidebar_test className="hidden md:block"/>
+        <Sidebar_test />
         </div>
         
         <div className="chattSection flex-1 p-10 h-screen">
 
           <div className="boxes flex h-full w-full border-2 border-[#C6C6E1] rounded-xl flex-row-revers bg-[#9191D6] bg-opacity-10">
             {/* friendsBox ------------------------------------------------------- */}
-            <div className="friendsBox h-full w-1/4 rounded-tl-xl rounded-bl-xl flex-1 p-4 border-r-2 border-[#C6C6E1]  ">
+            
+            {/* add later     ----   md:w-1/4 hidden md:block */}
+            <div className="menuList md:w-1/4 hidden md:block">
 
-              <div className="menuList p-5  hidden md:block">
+            
+            <div className="friendsBox p-3 h-full rounded-tl-xl rounded-bl-xl  border-r-2  border-[#C6C6E1]  flex flex-col  ">
 
-
-              < ProfileInfo path="/images/avatarprofile.svg" name="John Doe" status="Online"/>
-
-              <h2 className="text-center text-2xl my-8 py-2 rounded-full bg-[#9191D6] bg-opacity-20 text-[#242F5C] overflow-hidden">Conversations</h2>
-
-              <div className="MessagesList w-full flex flex-col items-center ">
-
-                  <FriendInfo path="/images/avatarprofile.svg" name="John Wick" lastMsg="Graet Game! Rematch tomorrow?" time="2:15 AM"/>
-                  <FriendInfo path="/images/avatarprofile.svg" name="lucy smith" lastMsg="hello dear" time="20:15 AM"/>
-                  <FriendInfo path="/images/avatarprofile.svg" name="henry civil" lastMsg="hi john how are yaa?" time="20:15 AM"/>
-
-                </div>
               
+
+                < ProfileInfo path="/images/avatarprofile.svg" name="John Doe" status="Online"/>
+                <h2 className="text-center text-2xl my-8 py-2 rounded-full bg-[#9191D6] bg-opacity-20 text-[#242F5C] overflow-hidden">Conversations</h2>
+
+
+                <div className="MessagesList  flex flex-col flex-grow overflow-y-auto">
+
+                    <FriendInfo path="/images/avatarprofile.svg" name="John Wick" lastMsg="Graet Game! Rematch tomorrow?" time="2:15 AM"/>
+                    <FriendInfo path="/images/avatarprofile.svg" name="lucy smith" lastMsg="hello dear" time="20:15 AM"/>
+                    <FriendInfo path="/images/avatarprofile.svg" name="henry civil" lastMsg="hi john how are yaa?" time="20:15 AM"/>
+                    <FriendInfo path="/images/avatarprofile.svg" name="henry civil" lastMsg="hi john how are yaa?" time="20:15 AM"/>
+                    <FriendInfo path="/images/avatarprofile.svg" name="henry civil" lastMsg="hi john how are yaa?" time="20:15 AM"/>
+
+                
               </div>
             </div>
+            </div>
+
             {/* messagesBox ------------------------------------------ */}
             
             
             
-            <div className="messagesBox h-full w-3/4 rounded-tr-xl rounded-br-xl flex-2 p-4 bg-[#F4F4FF ] flex flex-col">
+            <div className="messagesBox p-4 h-full rounded-tr-xl rounded-br-xl   bg-[#F4F4FF ] flex flex-col md:w-3/4">
               
               <FriendChatInfo path="/images/avatarprofile.svg" name="John Wick" status="Online"/>
 
@@ -166,6 +171,11 @@ export default function ChatPage() {
                 <FriendMsgBox time="02:22 PM" msg="Hi John, up for a ping pong match this evening? "/>
                 <MyMsgBox time="02:23 PM" msg="Sure, I'm in!"/>
                 <FriendMsgBox time="02:22 PM" msg="Hi John, up for a ping pong match this evening?"/>
+                <MyMsgBox time="02:23 PM" msg="Sure, I'm in!"/>
+                <MyMsgBox time="02:23 PM" msg="Sure, I'm in!"/>
+                <MyMsgBox time="02:23 PM" msg="Sure, I'm in!"/>
+                <MyMsgBox time="02:23 PM" msg="Sure, I'm in!"/>
+                <MyMsgBox time="02:23 PM" msg="Sure, I'm in!"/>
                 <MyMsgBox time="02:23 PM" msg="Sure, I'm in!"/>
 
                 
