@@ -16,12 +16,21 @@ const montserrat = Montserrat({
 
 
 
+    // - sm : `min-width: 640px`
+    // - md : `min-width: 768px`
+    // - lg : `min-width: 1024px`
+    // - xl : `min-width: 1280px`
+    // - 2xl : `min-width: 1536px`
+
+
+
+
 export default function ChatPage() {
   
   
   function ProfileInfo ({path, name, status}) {
     return (
-      <div className="profileInfo pt-7 pl-7 w-full flex items-center overflow-hidden">
+      <div className="profileInfo pt-5 pl-5 w-full flex items-center overflow-hidden">
         <Image
           src={path}
           alt="avatarprofile"
@@ -49,7 +58,7 @@ export default function ChatPage() {
         />
         <div className=" ml-2 ">
           <h3 className="text-2xl top-0 left-0 text-[#242F5C]">{name}</h3>
-          <p className="text-xs text-[#302FA5] overflow-hidden ">{lastMsg}</p>
+          <p className="text-xs text-[#302FA5] overflow-hidden whitespace-nowrap text-ellipsis max-w-[15ch]">{lastMsg}</p>
         </div>
         <span className="text-xs text-[#242F5C] ml-auto">{time}</span>
      </div>
@@ -102,22 +111,23 @@ export default function ChatPage() {
 
 
   
-    <div className={`flex flex-col h-full w-full ${montserrat.className}`}>
+    <div className={`flex flex-col h-full  ${montserrat.className}`}>
       <Navbar_test />
       <div className="parent flex flex-1  ">
         
-        <div className="sidebar hidden lg:block">
+      {/* hidden on smaller screens and only visible on screens 1280px or larger. */}
+        <div className="sidebar hidden xl:block">
         <Sidebar_test />
         </div>
         
-        <div className="chattSection flex-1 p-10 h-screen">
+        <div className="chattSection flex-1 p-5 md:p-10 h-screen w-screen">
 
           <div className="boxes flex h-full w-full border-2 border-[#C6C6E1] rounded-xl flex-row-revers bg-[#9191D6] bg-opacity-10">
             {/* friendsBox ------------------------------------------------------- */}
             
-            
-            <div className="menuList md:w-1/4 hidden md:block h-full flex-col">
-              <div className="friendsBox p-3 rounded-tl-xl rounded-bl-xl  border-r-2  border-[#C6C6E1] h-full  flex-col flex-grow overflow-y-auto">
+
+            <div className="menuList hidden sm:block md:w-2/5 w-lg:1/5 h-full flex-col">
+              <div className="friendsBox p-2 rounded-tl-xl rounded-bl-xl  border-r-2  border-[#C6C6E1] h-full  flex-col flex-grow overflow-y-auto">
 
                 
 
@@ -153,8 +163,8 @@ export default function ChatPage() {
             {/* messagesBox ------------------------------------------ */}
             
             
-            
-            <div className="messagesBox p-4 h-full rounded-tr-xl rounded-br-xl   bg-[#F4F4FF ] flex flex-col md:w-3/4">
+
+            <div className="messagesBox md:w-3/5 w-lg:4/5 p-2 h-full rounded-tr-xl rounded-br-xl   bg-[#F4F4FF ] flex flex-col ">
               
               <FriendChatInfo path="/images/avatarprofile.svg" name="John Wick" status="Online"/>
 
