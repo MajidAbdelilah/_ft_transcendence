@@ -20,7 +20,7 @@ const montserrat = Montserrat({
 
     // - sm : `min-width: 640px`
     // - md : `min-width: 768px`
-    // - lg : `min-width: 1024px`
+    // - lg : `min-width: 1024px`   
     // - xl : `min-width: 1280px`
     // - 2xl : `min-width: 1536px`
 
@@ -30,6 +30,7 @@ const montserrat = Montserrat({
 export default function ChatPage() {
   
   
+  // -- friends -----------------------------------------------------
   function ProfileInfo ({path, name, status}) {
     return (
       <div className="profileInfo pt-5 pl-5 w-full flex items-center overflow-hidden">
@@ -66,6 +67,7 @@ export default function ChatPage() {
      </div>
     );
   }
+  // -- chats -----------------------------------------------------
   function FriendChatInfo({path, name, status}) {
     return (
       <div className="friendChatInfo p-5 flex items-center" >
@@ -80,7 +82,7 @@ export default function ChatPage() {
             height="75"
             className="left-0 top-0 "
             />
-            <div className=" ml-4 hidden sm:block ">
+            <div className=" ml-4 hidden md:block ">
               <h3 className="text-3xl  top-0 left-0 text-[#242F5C] ">{name}</h3>
               <p className="text-sm text-[#302FA5] left ">{status}</p>
           </div>
@@ -88,7 +90,7 @@ export default function ChatPage() {
         </div>
         {/* button - edit later  -------------------------------------------------------------- */}
         
-        <div className="ChatListIcon block sm:hidden text-3xl text-[#242F5C]  mr-10" >
+        <div className="ChatListIcon block lg:hidden text-3xl text-[#242F5C]  mr-10" >
           <IoIosChatboxes className="ChatListIcon   " />
         </div>
 
@@ -138,13 +140,13 @@ export default function ChatPage() {
             {/* friendsBox ------------------------------------------------------- */}
             
 
-            <div className="menuList hidden sm:block md:w-2/5 w-lg:1/5 h-full flex-col">
+            <div className="menuList hidden lg:block w-2/5  h-full flex-col">
               <div className="friendsBox p-2 rounded-tl-xl rounded-bl-xl  border-r-2  border-[#C6C6E1] h-full  flex-col flex-grow overflow-y-auto">
 
                 
 
                   < ProfileInfo path="/images/avatarprofile.svg" name="John Doe" status="Online"/>
-                  <h2 className="text-center text-2xl my-8 py-2 rounded-full bg-[#9191D6] bg-opacity-20 text-[#242F5C] overflow-hidden">Conversations</h2>
+                  <h2 className="text-center text-1xl my-8 py-2 rounded-full bg-[#9191D6] bg-opacity-20 text-[#242F5C] overflow-hidden">Conversations</h2>
 
 
                   <div className="MessagesList flex flex-col ">
@@ -176,7 +178,7 @@ export default function ChatPage() {
             
             
 
-            <div className="messagesBox md:w-3/5 w-lg:4/5 p-2 h-full rounded-tr-xl rounded-br-xl   bg-[#F4F4FF ] flex flex-col ">
+            <div className="messagesBox md:w-full lg:w-3/5 p-2 h-full rounded-tr-xl rounded-br-xl   bg-[#F4F4FF ] flex flex-col ">
               
               <FriendChatInfo path="/images/avatarprofile.svg" name="John Wick" status="Online"/>
 
