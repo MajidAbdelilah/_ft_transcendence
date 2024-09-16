@@ -7,6 +7,7 @@ import { useRouter } from "next/navigation";
 import { useState, useEffect } from 'react'
 
 
+
 const montserrat = Montserrat({
   subsets: ['latin'],
   variable: '--font-montserrat',
@@ -41,7 +42,7 @@ export default function App() {
   return (
     <body>
       <div className={` h-[100vh]${montserrat.className}`}>
-      <nav className={`flex justify-between sm:pl-20 sm:pt-18 sm:pr-20 w-full sm:items-center sm:h-[200px] fixed  transition-all duration-300 ${
+      <nav className={`flex justify-between sm:pl-20 sm:pt-18 sm:pr-20 w-full sm:items-center sm:h-[200px] fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
           isScrolled ? 'bg-white bg-opacity-15 backdrop-blur-md shadow-md' : 'bg-transparent'
         }`}>
           <Image src="images/logo.svg" alt="Logo" width={150} height={150} className="sm:h-[150px] sm:w-[150px] w-[80px] h-[80px]" />
@@ -63,7 +64,7 @@ export default function App() {
               <br/>
               Dive into fast-paced matches, climb the leaderboards, and join a community of enthusiasts.
               <br/>
-              Ready for action? <span className="font-bold">Let the games begin!</span>
+              Ready for action?  <span className="font-bold"> Let the games begin!</span>
             </p>
           </div>
           <div className="sm:w-[50%] sm:max-w-[600px] ">

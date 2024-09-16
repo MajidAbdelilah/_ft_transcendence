@@ -10,9 +10,9 @@ const montserrat = Montserrat({
   })
 
 
-  function Sidebar() {
+function Sidebar() {
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-    const [isMobile, setIsMobile] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
   
     useEffect(() => {
       const handleResize = () => {
