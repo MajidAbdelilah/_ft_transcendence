@@ -60,7 +60,7 @@ export default function ChatPage() {
           <h3 className="text-2xl top-0 left-0 text-[#242F5C]">{name}</h3>
           <p className="text-xs text-[#302FA5] overflow-hidden whitespace-nowrap text-ellipsis max-w-[15ch]">{lastMsg}</p>
         </div>
-        <span className="text-xs text-[#242F5C] ml-auto">{time}</span>
+        <span className="text-xs text-[#242F5C] ml-auto hidden md:block">{time}</span>
      </div>
     );
   }
@@ -76,7 +76,7 @@ export default function ChatPage() {
             height="75"
             className="left-0 top-0 "
             />
-            <div className=" ml-4  ">
+            <div className=" ml-4 hidden sm:block ">
               <h3 className="text-3xl  top-0 left-0 text-[#242F5C] ">{name}</h3>
               <p className="text-sm text-[#302FA5] left ">{status}</p>
           </div>
