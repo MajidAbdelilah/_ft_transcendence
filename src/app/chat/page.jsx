@@ -4,6 +4,8 @@ import Image from "next/image";
 
 import { FaAngleDown } from "react-icons/fa";
 import { RiSendPlaneLine } from "react-icons/ri";
+import { IoIosChatboxes } from "react-icons/io";
+
 
 
 
@@ -68,6 +70,8 @@ export default function ChatPage() {
     return (
       <div className="friendChatInfo p-5 flex items-center" >
 
+
+
         <div className="hisProfile w-full flex items-center overflow-hidden">
           <Image
             src={path}
@@ -82,13 +86,21 @@ export default function ChatPage() {
           </div>
 
         </div>
-        {/* button - edit later change later -------------------------------------------------------------- */}
-        <div className="dropDownIcon" >
-          <FaAngleDown className="bottomIcon text-3xl ml-auto mr-8 text-[#242F5C]" />
+        {/* button - edit later  -------------------------------------------------------------- */}
+        
+        <div className="ChatListIcon block sm:hidden text-3xl text-[#242F5C]  mr-10" >
+          <IoIosChatboxes className="ChatListIcon   " />
+        </div>
+
+
+        <div className="dropDownIcon text-4xl ml-auto mr-8  text-[#242F5C]" >
+          <FaAngleDown className="dropDownIcon " />
         </div>
       </div>
     )
   }
+
+
   function FriendMsgBox ({time, msg}) {
     return (
       <div className="friendMsgBox ml-8 my-1">
