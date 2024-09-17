@@ -45,20 +45,24 @@ export default function ChatPage() {
   }
 
 
-  // -------------------------------------------------------
+  // chat icon handling ....-------------------------------------------------------
 
   const chatListRef = useRef(null);
+
   const handleClickOutside = (event) => {
+    //event.target is the element that the user clicked on our page
     if (chatListRef.current && !chatListRef.current.contains(event.target)) {
       setChatList(false);
     }
   };
+
   useEffect(() => {
     document.addEventListener('mousedown', handleClickOutside);
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
   }, []);
+
  // -------------------------------------------------------
 
   // -- friends -----------------------------------------------------
@@ -103,8 +107,22 @@ export default function ChatPage() {
     return (
       <div className="friendChatInfo p-5 flex items-center" >
 
+        {/* ChatListIcon  -------------------------------------------------------------- */}
+        <div className="ChatListIcon block lg:hidden text-3xl text-[#242F5C]  mr-12 " onClick={ftSwitchChatList}> 
+          <IoIosChatboxes className="ChatListIcon   " />
+        </div>
+        
+        {ChatListStatus && (
+          
+          <div className="targetDiv bg-blue-200 p-4" ref={chatListRef}>
+            This is the div that shows up when you click the icon.
+          </div>
+        )}
 
 
+
+
+        {/* button - edit later  -------------------------------------------------------------- */}
         <div className="hisProfile w-full flex items-center overflow-hidden">
           <Image
             src={path}
@@ -119,19 +137,10 @@ export default function ChatPage() {
           </div>
 
         </div>
-        {/* button - edit later  -------------------------------------------------------------- */}
+        {/* dropDownIcon  -------------------------------------------------------------- */}
         
         
-        <div className="ChatListIcon block lg:hidden text-3xl text-[#242F5C]  mr-10 " onClick={ftSwitchChatList}> 
-          <IoIosChatboxes className="ChatListIcon   " />
-        </div>
-        
-        {ChatListStatus && (
-          
-          <div className="targetDiv bg-blue-200 p-4" ref={chatListRef}>
-            This is the div that shows up when you click the icon.
-          </div>
-        )}
+
 
         <div className="dropDownIcon text-4xl ml-auto mr-8  text-[#242F5C]" >
           <FaAngleDown className="dropDownIcon " />
@@ -159,12 +168,12 @@ export default function ChatPage() {
   }
   return (
 
-    <div className={`flex flex-col h-full  ${montserrat.className}`}>
+    <div className={`flex flex-col h-screen  ${montserrat.className}`}>
       <Navbar_test />
-      <div className="parent flex flex-1  ">
+      <div className="parent flex flex-1 ">
         
       {/* hidden on smaller screens and only visible on screens 1280px or larger. */}
-        <div className="sidebar hidden xl:block">
+        <div className="sidebar hidden xl:block ">
         <Sidebar_test />
         </div>
         
@@ -249,6 +258,9 @@ export default function ChatPage() {
                 <RiSendPlaneLine className="text-3xl absolute right-4 top-3  text-[#2C3E86] text-opacity-80 "/>
               </div>
             
+
+
+
 
             
             </div>
