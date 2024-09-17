@@ -1,3 +1,5 @@
+"use client"; 
+
 import Sidebar_test from "./components/sidebar"; // import the real one as a componant later
 import Navbar_test from "./components/navbar"; // import the real one as a componant later
 import Image from "next/image";
@@ -7,7 +9,9 @@ import { RiSendPlaneLine } from "react-icons/ri";
 import { IoIosChatboxes } from "react-icons/io";
 
 
-
+import { useState } from "react";
+import { useEffect } from "react";
+import { useRef } from "react";
 
 import "./style.css";
 import { Inter, Montserrat } from "next/font/google";
@@ -29,7 +33,34 @@ const montserrat = Montserrat({
 
 export default function ChatPage() {
   
+  const [ChatListStatus, setChatList] = useState(false);
   
+  const ftSwitchChatList = () => {
+    if(ChatListStatus == true) {
+      setChatList(false);
+    }
+    else {
+      setChatList(true);
+    }
+  }
+
+
+  // -------------------------------------------------------
+
+  const chatListRef = useRef(null);
+  const handleClickOutside = (event) => {
+    if (chatListRef.current && !chatListRef.current.contains(event.target)) {
+      setChatList(false);
+    }
+  };
+  useEffect(() => {
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
+ // -------------------------------------------------------
+
   // -- friends -----------------------------------------------------
   function ProfileInfo ({path, name, status}) {
     return (
@@ -90,10 +121,17 @@ export default function ChatPage() {
         </div>
         {/* button - edit later  -------------------------------------------------------------- */}
         
-        <div className="ChatListIcon block lg:hidden text-3xl text-[#242F5C]  mr-10" >
+        
+        <div className="ChatListIcon block lg:hidden text-3xl text-[#242F5C]  mr-10 " onClick={ftSwitchChatList}> 
           <IoIosChatboxes className="ChatListIcon   " />
         </div>
-
+        
+        {ChatListStatus && (
+          
+          <div className="targetDiv bg-blue-200 p-4" ref={chatListRef}>
+            This is the div that shows up when you click the icon.
+          </div>
+        )}
 
         <div className="dropDownIcon text-4xl ml-auto mr-8  text-[#242F5C]" >
           <FaAngleDown className="dropDownIcon " />
@@ -121,10 +159,6 @@ export default function ChatPage() {
   }
   return (
 
-
-
-
-  
     <div className={`flex flex-col h-full  ${montserrat.className}`}>
       <Navbar_test />
       <div className="parent flex flex-1  ">
@@ -138,8 +172,6 @@ export default function ChatPage() {
 
           <div className="boxes flex h-full w-full border-2 border-[#C6C6E1] rounded-xl flex-row-revers bg-[#9191D6] bg-opacity-10">
             {/* friendsBox ------------------------------------------------------- */}
-            
-
             <div className="menuList hidden lg:block w-2/5  h-full flex-col">
               <div className="friendsBox p-2 rounded-tl-xl rounded-bl-xl  border-r-2  border-[#C6C6E1] h-full  flex-col flex-grow overflow-y-auto">
 
@@ -175,9 +207,6 @@ export default function ChatPage() {
             </div>
 
             {/* messagesBox ------------------------------------------ */}
-            
-            
-
             <div className="messagesBox md:w-full lg:w-3/5 p-2 h-full rounded-tr-xl rounded-br-xl   bg-[#F4F4FF ] flex flex-col ">
               
               <FriendChatInfo path="/images/avatarprofile.svg" name="John Wick" status="Online"/>
