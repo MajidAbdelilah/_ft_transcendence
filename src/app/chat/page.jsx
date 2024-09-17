@@ -173,12 +173,12 @@ export default function ChatPage() {
           <div className="boxes flex h-full w-full border-2 border-[#C6C6E1] rounded-xl flex-row-revers bg-[#9191D6] bg-opacity-10">
             {/* friendsBox ------------------------------------------------------- */}
             <div className="menuList hidden lg:block w-2/5  h-full flex-col">
-              <div className="friendsBox p-2 rounded-tl-xl rounded-bl-xl  border-r-2  border-[#C6C6E1] h-full  flex-col flex-grow overflow-y-auto">
+              <div className="friendsBox p-2 rounded-tl-xl rounded-bl-xl  border-r-2  border-[#C6C6E1] h-full  flex-col flex-grow overflow-y-auto custom-scrollbar">
 
                 
 
                   < ProfileInfo path="/images/avatarprofile.svg" name="John Doe" status="Online"/>
-                  <h2 className="text-center text-1xl my-8 py-2 rounded-full bg-[#9191D6] bg-opacity-20 text-[#242F5C] overflow-hidden">Conversations</h2>
+                  <h2 className="text-center text-1xl my-8 py-2 rounded-full bg-[#9191D6] bg-opacity-20 text-[#242F5C] overflow-hidden ">Conversations</h2>
 
 
                   <div className="MessagesList flex flex-col ">
@@ -212,7 +212,7 @@ export default function ChatPage() {
               <FriendChatInfo path="/images/avatarprofile.svg" name="John Wick" status="Online"/>
 
               {/* emplimenting peerToPeer */}
-              <div className="peerToPeer flex flex-col flex-grow overflow-y-auto">
+              <div className="peerToPeer flex flex-col flex-grow overflow-y-auto custom-scrollbar">
 
 
                 <FriendMsgBox time="02:22 PM" msg="Hi John, up for a ping pong match this evening? "/>

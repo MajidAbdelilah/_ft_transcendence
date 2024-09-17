@@ -28,6 +28,94 @@
   }
   
 
+  .animated-example {
+    width: 300px;
+    height: 200px;
+    border: solid 1px #1A7404;
+    position: absolute;
+    background-color: #62A80A;
+  }
+  
+  .animated {  
+    animation-duration: 20s;
+    animation-fill-mode: both;
+    animation-iteration-count: infinite;
+  }
+  
+  .bounceInLeft {
+    -webkit-animation-name: bounceInLeft;
+    animation-name: bounceInLeft;
+  }
+  
+  .bounceInDown {
+    -webkit-animation-name: bounceInDown;
+    animation-name: bounceInDown;
+  }
+  
+  @keyframes bounceInLeft {
+    0% {
+      opacity: 0;
+      transform: translateX(-2000px);
+    }
+    6% {
+      opacity: 1;
+      transform: translateX(30px);
+    }
+    8% {
+      transform: translateX(-10px);
+    }
+    10% {
+      transform: translateX(0);
+    }
+    40% {
+      opacity: 1;
+      transform: translateX(0);
+    }
+    42% {
+      opacity: 1;
+      transform: translateX(30px);
+    }
+    55% {
+      opacity: 0;
+      transform: translateX(-2000px);
+    }
+    100% {
+      opacity: 0;
+      transform: translateX(-2000px);
+    }
+  }
+  
+  @keyframes bounceInDown {
+    0% {
+      opacity: 0;
+      transform: translateY(-2000px);
+    }
+    50% {
+      opacity: 0;
+      transform: translateY(-2000px);
+    }
+    56% {
+      opacity: 1;
+      transform: translateY(30px);
+    }
+    58% {
+      transform: translateY(-10px);
+    }
+    60% {
+      transform: translateY(0);
+    }
+    90% {
+      transform: translateY(0);
+    }
+    92% {
+      opacity: 1;
+      transform: translateY(30px);
+    }
+    100% {
+      opacity: 0;
+      transform: translateY(-2000px);
+    }
+  }
 body{
     background-image: url('/images/background.svg');
     background-size: cover;
