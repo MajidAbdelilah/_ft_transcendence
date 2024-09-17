@@ -11,7 +11,7 @@ const montserrat = Montserrat({
 
 
 function Sidebar() {
-    const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
   
     useEffect(() => {

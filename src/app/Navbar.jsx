@@ -1,24 +1,29 @@
 import Image from 'next/image';
-import { useClickAway } from "@uidotdev/usehooks";
-import { DashContext } from "./Dashcontext";
-import { useContext } from "react";
+import { useClickAway, } from "@uidotdev/usehooks";
+import { Montserrat } from "next/font/google";
+import { useState } from "react";
 
-
+const montserrat = Montserrat({
+  subsets: ["latin"],
+  variable: "--font-montserrat",
+});
 
 
 function Navbar() {
-    const DashData = useContext(DashContext);
+
+    const [userDropdown, setUserDropdown] = useState(false);
+    const [notificationDropdown, setNotificationDropdown] = useState(false);
     const userDropdownRef = useClickAway(() => {
-        DashData.setUserDropdown(false);
+        setUserDropdown(false);
       });
     
       const notificationDropdownRef = useClickAway(() => {
-        DashData.setNotificationDropdown(false);
+        setNotificationDropdown(false);
       });
 
     return (
         <nav
-            className={`bg-[#F4F4FF] py-4 h-[90px] flex items-center shadow-md shadow-[#BCBCC9] ${DashData.montserrat.className}`}
+            className={`bg-[#F4F4FF] py-4 h-[90px] flex items-center shadow-md shadow-[#BCBCC9] ${montserrat.className}`}
       >
         <div className="flex justify-end flex-auto sm:gap-5 gap-3 sm:mr-10 ml-5">
           <div className="relative">
@@ -43,7 +48,7 @@ function Navbar() {
           </div>
           <div>
             <Image
-              onClick={() => DashData.setNotificationDropdown(!DashData.notificationDropdown)}
+              onClick={() => setNotificationDropdown(!notificationDropdown)}
               className="sm:w-8 sm:h-8 w-7 h-7 flex items-center justify-center sm:ml-5 mt-2 ml-2 cursor-pointer"
               src="/images/notification.svg"
               alt="Notification"
@@ -53,7 +58,7 @@ function Navbar() {
           </div>
           <div
             className="flex items-center justify-center sm:w-12 sm:h-12 w-10 h-10 rounded-full bg-white text-white relative mr-2 cursor-pointer"
-            onClick={() => DashData.setUserDropdown(!DashData.userDropdown)}
+            onClick={() => setUserDropdown(!userDropdown)}
           >
             <Image
               id="avatarButton"
@@ -76,10 +81,10 @@ function Navbar() {
               width="50"
               height="50"
             />
-            {DashData.userDropdown && (
+            {userDropdown && (
               <div ref={userDropdownRef} className="w-[200px] h-[200px] bg-[#EAEAFF] absolute bottom-[-210px] right-[3px] z-[10] rounded-[5px]"></div>
             )}
-            {DashData.notificationDropdown && (
+            {notificationDropdown && (
               <div ref={notificationDropdownRef} className="w-[400px] h-[200px] bg-[#EAEAFF] absolute bottom-[-210px] right-[70px] z-[10] rounded-[5px]"></div>
             )}
           </div>

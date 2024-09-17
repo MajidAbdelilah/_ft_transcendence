@@ -8,8 +8,6 @@ const montserrat = Montserrat({
 });
 
 const DashProvider = ({ children }) => {
-    const [userDropdown, setUserDropdown] = useState(false);
-    const [notificationDropdown, setNotificationDropdown] = useState(false);
     const [isMobile, setIsMobile] = useState(false);
     const [isScrolled, setIsScrolled] = useState(false);
   
@@ -68,10 +66,6 @@ const DashProvider = ({ children }) => {
     ]);
     return (
         <DashContext.Provider value={{
-            userDropdown,
-            setUserDropdown,
-            notificationDropdown,
-            setNotificationDropdown,
             isMobile,
             setIsMobile,
             isScrolled,
