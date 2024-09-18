@@ -27,24 +27,29 @@ function Navbar() {
       >
         <div className="flex justify-end flex-auto sm:gap-5 gap-3 sm:mr-10 ml-5">
           <div className="relative">
-            <input
-              type="text"
-              placeholder="Search..."
-              className="sm:py-3 shadow-sm shadow-[#BCBCC9] sm:w-[280px] py-[8px] w-[200px]  pl-[2.5rem] rounded-full bg-[#ECECEC] text-black focus:outline-none focus:ring-2 focus:ring-[#3CDCDE5]"
-            />
-            <svg
-              className="absolute left-3 top-1/2 transform -translate-y-1/2 op h-5 w-5 text-gray-400"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
+            <div
+              className="p-5 overflow-hidden w-[20px] h-[20px] sm:w-[50px] sm:h-[50px] focus-within:w-[150px] sm:hover:w-[257px] bg-[#CDCDE5] shadow-md rounded-full flex group items-center hover:duration-300 duration-300"
             >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+              <div className="flex items-center justify-center fill-[#242F5C] absolute left-0 w-[50px] sm:pr-0 pr-2">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  id="Isolation_Mode"
+                  data-name="Isolation Mode"
+                  viewBox="0 0 24 24"
+                  width="22"
+                  height="22"
+                >
+                  <path
+                    d="M18.9,16.776A10.539,10.539,0,1,0,16.776,18.9l5.1,5.1L24,21.88ZM10.5,18A7.5,7.5,0,1,1,18,10.5,7.507,7.507,0,0,1,10.5,18Z"
+                  ></path>
+                </svg>
+              </div>
+              <input
+                type="text"
+                className="outline-none text-[15px] sm:text-[20px] bg-transparent w-full text-[#242F5C] font-normal pl-[50px] pr-4"
               />
-            </svg>
+            </div>
+
           </div>
           <div>
             <Image
