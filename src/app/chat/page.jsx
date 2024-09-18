@@ -33,6 +33,8 @@ const montserrat = Montserrat({
 
 export default function ChatPage() {
   
+  // chat icon handling ....-------------------------------------------------------
+  // handing click on the chat icon
   const [ChatListStatus, setChatList] = useState(false);
   
   const ftSwitchChatList = () => {
@@ -44,9 +46,7 @@ export default function ChatPage() {
     }
   }
 
-
-  // chat icon handling ....-------------------------------------------------------
-
+  //handling if he click somewhere else on the page
   const chatListRef = useRef(null);
 
   const handleClickOutside = (event) => {
@@ -63,9 +63,7 @@ export default function ChatPage() {
     };
   }, []);
 
- // -------------------------------------------------------
-
-  // -- friends -----------------------------------------------------
+  // -- friends functions -----------------------------------------------------
   function ProfileInfo ({path, name, status}) {
     return (
       <div className="profileInfo pt-5 pl-5 w-full flex items-center overflow-hidden">
@@ -84,6 +82,7 @@ export default function ChatPage() {
     );
 
   }
+
   function FriendInfo({path, name, lastMsg, time}) {
     return (
       <div className="friendInfo my-3 w-full flex flex-row items-center overflow-hidden">
@@ -102,7 +101,7 @@ export default function ChatPage() {
      </div>
     );
   }
-  // -- messages -----------------------------------------------------
+  // -- messages functions -----------------------------------------------------
   function FriendChatInfo({path, name, status}) {
     return (
       <div className="friendChatInfo p-5 flex items-center" >
@@ -114,7 +113,7 @@ export default function ChatPage() {
         
         {ChatListStatus && (
           
-          <div className="targetDiv bg-blue-200 p-4" ref={chatListRef}>
+          <div className="targetDiv bg-blue-200 p-4 block lg:hidden" ref={chatListRef}>
             This is the div that shows up when you click the icon.
           </div>
         )}
@@ -131,7 +130,7 @@ export default function ChatPage() {
             height="75"
             className="left-0 top-0 "
             />
-            <div className=" ml-4 hidden md:block ">
+            <div className=" ml-4 hidden lg:block ">
               <h3 className="text-3xl  top-0 left-0 text-[#242F5C] ">{name}</h3>
               <p className="text-sm text-[#302FA5] left ">{status}</p>
           </div>
