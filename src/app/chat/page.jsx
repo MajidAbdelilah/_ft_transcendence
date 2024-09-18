@@ -98,11 +98,11 @@ export default function ChatPage() {
           <h3 className="text-2xl top-0 left-0 text-[#242F5C]">{name}</h3>
           <p className="text-xs text-[#302FA5] overflow-hidden whitespace-nowrap text-ellipsis max-w-[15ch]">{lastMsg}</p>
         </div>
-        <span className="text-xs text-[#242F5C] ml-auto hidden md:block">{time}</span>
+        <span className="text-xs text-[#242F5C] ml-auto hidden xl:block">{time}</span>
      </div>
     );
   }
-  // -- chats -----------------------------------------------------
+  // -- messages -----------------------------------------------------
   function FriendChatInfo({path, name, status}) {
     return (
       <div className="friendChatInfo p-5 flex items-center" >
@@ -173,7 +173,7 @@ export default function ChatPage() {
       <div className="parent flex flex-1 ">
         
       {/* hidden on smaller screens and only visible on screens 1280px or larger. */}
-        <div className="sidebar hidden xl:block ">
+        <div className="sidebar hidden sm:block ">
         <Sidebar_test />
         </div>
         
