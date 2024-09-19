@@ -32,8 +32,9 @@ export default function ChatPage() {
   const [chatState, setChatState] = useState(false);
   // const chatRef = useRef(null);
 
-  const displayOrHideIcon = () => {
+  const switchChatState = () => {
     setChatState(!chatState);
+    console.log(chatState);
   };
 
   // -- friends functions -----------------------------------------------------
@@ -84,7 +85,7 @@ export default function ChatPage() {
         {/* ChatListIcon  -------------------------------------------------------------- */}
         <div
           className="ChatListIcon block lg:hidden text-3xl text-[#242F5C]  mr-12 "
-          onClick={displayOrHideIcon}
+          onClick={switchChatState}
         >
           <IoIosChatboxes />
         </div>
@@ -151,7 +152,7 @@ export default function ChatPage() {
 
             <div
             // desplay in case of ld screeens and above
-              className={`menuList w-2/5 h-full flex-col lg:block ${
+              className={`menuList md:absolut w-full lg:w-2/5 h-full flex-col lg:block ${
                 // chatsaste is true == block (this div show be desplayer) - its false we hide menuList
                 chatState ? "block" : "hidden"
               } `}
