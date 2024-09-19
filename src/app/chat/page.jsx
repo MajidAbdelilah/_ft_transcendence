@@ -28,39 +28,16 @@ const montserrat = Montserrat({
 export default function ChatPage() {
   // chat icon handling ....-------------------------------------------------------
   // handing click on the chat icon  ------------------------
-  // const [ChatListStatus, setChatList] = useState(false);
+  
+  const [chatState, setChatState] = useState(false);
+  // const chatRef = useRef(null);
 
-  // const ftSwitchChatList = () => {
-  //   if (ChatListStatus == true) {
-  //     setChatList(false);
-  //   } else {
-  //     setChatList(true);
-  //   }
-  // };
-  function displayOrHideIcon(e) {
-    const tog = document.getElementsByClassName("menuList");
-    console.log(tog[0]);
-    tog[0].classList.toggle("active");
-  }
+  const displayOrHideIcon = () => {
 
-  // //handling if he click somewhere else on the page  ------------------------
-  // const chatListRef = useRef(null);
+    setChatState(!chatState) 
+  };
 
-  // const handleClickOutside = (event) => {
-  //   //event.target is the element that the user clicked on our page
-  //   if (chatListRef.current && !chatListRef.current.contains(event.target)) {
-  //     setChatList(false);
-  //   }
-  // };
 
-  // useEffect(() => {
-  //   document.addEventListener("mousedown", handleClickOutside);
-  //   return () => {
-  //     document.removeEventListener("mousedown", handleClickOutside);
-  //   };
-  // }, []);
-
-  // add ref={chatListRef}  to the div that you want to exclude from the click outside
 
   // -- friends functions -----------------------------------------------------
   function ProfileInfo({ path, name, status }) {
@@ -112,17 +89,10 @@ export default function ChatPage() {
           className="ChatListIcon block lg:hidden text-3xl text-[#242F5C]  mr-12 "
           onClick={displayOrHideIcon}
         >
-          <IoIosChatboxes className="ChatListIcon   " />
+          <IoIosChatboxes />
         </div>
 
-        {/* {ChatListStatus && (
-          <div
-            className="targetDiv bg-blue-200 p-4 block lg:hidden"
-            
-          >
-            This is the div that shows up when you click the icon.
-          </div>
-        )} */}
+
 
         {/* button - edit later  -------------------------------------------------------------- */}
         <div className="hisProfile w-full flex items-center overflow-hidden">
@@ -183,8 +153,8 @@ export default function ChatPage() {
         <div className="chattSection flex-1 p-5 md:p-10 h-screen w-screen">
           <div className="boxes flex h-full w-full border-2 border-[#C6C6E1] rounded-xl flex-row-revers bg-[#9191D6] bg-opacity-10">
             {/* friendsBox ------------------------------------------------------- */}
-            <div className="menuList hidden lg:block w-2/5  h-full flex-col">
-              <div className="friendsBox  p-2 rounded-tl-xl rounded-bl-xl  border-r-2  border-[#C6C6E1] h-full  flex-col flex-grow overflow-y-auto custom-scrollbar">
+            { chatState && (<div className="menuList w-2/5  h-full flex-col">
+            <div className="friendsBox  p-2 rounded-tl-xl rounded-bl-xl  border-r-2  border-[#C6C6E1] h-full  flex-col flex-grow overflow-y-auto custom-scrollbar">
                 <ProfileInfo
                   path="/images/avatarprofile.svg"
                   name="John Doe"
@@ -299,7 +269,7 @@ export default function ChatPage() {
                   />
                 </div>
               </div>
-            </div>
+            </div>)}
 
             {/* messagesBox ------------------------------------------ */}
             <div className="messagesBox md:w-full lg:w-3/5 p-2 h-full rounded-tr-xl rounded-br-xl   bg-[#F4F4FF ] flex flex-col ">
@@ -380,6 +350,13 @@ export default function ChatPage() {
           </div>
         </div>
       </div>
+
+
+
+
+
+
+      
     </div>
   );
 }
