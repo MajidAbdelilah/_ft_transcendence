@@ -154,7 +154,7 @@ export default function ChatPage() {
               className={`menuList w-full lg:w-2/5 h-full flex-col lg:block absolute z-50 lg:relative   ${
                 // chatsaste is true == block (this div show be desplayer) - its false we hide menuList
                 chatState
-                  ? "block min-[320px]:bg-red-400 min-[320px]:top-28 min-[320px]:w-full lg:top-0 lg:bg-inherit"
+                  ? "block bg-red-400  w-full top-28 lg:top-0 "
                   : "hidden"
               } `}
             >
