@@ -34,7 +34,6 @@ export default function ChatPage() {
 
   const switchChatState = () => {
     setChatState(!chatState);
-    console.log(chatState);
   };
 
   // -- friends functions -----------------------------------------------------
@@ -147,14 +146,16 @@ export default function ChatPage() {
         </div>
 
         <div className="chattSection flex-1 p-5 md:p-10 h-screen w-screen">
-          <div className="boxes flex h-full w-full border-2 border-[#C6C6E1] rounded-xl flex-row-revers bg-[#9191D6] bg-opacity-10">
+          <div className="boxes relative flex h-full w-full border-2 border-[#C6C6E1] rounded-xl flex-row-revers bg-[#9191D6] bg-opacity-10">
             {/* friendsBox ------------------------------------------------------- */}
 
             <div
-            // desplay in case of ld screeens and above
-              className={`menuList md:absolut w-full lg:w-2/5 h-full flex-col lg:block ${
+              // desplay in case of ld screeens and above
+              className={`menuList w-full lg:w-2/5 h-full flex-col lg:block absolute z-50 lg:relative   ${
                 // chatsaste is true == block (this div show be desplayer) - its false we hide menuList
-                chatState ? "block" : "hidden"
+                chatState
+                  ? "block min-[320px]:bg-red-400 min-[320px]:top-28 min-[320px]:w-full lg:top-0 lg:bg-inherit"
+                  : "hidden"
               } `}
             >
               <div className="friendsBox  p-2 rounded-tl-xl rounded-bl-xl  border-r-2  border-[#C6C6E1] h-full  flex-col flex-grow overflow-y-auto custom-scrollbar">
