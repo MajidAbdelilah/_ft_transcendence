@@ -28,16 +28,13 @@ const montserrat = Montserrat({
 export default function ChatPage() {
   // chat icon handling ....-------------------------------------------------------
   // handing click on the chat icon  ------------------------
-  
+
   const [chatState, setChatState] = useState(false);
   // const chatRef = useRef(null);
 
   const displayOrHideIcon = () => {
-
-    setChatState(!chatState) 
+    setChatState(!chatState);
   };
-
-
 
   // -- friends functions -----------------------------------------------------
   function ProfileInfo({ path, name, status }) {
@@ -92,9 +89,7 @@ export default function ChatPage() {
           <IoIosChatboxes />
         </div>
 
-
-
-        {/* button - edit later  -------------------------------------------------------------- */}
+        {/* hisProfile -------------------------------------------------------------- */}
         <div className="hisProfile w-full flex items-center overflow-hidden">
           <Image
             src={path}
@@ -153,8 +148,15 @@ export default function ChatPage() {
         <div className="chattSection flex-1 p-5 md:p-10 h-screen w-screen">
           <div className="boxes flex h-full w-full border-2 border-[#C6C6E1] rounded-xl flex-row-revers bg-[#9191D6] bg-opacity-10">
             {/* friendsBox ------------------------------------------------------- */}
-            { chatState && (<div className="menuList w-2/5  h-full flex-col">
-            <div className="friendsBox  p-2 rounded-tl-xl rounded-bl-xl  border-r-2  border-[#C6C6E1] h-full  flex-col flex-grow overflow-y-auto custom-scrollbar">
+
+            <div
+            // desplay in case of ld screeens and above
+              className={`menuList w-2/5 h-full flex-col lg:block ${
+                // chatsaste is true == block (this div show be desplayer) - its false we hide menuList
+                chatState ? "block" : "hidden"
+              } `}
+            >
+              <div className="friendsBox  p-2 rounded-tl-xl rounded-bl-xl  border-r-2  border-[#C6C6E1] h-full  flex-col flex-grow overflow-y-auto custom-scrollbar">
                 <ProfileInfo
                   path="/images/avatarprofile.svg"
                   name="John Doe"
@@ -269,7 +271,7 @@ export default function ChatPage() {
                   />
                 </div>
               </div>
-            </div>)}
+            </div>
 
             {/* messagesBox ------------------------------------------ */}
             <div className="messagesBox md:w-full lg:w-3/5 p-2 h-full rounded-tr-xl rounded-br-xl   bg-[#F4F4FF ] flex flex-col ">
@@ -350,13 +352,6 @@ export default function ChatPage() {
           </div>
         </div>
       </div>
-
-
-
-
-
-
-      
     </div>
   );
 }
