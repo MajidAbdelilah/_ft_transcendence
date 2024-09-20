@@ -8,7 +8,7 @@ import { FaAngleDown } from "react-icons/fa";
 import { RiSendPlaneLine } from "react-icons/ri";
 import { IoIosChatboxes } from "react-icons/io";
 
-import { useState } from "react";
+import { use, useState } from "react";
 import { useEffect } from "react";
 import { useRef } from "react";
 
@@ -19,13 +19,11 @@ const montserrat = Montserrat({
   variable: "--font-montserrat",
 });
 
-// color bacjground  : #F4F4FF 
+// color bacjground  : #F4F4FF
 // dark blue #242F5C
 //   #8988DE
 // #BCBCC9
 // #F4F4FF
-
-
 
 // - sm : `min-width: 640px`
 // - md : `min-width: 768px`
@@ -34,20 +32,30 @@ const montserrat = Montserrat({
 // - 2xl : `min-width: 1536px`
 
 export default function ChatPage() {
-  // chat icon handling ....-------------------------------------------------------
-  // handing click on the chat icon  ------------------------
 
-  const [chatState, setChatState] = useState(false);
-  // const chatRef = useRef(null);
+  // ...-------------------------------------------------------
+  const [iconState, setIconState] = useState({chatState: false, dropDownState: false});
 
   const switchChatState = () => {
-    setChatState(!chatState);
-  };
+    setIconState((prevState) => ({
+      ...prevState,
+      chatState: !(prevState.chatState),
+    }))
+  }
+  const switchDropDownState = () => {
+    setIconState((prevState) => ({
+      ...prevState,
+      dropDownState: !(prevState.dropDownState),
+    }))
+  }
+
+
+
 
   // -- friends functions -----------------------------------------------------
   function ProfileInfo({ path, name, status }) {
     return (
-      <div className="profileInfo  w-full flex items-center overflow-hidden bg-[#BCBCC9] py-5 pl-5 rounded-xl">
+      <div className="profileInfo  w-full flex items-center overflow-hidden py-5 pl-5">
         <Image
           src={path}
           alt="avatarprofile"
@@ -88,14 +96,13 @@ export default function ChatPage() {
   // -- messages functions -----------------------------------------------------
   function FriendChatInfo({ path, name, status }) {
     return (
-      <div className="friendChatInfo p-5 flex items-center border-b-2 border-[#9191D6] border-opacity-30">
+      <div className="friendChatInfo p-5 flex items-center border-b-2 border-[#9191D6] border-opacity-30 ">
         {/* ChatListIcon  -------------------------------------------------------------- */}
-        <div
-          className="ChatListIcon block lg:hidden text-3xl text-[#242F5C]  mr-12 "
+
+        <IoIosChatboxes
+          className="ChatListIcon block lg:hidden text-6xl text-[#242F5C]  mr-12 "
           onClick={switchChatState}
-        >
-          <IoIosChatboxes />
-        </div>
+        />
 
         {/* hisProfile -------------------------------------------------------------- */}
         <div className="hisProfile w-full flex items-center overflow-hidden">
@@ -113,9 +120,20 @@ export default function ChatPage() {
         </div>
         {/* dropDownIcon  -------------------------------------------------------------- */}
 
-        <div className="dropDownIcon text-4xl ml-auto mr-8  text-[#242F5C]">
-          <FaAngleDown className="dropDownIcon " />
-        </div>
+        <FaAngleDown 
+          className="dropDownIcon text-4xl ml-auto mr-8  text-[#242F5C]" 
+          onClick={switchDropDownState}
+        />
+
+        {iconState.dropDownState && (
+        <div className="absolute bg-white border rounded shadow-lg mt-2">
+        <ul>
+          <li className="p-2">Hello World</li>
+          <li className="p-2">Hello World</li>
+          <li className="p-2">Hello World</li>
+        </ul>
+      </div>
+        )}
       </div>
     );
   }
@@ -159,7 +177,7 @@ export default function ChatPage() {
 
             <div className={`menuList w-full lg:w-2/5 h-full flex-col lg:block absolute z-50 lg:relative bg-[#F4F4FF]  ${
                 // chatsaste is true == block (this div show be desplayer) - its false we hide menuList
-                chatState
+                iconState.chatState
                   ? "block bg-[#F4F4FF]  w-full top-32 lg:top-0 "
                   : "hidden"
               } `}
