@@ -7,6 +7,12 @@ import Image from "next/image";
 import { FaAngleDown } from "react-icons/fa";
 import { RiSendPlaneLine } from "react-icons/ri";
 import { IoIosChatboxes } from "react-icons/io";
+import { IoGameControllerOutline } from "react-icons/io5";
+import { LuUserX } from "react-icons/lu";
+
+
+import { IoPersonOutline } from "react-icons/io5";
+
 
 import { use, useState } from "react";
 import { useEffect } from "react";
@@ -125,14 +131,35 @@ export default function ChatPage() {
           onClick={switchDropDownState}
         />
 
+
+                  {/* <ul className="list">
+                    <li>
+                      <a  className="go-profile">
+                        <CgProfile />
+                        <span>Profile</span>
+                      </a>
+                    </li>
+                    <li>
+                      <a className="go-play-w-me">
+                        <FaGamepad />
+                        <span>Play With</span>
+                      </a>
+                    </li>
+                    <li onclick >
+                      <a className="block-it">
+                        <MdBlock />
+                        <span>Block</span>
+                      </a>
+                    </li>
+                  </ul> */}
         {iconState.dropDownState && (
-        <div className="absolute bg-white border rounded shadow-lg mt-2">
-        <ul>
-          <li className="p-2">Hello World</li>
-          <li className="p-2">Hello World</li>
-          <li className="p-2">Hello World</li>
+        // translate-x-64 translate-y-24
+        <ul className="list absolute right-16 top-20 bg-[#F4F4FF] border-[#C6C6E1] border-2 rounded-xl shadow-lg w-36 ">
+          <li > <a className="p-2 mt-1 flex items-center"> <IoPersonOutline />         <span>Profile</span> </a> </li>
+          <li > <a className="p-2 flex items-center"> <IoGameControllerOutline /> <span>Play with</span> </a> </li>
+          <li > <a className="p-2 mb-1 flex items-center"> <LuUserX />                 <span>Block</span> </a> </li>
         </ul>
-      </div>
+      
         )}
       </div>
     );
@@ -141,7 +168,7 @@ export default function ChatPage() {
   function FriendMsgBox({ time, msg }) {
     return (
       <div className="friendMsgBox ml-8 my-1">
-        <span className="msgTime text-sm pl-5 text-[#3D3D3D] block">
+        <span className="msgTime text-sm pl-5 text-[#242F5C] block">
           {time}
         </span>
         <p className="msgConetnt text-xl py-3 px-6 inline-block text-[#FFFFFF] bg-[#2C3E86] bg-opacity-80 rounded-3xl ">
@@ -153,10 +180,10 @@ export default function ChatPage() {
   function MyMsgBox({ time, msg }) {
     return (
       <div className="myMsgBox my-1 mr-8 ml-auto flex flex-col">
-        <span className="msgTime text-sm pr-5 text-[#3D3D3D] ml-auto">
+        <span className="msgTime text-sm pr-5 text-[#242F5C] ml-auto">
           {time}
         </span>
-        <p className="msgConetnt text-xl py-3 px-6 inline-block text-[#000000] bg-[#9191D6] bg-opacity-40 rounded-3xl ">
+        <p className="msgConetnt text-xl py-3 px-6 inline-block text-[#242F5C] bg-[#9191D6] bg-opacity-40 rounded-3xl ">
           {msg}
         </p>
       </div>
@@ -182,13 +209,13 @@ export default function ChatPage() {
                   : "hidden"
               } `}
             >
-              <div className="friendsBox  p-2 rounded-tl-xl rounded-bl-xl  border-r-2  border-[#C6C6E1] h-full  flex-col flex-grow overflow-y-auto custom-scrollbar">
+              <div className="friendsBox  p-2 rounded-tl-xl rounded-bl-xl  border-r-2  border-[#C6C6E1] h-full  flex-col flex-grow overflow-y-auto custom-scrollbar bg-[#F4F4FF]">
                 <ProfileInfo
                   path="/images/avatarprofile.svg"
                   name="John Doe"
                   status="Online"
                 />
-                <h2 className="text-center text-1xl my-3 py-2 rounded-full bg-[#BCBCC9]  text-[#242F5C] overflow-hidden ">
+                <h2 className="text-center text-1xl my-3 py-2 rounded-full bg-[#242F5C] bg-opacity-50 text-[#F4F4FF] overflow-hidden ">
                   Conversations
                 </h2>
 
@@ -300,7 +327,7 @@ export default function ChatPage() {
             </div>
 
             {/* messagesBox ------------------------------------------ */}
-            <div className="messagesBox md:w-full lg:w-3/5 p-2 h-full rounded-tr-xl rounded-br-xl   bg-[#F4F4FF ] flex flex-col ">
+            <div className="messagesBox md:w-full lg:w-3/5 p-2 h-full rounded-tr-xl rounded-br-xl   bg-[#F4F4FF] flex flex-col ">
               <FriendChatInfo
                 path="/images/avatarprofile.svg"
                 name="John Wick"
