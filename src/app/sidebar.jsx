@@ -10,15 +10,9 @@ const montserrat = Montserrat({
   })
 
 
-<<<<<<< HEAD:src/app/Dashboard/sidebar.jsx
-  function Sidebar_test() {
-    const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-    const [isMobile, setIsMobile] = useState(false);
-=======
 function Sidebar() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
->>>>>>> frontend-abazerou:src/app/sidebar.jsx
   
     useEffect(() => {
       const handleResize = () => {

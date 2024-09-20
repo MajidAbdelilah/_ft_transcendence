@@ -19,6 +19,14 @@ const montserrat = Montserrat({
   variable: "--font-montserrat",
 });
 
+// color bacjground  : #F4F4FF 
+// dark blue #242F5C
+//   #8988DE
+// #BCBCC9
+// #F4F4FF
+
+
+
 // - sm : `min-width: 640px`
 // - md : `min-width: 768px`
 // - lg : `min-width: 1024px`
@@ -39,7 +47,7 @@ export default function ChatPage() {
   // -- friends functions -----------------------------------------------------
   function ProfileInfo({ path, name, status }) {
     return (
-      <div className="profileInfo pt-5 pl-5 w-full flex items-center overflow-hidden">
+      <div className="profileInfo  w-full flex items-center overflow-hidden bg-[#BCBCC9] py-5 pl-5 rounded-xl">
         <Image
           src={path}
           alt="avatarprofile"
@@ -146,15 +154,13 @@ export default function ChatPage() {
         </div>
 
         <div className="chattSection flex-1 p-5 md:p-10 h-screen w-screen">
-          <div className="boxes relative flex h-full w-full border-2 border-[#C6C6E1] rounded-xl flex-row-revers bg-[#9191D6] bg-opacity-10">
+          <div className="boxes relative flex h-full w-full border-2 border-[#C6C6E1] bg-[#F4F4FF] rounded-xl flex-row-revers ">
             {/* friendsBox ------------------------------------------------------- */}
 
-            <div
-              // desplay in case of ld screeens and above
-              className={`menuList w-full lg:w-2/5 h-full flex-col lg:block absolute z-50 lg:relative   ${
+            <div className={`menuList w-full lg:w-2/5 h-full flex-col lg:block absolute z-50 lg:relative bg-[#F4F4FF]  ${
                 // chatsaste is true == block (this div show be desplayer) - its false we hide menuList
                 chatState
-                  ? "block bg-red-400  w-full top-28 lg:top-0 "
+                  ? "block bg-[#F4F4FF]  w-full top-32 lg:top-0 "
                   : "hidden"
               } `}
             >
@@ -164,7 +170,7 @@ export default function ChatPage() {
                   name="John Doe"
                   status="Online"
                 />
-                <h2 className="text-center text-1xl my-8 py-2 rounded-full bg-[#9191D6] bg-opacity-20 text-[#242F5C] overflow-hidden ">
+                <h2 className="text-center text-1xl my-3 py-2 rounded-full bg-[#BCBCC9]  text-[#242F5C] overflow-hidden ">
                   Conversations
                 </h2>
 
