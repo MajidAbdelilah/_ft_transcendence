@@ -31,6 +31,10 @@ const montserrat = Montserrat({
 // #BCBCC9
 // #F4F4FF
 
+
+// #EAEAFF
+// #C0C7E0
+
 // - sm : `min-width: 640px`
 // - md : `min-width: 768px`
 // - lg : `min-width: 1024px`
@@ -154,10 +158,10 @@ export default function ChatPage() {
                   </ul> */}
         {iconState.dropDownState && (
         // translate-x-64 translate-y-24
-        <ul className="list absolute right-16 top-20 bg-[#F4F4FF] border-[#C6C6E1] border-2 rounded-xl shadow-lg w-36 ">
-          <li > <a className="p-2 mt-1 flex items-center"> <IoPersonOutline />         <span>Profile</span> </a> </li>
-          <li > <a className="p-2 flex items-center"> <IoGameControllerOutline /> <span>Play with</span> </a> </li>
-          <li > <a className="p-2 mb-1 flex items-center"> <LuUserX />                 <span>Block</span> </a> </li>
+        <ul className="list absolute right-16 top-20 bg-[#EAEAFF] border-[#C6C6E1] border-2 rounded-xl shadow-lg w-36 ">
+          <li > <a className="p-2 text-lg text-[#242F5C] flex items-center border-[#C6C6E1] border-b-2"> <IoPersonOutline />          <span className="ml-2">Profile</span> </a> </li>
+          <li > <a className="p-2 text-lg text-[#242F5C] flex items-center"> <IoGameControllerOutline />       <span className="ml-2">Play with</span> </a> </li>
+          <li > <a className="p-2 text-lg text-[#242F5C] flex items-center border-[#C6C6E1] border-t-2"> <LuUserX />                  <span className="ml-2">Block</span> </a> </li>
         </ul>
       
         )}
@@ -215,7 +219,7 @@ export default function ChatPage() {
                   name="John Doe"
                   status="Online"
                 />
-                <h2 className="text-center text-1xl my-3 py-2 rounded-full bg-[#242F5C] bg-opacity-50 text-[#F4F4FF] overflow-hidden ">
+                <h2 className="text-center text-1xl my-3 py-2 rounded-full bg-[#EAEAFF] text-[#242F5C]  overflow-hidden ">
                   Conversations
                 </h2>
 
