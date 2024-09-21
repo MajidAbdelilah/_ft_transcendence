@@ -62,8 +62,8 @@ export default function ChatPage() {
   const chatRef = useRef();
   const dropDownRef = useRef();
 
-    // Handle click outside
-    const handleClickOutSide = (event) => {
+  // Handle click outside
+  const handleClickOutSide = (event) => {
 
       if (
         dropDownRef.current && !dropDownRef.current.contains(event.target) 
@@ -77,7 +77,7 @@ export default function ChatPage() {
         setIconState({ chatState : false});
       }
 
-    };
+  };
 
   useEffect(() => {
     // Add event listener for clicks outside
@@ -87,8 +87,6 @@ export default function ChatPage() {
     document.removeEventListener('mousedown', handleClickOutSide);
   };
   }, []) 
-
-
 
   // -- friends functions -----------------------------------------------------
   function ProfileInfo({ path, name, status }) {
@@ -200,6 +198,15 @@ export default function ChatPage() {
         </p>
       </div>
     );
+  }
+
+  function sendMessage(e) {
+    if (e.code === "Enter" || e.type === "click")
+      {
+        let inputText = document.getElementsByClassName("msgToSend")[0] ;
+        console.log(inputText.value);
+      }
+    
   }
   return (
     <div className={`flex flex-col h-screen  ${montserrat.className}`}>
@@ -406,11 +413,12 @@ export default function ChatPage() {
               {/* emplimenting SendMsg */}
               <div className="sendMsg mx-8 my-5 relative ">
                 <input
+                  className="msgToSend text-xl bg-[#9191D6] bg-opacity-20 py-3 pl-6 pr-16 w-full rounded-full"
                   type="text"
                   placeholder="Message"
-                  className="text-xl bg-[#9191D6] bg-opacity-20 py-3 pl-6 pr-16 w-full rounded-full"
+                  onKeyUp={sendMessage}
                 />
-                <RiSendPlaneLine className="text-3xl absolute right-4 top-3  text-[#2C3E86] text-opacity-80 " />
+                <RiSendPlaneLine onClick={sendMessage} className="text-3xl absolute right-4 top-3 text-[#2C3E86] text-opacity-80 " />
               </div>
             </div>
           </div>
