@@ -62,19 +62,22 @@ export default function ChatPage() {
   const chatRef = useRef();
   const dropDownRef = useRef();
 
-
     // Handle click outside
     const handleClickOutSide = (event) => {
-      // Check if click is outside the dropdown or chat
+
       if (
-        dropDownRef.current && !dropDownRef.current.contains(event.target) ||
+        dropDownRef.current && !dropDownRef.current.contains(event.target) 
+      ) {
+        setIconState({ dropDownState : false});
+      }
+
+      if(
         chatRef.current && !chatRef.current.contains(event.target)
       ) {
-        setIconState({ chatState: false, dropDownState: false });
+        setIconState({ chatState : false});
       }
+
     };
-
-
 
   useEffect(() => {
     // Add event listener for clicks outside
