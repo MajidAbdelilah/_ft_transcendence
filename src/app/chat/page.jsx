@@ -43,7 +43,7 @@ const montserrat = Montserrat({
 
 export default function ChatPage() {
 
-  // ...-------------------------------------------------------
+  // Clicking on icons -------------------------------------------------------
   const [iconState, setIconState] = useState({chatState: false, dropDownState: false});
 
   const switchChatState = () => {
@@ -58,7 +58,32 @@ export default function ChatPage() {
       dropDownState: !(prevState.dropDownState),
     }))
   }
+  // Hide components when clikcing outside  -------------------------------------------------------
+  const chatRef = useRef();
+  const dropDownRef = useRef();
 
+
+    // Handle click outside
+    const handleClickOutSide = (event) => {
+      // Check if click is outside the dropdown or chat
+      if (
+        dropDownRef.current && !dropDownRef.current.contains(event.target) ||
+        chatRef.current && !chatRef.current.contains(event.target)
+      ) {
+        setIconState({ chatState: false, dropDownState: false });
+      }
+    };
+
+
+
+  useEffect(() => {
+    // Add event listener for clicks outside
+  document.addEventListener('mousedown', handleClickOutSide);
+  return () => {
+    // Remove event listener on cleanup
+    document.removeEventListener('mousedown', handleClickOutSide);
+  };
+  }, []) 
 
 
 
@@ -112,6 +137,7 @@ export default function ChatPage() {
         <IoIosChatboxes
           className="ChatListIcon block lg:hidden text-6xl text-[#242F5C]  mr-12 "
           onClick={switchChatState}
+          
         />
 
         {/* hisProfile -------------------------------------------------------------- */}
@@ -135,30 +161,9 @@ export default function ChatPage() {
           onClick={switchDropDownState}
         />
 
-
-                  {/* <ul className="list">
-                    <li>
-                      <a  className="go-profile">
-                        <CgProfile />
-                        <span>Profile</span>
-                      </a>
-                    </li>
-                    <li>
-                      <a className="go-play-w-me">
-                        <FaGamepad />
-                        <span>Play With</span>
-                      </a>
-                    </li>
-                    <li onclick >
-                      <a className="block-it">
-                        <MdBlock />
-                        <span>Block</span>
-                      </a>
-                    </li>
-                  </ul> */}
         {iconState.dropDownState && (
-        // translate-x-64 translate-y-24
-        <ul className="list absolute right-16 top-20 bg-[#EAEAFF] border-[#C6C6E1] border-2 rounded-xl shadow-lg w-36 ">
+
+        <ul ref={dropDownRef} className="list absolute right-16 top-20 bg-[#EAEAFF] border-[#C6C6E1] border-2 rounded-xl shadow-lg w-36 ">
           <li > <a className="p-2 text-lg text-[#242F5C] flex items-center border-[#C6C6E1] border-b-2"> <IoPersonOutline />          <span className="ml-2">Profile</span> </a> </li>
           <li > <a className="p-2 text-lg text-[#242F5C] flex items-center"> <IoGameControllerOutline />       <span className="ml-2">Play with</span> </a> </li>
           <li > <a className="p-2 text-lg text-[#242F5C] flex items-center border-[#C6C6E1] border-t-2"> <LuUserX />                  <span className="ml-2">Block</span> </a> </li>
@@ -206,8 +211,7 @@ export default function ChatPage() {
           <div className="boxes relative flex h-full w-full border-2 border-[#C6C6E1] bg-[#F4F4FF] rounded-xl flex-row-revers ">
             {/* friendsBox ------------------------------------------------------- */}
 
-            <div className={`menuList w-full lg:w-2/5 h-full flex-col lg:block absolute z-50 lg:relative bg-[#F4F4FF]  ${
-                // chatsaste is true == block (this div show be desplayer) - its false we hide menuList
+            <div ref={iconState.chatState ? chatRef : null}  className={`menuList w-full lg:w-2/5 h-full flex-col lg:block absolute z-50 lg:relative bg-[#F4F4FF]  ${
                 iconState.chatState
                   ? "block bg-[#F4F4FF]  w-full top-32 lg:top-0 "
                   : "hidden"
