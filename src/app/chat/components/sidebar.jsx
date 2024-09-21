@@ -10,7 +10,7 @@ const montserrat = Montserrat({
 
   export default function Sidebar_test() {
     return (
-      <div className={`w-64 h-full bg-[#F4F4FF] p-8 flex justify-between flex-col ${montserrat.className}`}>
+      <div className={`w-64 h-screen bg-[#F4F4FF] p-8 flex justify-between flex-col ${montserrat.className}`}>
         <ul className="flex flex-col gap-8">
           <li>
             <a className="flex items-center py-2 px-4 font-semibold rounded transition-transform duration-200 ease-in-out transform hover:scale-110 text-xl text-[#242F5C] cursor-pointer transition-colors">

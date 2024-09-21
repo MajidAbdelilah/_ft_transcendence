@@ -14,9 +14,10 @@ import { LuUserX } from "react-icons/lu";
 import { IoPersonOutline } from "react-icons/io5";
 
 
-import { use, useState } from "react";
+import { useState } from "react";
 import { useEffect } from "react";
 import { useRef } from "react";
+import ReactDOM from 'react-dom';
 
 import "./style.css";
 import { Inter, Montserrat } from "next/font/google";
@@ -200,16 +201,39 @@ export default function ChatPage() {
     );
   }
 
+
+
+  function createMyMsgBox(time, msg) {
+
+    const container = document.createElement('div');
+    const root = ReactDOM.createRoot(container);
+    root.render(<MyMsgBox time={time} msg={msg} />);
+
+    return container;
+  }
+
+
+ 
   function sendMessage(e) {
-    if (e.code === "Enter" || e.type === "click")
+    if (e.code === "Enter" || e.type === "click" )
       {
-        let inputText = document.getElementsByClassName("msgToSend")[0] ;
-        console.log(inputText.value);
+        let inputText = document.getElementsByClassName("msgToSend")[0];// get the input of the user
+
+        console.log(inputText.value.trim());
+        if(inputText.value.trim() !== "") 
+        {
+          let MsgCon = createMyMsgBox("02:23 PM", inputText.value);
+          let list = document.getElementsByClassName("peerToPeer");
+          // console.log(theMsg);
+          list[0].appendChild(MsgCon);
+          // inputText.value = "";
+        }
       }
     
   }
+
   return (
-    <div className={`flex flex-col h-screen  ${montserrat.className}`}>
+    <div className={`flex flex-col h-screen ${montserrat.className}`}>
       <Navbar_test />
       <div className="parent flex flex-1 ">
         {/* hidden on smaller screens and only visible on screens 1280px or larger. */}
@@ -409,6 +433,8 @@ export default function ChatPage() {
                 <MyMsgBox time="02:23 PM" msg="Sure, I'm in!" />
                 <MyMsgBox time="02:23 PM" msg="Sure, I'm in!" />
                 <MyMsgBox time="02:23 PM" msg="Sure, I'm in!" />
+                
+                
               </div>
               {/* emplimenting SendMsg */}
               <div className="sendMsg mx-8 my-5 relative ">
