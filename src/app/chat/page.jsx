@@ -60,12 +60,14 @@ export default function ChatPage() {
       chatState: !(prevState.chatState),
     }))
   }
+
   const switchDropDownState = () => {
     setIconState((prevState) => ({
       ...prevState,
       dropDownState: !(prevState.dropDownState),
     }))
   }
+  
   // Hide components when clikcing outside  -------------------------------------------------------
   const chatRef = useRef();
   const dropDownRef = useRef();
@@ -269,7 +271,54 @@ export default function ChatPage() {
     
   }
 
+  function MessagesBox () {
+    return (
+      <div className="messagesBox md:w-full lg:w-3/5 p-2 h-full rounded-tr-xl rounded-br-xl   bg-[#F4F4FF] flex flex-col ">
+      <FriendChatInfo
+        path="/images/avatarprofile.svg"
+        name="John Wick"
+        status="Online"
+      />
 
+      {/* emplimenting peerToPeer */}
+      <div className="peerToPeer flex flex-col flex-grow overflow-y-auto custom-scrollbar">
+
+        <FriendMsgBox
+          time="02:22 PM"
+          msg="Hi John, up for a ping pong match this evening? "
+        />
+        <MyMsgBox time="02:23 PM" msg="Sure, I'm in!" />
+        <FriendMsgBox
+          time="02:22 PM"
+          msg="Hi John, up for a ping pong match this evening?"
+        />
+        <MyMsgBox time="02:23 PM" msg="Sure, I'm in!" />
+        <FriendMsgBox
+          time="02:22 PM"
+          msg="Hi John, up for a ping pong match this evening? "
+        />
+        <MyMsgBox time="02:23 PM" msg="Sure, I'm in!" />
+        <FriendMsgBox
+          time="02:22 PM"
+          msg="Hi John, up for a ping pong match this evening?"
+        />
+        <MyMsgBox time="02:23 PM" msg="Sure, I'm in!" />
+ 
+      </div>
+
+      {/* emplimenting SendMsg */}
+      <div className="sendMsg mx-8 my-5 relative ">
+        <input
+          className="msgToSend text-xl bg-[#9191D6] bg-opacity-20 py-3 pl-6 pr-16 w-full rounded-full"
+          type="text"
+          placeholder="Message"
+          onKeyUp={sendMessage}
+        />
+        <RiSendPlaneLine onClick={sendMessage} className="text-3xl absolute right-4 top-3 text-[#2C3E86] text-opacity-80 " />
+      </div>
+    </div>
+    );
+  }
   return (
     <div className={`flex flex-col h-screen  ${montserrat.className}`}>
       <Navbar_test />
@@ -318,171 +367,14 @@ export default function ChatPage() {
                     lastMsg="hi john how are yaa?"
                     time="20:15 AM"
                   />
-                  <FriendInfo
-                    path="/images/avatarprofile.svg"
-                    name="henry civil"
-                    lastMsg="hi john how are yaa?"
-                    time="20:15 AM"
-                  />
-                  <FriendInfo
-                    path="/images/avatarprofile.svg"
-                    name="henry civil"
-                    lastMsg="hi john how are yaa?"
-                    time="20:15 AM"
-                  />
-                  <FriendInfo
-                    path="/images/avatarprofile.svg"
-                    name="henry civil"
-                    lastMsg="hi john how are yaa?"
-                    time="20:15 AM"
-                  />
-                  <FriendInfo
-                    path="/images/avatarprofile.svg"
-                    name="henry civil"
-                    lastMsg="hi john how are yaa?"
-                    time="20:15 AM"
-                  />
-                  <FriendInfo
-                    path="/images/avatarprofile.svg"
-                    name="henry civil"
-                    lastMsg="hi john how are yaa?"
-                    time="20:15 AM"
-                  />
-                  <FriendInfo
-                    path="/images/avatarprofile.svg"
-                    name="henry civil"
-                    lastMsg="hi john how are yaa?"
-                    time="20:15 AM"
-                  />
-                  <FriendInfo
-                    path="/images/avatarprofile.svg"
-                    name="henry civil"
-                    lastMsg="hi john how are yaa?"
-                    time="20:15 AM"
-                  />
-                  <FriendInfo
-                    path="/images/avatarprofile.svg"
-                    name="henry civil"
-                    lastMsg="hi john how are yaa?"
-                    time="20:15 AM"
-                  />
-                  <FriendInfo
-                    path="/images/avatarprofile.svg"
-                    name="henry civil"
-                    lastMsg="hi john how are yaa?"
-                    time="20:15 AM"
-                  />
-                  <FriendInfo
-                    path="/images/avatarprofile.svg"
-                    name="henry civil"
-                    lastMsg="hi john how are yaa?"
-                    time="20:15 AM"
-                  />
-                  <FriendInfo
-                    path="/images/avatarprofile.svg"
-                    name="henry civil"
-                    lastMsg="hi john how are yaa?"
-                    time="20:15 AM"
-                  />
-                  <FriendInfo
-                    path="/images/avatarprofile.svg"
-                    name="henry civil"
-                    lastMsg="hi john how are yaa?"
-                    time="20:15 AM"
-                  />
-                  <FriendInfo
-                    path="/images/avatarprofile.svg"
-                    name="henry civil"
-                    lastMsg="hi john how are yaa?"
-                    time="20:15 AM"
-                  />
-                  <FriendInfo
-                    path="/images/avatarprofile.svg"
-                    name="henry civil"
-                    lastMsg="hi john how are yaa?"
-                    time="20:15 AM"
-                  />
+                  
                 </div>
               </div>
             </div>
 
-            {/* messagesBox ------------------------------------------ */}
-            <div className="messagesBox md:w-full lg:w-3/5 p-2 h-full rounded-tr-xl rounded-br-xl   bg-[#F4F4FF] flex flex-col ">
-              <FriendChatInfo
-                path="/images/avatarprofile.svg"
-                name="John Wick"
-                status="Online"
-              />
+            
+            < MessagesBox />
 
-              {/* emplimenting peerToPeer */}
-              <div className="peerToPeer flex flex-col flex-grow overflow-y-auto custom-scrollbar">
-                <FriendMsgBox
-                  time="02:22 PM"
-                  msg="Hi John, up for a ping pong match this evening? "
-                />
-                <MyMsgBox time="02:23 PM" msg="Sure, I'm in!" />
-                <FriendMsgBox
-                  time="02:22 PM"
-                  msg="Hi John, up for a ping pong match this evening?"
-                />
-                <MyMsgBox time="02:23 PM" msg="Sure, I'm in!" />
-                <FriendMsgBox
-                  time="02:22 PM"
-                  msg="Hi John, up for a ping pong match this evening? "
-                />
-                <MyMsgBox time="02:23 PM" msg="Sure, I'm in!" />
-                <FriendMsgBox
-                  time="02:22 PM"
-                  msg="Hi John, up for a ping pong match this evening?"
-                />
-                <MyMsgBox time="02:23 PM" msg="Sure, I'm in!" />
-                <FriendMsgBox
-                  time="02:22 PM"
-                  msg="Hi John, up for a ping pong match this evening? "
-                />
-                <MyMsgBox time="02:23 PM" msg="Sure, I'm in!" />
-                <FriendMsgBox
-                  time="02:22 PM"
-                  msg="Hi John, up for a ping pong match this evening?"
-                />
-                <MyMsgBox time="02:23 PM" msg="Sure, I'm in!" />
-                <FriendMsgBox
-                  time="02:22 PM"
-                  msg="Hi John, up for a ping pong match this evening? "
-                />
-                <MyMsgBox time="02:23 PM" msg="Sure, I'm in!" />
-                <FriendMsgBox
-                  time="02:22 PM"
-                  msg="Hi John, up for a ping pong match this evening?"
-                />
-                <MyMsgBox time="02:23 PM" msg="Sure, I'm in!" />
-                <FriendMsgBox
-                  time="02:22 PM"
-                  msg="Hi John, up for a ping pong match this evening? "
-                />
-                <MyMsgBox time="02:23 PM" msg="Sure, I'm in!" />
-                <FriendMsgBox
-                  time="02:22 PM"
-                  msg="Hi John, up for a ping pong match this evening?"
-                />
-                <MyMsgBox time="02:23 PM" msg="Sure, I'm in!" />
-                <MyMsgBox time="02:23 PM" msg="Sure, I'm in!" />
-                <MyMsgBox time="02:23 PM" msg="Sure, I'm in!" />
-                <MyMsgBox time="02:23 PM" msg="Sure, I'm in!" />
-                <MyMsgBox time="02:23 PM" msg="Sure, I'm in!" />
-                <MyMsgBox time="02:23 PM" msg="Sure, I'm in!" />
-              </div>
-              {/* emplimenting SendMsg */}
-              <div className="sendMsg mx-8 my-5 relative ">
-                <input
-                  className="msgToSend text-xl bg-[#9191D6] bg-opacity-20 py-3 pl-6 pr-16 w-full rounded-full"
-                  type="text"
-                  placeholder="Message"
-                  onKeyUp={sendMessage}
-                />
-                <RiSendPlaneLine onClick={sendMessage} className="text-3xl absolute right-4 top-3 text-[#2C3E86] text-opacity-80 " />
-              </div>
-            </div>
           </div>
         </div>
       </div>
