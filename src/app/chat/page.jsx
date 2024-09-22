@@ -195,6 +195,7 @@ export default function ChatPage() {
       </div>
     );
   }
+  
   function MyMsgBox({ time, msg }) {
     return (
       <div className="myMsgBox my-1 mr-8 ml-auto flex flex-col">
@@ -208,29 +209,6 @@ export default function ChatPage() {
     );
   }
 
-    // -----------------------------------------------------
-
-  // function createMsgBox(time, msg) {
-  //   // Create the main message container
-  //   let theMsg = document.createElement("div");
-  //   theMsg.className = "myMsgBox my-1 mr-8 ml-auto flex flex-col";
-
-  //   // Create the time span
-  //   let timeSpan = document.createElement("span");
-  //   timeSpan.className = "msgTime text-sm pr-5 text-[#242F5C] ml-auto";
-  //   timeSpan.textContent = time; // Set the time text
-
-  //   // Create the message paragraph
-  //   let msgParagraph = document.createElement("p");
-  //   msgParagraph.className = "msgConetnt text-xl py-3 px-6 inline-block text-[#242F5C] bg-[#9191D6] bg-opacity-40 rounded-3xl";
-  //   msgParagraph.textContent = msg; // Set the message text
-
-  //   // Append the time and message elements to the main message container
-  //   theMsg.appendChild(timeSpan);
-  //   theMsg.appendChild(msgParagraph);
-
-  //   return theMsg; // Return the complete message box
-  // -----------------------------------------------------
 
   function getCurrentTime() {
     const now = new Date();
