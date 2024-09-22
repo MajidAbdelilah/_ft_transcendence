@@ -208,11 +208,66 @@ export default function ChatPage() {
     );
   }
 
+    // -----------------------------------------------------
+
+  // function createMsgBox(time, msg) {
+  //   // Create the main message container
+  //   let theMsg = document.createElement("div");
+  //   theMsg.className = "myMsgBox my-1 mr-8 ml-auto flex flex-col";
+
+  //   // Create the time span
+  //   let timeSpan = document.createElement("span");
+  //   timeSpan.className = "msgTime text-sm pr-5 text-[#242F5C] ml-auto";
+  //   timeSpan.textContent = time; // Set the time text
+
+  //   // Create the message paragraph
+  //   let msgParagraph = document.createElement("p");
+  //   msgParagraph.className = "msgConetnt text-xl py-3 px-6 inline-block text-[#242F5C] bg-[#9191D6] bg-opacity-40 rounded-3xl";
+  //   msgParagraph.textContent = msg; // Set the message text
+
+  //   // Append the time and message elements to the main message container
+  //   theMsg.appendChild(timeSpan);
+  //   theMsg.appendChild(msgParagraph);
+
+  //   return theMsg; // Return the complete message box
+  // -----------------------------------------------------
+
+  function getCurrentTime() {
+    const now = new Date();
+    let hours = now.getHours();
+    const minutes = now.getMinutes();
+    const ampm = hours >= 12 ? 'PM' : 'AM';
+    
+    hours = hours % 12;
+    hours = hours ? hours : 12; // the hour '0' should be '12'
+    const formattedMinutes = minutes < 10 ? '0' + minutes : minutes;
+    
+    return `${hours}:${formattedMinutes} ${ampm}`;
+  }
 
 
+  function createMyMsgBox(time, msg) {
 
+    let theMsg;
+    theMsg = document.createElement("div");
+    theMsg.className = "myMsgBox my-1 mr-8 ml-auto flex flex-col";
 
+    let timeSpan;
+    timeSpan = document.createElement("span");
+    timeSpan.className = "msgTime text-sm pr-5 text-[#242F5C] ml-auto";
+    timeSpan.textContent= time;
 
+    let msgParagraph;
+    msgParagraph = document.createElement("p");
+    msgParagraph.className = "msgConetnt text-xl py-3 px-6 inline-block text-[#242F5C] bg-[#9191D6] bg-opacity-40 rounded-3xl ";
+    msgParagraph.textContent = msg;
+
+    theMsg.appendChild(timeSpan);
+    theMsg.appendChild(msgParagraph);
+
+    return theMsg;
+
+  }
 
 
   function sendMessage(e) {
@@ -223,25 +278,13 @@ export default function ChatPage() {
 
         if (inputText.value.trim() !== "")
         {
-          let theMsg = document.createElement("div");
-          theMsg.className = "myMsgBox my-1 mr-8 ml-auto flex flex-col";
-
+          let time = getCurrentTime();
+          let theMsg = createMyMsgBox(time, inputText.value);
           let conv = document.getElementsByClassName("peerToPeer")[0];
-
-
-
-
-
-          
-          // let TheMsg = createMsgBox("02:23 PM", inputText.value);
-
-          // conv.appendChild(TheMsg); // Append the new container to conv
-          console.log(theMsg);
-
-
-    
+          conv.appendChild(theMsg);
+          conv.scrollTop = conv.scrollHeight;
           inputText.value = ""; // Clear the input
-
+    
       }
 
       }
