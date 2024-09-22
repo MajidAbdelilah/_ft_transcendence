@@ -17,7 +17,9 @@ import { IoPersonOutline } from "react-icons/io5";
 import { useState } from "react";
 import { useEffect } from "react";
 import { useRef } from "react";
-import ReactDOM from 'react-dom';
+// import React from 'react';
+import ReactDOM from 'react-dom/client';
+
 
 import "./style.css";
 import { Inter, Montserrat } from "next/font/google";
@@ -25,6 +27,11 @@ const montserrat = Montserrat({
   subsets: ["latin"],
   variable: "--font-montserrat",
 });
+
+
+
+
+
 
 // color bacjground  : #F4F4FF
 // dark blue #242F5C
@@ -203,37 +210,47 @@ export default function ChatPage() {
 
 
 
-  function createMyMsgBox(time, msg) {
-
-    const container = document.createElement('div');
-    const root = ReactDOM.createRoot(container);
-    root.render(<MyMsgBox time={time} msg={msg} />);
-
-    return container;
-  }
 
 
- 
+
+
+
   function sendMessage(e) {
-    if (e.code === "Enter" || e.type === "click" )
-      {
-        let inputText = document.getElementsByClassName("msgToSend")[0];// get the input of the user
 
-        console.log(inputText.value.trim());
-        if(inputText.value.trim() !== "") 
+    if (e.code === "Enter" || e.type === "click")
+      {
+        let inputText = document.getElementsByClassName("msgToSend")[0] ;
+
+        if (inputText.value.trim() !== "")
         {
-          let MsgCon = createMyMsgBox("02:23 PM", inputText.value);
-          let list = document.getElementsByClassName("peerToPeer");
-          // console.log(theMsg);
-          list[0].appendChild(MsgCon);
-          // inputText.value = "";
-        }
+          let theMsg = document.createElement("div");
+          theMsg.className = "myMsgBox my-1 mr-8 ml-auto flex flex-col";
+
+          let conv = document.getElementsByClassName("peerToPeer")[0];
+
+
+
+
+
+          
+          // let TheMsg = createMsgBox("02:23 PM", inputText.value);
+
+          // conv.appendChild(TheMsg); // Append the new container to conv
+          console.log(theMsg);
+
+
+    
+          inputText.value = ""; // Clear the input
+
+      }
+
       }
     
   }
 
+
   return (
-    <div className={`flex flex-col h-screen ${montserrat.className}`}>
+    <div className={`flex flex-col h-screen  ${montserrat.className}`}>
       <Navbar_test />
       <div className="parent flex flex-1 ">
         {/* hidden on smaller screens and only visible on screens 1280px or larger. */}
@@ -433,8 +450,6 @@ export default function ChatPage() {
                 <MyMsgBox time="02:23 PM" msg="Sure, I'm in!" />
                 <MyMsgBox time="02:23 PM" msg="Sure, I'm in!" />
                 <MyMsgBox time="02:23 PM" msg="Sure, I'm in!" />
-                
-                
               </div>
               {/* emplimenting SendMsg */}
               <div className="sendMsg mx-8 my-5 relative ">
