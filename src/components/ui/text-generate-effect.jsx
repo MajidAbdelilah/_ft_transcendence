@@ -1,55 +1,53 @@
 "use client";
 import { useEffect } from "react";
 import { motion, stagger, useAnimate } from "framer-motion";
-import { cn } from "@/lib/utils";
-
-const TextGenerateEffect = ({
-  words = "",  // Provide a default empty string
+import { cn } from "/src/lib/utils";
+function TextGenerateEffect({
+  words,
   className,
   filter = true,
   duration = 0.5
-}) => {
+}) {
   const [scope, animate] = useAnimate();
-  let wordsArray = words ? words.split(" ") : [];  // Handle potential undefined words
-
+  let wordsArray = words.split(" ");
   useEffect(() => {
-    if (wordsArray.length > 0) {  // Only animate if there are words
-      animate("span", {
-        opacity: 1,
-        filter: filter ? "blur(0px)" : "none",
-      }, {
-        duration: duration ? duration : 1,
-        delay: stagger(0.2),
-      });
-    }
-  }, [animate, duration, filter, wordsArray]);
+    animate("span", {
+      opacity: 1,
+      filter: filter ? "blur(0px)" : "none",
+    }, {
+      duration: duration ? duration : 1,
+      delay: stagger(0.2),
+    });
+  }, [animate, duration, filter]);
 
   const renderWords = () => {
     return (
-      <motion.div ref={scope}>
-        {wordsArray.map((word, idx) => (
-          <motion.span
-            key={word + idx}
-            className="dark:text-white text-black opacity-0"
-            style={{
-              filter: filter ? "blur(10px)" : "none",
-            }}
-          >
-            {word}{" "}
-          </motion.span>
-        ))}
-      </motion.div>
+      (<motion.div ref={scope}>
+        {wordsArray.map((word, idx) => {
+          return (
+            (<motion.span
+              key={word + idx}
+              className="dark:text-white text-[#505F98] opacity-0"
+              style={{
+                filter: filter ? "blur(10px)" : "none",
+              }}>
+              {word}{" "}
+            </motion.span>)
+          );
+        })}
+      </motion.div>)
     );
   };
 
   return (
-    <div className={cn("font-bold", className)}>
-      <div className="mt-4">
-        <div className="dark:text-white text-black text-2xl leading-snug tracking-wide">
+    (<div className={cn("font-medium", className)}>
+      <div className="">
+        <div
+          className=" text-md pt-2 text-[#505F98] text-wrap leading-snug tracking-wide">
           {renderWords()}
         </div>
       </div>
-    </div>
+    </div>)
   );
 };
 
