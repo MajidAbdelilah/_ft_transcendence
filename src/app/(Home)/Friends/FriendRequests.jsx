@@ -69,8 +69,8 @@ function FriendRequests() {
         </div>
           :
           <div className="flex flex-row items-center justify-end lg:w-[20%] lg:h-[90%] md:w-[20%] md:h-[90%] w-[20%] h-[90%] absolute md:right-4 right-5 top-1 md:gap-5 gap-5">
-              <Image src="/images/Accept.svg" alt="profile" width={50} height={50} className="lg:w-[32%] lg:h-[32%] md:w-[40%] md:h-[40%] w-[30%] h-[30%] shadow-md shadow-[#BCBCC9] cursor-pointer" />
-              <Image src="/images/Reject.svg" alt="profile" width={50} height={50} className="lg:w-[32%] lg:h-[32%] md:w-[40%] md:h-[40%] w-[30%] h-[30%] shadow-md shadow-[#BCBCC9] cursor-pointer" />
+              <Image src="/images/Accept.svg" alt="profile" width={50} height={50} className="lg:w-[32%] lg:h-[32%] md:w-[40%] md:h-[40%] w-[30%] h-[30%]  cursor-pointer" />
+              <Image src="/images/Reject.svg" alt="profile" width={50} height={50} className="lg:w-[32%] lg:h-[32%] md:w-[40%] md:h-[40%] w-[30%] h-[30%]  cursor-pointer" />
           </div>}
         </div>
     </div>
