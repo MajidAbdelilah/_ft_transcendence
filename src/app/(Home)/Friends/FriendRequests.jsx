@@ -9,10 +9,11 @@ const montserrat = Montserrat({
 
 function FriendRequests() {
   const [isMobileRq, setIsMobileRq] = useState(false);
-
+  const [isMobile, setIsMobile] = useState(false);
   useEffect(() => {
     const handleResize = () => {
       setIsMobileRq(window.innerWidth <= 1700);
+      setIsMobile(window.innerWidth <= 768);
     };
 
     handleResize();
@@ -23,7 +24,7 @@ function FriendRequests() {
   }, []);
 
   return (
-    <div className={`w-full  md:w-[70%]  mx-auto h-20 lg:h-[12%] md:h[20%] mt-2 rounded-xl bg-[#D8D8F7] shadow-md shadow-[#BCBCC9] relative ${montserrat.className}`}>
+    <div className={`w-full  md:w-[70%]  mx-auto h-20 lg:h-[12%] md:h[20%] mt-2 rounded-xl bg-[#D8D8F7] shadow-md shadow-[#BCBCC9] relative ${isMobile ? '' : 'min-w-[500px] min-h-[90px]'} ${montserrat.className}`}>
         <div className="flex items-center h-full p-2">
         <div className="flex flex-row items-center justify-center lg:w-[10%] lg:h-[90%] md:w-[10%] md:h-[90%] w-[20%] h-[90%]">
             <Image src="/images/avatarinvite.svg" alt="profile" width={50} height={50} className="lg:w-[90%] lg:h-[90%] md:w-[80%] md:h-[80%] w-[100%] h-[100%]" />

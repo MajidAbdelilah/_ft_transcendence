@@ -72,7 +72,7 @@ function Friends() {
               </h1>
               <hr className="lg:w-[50%] lg:h-[3px] md:w-[40%] md:h-[3px] w-[65%] h-[3px] bg-[#CDCDE5] border-none rounded-full" />
               {!isMobile ? (
-                <div className="flex  w-[70%] h-[8%] flex-row justify-between items-center space-y-4 md:space-y-0 md:space-x-4 lg:space-x-8 xl:space-x-12">
+                <div className="flex  w-[70%] h-[8%] flex-row justify-between items-center space-y-4 md:space-y-0 md:space-x-4 lg:space-x-8 xl:space-x-12 ">
                   {navItems.map((item) => (
                     <h1
                       key={item}
@@ -111,7 +111,7 @@ function Friends() {
                   ))}
                 </div>
               )}
-              <div className="w-full h-full flex flex-col space-y-7 overflow-y-auto scrollbar-hide custom-scrollbar ">
+              <div className="w-full h-full flex flex-col space-y-7 overflow-y-auto scrollbar-hide custom-scrollbar">
                 <ScrollBlur>
                   { activeItem === "Friends List" && (
                     <>

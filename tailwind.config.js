@@ -109,6 +109,8 @@ module.exports = {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
         aurora: "aurora 60s linear infinite",
+        fadeIn: 'fadeIn 0.3s ease-out',
+        scaleIn: 'scaleIn 0.3s ease-out',
       },
     },
   },
