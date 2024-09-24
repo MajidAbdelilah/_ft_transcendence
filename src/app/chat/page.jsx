@@ -64,6 +64,7 @@ let friend1 = {
     { time: "02:23 PM", msg: "Sure, I'm in!", sender: "me" },
     { time: "02:24 PM", msg: "Great, see you at 7 PM!", sender: "friend" },
     { time: "02:25 PM", msg: "Perfect, see you then!", sender: "me" },
+
   ],
 };
 let friend2 = {
@@ -85,12 +86,12 @@ let friend2 = {
   ],
 };
 
+
+
 export default function ChatPage() {
+  
   // Clicking on icons -------------------------------------------------------
-  const [iconState, setIconState] = useState({
-    chatState: false,
-    dropDownState: false,
-  });
+  const [iconState, setIconState] = useState({ chatState: false, dropDownState: false, });
   const [selectedFriend, setSelectedFriend] = useState(null);
 
   const switchChatState = () => {
@@ -221,10 +222,10 @@ export default function ChatPage() {
 
         {/* dropDownIcon  -------------------------------------------------------------- */}
 
-        <FaAngleDown
+        { selectedFriend && (<FaAngleDown
           className="dropDownIcon text-4xl ml-auto mr-8  text-[#242F5C]"
           onClick={switchDropDownState}
-        />
+        />)}
 
         {iconState.dropDownState && (
           <ul
