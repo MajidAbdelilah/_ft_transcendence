@@ -270,20 +270,44 @@ export default function ChatPage() {
       }
     
   }
+//-----------------------------------------------------------------------------------
+  
+  const friend1 = {
+    name: "John Wick",
+    path: "/images/avatarprofile.svg",
+    status: "Online",
+    conversation: [
+      { time: "02:22 PM", msg: "Hi John, up for a ping pong match this evening?", sender: "friend" },
+      { time: "02:22 PM", msg: "Hi John, up for a ping pong match this evenihtrerthwrehwerhwrehwerhwerhwrehwherhrehehewhrhwerrhwerherheng?", sender: "friend" },
+      { time: "02:23 PM", msg: "Sure, I'm in!", sender: "me" },
+      { time: "02:24 PM", msg: "Great, see you at 7 PM!", sender: "friend" },
+      { time: "02:25 PM", msg: "Perfect, see you then!", sender: "me" },
+    ]
+  }
+  const friend2 = {
+    name: "Lucy Smith",
+    path: "/images/avatarprofile.svg",
+    status: "Offline",
+    conversation: [
+      { time: "09:15 AM", msg: "Good morning, how are you?", sender: "friend" },
+      { time: "09:16 AM", msg: "I'm doing well, thanks! How about you?", sender: "me" },
+      { time: "09:18 AM", msg: "I'm good too. Have a great day!", sender: "friend" },
+    ]
+  };
 
-  function MessagesBox () {
+function MessagesBox ({friend}) {
     return (
       <div className="messagesBox md:w-full lg:w-3/5 p-2 h-full rounded-tr-xl rounded-br-xl   bg-[#F4F4FF] flex flex-col ">
       <FriendChatInfo
-        path="/images/avatarprofile.svg"
-        name="John Wick"
-        status="Online"
+        path={friend.path}
+        name={friend.name}
+        status={friend.status}
       />
 
       {/* emplimenting peerToPeer */}
       <div className="peerToPeer flex flex-col flex-grow overflow-y-auto custom-scrollbar">
 
-        <FriendMsgBox
+        {/* <FriendMsgBox
           time="02:22 PM"
           msg="Hi John, up for a ping pong match this evening? "
         />
@@ -302,7 +326,17 @@ export default function ChatPage() {
           time="02:22 PM"
           msg="Hi John, up for a ping pong match this evening?"
         />
-        <MyMsgBox time="02:23 PM" msg="Sure, I'm in!" />
+        <MyMsgBox time="02:23 PM" msg="Sure, I'm in!" /> */}
+
+
+
+        {friend.conversation.map((message, index) => (
+          message.sender === "friend" ? (
+            <FriendMsgBox key={index} time={message.time} msg={(message.msg)} />
+          ) : (
+            <MyMsgBox key={index} time={message.time} msg={message.msg} />
+          )
+        ))}
  
       </div>
 
@@ -373,7 +407,7 @@ export default function ChatPage() {
             </div>
 
             
-            < MessagesBox />
+            < MessagesBox friend={friend1}/>
 
           </div>
         </div>
