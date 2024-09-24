@@ -196,7 +196,9 @@ export default function ChatPage() {
         />
 
         {/* hisProfile -------------------------------------------------------------- */}
-        <div className="hisProfile w-full flex items-center overflow-hidden">
+        {selectedFriend 
+        
+        ? (<div className="hisProfile w-full flex items-center overflow-hidden">
           <Image
             src={path}
             alt="avatarprofile"
@@ -208,7 +210,15 @@ export default function ChatPage() {
             <h3 className="text-3xl  top-0 left-0 text-[#242F5C] ">{name}</h3>
             <p className="text-sm text-[#302FA5] left ">{status}</p>
           </div>
-        </div>
+        </div>)
+        : ( 
+          <div className="w-full flex items-center overflow-hidden">
+            <p className="text-sm text-[#242F5C] ">Please select a conversation</p>
+          </div>
+        )}
+
+
+
         {/* dropDownIcon  -------------------------------------------------------------- */}
 
         <FaAngleDown
@@ -327,6 +337,14 @@ export default function ChatPage() {
   //-----------------------------------------------------------------------------------
 
   function MessagesBox({ friend }) {
+
+    if (friend == null) {
+      return (
+        <div className="messagesBox md:w-full lg:w-3/5 p-2 h-full rounded-tr-xl rounded-br-xl bg-[#F4F4FF] flex flex-col ">
+          <FriendChatInfo path="" name="" status="" /> 
+        </div>
+      );
+    }
     return (
       <div className="messagesBox md:w-full lg:w-3/5 p-2 h-full rounded-tr-xl rounded-br-xl bg-[#F4F4FF] flex flex-col ">
         <FriendChatInfo
@@ -397,7 +415,7 @@ export default function ChatPage() {
               </div>
             </div>
 
-            {selectedFriend && <MessagesBox friend={selectedFriend} />}
+            <MessagesBox friend={selectedFriend} />
 
 
             
