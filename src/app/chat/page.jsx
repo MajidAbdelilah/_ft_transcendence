@@ -9,7 +9,7 @@ import { RiSendPlaneLine } from "react-icons/ri";
 import { IoIosChatboxes } from "react-icons/io";
 import { IoGameControllerOutline } from "react-icons/io5";
 import { LuUserX } from "react-icons/lu";
-
+import { TbTournament } from "react-icons/tb";
 import { IoPersonOutline } from "react-icons/io5";
 
 import { useState } from "react";
@@ -39,6 +39,11 @@ const montserrat = Montserrat({
 // - lg : `min-width: 1024px`
 // - xl : `min-width: 1280px`
 // - 2xl : `min-width: 1536px`
+
+// -- data -----------------------------------------------------
+
+
+
 
 let user = {
   name: "John Doe",
@@ -85,6 +90,21 @@ let friend2 = {
     },
   ],
 };
+
+let tournament = {
+  name: "Tournament",
+  path: "/images/avatarprofile.svg",
+  status: "Online",
+  conversation: [
+    {
+      time: "",
+      msg: "Your turn is up! Please join the match now to secure your spot in the tournament.",
+      sender: "friend",
+    },
+  ],
+
+};
+
 
 
 
@@ -133,6 +153,13 @@ export default function ChatPage() {
   }, []);
 
   // -- friends functions -----------------------------------------------------
+
+
+
+
+
+
+
   function ProfileInfo({ user }) {
     return (
       <div className="profileInfo  w-full flex items-center overflow-hidden py-5 pl-5">
@@ -166,8 +193,8 @@ export default function ChatPage() {
         <Image
           src={friend.path}
           alt="avatarprofile"
-          width={50}
-          height={50}
+          width={45}
+          height={45}
           className="left-0 top-0 "
         />
         <div className=" ml-2 ">
@@ -410,8 +437,10 @@ export default function ChatPage() {
                 </h2>
 
                 <div className="MessagesList flex flex-col ">
+                  <FriendInfo friend={tournament} />
                   <FriendInfo friend={friend1} />
                   <FriendInfo friend={friend2} />
+                  
                 </div>
               </div>
             </div>
