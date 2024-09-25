@@ -52,8 +52,8 @@ let user = {
 };
 
 let friend1 = {
-  name: "John Wick",
-  path: "/images/avatarprofile.svg",
+  name: "Henry smith",
+  path: "/images/avatar3.svg",
   status: "Online",
   conversation: [
     {
@@ -74,7 +74,7 @@ let friend1 = {
 };
 let friend2 = {
   name: "Lucy Smith",
-  path: "/images/avatarprofile.svg",
+  path: "/images/avatar2.svg",
   status: "Offline",
   conversation: [
     { time: "09:15 AM", msg: "Good morning, how are you?", sender: "friend" },
@@ -92,7 +92,7 @@ let friend2 = {
 };
 
 let tournament = {
-  name: "Tournament",
+  name: "tournament",// teh tournament must be named like that , casue i ve built the logic so that the name is tournament.
   path: "/images/avatarprofile.svg",
   status: "Online",
   conversation: [
@@ -160,6 +160,7 @@ export default function ChatPage() {
 
 
 
+
   function ProfileInfo({ user }) {
     return (
       <div className="profileInfo  w-full flex items-center overflow-hidden py-5 pl-5">
@@ -190,13 +191,15 @@ export default function ChatPage() {
           setIconState({ chatState: false, dropDownState: false });
         }}
       >
-        <Image
-          src={friend.path}
-          alt="avatarprofile"
-          width={45}
-          height={45}
-          className="left-0 top-0 "
-        />
+        {friend.name === "tournament" ? (
+          
+          <TbTournament size={45} className="bg-[#C0C7E0] rounded-full text-[#242F5C] left-0 top-0 " />
+        ) : (
+        <Image src={friend.path} alt="avatarprofile" width={45} height={45} className="rounded-full left-0 top-0 " />
+        )}
+
+
+
         <div className=" ml-2 ">
           <h3 className="text-2xl top-0 left-0 text-[#242F5C]">
             {friend.name}
@@ -216,6 +219,7 @@ export default function ChatPage() {
   function FriendChatInfo({ path, name, status }) {
     return (
       <div className="friendChatInfo p-5 flex items-center border-b-2 border-[#9191D6] border-opacity-30 ">
+        
         {/* ChatListIcon  -------------------------------------------------------------- */}
 
         <IoIosChatboxes
@@ -224,16 +228,18 @@ export default function ChatPage() {
         />
 
         {/* hisProfile -------------------------------------------------------------- */}
-        {selectedFriend 
+        {selectedFriend !== null ? (
         
-        ? (<div className="hisProfile w-full flex items-center overflow-hidden">
-          <Image
-            src={path}
-            alt="avatarprofile"
-            width="75"
-            height="75"
-            className="left-0 top-0 "
-          />
+        <div className="hisProfile w-full flex items-center overflow-hidden ">
+          
+          {name === "tournament" ? (
+            <TbTournament size={75} className="bg-[#C0C7E0] rounded-full text-[#242F5C] left-0 top-0 " />
+          ) : (
+            <Image src={path} alt="avatarprofile" width={75} height={75} className=" rounded-full left-0 top-0 " />
+          )}
+
+
+
           <div className=" ml-4 hidden lg:block ">
             <h3 className="text-3xl  top-0 left-0 text-[#242F5C] ">{name}</h3>
             <p className="text-sm text-[#302FA5] left ">{status}</p>
