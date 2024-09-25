@@ -16,9 +16,11 @@ import { IoPersonOutline } from "react-icons/io5";
 import { useState } from "react";
 import { useEffect } from "react";
 import { useRef } from "react";
-// import React from 'react';
-// import ReactDOM from "react-dom/client";
 
+// -- components -----------------------------------------------------
+
+import ProfileInfo from "./components/ProfileInfo";
+import FriendInfo from "./components/FriendInfo";
 // -- font -----------------------------------------------------
 import { Inter, Montserrat } from "next/font/google";
 const montserrat = Montserrat({
@@ -35,11 +37,7 @@ const montserrat = Montserrat({
 // #EAEAFF
 // #C0C7E0
 
-
 // -- data -----------------------------------------------------
-
-
-
 
 let user = {
   name: "John Wick",
@@ -65,7 +63,6 @@ let friend1 = {
     { time: "02:23 PM", msg: "Sure, I'm in!", sender: "me" },
     { time: "02:24 PM", msg: "Great, see you at 7 PM!", sender: "friend" },
     { time: "02:25 PM", msg: "Perfect, see you then!", sender: "me" },
-
   ],
 };
 let friend2 = {
@@ -88,7 +85,7 @@ let friend2 = {
 };
 
 let tournament = {
-  name: "tournament",// teh tournament must be named like that , casue i ve built the logic so that the name is tournament.
+  name: "tournament", // teh tournament must be named like that , casue i ve built the logic so that the name is tournament.
   path: "/images/avatarprofile.svg",
   status: "Online",
   conversation: [
@@ -98,16 +95,14 @@ let tournament = {
       sender: "friend",
     },
   ],
-
 };
 
-
-
-
 export default function ChatPage() {
-  
   // Clicking on icons -------------------------------------------------------
-  const [iconState, setIconState] = useState({ chatState: false, dropDownState: false, });
+  const [iconState, setIconState] = useState({
+    chatState: false,
+    dropDownState: false,
+  });
   const [selectedFriend, setSelectedFriend] = useState(null);
 
   const switchChatState = () => {
@@ -148,69 +143,42 @@ export default function ChatPage() {
     };
   }, []);
 
-  // -- friends functions -----------------------------------------------------
+  // function FriendInfo({ friend }) {
+  //   let len = friend.conversation.length;
+  //   return (
+  //     <div
+  //       className="friendInfo my-3 w-full flex flex-row items-center overflow-hidden "
+  //       onClick={() => {
+  //         setSelectedFriend(friend);
+  //         setIconState({ chatState: false, dropDownState: false });
+  //       }}
+  //     >
+  //       {friend.name === "tournament" ? (
 
+  //         <TbTournament size={45} className="bg-[#EAEAFF] rounded-full text-[#242F5C] left-0 top-0 " />
+  //       ) : (
+  //         <Image src={friend.path} alt="avatarprofile" width={45} height={45} className="rounded-full left-0 top-0 " />
+  //       )}
 
+  //       <div className=" ml-2 ">
+  //         <h3 className="text-2xl top-0 left-0 text-[#242F5C]">
+  //           {friend.name}
+  //         </h3>
 
-  function ProfileInfo({ user }) {
-    return (
-      <div className="profileInfo  w-full flex items-center overflow-hidden py-5 pl-5">
-        <Image
-          src={user.path}
-          alt="avatarprofile"
-          width={75}
-          height={75}
-          className="left-0 top-0 "
-        />
-        <div className=" ml-4  ">
-          <h3 className="text-3xl  top-0 left-0 text-[#242F5C] ">
-            {user.name}
-          </h3>
-          <p className="text-sm text-[#302FA5] left">{user.status}</p>
-        </div>
-      </div>
-    );
-  }
-
-  function FriendInfo({ friend }) {
-    let len = friend.conversation.length;
-    return (
-      <div
-        className="friendInfo my-3 w-full flex flex-row items-center overflow-hidden "
-        onClick={() => {
-          setSelectedFriend(friend);
-          setIconState({ chatState: false, dropDownState: false });
-        }}
-      >
-        {friend.name === "tournament" ? (
-          
-          <TbTournament size={45} className="bg-[#EAEAFF] rounded-full text-[#242F5C] left-0 top-0 " />
-        ) : (
-          <Image src={friend.path} alt="avatarprofile" width={45} height={45} className="rounded-full left-0 top-0 " />
-        )}
-
-
-
-        <div className=" ml-2 ">
-          <h3 className="text-2xl top-0 left-0 text-[#242F5C]">
-            {friend.name}
-          </h3>
-
-          <p className="text-xs text-[#302FA5] overflow-hidden whitespace-nowrap text-ellipsis max-w-[15ch]">
-            {len > 0 ? friend.conversation[len - 1].msg : "No messages yet"}
-          </p>
-        </div>
-        <span className="text-xs text-[#242F5C] ml-auto hidden xl:block">
-          {len > 0 ? friend.conversation[len - 1].time : ""}
-        </span>
-      </div>
-    );
-  }
+  //         <p className="text-xs text-[#302FA5] overflow-hidden whitespace-nowrap text-ellipsis max-w-[15ch]">
+  //           {len > 0 ? friend.conversation[len - 1].msg : "No messages yet"}
+  //         </p>
+  //       </div>
+  //       <span className="text-xs text-[#242F5C] ml-auto hidden xl:block">
+  //         {len > 0 ? friend.conversation[len - 1].time : ""}
+  //       </span>
+  //     </div>
+  //   );
+  // }
   // -- messages functions -----------------------------------------------------
   function FriendChatInfo({ path, name, status }) {
     return (
       <div className="friendChatInfo p-5 flex items-center border-b-2 border-[#9191D6] border-opacity-30 ">
-        
         {/* ChatListIcon  -------------------------------------------------------------- */}
 
         <IoIosChatboxes
@@ -220,36 +188,43 @@ export default function ChatPage() {
 
         {/* hisProfile -------------------------------------------------------------- */}
         {selectedFriend !== null ? (
-        
-        <div className="hisProfile w-full flex items-center overflow-hidden ">
-          
-          {name === "tournament" ? (
-            <TbTournament size={75} className="bg-[#EAEAFF] rounded-full text-[#242F5C] left-0 top-0 " />
-          ) : (
-            <Image src={path} alt="avatarprofile" width={75} height={75} className=" rounded-full left-0 top-0 " />
-          )}
+          <div className="hisProfile w-full flex items-center overflow-hidden ">
+            {name === "tournament" ? (
+              <TbTournament
+                size={75}
+                className="bg-[#EAEAFF] rounded-full text-[#242F5C] left-0 top-0 "
+              />
+            ) : (
+              <Image
+                src={path}
+                alt="avatarprofile"
+                width={75}
+                height={75}
+                className=" rounded-full left-0 top-0 "
+              />
+            )}
 
-
-
-          <div className=" ml-4 hidden lg:block ">
-            <h3 className="text-3xl  top-0 left-0 text-[#242F5C] ">{name}</h3>
-            <p className="text-sm text-[#302FA5] left ">{status}</p>
+            <div className=" ml-4 hidden lg:block ">
+              <h3 className="text-3xl  top-0 left-0 text-[#242F5C] ">{name}</h3>
+              <p className="text-sm text-[#302FA5] left ">{status}</p>
+            </div>
           </div>
-        </div>)
-        : ( 
+        ) : (
           <div className="w-full flex items-center overflow-hidden">
-            <p className="text-sm text-[#242F5C] ">Please select a conversation</p>
+            <p className="text-sm text-[#242F5C] ">
+              Please select a conversation
+            </p>
           </div>
         )}
 
-
-
         {/* dropDownIcon  -------------------------------------------------------------- */}
 
-        { selectedFriend && (<FaAngleDown
-          className="dropDownIcon text-4xl ml-auto mr-8  text-[#242F5C]"
-          onClick={switchDropDownState}
-        />)}
+        {selectedFriend && (
+          <FaAngleDown
+            className="dropDownIcon text-4xl ml-auto mr-8  text-[#242F5C]"
+            onClick={switchDropDownState}
+          />
+        )}
 
         {iconState.dropDownState && (
           <ul
@@ -362,11 +337,10 @@ export default function ChatPage() {
   //-----------------------------------------------------------------------------------
 
   function MessagesBox({ friend }) {
-
     if (friend == null) {
       return (
         <div className="messagesBox md:w-full lg:w-3/5 p-2 h-full rounded-tr-xl rounded-br-xl bg-[#F4F4FF] flex flex-col ">
-          <FriendChatInfo path="" name="" status="" /> 
+          <FriendChatInfo path="" name="" status="" />
         </div>
       );
     }
@@ -434,18 +408,32 @@ export default function ChatPage() {
                 </h2>
 
                 <div className="MessagesList flex flex-col ">
-                  <FriendInfo friend={tournament} />
-                  <FriendInfo friend={friend1} />
-                  <FriendInfo friend={friend2} />
-                  
+                  <FriendInfo
+                    friend={tournament}
+                    onClick={() => {
+                      setSelectedFriend(tournament);
+                      setIconState({ chatState: false, dropDownState: false });
+                    }}
+                  />
+                  <FriendInfo
+                    friend={friend1}
+                    onClick={() => {
+                      setSelectedFriend(friend1);
+                      setIconState({ chatState: false, dropDownState: false });
+                    }}
+                  />
+                  <FriendInfo
+                    friend={friend2}
+                    onClick={() => {
+                      setSelectedFriend(friend2);
+                      setIconState({ chatState: false, dropDownState: false });
+                    }}
+                  />
                 </div>
               </div>
             </div>
 
             <MessagesBox friend={selectedFriend} />
-
-
-            
           </div>
         </div>
       </div>
