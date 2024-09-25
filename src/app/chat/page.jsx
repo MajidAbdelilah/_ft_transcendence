@@ -10,13 +10,14 @@ import { IoIosChatboxes } from "react-icons/io";
 import { IoGameControllerOutline } from "react-icons/io5";
 import { LuUserX } from "react-icons/lu";
 import { TbTournament } from "react-icons/tb";
+
 import { IoPersonOutline } from "react-icons/io5";
 
 import { useState } from "react";
 import { useEffect } from "react";
 import { useRef } from "react";
 // import React from 'react';
-import ReactDOM from "react-dom/client";
+// import ReactDOM from "react-dom/client";
 
 import "./style.css";
 import { Inter, Montserrat } from "next/font/google";
@@ -46,7 +47,7 @@ const montserrat = Montserrat({
 
 
 let user = {
-  name: "John Doe",
+  name: "John Wick",
   path: "/images/avatarprofile.svg",
   status: "Online",
 };
@@ -193,9 +194,9 @@ export default function ChatPage() {
       >
         {friend.name === "tournament" ? (
           
-          <TbTournament size={45} className="bg-[#C0C7E0] rounded-full text-[#242F5C] left-0 top-0 " />
+          <TbTournament size={45} className="bg-[#EAEAFF] rounded-full text-[#242F5C] left-0 top-0 " />
         ) : (
-        <Image src={friend.path} alt="avatarprofile" width={45} height={45} className="rounded-full left-0 top-0 " />
+          <Image src={friend.path} alt="avatarprofile" width={45} height={45} className="rounded-full left-0 top-0 " />
         )}
 
 
@@ -233,7 +234,7 @@ export default function ChatPage() {
         <div className="hisProfile w-full flex items-center overflow-hidden ">
           
           {name === "tournament" ? (
-            <TbTournament size={75} className="bg-[#C0C7E0] rounded-full text-[#242F5C] left-0 top-0 " />
+            <TbTournament size={75} className="bg-[#EAEAFF] rounded-full text-[#242F5C] left-0 top-0 " />
           ) : (
             <Image src={path} alt="avatarprofile" width={75} height={75} className=" rounded-full left-0 top-0 " />
           )}
