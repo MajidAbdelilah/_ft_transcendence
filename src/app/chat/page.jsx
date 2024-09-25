@@ -98,7 +98,7 @@ let tournament = {
   status: "Online",
   conversation: [
     {
-      time: "",
+      time: "09:15 AM",
       msg: "Your turn is up! Please join the match now to secure your spot in the tournament.",
       sender: "friend",
     },
