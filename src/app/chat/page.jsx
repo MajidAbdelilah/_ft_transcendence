@@ -19,7 +19,7 @@ import { useRef } from "react";
 // import React from 'react';
 // import ReactDOM from "react-dom/client";
 
-import "./style.css";
+// -- font -----------------------------------------------------
 import { Inter, Montserrat } from "next/font/google";
 const montserrat = Montserrat({
   subsets: ["latin"],
@@ -35,11 +35,6 @@ const montserrat = Montserrat({
 // #EAEAFF
 // #C0C7E0
 
-// - sm : `min-width: 640px`
-// - md : `min-width: 768px`
-// - lg : `min-width: 1024px`
-// - xl : `min-width: 1280px`
-// - 2xl : `min-width: 1536px`
 
 // -- data -----------------------------------------------------
 
@@ -154,11 +149,6 @@ export default function ChatPage() {
   }, []);
 
   // -- friends functions -----------------------------------------------------
-
-
-
-
-
 
 
 
