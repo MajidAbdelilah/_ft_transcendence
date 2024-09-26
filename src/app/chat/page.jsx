@@ -27,6 +27,7 @@ import Navbar_test from "./components/navbar"; // import the real one as a compo
 
 // -- font -----------------------------------------------------
 import { Inter, Montserrat } from "next/font/google";
+import path from "path";
 const montserrat = Montserrat({
   subsets: ["latin"],
   variable: "--font-montserrat",
@@ -101,6 +102,7 @@ export default function ChatPage() {
   };
 
   // Hide components when clikcing outside  -------------------------------------------------------
+  
   const chatRef = useRef();
   const dropDownRef = useRef();
 
@@ -126,8 +128,7 @@ export default function ChatPage() {
 
   // -- messages functions -----------------------------------------------------
   
-
-  function FriendChatInfo({ path, name, status,}) {
+  function FriendChatInfo({ friend}) {
     return (
       <div className="friendChatInfo p-5 flex items-center border-b-2 border-[#9191D6] border-opacity-30 ">
         {/* ChatListIcon  -------------------------------------------------------------- */}
@@ -139,7 +140,7 @@ export default function ChatPage() {
 
         {/* hisProfile -------------------------------------------------------------- */}
         {selectedFriend !== null ? (
-          < HisProfile path={path} name={name} status={status} />
+          < HisProfile path={friend.path} name={friend.name} status={friend.status} />
 
         ) : (
           < PleaseSelectAConversation/>
@@ -170,7 +171,6 @@ export default function ChatPage() {
       </div>
     );
   }
-
 
   function sendMessage(e) {
     //forr testing perposes..
@@ -206,20 +206,18 @@ export default function ChatPage() {
   //-----------------------------------------------------------------------------------
 
   function MessagesBox({ friend }) {
+    // no friend selected yet just return FriendChatInfo compomet with empty friend object
     if (friend == null) {
+      let noFriendYet = {path: "", name: "", status: ""};
       return (
-        <div className="messagesBox md:w-full lg:w-3/5 p-2 h-full rounded-tr-xl rounded-br-xl bg-[#F4F4FF] flex flex-col ">
-          <FriendChatInfo path="" name="" status="" />
+        <div className="messagesBox md:w-full lg:w-3/5 p-2 h-full rounded-tr-xl rounded-br-xl bg-[#F4F4FF] flex flex-col "> 
+          <FriendChatInfo friend={noFriendYet} />
         </div>
       );
     }
     return (
       <div className="messagesBox md:w-full lg:w-3/5 p-2 h-full rounded-tr-xl rounded-br-xl bg-[#F4F4FF] flex flex-col ">
-        <FriendChatInfo
-          path={friend.path}
-          name={friend.name}
-          status={friend.status}
-        />
+        <FriendChatInfo friend={friend}/>
 
         {/* emplimenting peerToPeer ---------------------------------------------------------------------------------------*/}
         <div className="peerToPeer flex flex-col flex-grow overflow-y-auto custom-scrollbar break-all ">
