@@ -20,7 +20,20 @@ function PlayNow() {
                 className="object-contain rounded-xl"
               />
             </div>
-            <button className="bg-[#242F5C] drop-shadow-xl text-[#E0E0FF] font-extrabold md:py-2 md:px-4 lg:py-3 lg:px-5 py-2 px-4 text-sm rounded-3xl absolute md:bottom-[7%] lg:bottom-[5%] bottom-2 lg:right-[4%] right-[8%] transition-transform duration-300 ease-in-out transform hover:scale-110">
+            <button className="absolute 
+                bottom-2 right-[8%] 
+                md:bottom-[7%] 
+                lg:bottom-[5%] lg:right-[4%]
+                py-2 px-4 
+                md:py-2 md:px-4 
+                lg:py-3 lg:px-8 
+                bg-[#242F5C] rounded-full cursor-pointer overflow-hidden 
+                transition-all duration-500 ease-in-out shadow-md 
+                hover:scale-105 hover:shadow-lg 
+                before:absolute before:top-0 before:-left-full before:w-full before:h-full 
+                before:bg-gradient-to-r before:from-[#242F5C] before:to-[#7C829D] 
+                before:transition-all before:duration-500 before:ease-in-out before:z-[-1] 
+                font-extrabold before:rounded-xl hover:before:left-0 text-[#fff]">
               PLAY NOW
             </button>
           </div>
