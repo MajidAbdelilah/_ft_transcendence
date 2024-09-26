@@ -136,7 +136,7 @@ function Settings() {
                  <div className="flex flex-col items-center bg-[#DAE4FF] w-[90%] sm:w-[70%] h-[10%] rounded-xl my-28 sm:my-28 relative">
                    <button type="submit" className="text-white bg-[#111B47] focus:ring-4 focus:outline-none absolute top-[23%] left-[80%] font-semibold rounded-full text-sm sm:text-lg w-[18%] h-[50%] text-center dark:bg-blue-600 dark:hover:bg-blue-600 dark:focus:ring-blue-800 transition-transform duration-300 ease-in-out transform hover:scale-105">Send</button>
                  </div>
-                 <button type="submit" className="text-white bg-[#111B47] focus:ring-4 focus:outline-none font-semibold rounded-full text-lg w-[60%] sm:w-[20%] py-3 sm:h-[6%] text-center dark:bg-blue-600 dark:hover:bg-blue-600 dark:focus:ring-blue-800 transition-transform duration-300 ease-in-out transform hover:scale-105 mt-4 sm:mt-0">Send</button>
+                 <button type="submit" className="text-white bg-[#111B47] focus:ring-4 focus:outline-none font-semibold rounded-full text-lg w-[60%] sm:w-[20%] py-3 sm:h-[6%] text-center dark:bg-blue-600 dark:hover:bg-blue-600 dark:focus:ring-blue-800 transition-transform duration-300 ease-in-out transform hover:scale-105 mt-4 sm:mt-0">Verify</button>
                  <Image
                    src="/images/close.svg"
                    alt="Close"
