@@ -22,7 +22,7 @@ import { createFriendMsgBox, createMyMsgBox, FriendMsgBox, MyMsgBox, getCurrentT
 import { HisProfile, PleaseSelectAConversation, ProfileOption, PlayWithOption, BlockOption} from "./components/FriendChatInfo";
 import Sidebar_test from "./components/sidebar"; // import the real one as a componant later
 import Navbar_test from "./components/navbar"; // import the real one as a componant later
-
+import { ConversationsHeader } from "./components/BasicComp";
 
 
 // -- font -----------------------------------------------------
@@ -68,7 +68,7 @@ let friend2 = {  name: "Lucy Smith",  path: "/images/avatar2.svg",  status: "Off
   ],
 };
 
-let tournament = { name: "tournament", // teh tournament must be named like that , casue i ve built the logic so that the name is tournament. path: "/images/avatarprofile.svg", status: "Online",
+let tournament = { name: "tournament", // ###############  WARNING   ########## the tournament must be named like that , casue i ve built the logic so that the name is tournament. path: "/images/avatarprofile.svg", status: "Online",
   conversation: [
     {
       time: "09:15 AM",
@@ -126,7 +126,7 @@ export default function ChatPage() {
   }, []);
 
 
-  // -- messages functions -----------------------------------------------------
+  // -- -----------------------------------------------------
   
   function FriendChatInfo({ friend}) {
     return (
@@ -148,8 +148,8 @@ export default function ChatPage() {
         )}
 
         {/* dropDownIcon  -------------------------------------------------------------- */}
-
-        {selectedFriend && (
+        {/*  if the user selected already a friend, and the friend is not the tournament robot , then show the drop down icon */}
+        {selectedFriend && friend.name !== "tournament" && (
           <FaAngleDown
             className="dropDownIcon text-4xl ml-auto mr-8  text-[#242F5C]"
             onClick={switchDropDownState}
@@ -173,7 +173,7 @@ export default function ChatPage() {
   }
 
   function sendMessage(e) {
-    //forr testing perposes.. delete later -----------------
+    //forr testing createFriendMsgBox .. delete later -----------------
     if (e.code === "Enter" || e.type === "click") {
       let inputText = document.getElementsByClassName("msgToSend")[0];
 
@@ -203,15 +203,6 @@ export default function ChatPage() {
     }
   }
   
-  function ConversationsHeader() {
-    return (
-      <h2 className="text-center text-1xl my-3 py-2 rounded-full bg-[#EAEAFF] text-[#242F5C]  overflow-hidden ">
-        Conversations
-      </h2>
-    );
-  }
-  //-----------------------------------------------------------------------------------
-
   function MessagesBox({ friend }) {
     // no friend selected yet just return FriendChatInfo compomet with empty friend object
     if (friend == null) {
