@@ -16,12 +16,16 @@ import { useRef } from "react";
 
 // -- components -----------------------------------------------------
 
+import Sidebar from "../sidebar";
+import Navbar from "../Navbar";
+
+
+
+
 import ProfileInfo from "./components/ProfileInfo";
 import FriendInfo from "./components/FriendInfo";
 import { createFriendMsgBox, createMyMsgBox, FriendMsgBox, MyMsgBox, getCurrentTime} from './components/peerToPeer';
 import { HisProfile, PleaseSelectAConversation, ProfileOption, PlayWithOption, BlockOption} from "./components/FriendChatInfo";
-import Sidebar_test from "./components/sidebar"; // import the real one as a componant later
-import Navbar_test from "./components/navbar"; // import the real one as a componant later
 import { ConversationsHeader } from "./components/BasicComp";
 
 
@@ -248,12 +252,12 @@ export default function ChatPage() {
 
   return (
     <div className={`flex flex-col h-screen  ${montserrat.className}`}>
-      <Navbar_test />
+      <Navbar/>
       <div className="parent flex flex-1 ">
         {/* hidden on smaller screens and only visible on screens 1280px or larger. */}
-        <div className="sidebar hidden sm:block ">
-          <Sidebar_test />
-        </div>
+        {/* <div className="sidebar hidden sm:block "> */}
+          <Sidebar  />
+        {/* </div> */}
 
         <div className="chattSection flex-1 p-5 md:p-10 h-screen w-screen">
           <div className="boxes relative flex h-full w-full border-2 border-[#C6C6E1] bg-[#F4F4FF] rounded-xl flex-row-revers ">

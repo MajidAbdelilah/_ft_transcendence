@@ -93,4 +93,4 @@ function Sidebar() {
   }
   
   
-  export default Sidebar_test;
+  export default Sidebar;
