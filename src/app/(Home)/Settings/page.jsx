@@ -1,8 +1,8 @@
 "use client";
 import { Inter, Montserrat } from "next/font/google";
 import { useState, useEffect } from "react";
-import Navbar from "../../Navbar";
-import Sidebar from "../../Sidebar";
+import Navbar from "./../../Navbar";
+import Sidebar from "./../../Sidebar";
 import Image from "next/image";
 
 const montserrat = Montserrat({

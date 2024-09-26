@@ -25,7 +25,8 @@
     "react-dom": "^18",
     "sass": "^1.79.1",
     "tailwind-merge": "^2.5.2",
-    "tailwindcss-animate": "^1.0.7"
+    "tailwindcss-animate": "^1.0.7",
+    "vercel": "^37.5.4"
   },
   "devDependencies": {
     "@types/node": "22.5.5",

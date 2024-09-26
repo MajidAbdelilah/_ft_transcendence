@@ -1,6 +1,6 @@
 "use client";
-import Navbar from "../../Navbar";
-import Sidebar from "../../Sidebar";
+import Navbar from "./../../Navbar";
+import Sidebar from "./../../Sidebar";
 import { Montserrat } from "next/font/google";
 import { useState, useEffect, useRef } from "react";
 import Image from "next/image";

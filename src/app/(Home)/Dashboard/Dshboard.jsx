@@ -6,8 +6,8 @@ import { useContext } from "react";
 import Achievements from "./Achievements";
 import MatchHistory from "./MatchHistory";
 import PlayNow from "./PlayNow";
-import Navbar from "../../Navbar";
-import Sidebar from "../../Sidebar";
+import Navbar from "./../../Navbar";
+import Sidebar from "./../../Sidebar";
 
 function Dashboard() {
   const DashData = useContext(DashContext);
