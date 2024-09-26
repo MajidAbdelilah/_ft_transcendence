@@ -116,9 +116,12 @@
       transform: translateY(-2000px);
     }
   }
+
+
+  
   
   body {
-    background-image: url('/images/background.svg');
+    background-image: url('/images/backgroundGrain.png');
     background-size: cover;
     background-repeat: no-repeat;
     background-attachment: fixed;

@@ -43,7 +43,7 @@ export default function App() {
       {/* <div className="absolute inset-0 z-0">
         <BackgroundBeams />
       </div> */}
-      <div className={`relative z-10 h-[100vh] ${montserrat.className}`}>
+      <div className={`relative z-10 h-[100vh]  ${montserrat.className}`}>
       <nav className={`flex justify-between sm:pl-20 sm:pt-18 sm:pr-20 w-full sm:items-center sm:h-[200px] fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
           isScrolled ? 'bg-white bg-opacity-15 backdrop-blur-md shadow-md' : 'bg-transparent'
         }`}>
