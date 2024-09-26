@@ -173,7 +173,7 @@ export default function ChatPage() {
   }
 
   function sendMessage(e) {
-    //forr testing perposes..
+    //forr testing perposes.. delete later -----------------
     if (e.code === "Enter" || e.type === "click") {
       let inputText = document.getElementsByClassName("msgToSend")[0];
 
@@ -203,6 +203,13 @@ export default function ChatPage() {
     }
   }
   
+  function ConversationsHeader() {
+    return (
+      <h2 className="text-center text-1xl my-3 py-2 rounded-full bg-[#EAEAFF] text-[#242F5C]  overflow-hidden ">
+        Conversations
+      </h2>
+    );
+  }
   //-----------------------------------------------------------------------------------
 
   function MessagesBox({ friend }) {
@@ -217,9 +224,10 @@ export default function ChatPage() {
     }
     return (
       <div className="messagesBox md:w-full lg:w-3/5 p-2 h-full rounded-tr-xl rounded-br-xl bg-[#F4F4FF] flex flex-col ">
+        {/* FriendChatInfo ---------------------------------------------------------------------------------------*/}
         <FriendChatInfo friend={friend}/>
 
-        {/* emplimenting peerToPeer ---------------------------------------------------------------------------------------*/}
+        {/* peerToPeer ---------------------------------------------------------------------------------------*/}
         <div className="peerToPeer flex flex-col flex-grow overflow-y-auto custom-scrollbar break-all ">
           {friend.conversation.map((message, index) =>
             message.sender === "friend" ? (
@@ -230,7 +238,7 @@ export default function ChatPage() {
           )}
         </div>
 
-        {/* emplimenting SendMsg ---------------------------------------------------------------------------------------*/}
+        {/*  SendMsg ---------------------------------------------------------------------------------------*/}
         <div className="sendMsg mx-8 my-5 relative ">
           <input
             className="msgToSend text-xl bg-[#9191D6] bg-opacity-20 py-3 pl-6 pr-16 w-full rounded-full"
@@ -270,9 +278,8 @@ export default function ChatPage() {
             >
               <div className="friendsBox  p-2 rounded-tl-xl rounded-bl-xl  border-r-2  border-[#C6C6E1] h-full  flex-col flex-grow overflow-y-auto custom-scrollbar bg-[#F4F4FF]">
                 <ProfileInfo user={user} />
-                <h2 className="text-center text-1xl my-3 py-2 rounded-full bg-[#EAEAFF] text-[#242F5C]  overflow-hidden ">
-                  Conversations
-                </h2>
+                < ConversationsHeader/>
+
 
                 <div className="MessagesList flex flex-col ">
                   <FriendInfo
