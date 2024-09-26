@@ -1,18 +1,15 @@
 "use client";
 
-import Sidebar_test from "./components/sidebar"; // import the real one as a componant later
-import Navbar_test from "./components/navbar"; // import the real one as a componant later
+
 import Image from "next/image";
 
+// -- icons -----------------------------------------------------
 import { FaAngleDown } from "react-icons/fa";
 import { RiSendPlaneLine } from "react-icons/ri";
 import { IoIosChatboxes } from "react-icons/io";
-import { IoGameControllerOutline } from "react-icons/io5";
-import { LuUserX } from "react-icons/lu";
-import { TbTournament } from "react-icons/tb";
 
-import { IoPersonOutline } from "react-icons/io5";
 
+// -- hooks -----------------------------------------------------
 import { useState } from "react";
 import { useEffect } from "react";
 import { useRef } from "react";
@@ -21,6 +18,13 @@ import { useRef } from "react";
 
 import ProfileInfo from "./components/ProfileInfo";
 import FriendInfo from "./components/FriendInfo";
+import { createFriendMsgBox, createMyMsgBox, FriendMsgBox, MyMsgBox, getCurrentTime} from './components/peerToPeer';
+import { HisProfile, PleaseSelectAConversation, ProfileOption, PlayWithOption, BlockOption} from "./components/FriendChatInfo";
+import Sidebar_test from "./components/sidebar"; // import the real one as a componant later
+import Navbar_test from "./components/navbar"; // import the real one as a componant later
+
+
+
 // -- font -----------------------------------------------------
 import { Inter, Montserrat } from "next/font/google";
 const montserrat = Montserrat({
@@ -28,47 +32,26 @@ const montserrat = Montserrat({
   variable: "--font-montserrat",
 });
 
-// color bacjground  : #F4F4FF
-// dark blue #242F5C
-//   #8988DE
-// #BCBCC9
-// #F4F4FF
 
-// #EAEAFF
-// #C0C7E0
+// -- colors -----------------------------------------------------co
+//  #F4F4FF   #242F5C   #8988DE   #BCBCC9   #F4F4FF   #EAEAFF   #C0C7E0
 
 // -- data -----------------------------------------------------
 
-let user = {
-  name: "John Wick",
-  path: "/images/avatarprofile.svg",
-  status: "Online",
-};
+let user = { name: "John Wick", path: "/images/avatarprofile.svg", status: "Online", };
 
-let friend1 = {
-  name: "Henry smith",
-  path: "/images/avatar3.svg",
-  status: "Online",
+let friend1 = { name: "Henry smith", path: "/images/avatar3.svg", status: "Online", 
   conversation: [
-    {
-      time: "02:22 PM",
-      msg: "Hi John, up for a ping pong match this evening?",
-      sender: "friend",
+    { time: "02:22 PM", msg: "Hi John, up for a ping pong match this evening?", sender: "friend",
     },
-    {
-      time: "02:22 PM",
-      msg: "Hi John, up for a ping pong match this evenihtrerthwrehwerhwrehwerhwerhwrehwherhrehehewhrhwerrhwerherheng?",
-      sender: "friend",
+    { time: "02:22 PM", msg: "Hi John, up for a ping pong match this evenihtrerthwrehwerhwrehwerhwerhwrehwherhrehehewhrhwerrhwerherheng?", sender: "friend",
     },
     { time: "02:23 PM", msg: "Sure, I'm in!", sender: "me" },
     { time: "02:24 PM", msg: "Great, see you at 7 PM!", sender: "friend" },
     { time: "02:25 PM", msg: "Perfect, see you then!", sender: "me" },
   ],
 };
-let friend2 = {
-  name: "Lucy Smith",
-  path: "/images/avatar2.svg",
-  status: "Offline",
+let friend2 = {  name: "Lucy Smith",  path: "/images/avatar2.svg",  status: "Offline",
   conversation: [
     { time: "09:15 AM", msg: "Good morning, how are you?", sender: "friend" },
     {
@@ -84,10 +67,7 @@ let friend2 = {
   ],
 };
 
-let tournament = {
-  name: "tournament", // teh tournament must be named like that , casue i ve built the logic so that the name is tournament.
-  path: "/images/avatarprofile.svg",
-  status: "Online",
+let tournament = { name: "tournament", // teh tournament must be named like that , casue i ve built the logic so that the name is tournament. path: "/images/avatarprofile.svg", status: "Online",
   conversation: [
     {
       time: "09:15 AM",
@@ -98,6 +78,7 @@ let tournament = {
 };
 
 export default function ChatPage() {
+
   // Clicking on icons -------------------------------------------------------
   const [iconState, setIconState] = useState({
     chatState: false,
@@ -123,7 +104,6 @@ export default function ChatPage() {
   const chatRef = useRef();
   const dropDownRef = useRef();
 
-  // Handle click outside
   const handleClickOutSide = (event) => {
     if (dropDownRef.current && !dropDownRef.current.contains(event.target)) {
       setIconState({ dropDownState: false });
@@ -143,40 +123,11 @@ export default function ChatPage() {
     };
   }, []);
 
-  // function FriendInfo({ friend }) {
-  //   let len = friend.conversation.length;
-  //   return (
-  //     <div
-  //       className="friendInfo my-3 w-full flex flex-row items-center overflow-hidden "
-  //       onClick={() => {
-  //         setSelectedFriend(friend);
-  //         setIconState({ chatState: false, dropDownState: false });
-  //       }}
-  //     >
-  //       {friend.name === "tournament" ? (
 
-  //         <TbTournament size={45} className="bg-[#EAEAFF] rounded-full text-[#242F5C] left-0 top-0 " />
-  //       ) : (
-  //         <Image src={friend.path} alt="avatarprofile" width={45} height={45} className="rounded-full left-0 top-0 " />
-  //       )}
-
-  //       <div className=" ml-2 ">
-  //         <h3 className="text-2xl top-0 left-0 text-[#242F5C]">
-  //           {friend.name}
-  //         </h3>
-
-  //         <p className="text-xs text-[#302FA5] overflow-hidden whitespace-nowrap text-ellipsis max-w-[15ch]">
-  //           {len > 0 ? friend.conversation[len - 1].msg : "No messages yet"}
-  //         </p>
-  //       </div>
-  //       <span className="text-xs text-[#242F5C] ml-auto hidden xl:block">
-  //         {len > 0 ? friend.conversation[len - 1].time : ""}
-  //       </span>
-  //     </div>
-  //   );
-  // }
   // -- messages functions -----------------------------------------------------
-  function FriendChatInfo({ path, name, status }) {
+  
+
+  function FriendChatInfo({ path, name, status,}) {
     return (
       <div className="friendChatInfo p-5 flex items-center border-b-2 border-[#9191D6] border-opacity-30 ">
         {/* ChatListIcon  -------------------------------------------------------------- */}
@@ -188,33 +139,11 @@ export default function ChatPage() {
 
         {/* hisProfile -------------------------------------------------------------- */}
         {selectedFriend !== null ? (
-          <div className="hisProfile w-full flex items-center overflow-hidden ">
-            {name === "tournament" ? (
-              <TbTournament
-                size={75}
-                className="bg-[#EAEAFF] rounded-full text-[#242F5C] left-0 top-0 "
-              />
-            ) : (
-              <Image
-                src={path}
-                alt="avatarprofile"
-                width={75}
-                height={75}
-                className=" rounded-full left-0 top-0 "
-              />
-            )}
+          < HisProfile path={path} name={name} status={status} />
 
-            <div className=" ml-4 hidden lg:block ">
-              <h3 className="text-3xl  top-0 left-0 text-[#242F5C] ">{name}</h3>
-              <p className="text-sm text-[#302FA5] left ">{status}</p>
-            </div>
-          </div>
         ) : (
-          <div className="w-full flex items-center overflow-hidden">
-            <p className="text-sm text-[#242F5C] ">
-              Please select a conversation
-            </p>
-          </div>
+          < PleaseSelectAConversation/>
+
         )}
 
         {/* dropDownIcon  -------------------------------------------------------------- */}
@@ -231,96 +160,35 @@ export default function ChatPage() {
             ref={dropDownRef}
             className="list absolute right-16 top-20 bg-[#EAEAFF] border-[#C6C6E1] border-2 rounded-xl shadow-lg w-36 "
           >
-            <li>
-              {" "}
-              <a className="p-2 text-lg text-[#242F5C] flex items-center border-[#C6C6E1] border-b-2">
-                {" "}
-                <IoPersonOutline /> <span className="ml-2">Profile</span>{" "}
-              </a>{" "}
-            </li>
-            <li>
-              {" "}
-              <a className="p-2 text-lg text-[#242F5C] flex items-center">
-                {" "}
-                <IoGameControllerOutline />{" "}
-                <span className="ml-2">Play with</span>{" "}
-              </a>{" "}
-            </li>
-            <li>
-              {" "}
-              <a className="p-2 text-lg text-[#242F5C] flex items-center border-[#C6C6E1] border-t-2">
-                {" "}
-                <LuUserX /> <span className="ml-2">Block</span>{" "}
-              </a>{" "}
-            </li>
+            <ProfileOption onClick={() => {window.open('https://google.com'); setIconState({dropDownState: false });}}/>
+            <PlayWithOption onClick={() => {window.open('https://facebook.com'); setIconState({dropDownState: false });}}/>
+            <BlockOption onClick={() => {window.open('https://instagram.com'); setIconState({dropDownState: false });}}/>
+
+
           </ul>
         )}
       </div>
     );
   }
 
-  function FriendMsgBox({ time, msg }) {
-    return (
-      <div className="friendMsgBox ml-1 my-1">
-        <span className="msgTime text-sm pl-5 text-[#242F5C] block">
-          {time}
-        </span>
-        <p className="msgConetnt text-xl py-3 px-6 inline-block text-[#FFFFFF] bg-[#2C3E86] bg-opacity-80 rounded-3xl ">
-          {msg}
-        </p>
-      </div>
-    );
-  }
-
-  function MyMsgBox({ time, msg }) {
-    return (
-      <div className="myMsgBox my-1 mr-1 ml-auto flex flex-col">
-        <span className="msgTime text-sm pr-5 text-[#242F5C] ml-auto">
-          {time}
-        </span>
-        <p className="msgConetnt text-xl py-3 px-6 inline-block text-[#242F5C] bg-[#9191D6] bg-opacity-40 rounded-3xl ">
-          {msg}
-        </p>
-      </div>
-    );
-  }
-
-  function getCurrentTime() {
-    const now = new Date();
-    let hours = now.getHours();
-    const minutes = now.getMinutes();
-    const ampm = hours >= 12 ? "PM" : "AM";
-
-    hours = hours % 12;
-    hours = hours ? hours : 12; // the hour '0' should be '12'
-    const formattedMinutes = minutes < 10 ? "0" + minutes : minutes;
-
-    return `${hours}:${formattedMinutes} ${ampm}`;
-  }
-
-  function createMyMsgBox(time, msg) {
-    let theMsg;
-    theMsg = document.createElement("div");
-    theMsg.className = "myMsgBox my-1 mr-8 ml-auto flex flex-col";
-
-    let timeSpan;
-    timeSpan = document.createElement("span");
-    timeSpan.className = "msgTime text-sm pr-5 text-[#242F5C] ml-auto";
-    timeSpan.textContent = time;
-
-    let msgParagraph;
-    msgParagraph = document.createElement("p");
-    msgParagraph.className =
-      "msgConetnt text-xl py-3 px-6 inline-block text-[#242F5C] bg-[#9191D6] bg-opacity-40 rounded-3xl ";
-    msgParagraph.textContent = msg;
-
-    theMsg.appendChild(timeSpan);
-    theMsg.appendChild(msgParagraph);
-
-    return theMsg;
-  }
 
   function sendMessage(e) {
+    //forr testing perposes..
+    if (e.code === "Enter" || e.type === "click") {
+      let inputText = document.getElementsByClassName("msgToSend")[0];
+
+      if (inputText.value.trim() === "receive") {
+        let time = getCurrentTime();
+        let theMsg = createFriendMsgBox(time, inputText.value);
+        let conv = document.getElementsByClassName("peerToPeer")[0];
+        conv.appendChild(theMsg);
+        conv.scrollTop = conv.scrollHeight;
+        inputText.value = ""; // Clear the input
+      }
+    }
+
+
+
     if (e.code === "Enter" || e.type === "click") {
       let inputText = document.getElementsByClassName("msgToSend")[0];
 
@@ -334,6 +202,7 @@ export default function ChatPage() {
       }
     }
   }
+  
   //-----------------------------------------------------------------------------------
 
   function MessagesBox({ friend }) {
@@ -352,7 +221,7 @@ export default function ChatPage() {
           status={friend.status}
         />
 
-        {/* emplimenting peerToPeer */}
+        {/* emplimenting peerToPeer ---------------------------------------------------------------------------------------*/}
         <div className="peerToPeer flex flex-col flex-grow overflow-y-auto custom-scrollbar break-all ">
           {friend.conversation.map((message, index) =>
             message.sender === "friend" ? (
@@ -363,7 +232,7 @@ export default function ChatPage() {
           )}
         </div>
 
-        {/* emplimenting SendMsg */}
+        {/* emplimenting SendMsg ---------------------------------------------------------------------------------------*/}
         <div className="sendMsg mx-8 my-5 relative ">
           <input
             className="msgToSend text-xl bg-[#9191D6] bg-opacity-20 py-3 pl-6 pr-16 w-full rounded-full"

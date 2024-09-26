@@ -1,7 +1,6 @@
 import Image from "next/image";
-import { TbTournament } from "react-icons/tb";
-// import { useState } from "react";
-// const [selectedFriend, setSelectedFriend] = useState(null);
+
+import { RiRobot3Line } from "react-icons/ri";
 
 export default function FriendInfo({ friend, onClick }) {
   let len = friend.conversation.length;
@@ -11,7 +10,7 @@ export default function FriendInfo({ friend, onClick }) {
       onClick={onClick}
     >
       {friend.name === "tournament" ? (
-        <TbTournament
+        <RiRobot3Line
           size={45}
           className="bg-[#EAEAFF] rounded-full text-[#242F5C] left-0 top-0 "
         />
