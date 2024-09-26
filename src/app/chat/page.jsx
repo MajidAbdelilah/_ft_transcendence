@@ -19,9 +19,6 @@ import { useRef } from "react";
 import Sidebar from "../sidebar";
 import Navbar from "../Navbar";
 
-
-
-
 import ProfileInfo from "./components/ProfileInfo";
 import FriendInfo from "./components/FriendInfo";
 import { createFriendMsgBox, createMyMsgBox, FriendMsgBox, MyMsgBox, getCurrentTime} from './components/peerToPeer';
