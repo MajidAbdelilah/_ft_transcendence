@@ -130,6 +130,10 @@ export default function ChatPage() {
 
   // -- -----------------------------------------------------
   
+
+  // setIconState
+
+  
   function FriendChatInfo({ friend}) {
     return (
       <div className="friendChatInfo p-5 flex items-center border-b-2 border-[#9191D6] border-opacity-30 ">
