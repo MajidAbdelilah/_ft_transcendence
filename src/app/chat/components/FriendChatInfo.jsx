@@ -4,6 +4,10 @@ import { RiRobot3Line } from "react-icons/ri";
 import { IoPersonOutline } from "react-icons/io5";
 import { IoGameControllerOutline } from "react-icons/io5";
 import { LuUserX } from "react-icons/lu";
+import { IoIosChatboxes } from "react-icons/io";
+import { FaAngleDown } from "react-icons/fa";
+
+
 
 export function HisProfile ({path, name, status}) {
     return (
@@ -71,3 +75,51 @@ export function PlayWithOption ({onClick}) {
       </li>
     );
   }
+
+  export function FriendChatInfo({ friend, ...rest }) {
+    return (
+      <div className="friendChatInfo p-5 flex items-center border-b-2 border-[#9191D6] border-opacity-30 ">
+        {/* ChatListIcon  -------------------------------------------------------------- */}
+
+        <IoIosChatboxes
+          className="ChatListIcon block lg:hidden text-6xl text-[#242F5C]  mr-12 "
+          onClick={rest.switchChatState}
+        />
+
+        {/* hisProfile -------------------------------------------------------------- */}
+        {rest.selectedFriend !== null ? (
+          < HisProfile path={friend.path} name={friend.name} status={friend.status} />
+
+        ) : (
+          < PleaseSelectAConversation/>
+
+        )}
+
+        {/* dropDownIcon  -------------------------------------------------------------- */}
+        {/*  if the user selected already a friend, and the friend is not the tournament robot , then show the drop down icon */}
+        {rest.selectedFriend && friend.name !== "tournament" && (
+          <FaAngleDown
+            className="dropDownIcon text-4xl ml-auto mr-8  text-[#242F5C]"
+            onClick={rest.switchDropDownState}
+          />
+        )}
+
+        {rest.iconState.dropDownState && (
+          <ul
+            ref={rest.dropDownRef}
+            className="list absolute right-16 top-20 bg-[#EAEAFF] border-[#C6C6E1] border-2 rounded-xl shadow-lg w-36 "
+          >
+            <ProfileOption onClick={() => {window.open('https://google.com'); rest.setIconState({dropDownState: false });}}/>
+            <PlayWithOption onClick={() => {window.open('https://facebook.com'); rest.setIconState({dropDownState: false });}}/>
+            <BlockOption onClick={() => {window.open('https://instagram.com'); rest.setIconState({dropDownState: false });}}/>
+
+
+          </ul>
+        )}
+      </div>
+    );
+  }
+
+
+
+

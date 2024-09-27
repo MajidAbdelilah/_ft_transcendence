@@ -4,9 +4,9 @@
 import Image from "next/image";
 
 // -- icons -----------------------------------------------------
-import { FaAngleDown } from "react-icons/fa";
 
-import { IoIosChatboxes } from "react-icons/io";
+
+
 
 
 // -- hooks -----------------------------------------------------
@@ -21,8 +21,8 @@ import Navbar from "../Navbar";
 
 import ProfileInfo from "./components/ProfileInfo";
 import FriendInfo from "./components/FriendInfo";
-import { createFriendMsgBox, createMyMsgBox, FriendMsgBox, MyMsgBox, getCurrentTime} from './components/peerToPeer';
-import { HisProfile, PleaseSelectAConversation, ProfileOption, PlayWithOption, BlockOption} from "./components/FriendChatInfo";
+import { FriendMsgBox, MyMsgBox, } from './components/peerToPeer';
+import { FriendChatInfo,} from "./components/FriendChatInfo";
 import { ConversationsHeader } from "./components/BasicComp";
 import { SendMsgBox } from "./components/SendMsgBox";
 
@@ -39,7 +39,7 @@ const montserrat = Montserrat({
 // -- colors -----------------------------------------------------co
 //  #F4F4FF   #242F5C   #8988DE   #BCBCC9   #F4F4FF   #EAEAFF   #C0C7E0
 
-// -- data -----------------------------------------------------
+// -- data for testing -----------------------------------------------------
 
 let user = { name: "John Wick", path: "/images/avatarprofile.svg", status: "Online", };
 
@@ -79,6 +79,9 @@ let tournament = { name: "tournament", // ###############  WARNING   ########## 
     },
   ],
 };
+
+
+// -- data ---------------------------------------------------------------------------------------------------------------
 
 export default function ChatPage() {
 
@@ -128,72 +131,38 @@ export default function ChatPage() {
   }, []);
 
 
-  // -- -----------------------------------------------------
+  // -------------------------------------------------------
   
-
-  // setIconState
-
-  
-  function FriendChatInfo({ friend}) {
-    return (
-      <div className="friendChatInfo p-5 flex items-center border-b-2 border-[#9191D6] border-opacity-30 ">
-        {/* ChatListIcon  -------------------------------------------------------------- */}
-
-        <IoIosChatboxes
-          className="ChatListIcon block lg:hidden text-6xl text-[#242F5C]  mr-12 "
-          onClick={switchChatState}
-        />
-
-        {/* hisProfile -------------------------------------------------------------- */}
-        {selectedFriend !== null ? (
-          < HisProfile path={friend.path} name={friend.name} status={friend.status} />
-
-        ) : (
-          < PleaseSelectAConversation/>
-
-        )}
-
-        {/* dropDownIcon  -------------------------------------------------------------- */}
-        {/*  if the user selected already a friend, and the friend is not the tournament robot , then show the drop down icon */}
-        {selectedFriend && friend.name !== "tournament" && (
-          <FaAngleDown
-            className="dropDownIcon text-4xl ml-auto mr-8  text-[#242F5C]"
-            onClick={switchDropDownState}
-          />
-        )}
-
-        {iconState.dropDownState && (
-          <ul
-            ref={dropDownRef}
-            className="list absolute right-16 top-20 bg-[#EAEAFF] border-[#C6C6E1] border-2 rounded-xl shadow-lg w-36 "
-          >
-            <ProfileOption onClick={() => {window.open('https://google.com'); setIconState({dropDownState: false });}}/>
-            <PlayWithOption onClick={() => {window.open('https://facebook.com'); setIconState({dropDownState: false });}}/>
-            <BlockOption onClick={() => {window.open('https://instagram.com'); setIconState({dropDownState: false });}}/>
-
-
-          </ul>
-        )}
-      </div>
-    );
-  }
-
-
-
   function MessagesBox({ friend }) {
     // no friend selected yet just return FriendChatInfo compomet with empty friend object
     if (friend == null) {
       let noFriendYet = {path: "", name: "", status: ""};
       return (
         <div className="messagesBox w-full lg:w-3/5 p-2 h-full rounded-tr-xl rounded-br-xl  flex flex-col "> 
-          <FriendChatInfo friend={noFriendYet} />
+          <FriendChatInfo 
+            friend={noFriendYet} 
+            switchChatState = {switchChatState}
+            selectedFriend={selectedFriend}
+            switchDropDownState={switchDropDownState}
+            iconState={iconState}
+            dropDownRef={dropDownRef}
+            setIconState={setIconState}
+          />
         </div>
       );
     }
     return (
       <div className="messagesBox w-full lg:w-3/5 p-2 h-full rounded-tr-xl rounded-br-xl flex flex-col ">
         {/* FriendChatInfo ---------------------------------------------------------------------------------------*/}
-        <FriendChatInfo friend={friend}/>
+        <FriendChatInfo 
+          friend={friend}
+          switchChatState = {switchChatState}
+          selectedFriend={selectedFriend}
+          switchDropDownState={switchDropDownState}
+          iconState={iconState}
+          dropDownRef={dropDownRef}
+          setIconState={setIconState}
+        />
 
         {/* peerToPeer ---------------------------------------------------------------------------------------*/}
         <div className="peerToPeer flex flex-col flex-grow overflow-y-auto custom-scrollbar break-all ">
