@@ -183,7 +183,7 @@ export default function ChatPage() {
   }
 
   return (
-    <div className={`flex flex-col h-screen  ${montserrat.className}`}>
+    <div className={`flex flex-col h-screen w-screen ${montserrat.className}`}>
       <Navbar/>
       <div className="parent flex flex-1 ">
         {/* hidden on smaller screens and only visible on screens 1280px or larger. */}
@@ -191,7 +191,7 @@ export default function ChatPage() {
           <Sidebar  />
         {/* </div> */}
 
-        <div className="chattSection flex-1 p-5 md:p-10 h-screen w-screen ">
+        <div className="chattSection flex-1 p-5 md:p-10 h-full w-full ">
           <div className="boxes relative flex h-full w-full border-2 border-[#C6C6E1] bg-[#F4F4FF] rounded-xl flex-row-revers ">
             {/* friendsBox ------------------------------------------------------- */}
 
