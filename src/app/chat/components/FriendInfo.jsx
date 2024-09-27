@@ -6,7 +6,7 @@ export default function FriendInfo({ friend, onClick }) {
   let len = friend.conversation.length;
   return (
     <div
-      className="friendInfo my-3 w-full flex flex-row items-center overflow-hidden "
+      className="friendInfo my-3 w-full flex flex-row items-center overflow-hidden cursor-pointer"
       onClick={onClick}
     >
       {friend.name === "tournament" ? (
