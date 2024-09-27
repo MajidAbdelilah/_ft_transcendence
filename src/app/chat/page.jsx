@@ -222,13 +222,13 @@ export default function ChatPage() {
           <Sidebar  />
         {/* </div> */}
 
-        <div className="chattSection flex-1 p-5 md:p-10 h-screen w-screen">
+        <div className="chattSection flex-1 p-5 md:p-10 h-screen w-screen ">
           <div className="boxes relative flex h-full w-full border-2 border-[#C6C6E1] bg-[#F4F4FF] rounded-xl flex-row-revers ">
             {/* friendsBox ------------------------------------------------------- */}
 
             <div
               ref={iconState.chatState ? chatRef : null}
-              className={`menuList w-full lg:w-2/5 h-full flex-col lg:block absolute z-50 lg:relative bg-[#F4F4FF]  ${
+              className={`menuList w-full lg:w-2/5 h-full flex-col lg:block absolute z-50 lg:relative bg-[#F4F4FF] rounded-xl ${
                 iconState.chatState
                   ? "block bg-[#F4F4FF]  w-full top-32 lg:top-0 "
                   : "hidden"
@@ -239,7 +239,7 @@ export default function ChatPage() {
                 < ConversationsHeader/>
 
 
-                <div className="MessagesList flex flex-col ">
+                <div className="MessagesList flex flex-col">
                   <FriendInfo
                     friend={tournament}
                     onClick={() => {
