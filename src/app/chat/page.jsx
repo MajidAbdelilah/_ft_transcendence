@@ -5,7 +5,7 @@ import Image from "next/image";
 
 // -- icons -----------------------------------------------------
 import { FaAngleDown } from "react-icons/fa";
-import { RiSendPlaneLine } from "react-icons/ri";
+
 import { IoIosChatboxes } from "react-icons/io";
 
 
@@ -24,6 +24,7 @@ import FriendInfo from "./components/FriendInfo";
 import { createFriendMsgBox, createMyMsgBox, FriendMsgBox, MyMsgBox, getCurrentTime} from './components/peerToPeer';
 import { HisProfile, PleaseSelectAConversation, ProfileOption, PlayWithOption, BlockOption} from "./components/FriendChatInfo";
 import { ConversationsHeader } from "./components/BasicComp";
+import { SendMsgBox } from "./components/SendMsgBox";
 
 
 // -- font -----------------------------------------------------
@@ -173,37 +174,8 @@ export default function ChatPage() {
     );
   }
 
-  function sendMessage(e) {
-    //forr testing createFriendMsgBox .. delete later -----------------
-    if (e.code === "Enter" || e.type === "click") {
-      let inputText = document.getElementsByClassName("msgToSend")[0];
-
-      if (inputText.value.trim() === "receive") {
-        let time = getCurrentTime();
-        let theMsg = createFriendMsgBox(time, inputText.value);
-        let conv = document.getElementsByClassName("peerToPeer")[0];
-        conv.appendChild(theMsg);
-        conv.scrollTop = conv.scrollHeight;
-        inputText.value = ""; // Clear the input
-      }
-    }
 
 
-
-    if (e.code === "Enter" || e.type === "click") {
-      let inputText = document.getElementsByClassName("msgToSend")[0];
-
-      if (inputText.value.trim() !== "") {
-        let time = getCurrentTime();
-        let theMsg = createMyMsgBox(time, inputText.value);
-        let conv = document.getElementsByClassName("peerToPeer")[0];
-        conv.appendChild(theMsg);
-        conv.scrollTop = conv.scrollHeight;
-        inputText.value = ""; // Clear the input
-      }
-    }
-  }
-  
   function MessagesBox({ friend }) {
     // no friend selected yet just return FriendChatInfo compomet with empty friend object
     if (friend == null) {
@@ -230,19 +202,9 @@ export default function ChatPage() {
           )}
         </div>
 
-        {/*  SendMsg ---------------------------------------------------------------------------------------*/}
-        <div className="sendMsg mx-8 my-5 relative ">
-          <input
-            className="msgToSend text-xl bg-[#9191D6] bg-opacity-20 py-3 pl-6 pr-16 w-full rounded-full"
-            type="text"
-            placeholder="Message"
-            onKeyUp={sendMessage}
-          />
-          <RiSendPlaneLine
-            onClick={sendMessage}
-            className="text-3xl absolute right-4 top-3 text-[#2C3E86] text-opacity-80 "
-          />
-        </div>
+        {/*  SendMsgBox ---------------------------------------------------------------------------------------*/}
+        < SendMsgBox friend={friend}/>
+
       </div>
     );
   }
