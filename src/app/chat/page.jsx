@@ -185,13 +185,13 @@ export default function ChatPage() {
     if (friend == null) {
       let noFriendYet = {path: "", name: "", status: ""};
       return (
-        <div className="messagesBox md:w-full lg:w-3/5 p-2 h-full rounded-tr-xl rounded-br-xl bg-[#F4F4FF] flex flex-col "> 
+        <div className="messagesBox w-full lg:w-3/5 p-2 h-full rounded-tr-xl rounded-br-xl  flex flex-col "> 
           <FriendChatInfo friend={noFriendYet} />
         </div>
       );
     }
     return (
-      <div className="messagesBox md:w-full lg:w-3/5 p-2 h-full rounded-tr-xl rounded-br-xl bg-[#F4F4FF] flex flex-col ">
+      <div className="messagesBox w-full lg:w-3/5 p-2 h-full rounded-tr-xl rounded-br-xl flex flex-col ">
         {/* FriendChatInfo ---------------------------------------------------------------------------------------*/}
         <FriendChatInfo friend={friend}/>
 
