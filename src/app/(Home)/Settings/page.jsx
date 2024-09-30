@@ -27,7 +27,6 @@ function Settings() {
   }, []);
 
   const handleFileUpload = (e) => {
-    // Add your file upload logic here
     console.log(e.target.files[0]);
   };
 
@@ -148,7 +147,6 @@ function Settings() {
                </div>
               </div>
              </div>
-             
           )}
         </div>
       </div>
