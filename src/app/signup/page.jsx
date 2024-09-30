@@ -63,13 +63,20 @@ function Signup_page() {
         },
     });
 
-    const handleSubmit = async (values) => {
-        try {
-            const response = await axios.post('/api/signup', values);
-            console.log(response);
-        } catch (error) {
-            console.log(error);
+  const handleSubmit = (values) => {
+        const FinalValues = {
+            username: values.username,
+            email: values.email,
+            password: values.password,
         }
+    
+        // try {
+        //     const response = await axios.post('/api/signup', values);
+        //     console.log(response);
+        // } catch (error) {
+        //     console.log(error);
+      // }
+      console.log(FinalValues);
     }
 
   return (

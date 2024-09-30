@@ -5,6 +5,7 @@ import BackgroundBeams from "/src/components/ui/background-beams";
 import Image from "next/image";
 import Link from "next/link";
 import { useFormik } from "formik";
+import axios from "axios";
 
 const montserrat = Montserrat({
   subsets: ["latin"],
@@ -47,19 +48,20 @@ function Login_page() {
   });
 
     const handleSubmit = async (values) => {
-      try {
-        const response = await axios.get('/api/login', values);
-        console.log(response);
-      } catch (error) {
-        console.log(error);
-      }
+      // try {
+      //   const response = await axios.get('/api/login', values);
+      //   console.log(response);
+      // } catch (error) {
+      //   console.log(error);
+      // }
+      console.log(values);
     };
 
   return (
     <div
       className={`h-[100vh] flex justify-center items-center ${montserrat.className}`}
     >
-      <form className="max-w-[700px] z-[10] absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[90%] bg-[rgba(66,74,120,0.05)] bg-blend-hard-light shadow-[inset_0px_0px_4.6px_#A8B4FF] p-8 rounded-xl h-[700px] w-[600px] flex flex-col items-center">
+      <form onSubmit={formik.handleSubmit} className="max-w-[700px] z-[10] absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[90%] bg-[rgba(66,74,120,0.05)] bg-blend-hard-light shadow-[inset_0px_0px_4.6px_#A8B4FF] p-8 rounded-xl h-[700px] w-[600px] flex flex-col items-center">
         <div className="w-full flex justify-center">
           <Image src="images/logo.svg" alt="Logo" width="100" height="100" />
         </div>
@@ -69,7 +71,7 @@ function Login_page() {
         <div className="mb-5 mt-8 max-w-[350px] w-full flex flex-col justify-center items-center">
           <div className="max-w-[350px] w-full">
             <label
-              for="email"
+              htmlFor="email"
               className="block mb-2 text-lg font-bold text-gray-900 text-[#111B47]"
             >
               Email
@@ -85,7 +87,7 @@ function Login_page() {
             />
             {formik.errors.email && formik.touched.email && <p className="text-red-500 text-sm mt-2 animatedInputError font-medium">{formik.errors.email}</p>}
             <label
-              for="password"
+              htmlFor="password"
               className="block mb-2 mt-5 text-lg font-bold text-gray-900 text-[#111B47]"
             >
               Password
