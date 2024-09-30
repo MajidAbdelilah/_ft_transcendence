@@ -42,8 +42,8 @@ export function sendMessage(e) {
           onKeyUp={sendMessage}
         />
         <RiSendPlaneLine
+          className="text-3xl absolute right-4 top-3 text-[#2C3E86] text-opacity-80 cursor-pointer"
           onClick={sendMessage}
-          className="text-3xl absolute right-4 top-3 text-[#2C3E86] text-opacity-80 "
         />
       </div>
     );

@@ -47,7 +47,7 @@ export function PleaseSelectAConversation() {
 
 export function ProfileOption({onClick}) {
     return (
-        <li onClick={onClick}>
+        <li onClick={onClick} className="cursor-pointer">
         <a className="p-2 text-lg text-[#242F5C] flex items-center border-[#C6C6E1] border-b-2">
         <IoPersonOutline /> <span className="ml-2">Profile</span>
         </a>
@@ -57,7 +57,7 @@ export function ProfileOption({onClick}) {
 
 export function PlayWithOption ({onClick}) {
     return (
-      <li onClick={onClick} >
+      <li onClick={onClick } className="cursor-pointer">
       <a className="p-2 text-lg text-[#242F5C] flex items-center">
         <IoGameControllerOutline />
         <span className="ml-2">Play with</span>
@@ -68,7 +68,7 @@ export function PlayWithOption ({onClick}) {
 
  export function BlockOption ({onClick}) {
     return (
-      <li onClick={onClick} >
+      <li onClick={onClick} className="cursor-pointer">
         <a className="p-2 text-lg text-[#242F5C] flex items-center border-[#C6C6E1] border-t-2">
           <LuUserX /> <span className="ml-2">Block</span>
         </a>
@@ -78,11 +78,11 @@ export function PlayWithOption ({onClick}) {
 
   export function FriendChatInfo({ friend, ...rest }) {
     return (
-      <div className="friendChatInfo p-5 flex items-center border-b-2 border-[#9191D6] border-opacity-30 ">
+      <div className="friendChatInfo p-5 flex items-center border-b-2 mb-4 border-[#9191D6] border-opacity-30 ">
         {/* ChatListIcon  -------------------------------------------------------------- */}
 
         <IoIosChatboxes
-          className="ChatListIcon block lg:hidden text-6xl text-[#242F5C]  mr-12 "
+          className="ChatListIcon block lg:hidden text-6xl text-[#242F5C] mr-8 cursor-pointer"
           onClick={rest.switchChatState}
         />
 
@@ -99,7 +99,7 @@ export function PlayWithOption ({onClick}) {
         {/*  if the user selected already a friend, and the friend is not the tournament robot , then show the drop down icon */}
         {rest.selectedFriend && friend.name !== "tournament" && (
           <FaAngleDown
-            className="dropDownIcon text-4xl ml-auto mr-8  text-[#242F5C]"
+            className="dropDownIcon text-4xl ml-auto mr-8  text-[#242F5C] cursor-pointer"
             onClick={rest.switchDropDownState}
           />
         )}
