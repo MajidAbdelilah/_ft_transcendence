@@ -93,7 +93,7 @@ function Signup_page() {
         <h1 className="sm:text-4xl text-xl text-center text-[#111B47] font-bold">
           Create your account
         </h1>
-        <div className="mb-5 mt-8 max-w-[350px] w-full flex flex-col justify-center items-center">
+        <div className="mb-5 mt-8 max-w-[350px] w-full flex flex-col justify-center items-center min-h-[340px] max-h-[600px]">
           <div className="max-w-[350px] w-full">
             <label
               htmlFor="username"
