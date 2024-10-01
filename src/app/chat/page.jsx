@@ -1,13 +1,8 @@
 "use client";
 
-
 import Image from "next/image";
 
 // -- icons -----------------------------------------------------
-
-
-
-
 
 // -- hooks -----------------------------------------------------
 import { useState } from "react";
@@ -21,11 +16,10 @@ import Navbar from "../Navbar";
 
 import ProfileInfo from "./components/ProfileInfo";
 import FriendInfo from "./components/FriendInfo";
-import { FriendMsgBox, MyMsgBox, } from './components/peerToPeer';
-import { FriendChatInfo,} from "./components/FriendChatInfo";
+import { FriendMsgBox, MyMsgBox } from "./components/peerToPeer";
+import { FriendChatInfo } from "./components/FriendChatInfo";
 import { ConversationsHeader } from "./components/BasicComp";
 import { SendMsgBox } from "./components/SendMsgBox";
-
 
 // -- font -----------------------------------------------------
 import { Inter, Montserrat } from "next/font/google";
@@ -35,26 +29,41 @@ const montserrat = Montserrat({
   variable: "--font-montserrat",
 });
 
-
 // -- colors -----------------------------------------------------co
 //  #F4F4FF   #242F5C   #8988DE   #BCBCC9   #F4F4FF   #EAEAFF   #C0C7E0
 
 // -- data for testing -----------------------------------------------------
 
-let user = { name: "John Wick", path: "/images/avatarprofile.svg", status: "Online", };
+let user = {
+  name: "John Wick",
+  path: "/images/avatarprofile.svg",
+  status: "Online",
+};
 
-let friend1 = { name: "Henry smith", path: "/images/avatar3.svg", status: "Online", 
+let friend1 = {
+  name: "Henry smith",
+  path: "/images/avatar3.svg",
+  status: "Online",
   conversation: [
-    { time: "02:22 PM", msg: "Hi John, up for a ping pong match this evening?", sender: "friend",
+    {
+      time: "02:22 PM",
+      msg: "Hi John, up for a ping pong match this evening?",
+      sender: "friend",
     },
-    { time: "02:22 PM", msg: "Hi John, up for a ping pong match this evenihtrerthwrehwerhwrehwerhwerhwrehwherhrehehewhrhwerrhwerherheng?", sender: "friend",
+    {
+      time: "02:22 PM",
+      msg: "Hi John, up for a ping pong match this evenihtrerthwrehwerhwrehwerhwerhwrehwherhrehehewhrhwerrhwerherheng?",
+      sender: "friend",
     },
     { time: "02:23 PM", msg: "Sure, I'm in!", sender: "me" },
     { time: "02:24 PM", msg: "Great, see you at 7 PM!", sender: "friend" },
     { time: "02:25 PM", msg: "Perfect, see you then!", sender: "me" },
   ],
 };
-let friend2 = {  name: "Lucy Smith",  path: "/images/avatar2.svg",  status: "Offline",
+let friend2 = {
+  name: "Lucy Smith",
+  path: "/images/avatar2.svg",
+  status: "Offline",
   conversation: [
     { time: "09:15 AM", msg: "Good morning, how are you?", sender: "friend" },
     {
@@ -70,7 +79,8 @@ let friend2 = {  name: "Lucy Smith",  path: "/images/avatar2.svg",  status: "Off
   ],
 };
 
-let tournament = { name: "tournament", // ###############  WARNING   ########## the tournament must be named like that , casue i ve built the logic so that the name is tournament. path: "/images/avatarprofile.svg", status: "Online",
+let tournament = {
+  name: "tournament", // ###############  WARNING   ########## the tournament must be named like that , casue i ve built the logic so that the name is tournament. path: "/images/avatarprofile.svg", status: "Online",
   conversation: [
     {
       time: "09:15 AM",
@@ -80,11 +90,9 @@ let tournament = { name: "tournament", // ###############  WARNING   ########## 
   ],
 };
 
-
 // -- data ---------------------------------------------------------------------------------------------------------------
 
 export default function ChatPage() {
-
   // Clicking on icons -------------------------------------------------------
   const [iconState, setIconState] = useState({
     chatState: false,
@@ -107,7 +115,7 @@ export default function ChatPage() {
   };
 
   // Hide components when clikcing outside  -------------------------------------------------------
-  
+
   const chatRef = useRef();
   const dropDownRef = useRef();
 
@@ -130,18 +138,17 @@ export default function ChatPage() {
     };
   }, []);
 
-
   // -------------------------------------------------------
-  
+
   function MessagesBox({ friend }) {
     // no friend selected yet just return FriendChatInfo compomet with empty friend object
     if (friend == null) {
-      let noFriendYet = {path: "", name: "", status: ""};
+      let noFriendYet = { path: "", name: "", status: "" };
       return (
-        <div className="messagesBox w-full lg:w-3/5 p-2 h-full rounded-tr-xl rounded-br-xl  flex flex-col "> 
-          <FriendChatInfo 
-            friend={noFriendYet} 
-            switchChatState = {switchChatState}
+        <div className="messagesBox w-full lg:w-3/5 p-2 h-full rounded-tr-xl rounded-br-xl  flex flex-col ">
+          <FriendChatInfo
+            friend={noFriendYet}
+            switchChatState={switchChatState}
             selectedFriend={selectedFriend}
             switchDropDownState={switchDropDownState}
             iconState={iconState}
@@ -152,11 +159,11 @@ export default function ChatPage() {
       );
     }
     return (
-      <div className="messagesBox w-full lg:w-3/5 p-2 h-full rounded-tr-xl rounded-br-xl flex flex-col ">
+      <div className="messagesBox w-full lg:w-3/5 p-2 h-[88vh] rounded-tr-xl rounded-br-xl flex flex-col ">
         {/* FriendChatInfo ---------------------------------------------------------------------------------------*/}
-        <FriendChatInfo 
+        <FriendChatInfo
           friend={friend}
-          switchChatState = {switchChatState}
+          switchChatState={switchChatState}
           selectedFriend={selectedFriend}
           switchDropDownState={switchDropDownState}
           iconState={iconState}
@@ -165,7 +172,7 @@ export default function ChatPage() {
         />
 
         {/* peerToPeer ---------------------------------------------------------------------------------------*/}
-        <div className="peerToPeer flex flex-col flex-grow overflow-y-auto custom-scrollbar break-all ">
+        <div className="peerToPeer flex flex-col  flex-grow overflow-y-auto custom-scrollbar break-all ">
           {friend.conversation.map((message, index) =>
             message.sender === "friend" ? (
               <FriendMsgBox key={index} time={message.time} msg={message.msg} />
@@ -176,19 +183,18 @@ export default function ChatPage() {
         </div>
 
         {/*  SendMsgBox ---------------------------------------------------------------------------------------*/}
-        < SendMsgBox friend={friend}/>
-
+        <SendMsgBox friend={friend} />
       </div>
     );
   }
 
   return (
     <div className={`flex flex-col h-screen w-screen ${montserrat.className}`}>
-      <Navbar/>
+      <Navbar />
       <div className="parent flex flex-1 ">
         {/* hidden on smaller screens and only visible on screens 1280px or larger. */}
         {/* <div className="sidebar hidden sm:block "> */}
-          <Sidebar  />
+        <Sidebar />
         {/* </div> */}
 
         <div className="chattSection flex-1 p-5 md:p-10 h-full w-full ">
@@ -205,8 +211,7 @@ export default function ChatPage() {
             >
               <div className="friendsBox  p-2 rounded-tl-xl rounded-bl-xl  border-r-2  border-[#C6C6E1] h-full  flex-col flex-grow overflow-y-auto custom-scrollbar bg-[#F4F4FF]">
                 <ProfileInfo user={user} />
-                < ConversationsHeader/>
-
+                <ConversationsHeader />
 
                 <div className="MessagesList flex flex-col">
                   <FriendInfo
