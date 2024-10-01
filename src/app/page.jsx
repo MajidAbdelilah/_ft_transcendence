@@ -38,6 +38,9 @@ export default function App() {
   const handleSignUp = () => {
     router.push('/signup');
   }
+
+
+  
   return (
     <body className="relative">
       {/* <div className="absolute inset-0 z-0">
