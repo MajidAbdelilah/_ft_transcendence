@@ -6,8 +6,7 @@ import { useContext } from "react";
 import Achievements from "./Achievements";
 import MatchHistory from "./MatchHistory";
 import PlayNow from "./PlayNow";
-import Navbar from "./../../Navbar";
-import Sidebar from "./../../Sidebar";
+
 
 function Dashboard() {
   const DashData = useContext(DashContext);
@@ -36,17 +35,12 @@ function Dashboard() {
   });
 
   return (
-    <div className="flex flex-col h-screen">
-      <Navbar />
-      <div className="flex flex-1 overflow-y-auto flex-wrap">
-        <Sidebar />
+
         <div className="flex-1 overflow-y-auto p-4 flex flex-wrap items-center justify-center h-full">
           <PlayNow />
           <Achievements />
           <MatchHistory />
         </div>
-      </div>
-    </div>
   );
 }
 

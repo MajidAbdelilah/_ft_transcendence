@@ -4,13 +4,14 @@ import { useContext } from "react";
 
 function PlayNow() {
   const DashData = useContext(DashContext);
+  
   return (
     <div
             className={` ${
               !DashData.isMobile
                 ? "bg-[#F4F4FF] drop-shadow-md rounded-3xl border-[#BCBCC9] mt-10 md:w-[70%] shadow-md shadow-[#BCBCC9] md:h-[48%] lg:w-[800px] lg:h-[500px] "
                 : "min-h-[235px]"
-            } w-[90%] h-[25%] relative p-4 flex flex-col justify-center items-center`}
+            } w-[90%] h-[25%] relative p-4 flex flex-col justify-center items-center `}
           >
             <div className="w-full h-[80%] relative mb-4">
               <Image
@@ -33,7 +34,7 @@ function PlayNow() {
                 before:absolute before:top-0 before:-left-full before:w-full before:h-full 
                 before:bg-gradient-to-r before:from-[#242F5C] before:to-[#7C829D] 
                 before:transition-all before:duration-500 before:ease-in-out before:z-[-1] 
-                font-extrabold before:rounded-xl hover:before:left-0 text-[#fff]">
+                font-extrabold before:rounded-xl hover:before:left-0 text-[#fff]  animate-fadeinbounceright">
               PLAY NOW
             </button>
           </div>

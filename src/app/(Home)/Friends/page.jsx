@@ -1,6 +1,6 @@
 "use client";
-import Navbar from "./../../Navbar";
-import Sidebar from "./../../Sidebar";
+// import Navbar from "./../../Navbar";
+// import Sidebar from "./../../Sidebar";
 import { Montserrat } from "next/font/google";
 import { useState, useEffect, useRef } from "react";
 import Image from "next/image";
@@ -57,17 +57,13 @@ function Friends() {
   }, []);
 
   return (
-    <div className={`flex flex-col h-screen ${montserrat.className}`}>
-      <Navbar />
-      <div className="flex flex-1 overflow-y-auto flex-wrap">
-        <Sidebar />
-        <div className={`flex-1 overflow-y-auto flex flex-wrap items-center justify-center h-full ${isMobile ? '' : 'p-4'}`}>
+        <div className={`flex-1 overflow-y-auto flex flex-wrap items-center justify-center h-full  ${isMobile ? '' : 'p-4'}`}>
           <div
             className={` ${isMobile ? 'w-full mt-4' : 'rounded-3xl border-solid border-[#BCBCC9] bg-[#F4F4FF] rounded-3xl border-[#BCBCC9] bg-[#F4F4FF]'} flex flex-col  shadow-lg shadow-[#BCBCC9] items-center 
             md:w-[80%] h-full sm:h-[80%] md:h-[72%] bg-[#F4F4FF] justify-center p-4`}
           >
             <div className="w-[70%] h-full mt-2 md:mt-2 lg:mt-5 flex flex-col items-center justify-center space-y-8 ">
-              <h1 className="text-3xl lg:text-5xl md:text-3xl font-extrabold content-center tracking-wide text-[#242F5C]">
+              <h1 className="text-3xl lg:text-5xl md:text-3xl font-extrabold content-center tracking-wide text-[#242F5C] animate-fadeinbounceright">
                 FRIENDS
               </h1>
               <hr className="lg:w-[50%] lg:h-[3px] md:w-[40%] md:h-[3px] w-[65%] h-[3px] bg-[#CDCDE5] border-none rounded-full" />
@@ -155,8 +151,6 @@ function Friends() {
             </div>
           </div>
         </div>
-      </div>
-    </div>
   );
 }
 

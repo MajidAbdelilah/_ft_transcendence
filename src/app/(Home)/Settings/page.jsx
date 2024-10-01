@@ -1,8 +1,6 @@
 "use client";
 import { Inter, Montserrat } from "next/font/google";
 import { useState, useEffect } from "react";
-import Navbar from "./../../Navbar";
-import Sidebar from "./../../Sidebar";
 import Image from "next/image";
 
 const montserrat = Montserrat({
@@ -31,10 +29,7 @@ function Settings() {
   };
 
   return (
-    <div className={`flex flex-col h-screen ${montserrat.className}`}>
-      <Navbar />
-      <div className="flex flex-1 overflow-y-auto flex-wrap">
-        <Sidebar />
+
         <div className={`flex-1 overflow-y-auto flex flex-wrap items-center justify-center relative h-full ${isMobile ? '' : 'p-4'}`}>
           <div
             className={` ${isMobile ? 'w-full mt-4' : 'rounded-3xl border-solid border-[#BCBCC9] bg-[#F4F4FF] rounded-3xl border-[#BCBCC9] bg-[#F4F4FF]'} flex flex-col min-w-[500px] min-h-[600px] relative shadow-lg shadow-[#BCBCC9] items-center 
@@ -149,8 +144,6 @@ function Settings() {
              </div>
           )}
         </div>
-      </div>
-    </div>
   );
 }
 
