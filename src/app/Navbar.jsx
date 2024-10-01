@@ -1,7 +1,9 @@
 import Image from "next/image";
 import { useClickAway } from "@uidotdev/usehooks";
 import { Montserrat } from "next/font/google";
-import { useState } from "react";
+import { useState, useRef } from "react";
+
+
 
 const montserrat = Montserrat({
   subsets: ["latin"],
@@ -12,13 +14,28 @@ function Navbar() {
   const [userDropdown, setUserDropdown] = useState(false);
   const [notificationDropdown, setNotificationDropdown] = useState(false);
 
-  const userDropdownRef = useClickAway(() => {
+  const userDropdownRef = useRef(null);
+  const notificationDropdownRef = useRef(null);
+  
+  useClickAway(userDropdownRef, () => {
     setUserDropdown(false);
   });
-
-  const notificationDropdownRef = useClickAway(() => {
+  
+  useClickAway(notificationDropdownRef, () => {
     setNotificationDropdown(false);
   });
+
+  const toggleUserDropdown = (e) => {
+    e.stopPropagation();
+    setUserDropdown(prev => !prev);
+    setNotificationDropdown(false);
+  };
+  
+  const toggleNotificationDropdown = (e) => {
+    e.stopPropagation();
+    setNotificationDropdown(prev => !prev);
+    setUserDropdown(false);
+  };
 
   return (
     <nav
@@ -45,9 +62,9 @@ function Navbar() {
               />
             </svg>
           </div>
-        <div>
+        <div ref={notificationDropdownRef}>
           <Image
-            onClick={() => setNotificationDropdown(!notificationDropdown)}
+            onClick={toggleNotificationDropdown}
             className="sm:w-8 sm:h-8 w-7 h-7 flex items-center justify-center sm:ml-5 mt-2 ml-2 cursor-pointer"
             src="/images/notification.svg"
             alt="Notification"
@@ -55,9 +72,9 @@ function Navbar() {
             height="20"
           />
         </div>
-        <div
+        <div ref={userDropdownRef}
           className="flex items-center justify-center sm:w-12 sm:h-12 w-10 h-10 rounded-full bg-white text-white relative mr-2 cursor-pointer"
-          onClick={() => setUserDropdown(!userDropdown)}
+          onClick={toggleUserDropdown}
         >
           <Image
             id="avatarButton"
@@ -80,15 +97,15 @@ function Navbar() {
             width="50"
             height="50"
           />
-          {userDropdown && (
+          {userDropdown &&(
             <div
-              ref={userDropdownRef}
               className="w-[200px] h-[200px] bg-[#EAEAFF] absolute bottom-[-210px] right-[3px] z-[10] rounded-[5px]"
-            ></div>
+            >
+              <p>John Doe</p>
+            </div>
           )}
           {notificationDropdown && (
             <div
-              ref={notificationDropdownRef}
               className="w-[400px] h-[200px] bg-[#EAEAFF] absolute bottom-[-210px] right-[70px] z-[10] rounded-[5px]"
             ></div>
           )}
