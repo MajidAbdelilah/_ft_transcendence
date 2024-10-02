@@ -7,14 +7,7 @@ import { motion } from "framer-motion"
 function MatchHistory() {
   const DashData = useContext(DashContext);
   return (
-    <motion.div
-    initial={{ scale: 0 }}
-    animate={{ scale: 1 }}
-    transition={{
-      type: "spring",
-      stiffness: 260,
-      damping: 20
-    }}
+    <div
       className={`${
         !DashData.isMobile
           ? "shadow-md shadow-[#BCBCC9] rounded-3xl border-[#BCBCC9] bg-[#F4F4FF] w-[90%] md:w-[70%] h-[48%] md:h-[400px] lg:w-full lg:h-[500px] ml-[5%] mt-[50px] mr-[5%]"
@@ -90,7 +83,7 @@ function MatchHistory() {
           </div>
         </div>
       </div>
-    </motion.div>
+    </div>
   );
 }
 
