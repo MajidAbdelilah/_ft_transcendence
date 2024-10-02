@@ -66,6 +66,7 @@ function MatchHistory() {
                           width={64}
                           height={64}
                           className="w-full h-full object-cover"
+                          priority
                         />
                       </div>
                     </td>
