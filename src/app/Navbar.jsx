@@ -1,7 +1,8 @@
+'use client';
 import Image from "next/image";
 import { useClickAway } from "@uidotdev/usehooks";
 import { Montserrat } from "next/font/google";
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 
 
 
@@ -50,6 +51,8 @@ function Navbar() {
 
   const [userDropdown, setUserDropdown] = useState(false);
   const [notificationDropdown, setNotificationDropdown] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+
 
   const userDropdownRef = useRef(null);
   const notificationDropdownRef = useRef(null);
@@ -74,11 +77,29 @@ function Navbar() {
     setUserDropdown(false);
   };
 
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+    handleResize();
+    window.addEventListener("resize", handleResize);
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+
+  }, []);
+
+
   return (
     <nav
       className={`bg-[#F4F4FF] py-4 h-[90px] flex items-center shadow-md shadow-[#BCBCC9] ${montserrat.className}`}
     >
-      <div className="flex justify-end flex-auto sm:gap-5 gap-3 sm:mr-10 ml-5">
+      {!isMobile &&
+        <div className="flex items-center pl-[70px]">
+          <Image src="/images/logo.svg" alt="Logo" width={100} height={100} className="w-[110px] h-[110px]" />
+        </div>
+      }
+      <div className="flex justify-end flex-auto sm:gap-5 gap-3 sm:mr-10">
       <div className="relative">
             <input
               type="text"
