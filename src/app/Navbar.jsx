@@ -10,7 +10,44 @@ const montserrat = Montserrat({
   variable: "--font-montserrat",
 });
 
+const LogoutProfile = () => {
+  return (
+    <div className="flex flex-row items-center m-3 justify-content relative gap-2 cursor-pointer">
+      <Image src="/images/Logout.svg" alt="profile" width={50} height={50} className="w-[18px] h-[18px]" />
+      <h1 className="text-base font-medium text-[#242F5C]">Log Out</h1>
+    </div>
+  );
+}
+
+const GameStats = () => {
+  return (
+    <div className="flex flex-row items-center m-3 justify-content relative gap-2 cursor-pointer">
+      <Image src="/images/Stats.svg" alt="profile" width={50} height={50} className="w-[18px] h-[18px]" />
+      <h1 className="text-base font-medium text-[#242F5C]">Games Statistics</h1>
+    </div>
+  );
+}
+
+const ProfileSetting = () => {
+  return (
+    <div className="flex flex-row items-center m-3 justify-content relative gap-2 cursor-pointer">
+      <Image src="/images/settings.svg" alt="profile" width={50} height={50} className="w-[18px] h-[18px]" />
+      <h1 className="text-base font-medium text-[#242F5C]">Account Settings</h1>
+    </div>
+  );
+}
+
+const ProfileInfo = () => {
+  return (
+    <div className="flex flex-row items-center m-3 justify-content relative gap-2 cursor-pointer">
+      <Image src="/images/avatarAcc.svg" alt="profile" width={50} height={50} className="w-[18px] h-[18px]" />
+      <h1 className="text-base font-medium text-[#242F5C]">View Profile</h1>
+    </div>
+  );
+}
+
 function Navbar() {
+
   const [userDropdown, setUserDropdown] = useState(false);
   const [notificationDropdown, setNotificationDropdown] = useState(false);
 
@@ -73,7 +110,7 @@ function Navbar() {
           />
         </div>
         <div ref={userDropdownRef}
-          className="flex items-center justify-center sm:w-12 sm:h-12 w-10 h-10 rounded-full bg-white text-white relative mr-2 cursor-pointer"
+          className="flex items-center justify-center sm:w-12 sm:h-12 w-10 h-10 rounded-full bg-white text-white relative mr-2"
           onClick={toggleUserDropdown}
         >
           <Image
@@ -81,7 +118,7 @@ function Navbar() {
             type="button"
             dropdown-toggle="userDropdown"
             dropdown-placement="bottom-start"
-            className="sm:w-10 sm:h-10 w-8 h-8 rounded-full cursor-pointer "
+            className="sm:w-10 sm:h-10 w-8 h-8 rounded-full bg-[#D7D7EA] cursor-pointer"
             src="/images/avatar.svg"
             alt="User dropdown"
             width="100"
@@ -99,14 +136,20 @@ function Navbar() {
           />
           {userDropdown &&(
             <div
-              className="w-[200px] h-[200px] bg-[#EAEAFF] absolute bottom-[-210px] right-[3px] z-[10] rounded-[5px]"
+              className="w-[220px] h-[230px] bg-[#EAEAFF] border-2 border-solid border-[#C0C7E0] absolute bottom-[-232px] right-[3px] z-[10] rounded-[5px] shadow shadow-[#BCBCC9]"
             >
-              <p>John Doe</p>
+              <h1 className="text-lg font-medium text-[#242F5C] p-4">My Account</h1>
+              <hr className="w-[100%] h-[1px] bg-[#CDCDE5] border-none rounded-full" />
+              <ProfileInfo />
+              <ProfileSetting />
+              <GameStats />
+              <hr className="w-[100%] h-[1px] bg-[#CDCDE5] border-none rounded-full" />
+              <LogoutProfile />
             </div>
           )}
           {notificationDropdown && (
             <div
-              className="w-[400px] h-[200px] bg-[#EAEAFF] absolute bottom-[-210px] right-[70px] z-[10] rounded-[5px]"
+              className="w-[400px] h-[200px] bg-[#EAEAFF] absolute bottom-[-210px] right-[70px] z-[10] rounded-[5px] border-2 border-solid border-[#C0C7E0] shadow shadow-[#BCBCC9]"
             ></div>
           )}
         </div>
