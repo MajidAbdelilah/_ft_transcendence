@@ -6,7 +6,6 @@ import Image from "next/image";
 import Link from "next/link";
 import { useFormik } from "formik";
 import axios from "axios";
-import { motion } from "framer-motion"
 
 
 const montserrat = Montserrat({
@@ -60,15 +59,8 @@ function Login_page() {
     };
 
   return (
-    <motion.div
+    <div
       className={`h-[100vh] flex justify-center items-center ${montserrat.className}`}
-       initial={{ scale: 0 }}
-            animate={{ scale: 1 }}
-            transition={{
-              type: "spring",
-              stiffness: 260,
-              damping: 20
-            }}
     >
       <form onSubmit={formik.handleSubmit} className="max-w-[700px] z-[10] absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[90%] bg-[rgba(66,74,120,0.05)] bg-blend-hard-light shadow-[inset_0px_0px_4.6px_#A8B4FF] p-8 rounded-xl h-[700px] w-[600px] flex flex-col items-center">
         <div className="w-full flex justify-center">
@@ -139,7 +131,7 @@ function Login_page() {
           </button>{" "}
         </div>
       </form>
-    </motion.div>
+    </div>
   );
 }
 

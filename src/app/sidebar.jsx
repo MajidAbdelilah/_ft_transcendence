@@ -7,11 +7,16 @@ import { useRouter } from "next/navigation";
 import { FaBarsStaggered } from "react-icons/fa6";
 import { useClickAway } from "@uidotdev/usehooks";
 import { useRef } from "react";
+import { motion } from "framer-motion";
 
 const montserrat = Montserrat({
   subsets: ["latin"],
   variable: "--font-montserrat",
 });
+const variants = {
+  open: { opacity: 1, x: 0 },
+  closed: { opacity: 0, x: "-100%" },
+};
 
 function Sidebar() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -46,7 +51,7 @@ function Sidebar() {
           <FaBarsStaggered />
         </button>
       )}
-      <div
+      <motion.div
        
         className={`${
           isMobile
@@ -57,6 +62,11 @@ function Sidebar() {
         } bg-[#F4F4FF] p-8 flex justify-between shadow-md shadow-[#BCBCC9] flex-col  ${
           montserrat.className
           } `}
+          animate={isMobile ? (isMobileMenuOpen ? "open" : "closed") : "open"}
+          variants={variants}
+          initial={isMobile ? "closed" : "open"}
+          transition={{ duration: 0.3, ease: "easeInOut" }}
+        
         
       >
         
@@ -160,7 +170,7 @@ function Sidebar() {
             className="mx-auto pt-10 absolute right-[12px] top-2 cursor-pointer"
           />
         </div>
-      </div>
+      </motion.div>
     </div>
   );
 }
