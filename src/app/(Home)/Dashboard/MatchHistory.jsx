@@ -14,9 +14,17 @@ function MatchHistory() {
           : "shadow-md shadow-[#BCBCC9] rounded-3xl bg-[#F4F4FF]/75 border-[#BCBCC9]/25 bg-[#F4F4FF] w-[90%] h-[48%] ml-[5%] mt-[50px] mr-[5%]"
       }`}
     >
-      <h1 className="text-[#444E74]  h-[18%] font-black text-center pt-5 tracking-wider lg:text-4xl md:text-3xl text-lg md:text-xl lg:text-2xl ">
+      <motion.h1 className="text-[#444E74]  h-[18%] font-black text-center pt-5 tracking-wider lg:text-4xl md:text-3xl text-lg md:text-xl lg:text-2xl "
+        initial={{ scale: 0 }}
+        animate={{ scale: 1 }}
+        transition={{
+          type: "spring",
+          stiffness: 260,
+          damping: 30
+        }}
+      >
         MATCH HISTORY
-      </h1>
+      </motion.h1>
       <div className="flex flex-col justify-content overflow-auto overflow-y-scroll custom-scrollbar h-[95%]">
         <div className="flex flex-col aspect-square overflow-y-auto gap-2 overflow-hidden">
           <div

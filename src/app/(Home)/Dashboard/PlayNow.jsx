@@ -30,7 +30,7 @@ function PlayNow() {
                 className="object-contain rounded-xl"
               />
             </div>
-            <button className="absolute 
+            <motion.button className="absolute 
                 bottom-2 right-[8%] 
                 md:bottom-[7%] 
                 lg:bottom-[5%] lg:right-[4%]
@@ -43,9 +43,9 @@ function PlayNow() {
                 before:absolute before:top-0 before:-left-full before:w-full before:h-full 
                 before:bg-gradient-to-r before:from-[#242F5C] before:to-[#7C829D] 
                 before:transition-all before:duration-500 before:ease-in-out before:z-[-1] 
-                font-extrabold before:rounded-xl hover:before:left-0 text-[#fff]  animate-fadeinbounceright">
+                font-extrabold before:rounded-xl hover:before:left-0 text-[#fff]" >
               PLAY NOW
-            </button>
+            </motion.button>
           </motion.div>
     )
 }

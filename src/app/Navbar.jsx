@@ -3,6 +3,9 @@ import Image from "next/image";
 import { useClickAway } from "@uidotdev/usehooks";
 import { Montserrat } from "next/font/google";
 import { useState, useRef, useEffect } from "react";
+import { motion } from "framer-motion"
+import Link from "next/link";
+
 
 
 
@@ -31,10 +34,12 @@ const GameStats = () => {
 
 const ProfileSetting = () => {
   return (
+    <Link href="/Settings">
     <div className="flex flex-row items-center m-3 justify-content relative gap-2 cursor-pointer">
       <Image src="/images/settings.svg" alt="profile" width={50} height={50} className="w-[18px] h-[18px]" />
       <h1 className="text-base font-medium text-[#242F5C]">Account Settings</h1>
-    </div>
+      </div>
+    </Link>
   );
 }
 
@@ -156,8 +161,15 @@ function Navbar() {
             height="50"
           />
           {userDropdown &&(
-            <div
-              className="w-[220px] h-[230px] bg-[#EAEAFF] border-2 border-solid border-[#C0C7E0] absolute bottom-[-232px] right-[3px] z-[10] rounded-[5px] shadow shadow-[#BCBCC9]"
+            <motion.div
+              className="w-[220px] h-[230px] bg-[#EAEAFF] border-2 border-solid border-[#C0C7E0] absolute bottom-[-235px] right-[3px] z-[10] rounded-[5px] shadow shadow-[#BCBCC9]"
+              initial={{ scale: 0 }}
+              animate={{ scale: 1 }}
+              transition={{
+                type: "spring",
+                stiffness: 260,
+                damping: 30
+              }}
             >
               <h1 className="text-lg font-medium text-[#242F5C] p-4">My Account</h1>
               <hr className="w-[100%] h-[1px] bg-[#CDCDE5] border-none rounded-full" />
@@ -166,12 +178,19 @@ function Navbar() {
               <GameStats />
               <hr className="w-[100%] h-[1px] bg-[#CDCDE5] border-none rounded-full" />
               <LogoutProfile />
-            </div>
+            </motion.div>
           )}
           {notificationDropdown && (
-            <div
-              className="w-[400px] h-[200px] bg-[#EAEAFF] absolute bottom-[-210px] right-[70px] z-[10] rounded-[5px] border-2 border-solid border-[#C0C7E0] shadow shadow-[#BCBCC9]"
-            ></div>
+            <motion.div
+              initial={{ scale: 0 }}
+              animate={{ scale: 1 }}
+              transition={{
+                type: "spring",
+                stiffness: 260,
+                damping: 30
+              }}
+              className="w-[250px] h-[200px] sm:w-[400px] sm:h-[200px] bg-[#EAEAFF] absolute bottom-[-210px] right-[70px] z-[10] rounded-[5px] border-2 border-solid border-[#C0C7E0] shadow shadow-[#BCBCC9]"
+            ></motion.div>
           )}
         </div>
       </div>
