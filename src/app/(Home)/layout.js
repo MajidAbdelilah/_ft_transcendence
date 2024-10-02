@@ -1,7 +1,7 @@
 "use client";
 
 import Navbar from "./../Navbar";
-import Sidebar from "./../Sidebar";
+import Sidebar from "./../sidebar";
 import { Montserrat } from "next/font/google";
 
 
