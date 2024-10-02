@@ -1,11 +1,20 @@
 import Image from "next/image";
 import { DashContext } from "./Dashcontext";
 import { useContext } from "react";
+import { motion } from "framer-motion"
+
 
 function Achievements() {
     const DashData = useContext(DashContext);
     return (
-        <div
+      <motion.div
+      initial={{ scale: 0 }}
+      animate={{ scale: 1 }}
+      transition={{
+        type: "spring",
+        stiffness: 260,
+        damping: 20
+      }}
             className={`${
               !DashData.isMobile
                 ? "shadow-md shadow-[#BCBCC9] rounded-3xl border-[#BCBCC9] bg-[#F4F4FF] md:w-[70%] md:h-[48%] lg:w-[800px] lg:h-[500px] w-[90%] h-[48%] ml-[5%] mt-[50px] mr-[5%]"
@@ -13,6 +22,7 @@ function Achievements() {
             }`}
       >
         <div className="animation-wrapper">
+          
 
             <h1 className="text-[#444E74] h-[18%] font-black text-center pt-5 tracking-wider lg:text-4xl md:text-3xl text-lg md:text-xl lg:text-2xl">
               ACHIEVEMENTS
@@ -52,7 +62,7 @@ function Achievements() {
                   alt="achvRockie"
                   width={100}
                   height={100}
-                  className="w-[70%] blur-md max-w-[80px] md:max-w-[90px] lg:max-w-[100px] object-contain"
+                  className="w-[70%] blur max-w-[80px] md:max-w-[90px] lg:max-w-[100px] object-contain"
                 />
               </div>
               <div className="w-full aspect-square flex items-center justify-center">
@@ -61,7 +71,7 @@ function Achievements() {
                   alt="achvRockie"
                   width={100}
                   height={100}
-                  className="w-[70%] blur-md max-w-[80px] md:max-w-[90px] lg:max-w-[100px] object-contain"
+                  className="w-[70%] blur max-w-[80px] md:max-w-[90px] lg:max-w-[100px] object-contain"
                 />
               </div>
               <div className="w-full aspect-square flex items-center justify-center">
@@ -70,7 +80,7 @@ function Achievements() {
                   alt="achvRockie"
                   width={100}
                   height={100}
-                  className="w-[70%] blur-md max-w-[80px] md:max-w-[90px] lg:max-w-[100px] object-contain"
+                  className="w-[70%] blur max-w-[80px] md:max-w-[90px] lg:max-w-[100px] object-contain"
                 />
               </div>
               <div className="w-full aspect-square flex items-center justify-center">
@@ -79,7 +89,7 @@ function Achievements() {
                   alt="achvRockie"
                   width={100}
                   height={100}
-                  className="w-[70%] blur-md max-w-[80px] md:max-w-[90px] lg:max-w-[100px] object-contain"
+                  className="w-[70%] blur max-w-[80px] md:max-w-[90px] lg:max-w-[100px] object-contain"
                 />
               </div>
               <div className="w-full aspect-square flex items-center justify-center">
@@ -88,7 +98,7 @@ function Achievements() {
                   alt="achvRockie"
                   width={100}
                   height={100}
-                  className="w-[70%] blur-md max-w-[80px] md:max-w-[90px] lg:max-w-[100px] object-contain"
+                  className="w-[70%] blur max-w-[80px] md:max-w-[90px] lg:max-w-[100px] object-contain"
                 />
               </div>
               <div className="w-full aspect-square flex items-center justify-center">
@@ -97,7 +107,7 @@ function Achievements() {
                   alt="achvRockie"
                   width={100}
                   height={100}
-                  className="w-[70%] blur-md max-w-[80px] md:max-w-[90px] lg:max-w-[100px] object-contain"
+                  className="w-[70%] blur max-w-[80px] md:max-w-[90px] lg:max-w-[100px] object-contain"
                 />
               </div>
               <div className="w-full aspect-square flex items-center justify-center">
@@ -106,11 +116,11 @@ function Achievements() {
                   alt="achvRockie"
                   width={100}
                   height={100}
-                  className="w-[70%] blur-md max-w-[80px] md:max-w-[90px] lg:max-w-[100px] object-contain"
+                  className="w-[70%] blur max-w-[80px] md:max-w-[90px] lg:max-w-[100px] object-contain"
                 />
               </div>
             </div>
-          </div>
+          </motion.div>
     )
 }
 

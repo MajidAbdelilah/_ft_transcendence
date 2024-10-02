@@ -57,8 +57,8 @@ function Friends() {
   }, []);
 
   return (
-        <div className={`flex-1 overflow-y-auto flex flex-wrap items-center justify-center h-full  ${isMobile ? '' : 'p-4'}`}>
-          <div
+    <div className={`flex-1 overflow-y-auto flex flex-wrap items-center justify-center h-full  ${isMobile ? '' : 'p-4'}`}>
+      <div
             className={` ${isMobile ? 'w-full mt-4' : 'rounded-3xl border-solid border-[#BCBCC9] bg-[#F4F4FF] rounded-3xl border-[#BCBCC9] bg-[#F4F4FF]'} flex flex-col  shadow-lg shadow-[#BCBCC9] items-center 
             md:w-[90%] h-full sm:h-[80%] md:h-[90%] bg-[#F4F4FF] justify-center p-4`}
           >

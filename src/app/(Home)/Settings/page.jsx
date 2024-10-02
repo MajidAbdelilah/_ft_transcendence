@@ -2,6 +2,7 @@
 import { Inter, Montserrat } from "next/font/google";
 import { useState, useEffect } from "react";
 import Image from "next/image";
+import { motion } from "framer-motion"
 
 const montserrat = Montserrat({
   subsets: ["latin"],
@@ -31,9 +32,16 @@ function Settings() {
   return (
 
         <div className={`flex-1 overflow-y-auto flex flex-wrap items-center justify-center relative h-full ${isMobile ? '' : 'p-4'}`}>
-          <div
+          <motion.div
             className={` ${isMobile ? 'w-full mt-4' : 'rounded-3xl border-solid border-[#BCBCC9] bg-[#F4F4FF] rounded-3xl border-[#BCBCC9] bg-[#F4F4FF]'} flex flex-col min-w-[500px] min-h-[600px] relative shadow-lg shadow-[#BCBCC9] items-center 
             md:w-[45%] h-full sm:h-[80%] md:h-[72%] bg-[#F4F4FF] justify-center p-4`}
+            initial={{ scale: 0 }}
+            animate={{ scale: 1 }}
+            transition={{
+              type: "spring",
+              stiffness: 260,
+              damping: 20
+            }}
           >
             <div className="w-[70%] xl:w-[70%] lg:w-[70%]  md:w-[70%] h-full mt-2 md:mt-2 lg:mt-5 flex flex-col items-center space-y-16 relative">
               <div className="flex flex-row items-center justify-arround space-x-4">
@@ -60,7 +68,7 @@ function Settings() {
                 )}
               </div>
             </div>
-          </div>
+          </motion.div>
           {isProfile && (
               <div className="fixed inset-0 backdrop-blur-sm flex justify-center items-center absolute top-0 left-0 w-full h-full animate-fadeIn">
                 <div className="bg-[#F4F4FF] flex flex-col items-center shadow-lg rounded-xl w-full  h-full border-solid border-[#BCBCC9] border-2 max-w-[800px] mt-[160px] max-h-[900px] min-h-[800px] min-hrounded-xl pt-8 animate-scaleIn">

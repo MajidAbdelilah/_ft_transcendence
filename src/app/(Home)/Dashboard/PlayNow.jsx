@@ -1,12 +1,21 @@
 import Image from "next/image";
 import { DashContext } from "./Dashcontext";
 import { useContext } from "react";
+import { motion } from "framer-motion"
+
 
 function PlayNow() {
   const DashData = useContext(DashContext);
   
   return (
-    <div
+    <motion.div
+        initial={{ scale: 0 }}
+        animate={{ scale: 1 }}
+        transition={{
+          type: "spring",
+          stiffness: 260,
+          damping: 20
+        }}
             className={` ${
               !DashData.isMobile
                 ? "bg-[#F4F4FF] drop-shadow-md rounded-3xl border-[#BCBCC9] mt-10 md:w-[70%] shadow-md shadow-[#BCBCC9] md:h-[48%] lg:w-[800px] lg:h-[500px] "
@@ -37,7 +46,7 @@ function PlayNow() {
                 font-extrabold before:rounded-xl hover:before:left-0 text-[#fff]  animate-fadeinbounceright">
               PLAY NOW
             </button>
-          </div>
+          </motion.div>
     )
 }
 
