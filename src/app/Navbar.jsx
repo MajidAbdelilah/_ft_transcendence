@@ -13,7 +13,7 @@ const montserrat = Montserrat({
 const LogoutProfile = () => {
   return (
     <div className="flex flex-row items-center m-3 justify-content relative gap-2 cursor-pointer">
-      <Image src="/images/Logout.svg" alt="profile" width={50} height={50} className="w-[18px] h-[18px]" />
+      <Image src="/images/logout.svg" alt="profile" width={50} height={50} className="w-[18px] h-[18px]" />
       <h1 className="text-base font-medium text-[#242F5C]">Log Out</h1>
     </div>
   );
