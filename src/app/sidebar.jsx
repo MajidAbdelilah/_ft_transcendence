@@ -37,7 +37,7 @@ function Sidebar() {
   }, []);
 
   const toggleMobileMenu = () => {
-    setIsMobileMenuOpen(false);
+    setIsMobileMenuOpen(!isMobileMenuOpen);
   };
 
 

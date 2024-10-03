@@ -4,12 +4,14 @@ import { useState, useEffect } from "react";
 import Image from "next/image";
 import { motion } from "framer-motion"
 
+
 const montserrat = Montserrat({
   subsets: ["latin"],
   variable: "--font-montserrat",
 });
 
 function Settings() {
+
   const [isMobile, setIsMobile] = useState(false);
   const [isIcon, setIsIcon] = useState(false);
   const [isProfile, setIsProfile] = useState(false);
@@ -110,7 +112,6 @@ function Settings() {
                   />
                   <h1 className="text-2xl font-bold tracking-wide text-[#242F5C] pt-8">Update Profile</h1>
                   <form className="w-full h-full flex flex-col items-center justify-center">
-
                   <div className='max-w-[350px] w-full mt-4 '>
                     <label for="username" className="block mb-2 text-lg font-bold text-gray-900 text-[#242F5C]">Username</label>
                     <input type="email" id="email" className="bg-[#F8FBFF] border  text-gray-900 text-sm rounded-[10px] focus:ring-blue-500 focus:border-blue-500 block w-full p-3.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Username" required />
