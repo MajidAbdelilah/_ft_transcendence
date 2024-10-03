@@ -6,7 +6,7 @@ export default function FriendInfo({ friend, onClick }) {
   let len = friend.conversation.length;
   return (
     <div
-      className="friendInfo my-3 w-full flex flex-row items-center overflow-hidden cursor-pointer"
+      className="friendInfo my-2 px-1 w-full flex flex-row items-center overflow-hidden cursor-pointer"
       onClick={onClick}
     >
       {friend.name === "tournament" ? (
@@ -31,7 +31,7 @@ export default function FriendInfo({ friend, onClick }) {
           {len > 0 ? friend.conversation[len - 1].msg : "No messages yet"}
         </p>
       </div>
-      <span className="text-xs text-[#242F5C] ml-auto hidden xl:block">
+      <span className="text-xs  text-[#242F5C] ml-auto hidden xl:block">
         {len > 0 ? friend.conversation[len - 1].time : ""}
       </span>
     </div>
