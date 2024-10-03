@@ -44,6 +44,7 @@ function Settings() {
               stiffness: 260,
               damping: 20
             }}
+        
           >
             <div className="w-[70%] xl:w-[70%] lg:w-[70%]  md:w-[70%] h-full mt-2 md:mt-2 lg:mt-5 flex flex-col items-center space-y-16 relative">
               <div className="flex flex-row items-center justify-arround space-x-4">
