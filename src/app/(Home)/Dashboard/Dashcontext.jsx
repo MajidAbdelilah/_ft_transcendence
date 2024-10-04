@@ -10,7 +10,7 @@ const montserrat = Montserrat({
 const DashProvider = ({ children }) => {
     const [isMobile, setIsMobile] = useState(false);
     const [isScrolled, setIsScrolled] = useState(false);
-  
+
 
     const [matchHistory, setMatchHistory] = useState([
         {
@@ -34,7 +34,7 @@ const DashProvider = ({ children }) => {
             result: "Win",
             map: "Blue"
         },
-          
+
         {
             avatar: "/images/avatar1.svg",
             name: "Ali",

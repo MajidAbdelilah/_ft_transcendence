@@ -3,9 +3,9 @@ import Image from "next/image";
 import { Montserrat } from "next/font/google";
 import { useState, useEffect } from "react";
 const montserrat = Montserrat({
-    subsets: ['latin'],
-    variable: '--font-montserrat',
-  })
+  subsets: ['latin'],
+  variable: '--font-montserrat',
+})
 
 function FriendRequests() {
   const [isMobileRq, setIsMobileRq] = useState(false);
@@ -25,13 +25,13 @@ function FriendRequests() {
 
   return (
     <div className={`w-full  md:w-[70%]  mx-auto h-20 lg:h-[12%] md:h[20%] mt-2 rounded-xl bg-[#D8D8F7] shadow-md shadow-[#BCBCC9] relative ${isMobile ? '' : 'min-w-[500px] min-h-[90px]'} ${montserrat.className}`}>
-        <div className="flex items-center h-full p-2">
+      <div className="flex items-center h-full p-2">
         <div className="flex flex-row items-center justify-center lg:w-[10%] lg:h-[90%] md:w-[10%] md:h-[90%] w-[20%] h-[90%]">
-            <Image priority src="./images/avatarInvite.svg" alt="profile" width={50} height={50} className="lg:w-[90%] lg:h-[90%] md:w-[80%] md:h-[80%] w-[100%] h-[100%]" />
+          <Image priority src="./images/avatarInvite.svg" alt="profile" width={50} height={50} className="lg:w-[90%] lg:h-[90%] md:w-[80%] md:h-[80%] w-[100%] h-[100%]" />
         </div>
         <div className="ml-4 flex flex-col justify-center">
-            <h1 className="text-[#242F5C] text-sm lg:text-lg md:text-base font-bold">John Doe</h1>
-            <p className="text-green-600 lg:text-sm text-xs font-medium">Online</p>
+          <h1 className="text-[#242F5C] text-sm lg:text-lg md:text-base font-bold">John Doe</h1>
+          <p className="text-green-600 lg:text-sm text-xs font-medium">Online</p>
         </div>
         {!isMobileRq ? <div className="flex flex-row items-center justify-end lg:w-[50%] lg:h-[90%] md:w-[10%] md:h-[90%] w-[20%] h-[90%] absolute md:right-10 right-5 top-1 md:gap-5 gap-2">
           <button className="
@@ -70,10 +70,10 @@ function FriendRequests() {
         </div>
           :
           <div className="flex flex-row items-center justify-end lg:w-[20%] lg:h-[90%] md:w-[20%] md:h-[90%] w-[20%] h-[90%] absolute md:right-4 right-5 top-1 md:gap-5 gap-5">
-              <Image src="/images/Accept.svg" alt="profile" width={50} height={50} className="lg:w-[32%] lg:h-[32%] md:w-[40%] md:h-[40%] w-[30%] h-[30%]  cursor-pointer" />
-              <Image src="/images/Reject.svg" alt="profile" width={50} height={50} className="lg:w-[32%] lg:h-[32%] md:w-[40%] md:h-[40%] w-[30%] h-[30%]  cursor-pointer" />
+            <Image src="/images/Accept.svg" alt="profile" width={50} height={50} className="lg:w-[32%] lg:h-[32%] md:w-[40%] md:h-[40%] w-[30%] h-[30%]  cursor-pointer" />
+            <Image src="/images/Reject.svg" alt="profile" width={50} height={50} className="lg:w-[32%] lg:h-[32%] md:w-[40%] md:h-[40%] w-[30%] h-[30%]  cursor-pointer" />
           </div>}
-        </div>
+      </div>
     </div>
   );
 }

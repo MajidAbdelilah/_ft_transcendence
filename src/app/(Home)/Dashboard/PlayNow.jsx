@@ -6,31 +6,30 @@ import { motion } from "framer-motion"
 
 function PlayNow() {
   const DashData = useContext(DashContext);
-  
+
   return (
     <motion.div
-        initial={{ scale: 0 }}
-        animate={{ scale: 1 }}
-        transition={{
-          type: "spring",
-          stiffness: 260,
-          damping: 20
-        }}
-            className={` ${
-              !DashData.isMobile
-                ? "bg-[#F4F4FF] drop-shadow-md rounded-3xl border-[#BCBCC9] mt-10 md:w-[70%] shadow-md shadow-[#BCBCC9] md:h-[48%] lg:w-[800px] lg:h-[500px] "
-                : "min-h-[235px]"
-            } w-[90%] h-[25%] relative p-4 flex flex-col justify-center items-center `}
-          >
-            <div className="w-full h-[80%] relative mb-4">
-              <Image
-                src="/images/playNow.webp"
-                alt="Game Image"
-                fill
-                className="object-contain rounded-xl"
-              />
-            </div>
-            <motion.button className="absolute 
+      initial={{ scale: 0 }}
+      animate={{ scale: 1 }}
+      transition={{
+        type: "spring",
+        stiffness: 260,
+        damping: 20
+      }}
+      className={` ${!DashData.isMobile
+          ? "bg-[#F4F4FF] drop-shadow-md rounded-3xl border-[#BCBCC9] mt-10 md:w-[70%] shadow-md shadow-[#BCBCC9] md:h-[48%] lg:w-[800px] lg:h-[500px] "
+          : "min-h-[235px]"
+        } w-[90%] h-[25%] relative p-4 flex flex-col justify-center items-center `}
+    >
+      <div className="w-full h-[80%] relative mb-4">
+        <Image
+          src="/images/playNow.webp"
+          alt="Game Image"
+          fill
+          className="object-contain rounded-xl"
+        />
+      </div>
+      <motion.button className="absolute 
                 bottom-2 right-[8%] 
                 md:bottom-[7%] 
                 lg:bottom-[5%] lg:right-[4%]
@@ -44,10 +43,10 @@ function PlayNow() {
                 before:bg-gradient-to-r before:from-[#242F5C] before:to-[#7C829D] 
                 before:transition-all before:duration-500 before:ease-in-out before:z-[-1] 
                 font-extrabold before:rounded-xl hover:before:left-0 text-[#fff]" >
-              PLAY NOW
-            </motion.button>
-          </motion.div>
-    )
+        PLAY NOW
+      </motion.button>
+    </motion.div>
+  )
 }
 
 export default PlayNow;

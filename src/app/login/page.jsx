@@ -52,27 +52,27 @@ function Login_page() {
     },
   });
 
-    const handleSubmit = async (values) => {
-      // try {
-      //   const response = await axios.get('/api/login', values);
-      //   console.log(response);
-      // } catch (error) {
-      //   console.log(error);
-      // }
-      console.log(values);
-    };
+  const handleSubmit = async (values) => {
+    // try {
+    //   const response = await axios.get('/api/login', values);
+    //   console.log(response);
+    // } catch (error) {
+    //   console.log(error);
+    // }
+    console.log(values);
+  };
 
-  
-    useEffect(() => {
-      const handleResize = () => {
-        setIsMobile(window.innerWidth <= 768);
-      };
-      handleResize();
-      window.addEventListener("resize", handleResize);
-      return () => {
-        window.removeEventListener("resize", handleResize);
-      };
-    }, []);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+    handleResize();
+    window.addEventListener("resize", handleResize);
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
   return (
     <div
       className={`h-[100vh] flex justify-center items-center ${montserrat.className}`}

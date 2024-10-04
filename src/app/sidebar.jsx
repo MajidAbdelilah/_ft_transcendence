@@ -21,7 +21,7 @@ const variants = {
 function Sidebar() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
-  const sideRef =  useClickAway( () => {
+  const sideRef = useClickAway(() => {
     setIsMobileMenuOpen(false);
   });
 
@@ -52,24 +52,21 @@ function Sidebar() {
         </button>
       )}
       <motion.div
-       
-        className={`${
-          isMobile
-            ? `fixed top-0 left-0 h-full w-64 transform ${
-                isMobileMenuOpen ? "translate-x-0" : "-translate-x-full"
-              } transition-transform duration-300 ease-in-out z-40`
+
+        className={`${isMobile
+            ? `fixed top-0 left-0 h-full w-64 transform ${isMobileMenuOpen ? "translate-x-0" : "-translate-x-full"
+            } transition-transform duration-300 ease-in-out z-40`
             : "w-64 h-full"
-        } bg-[#F4F4FF] p-8 flex justify-between shadow-md shadow-[#BCBCC9] flex-col  ${
-          montserrat.className
+          } bg-[#F4F4FF] p-8 flex justify-between shadow-md shadow-[#BCBCC9] flex-col  ${montserrat.className
           } `}
-          animate={isMobile ? (isMobileMenuOpen ? "open" : "closed") : "open"}
-          variants={variants}
-          initial={isMobile ? "closed" : "open"}
-          transition={{ duration: 0.3, ease: "easeInOut" }}
-        
-        
+        animate={isMobile ? (isMobileMenuOpen ? "open" : "closed") : "open"}
+        variants={variants}
+        initial={isMobile ? "closed" : "open"}
+        transition={{ duration: 0.3, ease: "easeInOut" }}
+
+
       >
-        
+
         <ul className="flex flex-col gap-8 sm:mt-5 mt-10 pt-12 h-[80%]">
           <li>
             <Link

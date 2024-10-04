@@ -35,9 +35,9 @@ const GameStats = () => {
 const ProfileSetting = () => {
   return (
     <Link href="/Settings">
-    <div className="flex flex-row items-center m-3 justify-content relative gap-2 cursor-pointer">
-      <Image src="/images/settings.svg" alt="profile" width={50} height={50} className="w-[18px] h-[18px]" />
-      <h1 className="text-base font-medium text-[#242F5C]">Account Settings</h1>
+      <div className="flex flex-row items-center m-3 justify-content relative gap-2 cursor-pointer">
+        <Image src="/images/settings.svg" alt="profile" width={50} height={50} className="w-[18px] h-[18px]" />
+        <h1 className="text-base font-medium text-[#242F5C]">Account Settings</h1>
       </div>
     </Link>
   );
@@ -61,11 +61,11 @@ function Navbar() {
 
   const userDropdownRef = useRef(null);
   const notificationDropdownRef = useRef(null);
-  
+
   useClickAway(userDropdownRef, () => {
     setUserDropdown(false);
   });
-  
+
   useClickAway(notificationDropdownRef, () => {
     setNotificationDropdown(false);
   });
@@ -75,7 +75,7 @@ function Navbar() {
     setUserDropdown(prev => !prev);
     setNotificationDropdown(false);
   };
-  
+
   const toggleNotificationDropdown = (e) => {
     e.stopPropagation();
     setNotificationDropdown(prev => !prev);
@@ -105,26 +105,26 @@ function Navbar() {
         </div>
       }
       <div className="flex justify-end flex-auto sm:gap-5 gap-3 sm:mr-10">
-      <div className="relative">
-            <input
-              type="text"
-              placeholder="Search..."
-              className="sm:py-3 shadow-sm shadow-[#BCBCC9] sm:w-[280px] py-[8px] w-[200px]  pl-[2.5rem] rounded-full bg-[#D7D7EA] text-[#242F5C] focus:outline-none focus:ring-2 focus:ring-[#3CDCDE5]"
+        <div className="relative">
+          <input
+            type="text"
+            placeholder="Search..."
+            className="sm:py-3 shadow-sm shadow-[#BCBCC9] sm:w-[280px] py-[8px] w-[200px]  pl-[2.5rem] rounded-full bg-[#D7D7EA] text-[#242F5C] focus:outline-none focus:ring-2 focus:ring-[#3CDCDE5]"
+          />
+          <svg
+            className="absolute left-3 top-1/2 transform -translate-y-1/2 op h-5 w-5 text-gray-400"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
             />
-            <svg
-              className="absolute left-3 top-1/2 transform -translate-y-1/2 op h-5 w-5 text-gray-400"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-              />
-            </svg>
-          </div>
+          </svg>
+        </div>
         <div ref={notificationDropdownRef}>
           <Image
             onClick={toggleNotificationDropdown}
@@ -160,7 +160,7 @@ function Navbar() {
             width="50"
             height="50"
           />
-          {userDropdown &&(
+          {userDropdown && (
             <motion.div
               className="w-[220px] h-[230px] bg-[#EAEAFF] border-2 border-solid border-[#C0C7E0] absolute bottom-[-235px] right-[3px] z-[10] rounded-[5px] shadow shadow-[#BCBCC9]"
               initial={{ scale: 0 }}

@@ -11,35 +11,35 @@ const montserrat = Montserrat({
 });
 
 const validate = values => {
-    const errors = {};
-    if (!values.username) {
-      errors.username = 'Username is required';
-    }
-    else if (values.username.length > 15) {
-        errors.username = 'Username must be 15 characters or less';
-    }
-    else if (values.username.length < 2) {
-        errors.username = 'Username must be at least 2 characters';
-    }
-    
-    if (!values.email) {
-      errors.email = 'Email is required';
-    } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(values.email)) {
-      errors.email = 'Invalid email address';
-    }
+  const errors = {};
+  if (!values.username) {
+    errors.username = 'Username is required';
+  }
+  else if (values.username.length > 15) {
+    errors.username = 'Username must be 15 characters or less';
+  }
+  else if (values.username.length < 2) {
+    errors.username = 'Username must be at least 2 characters';
+  }
 
-    if (!values.password) {
-        errors.password = 'Password is required';
-    } else if (values.password.length < 6) {
-        errors.password = 'Password must be at least 6 characters';
-    }
+  if (!values.email) {
+    errors.email = 'Email is required';
+  } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(values.email)) {
+    errors.email = 'Invalid email address';
+  }
 
-    if (!values.confirmPassword) {
-        errors.confirmPassword = 'Confirm Password is required';
-    } else if (values.confirmPassword !== values.password) {
-        errors.confirmPassword = 'Password do not match';
-    }
-    return errors;
+  if (!values.password) {
+    errors.password = 'Password is required';
+  } else if (values.password.length < 6) {
+    errors.password = 'Password must be at least 6 characters';
+  }
+
+  if (!values.confirmPassword) {
+    errors.confirmPassword = 'Confirm Password is required';
+  } else if (values.confirmPassword !== values.password) {
+    errors.confirmPassword = 'Password do not match';
+  }
+  return errors;
 };
 
 
@@ -57,39 +57,39 @@ function Signup_page() {
     };
   }, []);
 
-    const formik = useFormik({
-        initialValues: {
-          username: '',
-          email: '',
-          password: '',
-          confirmPassword: '',
-        },
-        validate,
-        onSubmit: values => {
-          handleSubmit(values);
-        },
-        handleBlur: (e) => {
-            const { name, value } = e.target;
-            formik.setFieldValue(name, value);
-            formik.setFieldError(name, validate({ [name]: value })[name]);
-        },
-    });
+  const formik = useFormik({
+    initialValues: {
+      username: '',
+      email: '',
+      password: '',
+      confirmPassword: '',
+    },
+    validate,
+    onSubmit: values => {
+      handleSubmit(values);
+    },
+    handleBlur: (e) => {
+      const { name, value } = e.target;
+      formik.setFieldValue(name, value);
+      formik.setFieldError(name, validate({ [name]: value })[name]);
+    },
+  });
 
   const handleSubmit = (values) => {
-        const FinalValues = {
-            username: values.username,
-            email: values.email,
-            password: values.password,
-        }
-    
-        // try {
-        //     const response = await axios.post('/api/signup', values);
-        //     console.log(response);
-        // } catch (error) {
-        //     console.log(error);
-      // }
-      console.log(FinalValues);
+    const FinalValues = {
+      username: values.username,
+      email: values.email,
+      password: values.password,
     }
+
+    // try {
+    //     const response = await axios.post('/api/signup', values);
+    //     console.log(response);
+    // } catch (error) {
+    //     console.log(error);
+    // }
+    console.log(FinalValues);
+  }
 
   return (
     <div
@@ -155,7 +155,7 @@ function Signup_page() {
               onChange={formik.handleChange}
               className={`${formik.errors.password && formik.touched.password ? 'border-red-500' : ''} bg-[#F8FBFF] border mt-[5px] text-gray-900 text-sm rounded-[10px] focus:ring-blue-500 mb-5 focus:border-blue-500 block w-full p-3.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500`}
               placeholder="Enter your password"
-              
+
               onBlur={formik.handleBlur}
             />
             {formik.errors.password && formik.touched.password && <p className="text-red-500 text-sm animatedInputError font-medium mt-[-10px]">{formik.errors.password}</p>}
