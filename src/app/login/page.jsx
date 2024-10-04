@@ -1,7 +1,6 @@
 "use client";
 
 import { Inter, Montserrat } from "next/font/google";
-import BackgroundBeams from "/src/components/ui/background-beams";
 import Image from "next/image";
 import Link from "next/link";
 import { useFormik } from "formik";
