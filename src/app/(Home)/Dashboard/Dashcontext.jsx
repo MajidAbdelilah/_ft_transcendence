@@ -14,7 +14,7 @@ const DashProvider = ({ children }) => {
   const [matchHistory, setMatchHistory] = useState([
     {
       avatar: "/images/avatar1.svg",
-      name: "Alijfdftdkt",
+      name: "Alijfdfhfffftdkt",
       score: "5-4",
       result: "Win",
       map: "Blue",
@@ -28,7 +28,7 @@ const DashProvider = ({ children }) => {
     },
     {
       avatar: "/images/avatar3.svg",
-      name: "Ali",
+      name: "Alghjgfjgi",
       score: "5-4",
       result: "Win",
       map: "Blue",

@@ -12,51 +12,49 @@ const montserrat = Montserrat({
   variable: "--font-montserrat",
 });
 
-
-
-
 //data ------------------------------------------
 let user1 = {
   name: "John Wick",
-  avatar: "/images/avatar1.svg",
+  avatar: "/images/avatarprofile.svg",
   status: "Online",
-  level : 1,
+  level: 1,
   score: "5-4",
   result: "Win",
   map: "Blue",
 };
 
-
-let user2 ={
+let user2 = {
   avatar: "/images/avatar3.svg",
   name: "Ali",
   score: "5-4",
   result: "Win",
   map: "Blue",
   status: "Offline",
-  level : 2,
+  level: 2,
 };
 
-let user3 ={
+let user3 = {
   avatar: "/images/avatarprofile.svg",
   name: "Malcom Smith",
   score: "3-4",
   result: "Lose",
   map: "Blue",
   status: "Offline",
-  level : 3,
+  level: 3,
 };
 
 export default function Profile() {
   return (
     <DashProvider>
-      <div className={`flex-1 overflow-y-auto p-4 flex flex-wrap items-center justify-center h-full ${montserrat.variable}`}>
-      
-      <UserProfile user={user1}/>
-      <UserProfile user={user2}/>
-      <LeaderBoard first={user1} second={user2} third={user3}/>
-      
-      <MatchHistory />
+      <div
+        className={`flex-1 overflow-y-auto p-4 flex flex-wrap items-center justify-center h-full ${montserrat.variable}`}
+      >
+
+          <UserProfile user={user1} />
+          <LeaderBoard first={user1} second={user2} third={user3} />
+
+
+        <MatchHistory />
       </div>
     </DashProvider>
   );

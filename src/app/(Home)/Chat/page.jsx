@@ -62,7 +62,7 @@ let friend1 = {
 };
 let friend2 = {
   name: "Lucy Smith",
-  path: "/images/avatar2.svg",
+  path: "/images/avatarprofile.svg",
   status: "Offline",
   conversation: [
     { time: "09:15 AM", msg: "Good morning, how are you?", sender: "friend" },
