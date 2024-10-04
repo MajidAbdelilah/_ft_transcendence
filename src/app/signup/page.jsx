@@ -44,6 +44,18 @@ const validate = values => {
 
 
 function Signup_page() {
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+    handleResize();
+    window.addEventListener("resize", handleResize);
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
 
     const formik = useFormik({
         initialValues: {
@@ -84,16 +96,16 @@ function Signup_page() {
       className={`h-[100vh] flex justify-center items-center ${montserrat.className}`}
     >
       <form
-        className="max-w-[700px] w-[90%] bg-[rgba(66,74,120,0.05)] bg-blend-hard-light shadow-[inset_0px_0px_4.6px_#A8B4FF] p-8 rounded-xl  w-[600px] flex flex-col items-center"
+        className={`${!isMobile ? "bg-[rgba(66,74,120,0.05)]" : "border-none"} max-w-[700px] w-[90%]  bg-blend-hard-light ${!isMobile ? "shadow-[inset_0px_0px_4.6px_#A8B4FF]" : ""} p-8 rounded-xl  w-[600px] flex flex-col items-center`}
         onSubmit={formik.handleSubmit}
       >
         <div className="w-full flex justify-center">
-          <Image src="images/logo.svg" alt="Logo" width="100" height="100" />
+          <Image src="/images/logo.png" alt="Logo" width="100" height="100" />
         </div>
         <h1 className="sm:text-4xl text-xl text-center text-[#111B47] font-bold">
           Create your account
         </h1>
-        <div className="mb-5 mt-8 max-w-[350px] w-full flex flex-col justify-center items-center min-h-[340px] max-h-[600px]">
+        <div className="mb- mt-8 max-w-[350px] w-full flex flex-col justify-center items-center min-h-[340px] max-h-[700px]">
           <div className="max-w-[350px] w-full">
             <label
               htmlFor="username"
