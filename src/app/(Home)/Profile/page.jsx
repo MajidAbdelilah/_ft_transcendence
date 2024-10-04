@@ -49,10 +49,10 @@ export default function Profile() {
       <div
         className={`flex-1 overflow-y-auto p-4 flex flex-wrap items-center justify-center h-full ${montserrat.variable}`}
       >
-
+        <div className="flex flex-col lg:flex-row w-full lg:mx-8 items-center justify-center gap-8">
           <UserProfile user={user1} />
           <LeaderBoard first={user1} second={user2} third={user3} />
-
+        </div>
 
         <MatchHistory />
       </div>
