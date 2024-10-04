@@ -18,7 +18,7 @@ const montserrat = Montserrat({
 //data ------------------------------------------
 let user1 = {
   name: "John Wick",
-  avatar: "/images/avatarprofile.svg",
+  avatar: "/images/avatar1.svg",
   status: "Online",
   level : 1,
   score: "5-4",
@@ -28,7 +28,7 @@ let user1 = {
 
 
 let user2 ={
-  avatar: "/images/avatar1.svg",
+  avatar: "/images/avatar3.svg",
   name: "Ali",
   score: "5-4",
   result: "Win",
@@ -38,7 +38,7 @@ let user2 ={
 };
 
 let user3 ={
-  avatar: "/images/avatar3.svg",
+  avatar: "/images/avatarprofile.svg",
   name: "Malcom Smith",
   score: "3-4",
   result: "Lose",
@@ -53,6 +53,7 @@ export default function Profile() {
       <div className={`flex-1 overflow-y-auto p-4 flex flex-wrap items-center justify-center h-full ${montserrat.variable}`}>
       
       <UserProfile user={user1}/>
+      <UserProfile user={user2}/>
       <LeaderBoard first={user1} second={user2} third={user3}/>
       
       <MatchHistory />

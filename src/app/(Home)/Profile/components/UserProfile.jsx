@@ -77,7 +77,7 @@ export default function UserProfile({user}) {
   
 
   return (
-    <div className="flex shadow-md shadow-[#BCBCC9] border border-[#BCBCC9] rounded-2xl bg-[#F4F4FF] h-40 w-[80%]">
+    <div className="flex shadow-md shadow-[#BCBCC9] border border-[#BCBCC9] rounded-2xl bg-[#F4F4FF] h-40 w-[80%] mt-10">
       
       <Part1 user={user} />
       <Part2 user={user}/>
