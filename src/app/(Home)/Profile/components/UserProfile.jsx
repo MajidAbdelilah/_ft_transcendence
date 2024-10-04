@@ -25,14 +25,14 @@ function Part1({user}) {
         alt="Profile"
         className="absolute w-20 h-20 rounded-full border-2 border-[#BCBCC9] -top-10  shadow-md shadow-[#BCBCC9]"
         />
-      <div className="mt-12 text-sm font-bold text-[#242F5C]">
+      <div className="mt-12 text-sm md:text-md lg:text-lg xl:text-xl font-bold text-[#242F5C]">
         {user.name}
       </div>
-      <span className="text-xs mt-1 text-[#8988DE]">{user.status}</span>
+      <span className="text-xs md:text-sm lg:text-md xl:text-lg mt-1 text-[#8988DE]">{user.status}</span>
 
       <div className="flex flex-row mt-2 text-[#242F5C] ">
-        <BsChatLeftText className="mr-1 text-lg" />
-        <MdOutlinePersonAddAlt className="ml-1 text-xl" />
+        <BsChatLeftText className="mr-1 text-lg lg:text-xl" />
+        <MdOutlinePersonAddAlt className="ml-1 text-xl lg:text-2xl" />
       </div>
     </div>
   </div>
@@ -46,7 +46,7 @@ function Part2({user}) {
       <LuUserX className="blockIcon text-[#242F5C] text-3xl" />
 
       <div className="level flex flex-col items-start w-full mb-4">
-        <span className="text-xs text-[#242F5C] font-semibold">Level {user.level}</span>
+        <span className=" text-[#242F5C] font-semibold text-xs ">Level {user.level}</span>
 
         
         <div className="relative w-full h-3 bg-gray-300 rounded-full mt-1 ">
