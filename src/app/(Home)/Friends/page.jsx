@@ -89,7 +89,7 @@ function Friends() {
                   ))}
                 </div>
               ) : (
-                <div className="w-full  h-[10%] flex flex-row items-center content-center  justify-around ">
+                <div className="w-full  h-[10%] flex flex-row items-center content-center  justify-around">
                   {navItemsIcons.map((item) => (
                     <Image
                       key={item.name}

@@ -71,7 +71,7 @@ function MatchHistory() {
                     <td className="flex items-center justify-center py-2 sm:py-3 md:py-4">
                       <div className="w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 lg:w-[70px] lg:h-[70px] overflow-hidden rounded-full">
                         <Image
-                          src="/images/avatar1.svg"
+                          src="/images/avatar1.webp"
                           alt="avatar"
                           width={64}
                           height={64}

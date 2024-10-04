@@ -24,7 +24,7 @@ function PlayNow() {
           >
             <div className="w-full h-[80%] relative mb-4">
               <Image
-                src="/images/gamePic.svg"
+                src="/images/playNow.webp"
                 alt="Game Image"
                 fill
                 className="object-contain rounded-xl"

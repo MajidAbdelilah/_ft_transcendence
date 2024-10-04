@@ -100,8 +100,8 @@ function Navbar() {
       className={`bg-[#F4F4FF] py-4 h-[90px] flex items-center shadow-md shadow-[#BCBCC9] ${montserrat.className}`}
     >
       {!isMobile &&
-        <div className="flex items-center pl-[70px]">
-          <Image src="/images/logo.svg" alt="Logo" width={100} height={100} className="w-[110px] h-[110px]" />
+        <div className="flex items-center pl-[70px] pt-5">
+          <Image src="/images/logo.png" alt="Logo" width={100} height={100} className="w-[120px] h-[100px]" />
         </div>
       }
       <div className="flex justify-end flex-auto sm:gap-5 gap-3 sm:mr-10">
