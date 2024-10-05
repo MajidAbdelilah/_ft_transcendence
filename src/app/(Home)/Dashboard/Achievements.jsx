@@ -41,7 +41,7 @@ function Achievements() {
           ACHIEVEMENTS
         </h1>
       </div>
-      <div className="grid grid-cols-3 md:grid-cols-3 gap-4 md:gap-6 lg:gap-4 justify-items-center max-h-[80%] overflow-y-auto overflow-hidden custom-scrollbar">
+      <div className="grid grid-cols-3 md:grid-cols-3 gap-4 md:gap-6 lg:gap-4 justify-items-center max-h-[70%] overflow-y-auto overflow-hidden custom-scrollbar">
         {achievements.map((achievement, index) => (
           <div key={index} className="w-full aspect-square flex items-center justify-center">
             <Image
