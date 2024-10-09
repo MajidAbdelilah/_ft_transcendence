@@ -144,7 +144,7 @@ function Navbar() {
             type="button"
             dropdown-toggle="userDropdown"
             dropdown-placement="bottom-start"
-            className="sm:w-10 sm:h-10 w-8 h-8 rounded-full bg-[#D7D7EA] cursor-pointer"
+            className="sm:w-10 sm:h-10 w-8 h-8 rounded-full bg-[#D7D7EA] cursor-pointer rounded-full"
             src="/images/avatar.svg"
             alt="User dropdown"
             width="100"

@@ -8,6 +8,7 @@ import { FaBarsStaggered } from "react-icons/fa6";
 import { useClickAway } from "@uidotdev/usehooks";
 import { useRef } from "react";
 import { motion } from "framer-motion";
+import axios from "axios";
 
 const montserrat = Montserrat({
   subsets: ["latin"],
@@ -18,9 +19,19 @@ const variants = {
   closed: { opacity: 0, x: "-100%" },
 };
 
+// class UserData {
+//   constructor(name = "", email = "", avatar = "") {
+//     this.name = name;
+//     this.email = email;
+//     this.avatar = avatar;
+//   }
+// }
+
 function Sidebar() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
+  // const [userData, setUserData] = useState(new UserData());
+
   const sideRef = useClickAway(() => {
     setIsMobileMenuOpen(false);
   });
@@ -35,6 +46,22 @@ function Sidebar() {
       window.removeEventListener("resize", handleResize);
     };
   }, []);
+
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        const response = await axios.get('http://127.0.0.1:5500/user.json');
+        const data = await response.data;
+        console.log(data);
+        setUserData(new UserData(data.user, data.email, data.image));
+      } catch (error) {
+        console.error('Error fetching user data:', error);
+      }
+    };
+    fetchUserData();
+  }, []);
+
+
 
   const toggleMobileMenu = () => {
     setIsMobileMenuOpen(!isMobileMenuOpen);
@@ -63,10 +90,7 @@ function Sidebar() {
         variants={variants}
         initial={isMobile ? "closed" : "open"}
         transition={{ duration: 0.3, ease: "easeInOut" }}
-
-
       >
-
         <ul className="flex flex-col gap-8 sm:mt-5 mt-10 pt-12 h-[80%]">
           <li>
             <Link
@@ -144,28 +168,33 @@ function Sidebar() {
             </a>
           </li>
         </ul>
-        <div className="w-full sm:pb-40 max-w-[100%] mx-auto relative pb-20">
+        <div className="w-full  max-w-[100%] sm:mb-10 ">
           <hr className="border-[#242F5C] border-t-1" />
-          <Image
-            src="/images/avatarprofile.svg"
-            alt="avatarprofile"
-            width={50}
-            height={50}
-            className="mx-auto pt-9 left-5 absolute left-[-7px]"
-          />
-          <p className="text-center text-lg font-normal text-[#242F5C] pt-10 absolute left-12 ">
-            John Doe
-          </p>
-          <p className="text-center text-[12px] font-light text-[#8988DE] pt-10 absolute left-12 top-6 ">
-            My Account
-          </p>
-          <Image
-            src="/images/logout.svg"
-            alt="arrow"
-            width={20}
-            height={20}
-            className="mx-auto pt-10 absolute right-[12px] top-2 cursor-pointer"
-          />
+          <div className="flex items-center justify-center mt-8 gap-4">
+            <Image
+              src="/images/avatarprofile.svg"
+              alt="avatarprofile"
+              width={50}
+              height={50}
+              className="rounded-full object-cover w-14 h-14 border-[1px] border-transparent outline outline-2 outline-offset-2 outline-[#242F5C]"
+              objectFit="cover"
+            />
+            <div className="">
+              <p className="text-center text-lg font-normal text-[#242F5C]">
+                Abdellah
+              </p>
+              <p className="text-center text-[12px] mt-[-5px] font-light text-[#8988DE]  ">
+                My Account
+              </p>
+            </div>
+            <Image
+              src="/images/logout.svg"
+              alt="arrow"
+              width={20}
+              height={20}
+              className="cursor-pointer"
+            />
+            </div>
         </div>
       </motion.div>
     </div>
