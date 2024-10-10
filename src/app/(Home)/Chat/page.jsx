@@ -100,16 +100,31 @@ export default function ChatPage() {
   
   useEffect(() => {
     async function mainFetch() {
-      const response = await fetch('https://jsonplaceholder.typicode.com/users');
+      const response = await fetch('/data.json');
       const data = await response.json();
       // setUsers(data);
-      const usr = data.find(user => user.id === UserId);
-      console.log(usr);
+      const usr = data.find(user => user.userId === UserId);
+      // console.log(usr);
       setLoggedInUser(usr);
-      // console.log(data);
+      // fetchFriends
+      console.log(usr);
+
+
+      // fetchFriends(UserId);
     }
     mainFetch();
-  }, []);
+  }, [UserId]);
+
+  // async function fetchFriends(userId) {
+  //   // Replace this URL with your actual API endpoint once it's implemented
+  //   const response = await fetch(`https://jsonplaceholder.typicode.com/users/${userId}/friends`);
+  //   const data = await response.json();
+  //   // setFriends(data); // Store friends data
+  //   console.log(data);
+  // }
+
+
+
 
 
 
@@ -227,27 +242,24 @@ export default function ChatPage() {
             >
               <div className="friendsBox  p-2 rounded-tl-xl rounded-bl-xl  border-r-2  border-[#C6C6E1] h-full  flex-col flex-grow overflow-y-auto custom-scrollbar bg-[#F4F4FF]">
               
-                <ProfileInfo path="/images/avatarprofile.svg" name={loggedInUser.name} status={loggedInUser.username}/>
+                <ProfileInfo path={loggedInUser.avatar} name={loggedInUser.name} status={loggedInUser.status}/>
 
                 <ConversationsHeader />
 
                 <div className="MessagesList flex flex-col">
-                  <FriendInfo
-                    friend={tournament}
+                  <FriendInfo  name={tournament.name} path={tournament.path} conversation={tournament.conversation} 
                     onClick={() => {
                       setSelectedFriend(tournament);
                       setIconState({ chatState: false, dropDownState: false });
                     }}
                   />
-                  <FriendInfo
-                    friend={friend1}
+                  <FriendInfo  name={friend1.name} path={friend1.path} conversation={friend1.conversation} 
                     onClick={() => {
                       setSelectedFriend(friend1);
                       setIconState({ chatState: false, dropDownState: false });
                     }}
                   />
-                  <FriendInfo
-                    friend={friend2}
+                  <FriendInfo name={friend2.name} path={friend2.path} conversation={friend2.conversation} 
                     onClick={() => {
                       setSelectedFriend(friend2);
                       setIconState({ chatState: false, dropDownState: false });
@@ -257,7 +269,7 @@ export default function ChatPage() {
               </div>
             </div>
 
-            <MessagesBox friend={selectedFriend} />
+            <MessagesBox friend={selectedFriend}  />
           </div>
         </div>
 

@@ -1,7 +1,6 @@
-{
-    "users": [
+[
       {
-        "userId": "1",
+        "userId": 1,
         "name": "John Wick",
         "avatar": "/images/avatarprofile.svg",
         "status": "Online",
@@ -11,7 +10,7 @@
         "map": "Blue",
         "conversations": [
           {
-            "friendId": "2",
+            "friendId": 2,
             "friendName": "Henry Smith",
             "friendAvatar": "/images/avatar3.svg",
             "friendStatus": "Online",
@@ -34,7 +33,7 @@
             ]
           },
           {
-            "friendId": "3",
+            "friendId": 3,
             "friendName": "Lucy Smith",
             "friendAvatar": "/images/avatarprofile.svg",
             "friendStatus": "Offline",
@@ -59,7 +58,7 @@
         ]
       },
       {
-        "userId": "2",
+        "userId": 2,
         "name": "Henry Smith",
         "avatar": "/images/avatar3.svg",
         "status": "Online",
@@ -69,7 +68,7 @@
         "map": "Green",
         "conversations": [
           {
-            "friendId": "1",
+            "friendId": 1,
             "friendName": "John Wick",
             "friendAvatar": "/images/avatarprofile.svg",
             "friendStatus": "Online",
@@ -92,7 +91,7 @@
             ]
           },
           {
-            "friendId": "4",
+            "friendId": 4,
             "friendName": "Max Doe",
             "friendAvatar": "/images/avatar4.svg",
             "friendStatus": "Offline",
@@ -117,7 +116,7 @@
         ]
       },
       {
-        "userId": "3",
+        "userId": 3,
         "name": "Lucy Smith",
         "avatar": "/images/avatarprofile.svg",
         "status": "Offline",
@@ -127,7 +126,7 @@
         "map": "Red",
         "conversations": [
           {
-            "friendId": "1",
+            "friendId": 1,
             "friendName": "John Wick",
             "friendAvatar": "/images/avatarprofile.svg",
             "friendStatus": "Online",
@@ -150,7 +149,7 @@
             ]
           },
           {
-            "friendId": "4",
+            "friendId": 4,
             "friendName": "Max Doe",
             "friendAvatar": "/images/avatar4.svg",
             "friendStatus": "Offline",
@@ -175,7 +174,7 @@
         ]
       },
       {
-        "userId": "4",
+        "userId": 4,
         "name": "Max Doe",
         "avatar": "/images/avatar4.svg",
         "status": "Offline",
@@ -185,7 +184,7 @@
         "map": "Yellow",
         "conversations": [
           {
-            "friendId": "2",
+            "friendId": 2,
             "friendName": "Henry Smith",
             "friendAvatar": "/images/avatar3.svg",
             "friendStatus": "Online",
@@ -208,7 +207,7 @@
             ]
           },
           {
-            "friendId": "3",
+            "friendId": 3,
             "friendName": "Lucy Smith",
             "friendAvatar": "/images/avatarprofile.svg",
             "friendStatus": "Offline",
@@ -234,5 +233,5 @@
       }
 
     ]
-  }
+
   
