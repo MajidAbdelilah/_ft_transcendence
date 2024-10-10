@@ -95,26 +95,46 @@ let tournament = {
 export default function ChatPage() {
   // -------------------------------------------------------
 
-  let UserId = 1 ;// find a way to get his id later
+
+
+  let UserId = 1; // Assume this is the logged-in user's ID
   let [loggedInUser, setLoggedInUser] = useState(null);
+  let [friendConversations, setFriendConversations] = useState([]);
   
   useEffect(() => {
     async function mainFetch() {
-      const response = await fetch('/data.json');
-      const data = await response.json();
-
-      const usr = data.find(user => user.userId === UserId);
-
-      setLoggedInUser(usr);
-
-      console.log(usr);
-
+      try {
+        const response = await fetch('/data.json');
+        const data = await response.json();
+  
+        // Find the logged-in user
+        const usr = data.find((user) => user.userId === UserId);
+        setLoggedInUser(usr);
+  
+        if (usr && usr.conversations) {
+          // Create an array to store friend IDs and their conversations
+          const conversationsArray = usr.conversations.map((conversation) => ({
+            friendId: conversation.friendId,
+            messages: conversation.messages,
+          }));
+  
+          // Store this array in state for later processing
+          setFriendConversations(conversationsArray);
+  
+          // Log the result to the console for now
+          console.log("Friend Conversations:", conversationsArray);
+        }
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
     }
+  
     mainFetch();
-  }, [UserId]);
-
+  }, []);
+  
 //  stage one get an array of the id and teh converstaon
 // create a cecond array where you change the id with the user data, cause you need his name and avatar.
+
 
 
 
