@@ -93,6 +93,27 @@ let tournament = {
 // -- data ---------------------------------------------------------------------------------------------------------------
 
 export default function ChatPage() {
+  // -------------------------------------------------------
+
+  let UserId = 1 ;// find a way to get his id later
+  let [loggedInUser, setLoggedInUser] = useState(null);
+  
+  useEffect(() => {
+    async function mainFetch() {
+      const response = await fetch('https://jsonplaceholder.typicode.com/users');
+      const data = await response.json();
+      // setUsers(data);
+      const usr = data.find(user => user.id === UserId);
+      console.log(usr);
+      setLoggedInUser(usr);
+      // console.log(data);
+    }
+    mainFetch();
+  }, []);
+
+
+
+
   // Clicking on icons -------------------------------------------------------
   const [iconState, setIconState] = useState({
     chatState: false,
@@ -188,6 +209,7 @@ export default function ChatPage() {
     );
   }
 
+  if (!loggedInUser) return null;
   return (
 
 
@@ -204,7 +226,9 @@ export default function ChatPage() {
               } `}
             >
               <div className="friendsBox  p-2 rounded-tl-xl rounded-bl-xl  border-r-2  border-[#C6C6E1] h-full  flex-col flex-grow overflow-y-auto custom-scrollbar bg-[#F4F4FF]">
-                <ProfileInfo user={user} />
+              
+                <ProfileInfo path="/images/avatarprofile.svg" name={loggedInUser.name} status={loggedInUser.username}/>
+
                 <ConversationsHeader />
 
                 <div className="MessagesList flex flex-col">

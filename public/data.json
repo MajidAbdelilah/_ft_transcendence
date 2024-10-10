@@ -1,0 +1,238 @@
+{
+    "users": [
+      {
+        "userId": "1",
+        "name": "John Wick",
+        "avatar": "/images/avatarprofile.svg",
+        "status": "Online",
+        "level": 1,
+        "score": "5-4",
+        "result": "Win",
+        "map": "Blue",
+        "conversations": [
+          {
+            "friendId": "2",
+            "friendName": "Henry Smith",
+            "friendAvatar": "/images/avatar3.svg",
+            "friendStatus": "Online",
+            "messages": [
+              {
+                "time": "02:22 PM",
+                "msg": "Hi John, let's meet for the game tonight!",
+                "sender": "friend"
+              },
+              {
+                "time": "02:23 PM",
+                "msg": "Absolutely! What time works for you?",
+                "sender": "user"
+              },
+              {
+                "time": "02:25 PM",
+                "msg": "How about 7 PM?",
+                "sender": "friend"
+              }
+            ]
+          },
+          {
+            "friendId": "3",
+            "friendName": "Lucy Smith",
+            "friendAvatar": "/images/avatarprofile.svg",
+            "friendStatus": "Offline",
+            "messages": [
+              {
+                "time": "09:10 AM",
+                "msg": "Good morning John, are you joining the competition?",
+                "sender": "friend"
+              },
+              {
+                "time": "09:12 AM",
+                "msg": "Good morning! Yes, I'll be there!",
+                "sender": "user"
+              },
+              {
+                "time": "09:14 AM",
+                "msg": "Great! See you there.",
+                "sender": "friend"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "userId": "2",
+        "name": "Henry Smith",
+        "avatar": "/images/avatar3.svg",
+        "status": "Online",
+        "level": 2,
+        "score": "6-5",
+        "result": "Loss",
+        "map": "Green",
+        "conversations": [
+          {
+            "friendId": "1",
+            "friendName": "John Wick",
+            "friendAvatar": "/images/avatarprofile.svg",
+            "friendStatus": "Online",
+            "messages": [
+              {
+                "time": "02:22 PM",
+                "msg": "Hi John, let's meet for the game tonight!",
+                "sender": "user"
+              },
+              {
+                "time": "02:23 PM",
+                "msg": "Absolutely! What time works for you?",
+                "sender": "friend"
+              },
+              {
+                "time": "02:25 PM",
+                "msg": "How about 7 PM?",
+                "sender": "user"
+              }
+            ]
+          },
+          {
+            "friendId": "4",
+            "friendName": "Max Doe",
+            "friendAvatar": "/images/avatar4.svg",
+            "friendStatus": "Offline",
+            "messages": [
+              {
+                "time": "03:30 PM",
+                "msg": "Hey Max, are we still on for tomorrow?",
+                "sender": "user"
+              },
+              {
+                "time": "03:35 PM",
+                "msg": "Yeah, looking forward to it!",
+                "sender": "friend"
+              },
+              {
+                "time": "03:37 PM",
+                "msg": "Awesome, see you then.",
+                "sender": "user"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "userId": "3",
+        "name": "Lucy Smith",
+        "avatar": "/images/avatarprofile.svg",
+        "status": "Offline",
+        "level": 3,
+        "score": "4-3",
+        "result": "Win",
+        "map": "Red",
+        "conversations": [
+          {
+            "friendId": "1",
+            "friendName": "John Wick",
+            "friendAvatar": "/images/avatarprofile.svg",
+            "friendStatus": "Online",
+            "messages": [
+              {
+                "time": "09:10 AM",
+                "msg": "Good morning John, are you joining the competition?",
+                "sender": "user"
+              },
+              {
+                "time": "09:12 AM",
+                "msg": "Good morning! Yes, I'll be there!",
+                "sender": "friend"
+              },
+              {
+                "time": "09:14 AM",
+                "msg": "Great! See you there.",
+                "sender": "user"
+              }
+            ]
+          },
+          {
+            "friendId": "4",
+            "friendName": "Max Doe",
+            "friendAvatar": "/images/avatar4.svg",
+            "friendStatus": "Offline",
+            "messages": [
+              {
+                "time": "10:00 AM",
+                "msg": "Max, did you complete the task?",
+                "sender": "user"
+              },
+              {
+                "time": "10:05 AM",
+                "msg": "Yes, all set!",
+                "sender": "friend"
+              },
+              {
+                "time": "10:10 AM",
+                "msg": "Great! Let's catch up later.",
+                "sender": "user"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "userId": "4",
+        "name": "Max Doe",
+        "avatar": "/images/avatar4.svg",
+        "status": "Offline",
+        "level": 4,
+        "score": "8-7",
+        "result": "Loss",
+        "map": "Yellow",
+        "conversations": [
+          {
+            "friendId": "2",
+            "friendName": "Henry Smith",
+            "friendAvatar": "/images/avatar3.svg",
+            "friendStatus": "Online",
+            "messages": [
+              {
+                "time": "03:30 PM",
+                "msg": "Hey Max, are we still on for tomorrow?",
+                "sender": "friend"
+              },
+              {
+                "time": "03:35 PM",
+                "msg": "Yeah, looking forward to it!",
+                "sender": "user"
+              },
+              {
+                "time": "03:37 PM",
+                "msg": "Awesome, see you then.",
+                "sender": "friend"
+              }
+            ]
+          },
+          {
+            "friendId": "3",
+            "friendName": "Lucy Smith",
+            "friendAvatar": "/images/avatarprofile.svg",
+            "friendStatus": "Offline",
+            "messages": [
+              {
+                "time": "10:00 AM",
+                "msg": "Max, did you complete the task?",
+                "sender": "friend"
+              },
+              {
+                "time": "10:05 AM",
+                "msg": "Yes, all set!",
+                "sender": "user"
+              },
+              {
+                "time": "10:10 AM",
+                "msg": "Great! Let's catch up later.",
+                "sender": "friend"
+              }
+            ]
+          }
+        ]
+      }
+
+    ]
+  }
+  
