@@ -102,29 +102,19 @@ export default function ChatPage() {
     async function mainFetch() {
       const response = await fetch('/data.json');
       const data = await response.json();
-      // setUsers(data);
+
       const usr = data.find(user => user.userId === UserId);
-      // console.log(usr);
+
       setLoggedInUser(usr);
-      // fetchFriends
+
       console.log(usr);
 
-
-      // fetchFriends(UserId);
     }
     mainFetch();
   }, [UserId]);
 
-  // async function fetchFriends(userId) {
-  //   // Replace this URL with your actual API endpoint once it's implemented
-  //   const response = await fetch(`https://jsonplaceholder.typicode.com/users/${userId}/friends`);
-  //   const data = await response.json();
-  //   // setFriends(data); // Store friends data
-  //   console.log(data);
-  // }
-
-
-
+//  stage one get an array of the id and teh converstaon
+// create a cecond array where you change the id with the user data, cause you need his name and avatar.
 
 
 
@@ -247,19 +237,19 @@ export default function ChatPage() {
                 <ConversationsHeader />
 
                 <div className="MessagesList flex flex-col">
-                  <FriendInfo  name={tournament.name} path={tournament.path} conversation={tournament.conversation} 
+                  {/* <FriendInfo  friend={tournament} conversation={tournament.conversation} 
                     onClick={() => {
                       setSelectedFriend(tournament);
                       setIconState({ chatState: false, dropDownState: false });
                     }}
-                  />
-                  <FriendInfo  name={friend1.name} path={friend1.path} conversation={friend1.conversation} 
+                  /> */}
+                  <FriendInfo  friend={friend1} conversation={friend1.conversation} 
                     onClick={() => {
                       setSelectedFriend(friend1);
                       setIconState({ chatState: false, dropDownState: false });
                     }}
                   />
-                  <FriendInfo name={friend2.name} path={friend2.path} conversation={friend2.conversation} 
+                  <FriendInfo friend={friend2} conversation={friend2.conversation} 
                     onClick={() => {
                       setSelectedFriend(friend2);
                       setIconState({ chatState: false, dropDownState: false });

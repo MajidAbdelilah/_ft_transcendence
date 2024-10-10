@@ -11,9 +11,6 @@
         "conversations": [
           {
             "friendId": 2,
-            "friendName": "Henry Smith",
-            "friendAvatar": "/images/avatar3.svg",
-            "friendStatus": "Online",
             "messages": [
               {
                 "time": "02:22 PM",
@@ -34,9 +31,6 @@
           },
           {
             "friendId": 3,
-            "friendName": "Lucy Smith",
-            "friendAvatar": "/images/avatarprofile.svg",
-            "friendStatus": "Offline",
             "messages": [
               {
                 "time": "09:10 AM",
@@ -69,9 +63,6 @@
         "conversations": [
           {
             "friendId": 1,
-            "friendName": "John Wick",
-            "friendAvatar": "/images/avatarprofile.svg",
-            "friendStatus": "Online",
             "messages": [
               {
                 "time": "02:22 PM",
@@ -92,9 +83,6 @@
           },
           {
             "friendId": 4,
-            "friendName": "Max Doe",
-            "friendAvatar": "/images/avatar4.svg",
-            "friendStatus": "Offline",
             "messages": [
               {
                 "time": "03:30 PM",
@@ -127,9 +115,6 @@
         "conversations": [
           {
             "friendId": 1,
-            "friendName": "John Wick",
-            "friendAvatar": "/images/avatarprofile.svg",
-            "friendStatus": "Online",
             "messages": [
               {
                 "time": "09:10 AM",
@@ -150,9 +135,6 @@
           },
           {
             "friendId": 4,
-            "friendName": "Max Doe",
-            "friendAvatar": "/images/avatar4.svg",
-            "friendStatus": "Offline",
             "messages": [
               {
                 "time": "10:00 AM",
@@ -185,9 +167,6 @@
         "conversations": [
           {
             "friendId": 2,
-            "friendName": "Henry Smith",
-            "friendAvatar": "/images/avatar3.svg",
-            "friendStatus": "Online",
             "messages": [
               {
                 "time": "03:30 PM",
@@ -208,9 +187,6 @@
           },
           {
             "friendId": 3,
-            "friendName": "Lucy Smith",
-            "friendAvatar": "/images/avatarprofile.svg",
-            "friendStatus": "Offline",
             "messages": [
               {
                 "time": "10:00 AM",
