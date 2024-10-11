@@ -144,6 +144,9 @@ function Friends() {
                   <BlockedFriends />
                   <BlockedFriends />
                   <BlockedFriends />
+                  <BlockedFriends />
+                  <BlockedFriends />
+                  <BlockedFriends />
                 </>
               )}
             </ScrollBlur>

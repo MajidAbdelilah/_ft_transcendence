@@ -23,14 +23,6 @@ const LogoutProfile = () => {
   );
 }
 
-const GameStats = () => {
-  return (
-    <div className="flex flex-row items-center m-3 justify-content relative gap-2 cursor-pointer">
-      <Image src="/images/Stats.svg" alt="profile" width={50} height={50} className="w-[18px] h-[18px]" />
-      <h1 className="text-base font-medium text-[#242F5C]">Games Statistics</h1>
-    </div>
-  );
-}
 
 const ProfileSetting = () => {
   return (
@@ -162,7 +154,7 @@ function Navbar() {
           />
           {userDropdown && (
             <motion.div
-              className="w-[220px] h-[230px] bg-[#EAEAFF] border-2 border-solid border-[#C0C7E0] absolute bottom-[-235px] right-[3px] z-[10] rounded-[5px] shadow shadow-[#BCBCC9]"
+              className="w-[220px] h-[210px] bg-[#EAEAFF] border-2 border-solid border-[#C0C7E0] absolute bottom-[-215px] right-[3px] z-[10] rounded-[5px] shadow shadow-[#BCBCC9]"
               initial={{ scale: 0 }}
               animate={{ scale: 1 }}
               transition={{
@@ -175,7 +167,6 @@ function Navbar() {
               <hr className="w-[100%] h-[1px] bg-[#CDCDE5] border-none rounded-full" />
               <ProfileInfo />
               <ProfileSetting />
-              <GameStats />
               <hr className="w-[100%] h-[1px] bg-[#CDCDE5] border-none rounded-full" />
               <LogoutProfile />
             </motion.div>
