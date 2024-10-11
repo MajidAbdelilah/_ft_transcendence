@@ -99,7 +99,7 @@ export default function ChatPage() {
 
   let UserId = 1; // Assume this is the logged-in user's ID
   let [loggedInUser, setLoggedInUser] = useState(null);
-  let [friendConversations, setFriendConversations] = useState([]);
+  let [fullFriendConversations, setFullFriendConversations] = useState([]);
   
   useEffect(() => {
     async function mainFetch() {
@@ -112,17 +112,22 @@ export default function ChatPage() {
         setLoggedInUser(usr);
   
         if (usr && usr.conversations) {
-          // Create an array to store friend IDs and their conversations
-          const conversationsArray = usr.conversations.map((conversation) => ({
-            friendId: conversation.friendId,
-            messages: conversation.messages,
-          }));
+          // Create a new array to store friend objects and their conversations
+          const conversationsWithFriends = usr.conversations.map((conversation) => {
+            // Find the friend object based on the friendId
+            const friend = data.find((user) => user.userId === conversation.friendId);
+  
+            return {
+              friendData: friend, // Include full friend details (name, status, etc.)
+              messages: conversation.messages, // Include the conversation messages
+            };
+          });
   
           // Store this array in state for later processing
-          setFriendConversations(conversationsArray);
+          setFullFriendConversations(conversationsWithFriends);
   
           // Log the result to the console for now
-          console.log("Friend Conversations:", conversationsArray);
+          // console.log("Full Friend Conversations:", conversationsWithFriends);
         }
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -131,20 +136,22 @@ export default function ChatPage() {
   
     mainFetch();
   }, []);
-  
+  console.log("Full Friend Conversations outside mainFetch:", fullFriendConversations);
 //  stage one get an array of the id and teh converstaon
 // create a cecond array where you change the id with the user data, cause you need his name and avatar.
 
 
 
 
+const [selectedFriend, setSelectedFriend] = useState(null);
+const [selectedConversation, setSelectedConversation] = useState(null);
 
   // Clicking on icons -------------------------------------------------------
   const [iconState, setIconState] = useState({
     chatState: false,
     dropDownState: false,
   });
-  const [selectedFriend, setSelectedFriend] = useState(null);
+ 
 
   const switchChatState = () => {
     setIconState((prevState) => ({
@@ -186,10 +193,10 @@ export default function ChatPage() {
 
   // -------------------------------------------------------
 
-  function MessagesBox({ friend }) {
+  function MessagesBox({ friend, conversation }) {
     // no friend selected yet just return FriendChatInfo compomet with empty friend object
     if (friend == null) {
-      let noFriendYet = { path: "", name: "", status: "" };
+      let noFriendYet = { avatar: "", name: "", status: "" };
       return (
         <div className="messagesBox w-full lg:w-3/5 p-2 h-full rounded-tr-xl rounded-br-xl  flex flex-col ">
           <FriendChatInfo
@@ -219,7 +226,7 @@ export default function ChatPage() {
 
         {/* peerToPeer ---------------------------------------------------------------------------------------*/}
         <div className="peerToPeer flex flex-col  flex-grow overflow-y-auto custom-scrollbar break-all ">
-          {friend.conversation.map((message, index) =>
+          {conversation.map((message, index) =>
             message.sender === "friend" ? (
               <FriendMsgBox key={index} time={message.time} msg={message.msg} />
             ) : (
@@ -252,7 +259,7 @@ export default function ChatPage() {
             >
               <div className="friendsBox  p-2 rounded-tl-xl rounded-bl-xl  border-r-2  border-[#C6C6E1] h-full  flex-col flex-grow overflow-y-auto custom-scrollbar bg-[#F4F4FF]">
               
-                <ProfileInfo path={loggedInUser.avatar} name={loggedInUser.name} status={loggedInUser.status}/>
+                <ProfileInfo avatar={loggedInUser.avatar} name={loggedInUser.name} status={loggedInUser.status}/>
 
                 <ConversationsHeader />
 
@@ -263,15 +270,23 @@ export default function ChatPage() {
                       setIconState({ chatState: false, dropDownState: false });
                     }}
                   /> */}
-                  <FriendInfo  friend={friend1} conversation={friend1.conversation} 
+                  <FriendInfo  
+                  name={fullFriendConversations[0].friendData.name} 
+                  avatar={fullFriendConversations[0].friendData.avatar} 
+                  conversation={fullFriendConversations[0].messages} 
                     onClick={() => {
-                      setSelectedFriend(friend1);
+                      setSelectedFriend(fullFriendConversations[0].friendData);
+                      setSelectedConversation(fullFriendConversations[0].messages);
                       setIconState({ chatState: false, dropDownState: false });
                     }}
                   />
-                  <FriendInfo friend={friend2} conversation={friend2.conversation} 
+                  <FriendInfo friend={fullFriendConversations[1].friendData} 
+                  name={fullFriendConversations[1].friendData.name} 
+                  avatar={fullFriendConversations[1].friendData.avatar}   
+                  conversation={fullFriendConversations[1].messages} 
                     onClick={() => {
-                      setSelectedFriend(friend2);
+                      setSelectedFriend(fullFriendConversations[1].friendData);
+                      setSelectedConversation(fullFriendConversations[1].messages);
                       setIconState({ chatState: false, dropDownState: false });
                     }}
                   />
@@ -279,7 +294,7 @@ export default function ChatPage() {
               </div>
             </div>
 
-            <MessagesBox friend={selectedFriend}  />
+            <MessagesBox friend={selectedFriend}  conversation={selectedConversation}/>
           </div>
         </div>
 

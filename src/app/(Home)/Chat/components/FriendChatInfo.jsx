@@ -88,7 +88,7 @@ export function PlayWithOption ({onClick}) {
 
         {/* hisProfile -------------------------------------------------------------- */}
         {rest.selectedFriend !== null ? (
-          < HisProfile path={friend.path} name={friend.name} status={friend.status} />
+          < HisProfile path={friend.avatar} name={friend.name} status={friend.status} />
 
         ) : (
           < PleaseSelectAConversation/>

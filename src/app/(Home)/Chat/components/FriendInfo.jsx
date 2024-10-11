@@ -2,21 +2,21 @@ import Image from "next/image";
 
 import { RiRobot3Line } from "react-icons/ri";
 
-export default function FriendInfo({ friend, conversation, onClick }) {
+export default function FriendInfo({ avatar, name, conversation, onClick }) {
   let len = conversation.length;
   return (
     <div
       className="friendInfo my-2 px-1 w-full flex flex-row items-center overflow-hidden cursor-pointer"
       onClick={onClick}
     >
-      {friend.name === "tournament" ? (
+      {name === "tournament" ? (
         <RiRobot3Line
           size={45}
           className="bg-[#EAEAFF] rounded-full text-[#242F5C] left-0 top-0 "
         />
       ) : (
         <Image
-          src={friend.path}
+          src={avatar}
           alt="avatarprofile"
           width={45}
           height={45}
@@ -25,7 +25,7 @@ export default function FriendInfo({ friend, conversation, onClick }) {
       )}
 
       <div className=" ml-2 ">
-        <h3 className="text-2xl top-0 left-0 text-[#242F5C]">{friend.name}</h3>
+        <h3 className="text-2xl top-0 left-0 text-[#242F5C]">{name}</h3>
 
         <p className="text-xs text-[#302FA5] overflow-hidden whitespace-nowrap text-ellipsis max-w-[15ch]">
           {len > 0 ? conversation[len - 1].msg : "No messages yet"}
