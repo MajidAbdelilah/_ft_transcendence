@@ -1,8 +1,0 @@
-{
-  "compilerOptions": {
-    "paths": {
-      "@/*": ["./src/*"],
-      "@/LandingPage": ["./src/LandingPage.jsx"]
-    }
-  }
-}
