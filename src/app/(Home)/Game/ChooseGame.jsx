@@ -1,10 +1,11 @@
 'use client';
-
 import React, { useState, useEffect} from 'react';
 import Image from 'next/image';
 import { motion } from 'framer-motion';
 import { Montserrat } from "next/font/google";
 import Checkbox from './utils'; // Assuming this is your Checkbox component
+
+
 
 
 const montserrat = Montserrat({
@@ -28,34 +29,51 @@ function TournamentPage({ onClose }) {
     };
   }, []);
 
+
+  function InviteFriends() {
+    return(
+
+      <div className={`w-[90%] mx-auto h-20 lg:h-[12%] md:h[20%] sm:mt-20 mt-10 rounded-xl bg-[#D8D8F7] shadow-md shadow-[#BCBCC9] relative ${isMobile ? 'w-[95%]' : ' min-h-[90px] '} ${montserrat.className}`}>
+      <div className="flex items-center h-full p-2">
+          <div className="flex flex-row items-center justify-center lg:w-[10%] lg:h-[90%] md:w-[10%] md:h-[90%] w-[20%] h-[90%] ">
+            <Image priority src="./images/avatarInvite.svg" alt="profile" width={50} height={50} className="lg:w-[90%] lg:h-[90%] md:w-[80%] md:h-[80%] w-[100%] h-[100%]" />
+          </div>
+          <div className="ml-4 flex flex-col justify-center">
+            <h1 className="text-[#242F5C] text-sm lg:text-lg md:text-base font-bold">John Doe</h1>
+            <p className="text-green-600 lg:text-sm text-xs font-medium">Online</p>
+          </div>
+          <div className=" flex flex-row items-center justify-center lg:w-[10%] lg:h-[90%] md:w-[10%] md:h-[90%] w-[20%] h-[90%] absolute md:right-10 right-5 top-1 md:gap-3 gap-2">
+            <Image src="/images/Invitegame.svg" alt="profile" width={50} height={50} className="lg:w-[40%] lg:h-[40%] md:w-[40%] md:h-[40%] w-[30%] h-[30%] cursor-pointer " />
+          </div>
+      </div>
+    </div>
+);
+  };
+
   return (
     <>
       {IsClose && (
         <div className="fixed inset-0 backdrop-blur-sm flex justify-center items-center animate-fadeIn">
-          <div className="bg-[#F4F4FF] flex flex-col items-center shadow-lg rounded-xl w-[95%] h-[80%] sm:h-[90%] border-solid border-[#BCBCC9] border-2 max-w-[900px] max-h-[900px] min-h-[580px] pt-8 animate-scaleIn">
-            <div className="relative flex flex-col items-center w-full h-full">
-            <div className={`w-[90%] mx-auto h-20 lg:h-[12%] md:h[20%] mt-20 rounded-xl bg-[#D8D8F7] shadow-md shadow-[#BCBCC9] relative ${isMobile ? 'w-full' : ' min-h-[90px]'} ${montserrat.className}`}>
-              <div className="flex items-center h-full p-2">
-                <div className="flex flex-row items-center justify-center lg:w-[10%] lg:h-[90%] md:w-[10%] md:h-[90%] w-[20%] h-[90%] ">
-                  <Image priority src="./images/avatarInvite.svg" alt="profile" width={50} height={50} className="lg:w-[90%] lg:h-[90%] md:w-[80%] md:h-[80%] w-[100%] h-[100%]" />
-                </div>
-                <div className="ml-4 flex flex-col justify-center">
-                  <h1 className="text-[#242F5C] text-sm lg:text-lg md:text-base font-bold">John Doe</h1>
-                  <p className="text-green-600 lg:text-sm text-xs font-medium">Online</p>
-                </div>
-                <div className=" flex flex-row items-center justify-center lg:w-[10%] lg:h-[90%] md:w-[10%] md:h-[90%] w-[20%] h-[90%] absolute md:right-10 right-5 top-1 md:gap-3 gap-2">
-                  <Image src="/images/Invitegame.svg" alt="profile" width={50} height={50} className="lg:w-[40%] lg:h-[40%] md:w-[40%] md:h-[40%] w-[30%] h-[30%] cursor-pointer " />
-                  <Image src="/images/chat.svg" alt="profile" width={50} height={50} className="lg:w-[40%] lg:h-[40%] md:w-[40%] md:h-[40%] w-[30%] h-[30%] cursor-pointer" />
-                  <Image src="/images/BlockedFriends.svg" alt="profile" width={50} height={50} className="lg:w-[40%] lg:h-[40%] md:w-[40%] md:h-[40%] w-[30%] h-[30%] cursor-pointer " />
-                </div>
-              </div>
-            </div>
+          <div className="bg-[#F4F4FF] flex flex-col items-center shadow-lg rounded-xl w-[95%] overflow-y-auto scrollbar-hide custom-scrollbarh-[90%] mt-[80px] sm:h-[90%] border-solid border-[#BCBCC9] border-2 max-w-[900px] max-h-[500px] sm:max-h-[900px] min-h-[580px] pt-8 animate-scaleIn">
+            <div className="relative flex flex-col items-center w-full h-full overflow-y-auto scrollbar-hide custom-scrollbar">
+              <InviteFriends />
+              <InviteFriends />
+              <InviteFriends />
+              <InviteFriends />
+              <InviteFriends />
+              <InviteFriends />
+              <InviteFriends />
+              <InviteFriends />
+              <InviteFriends />
+              <InviteFriends />
+              <InviteFriends />
+              <InviteFriends />
               <Image
                 src="/images/close.svg"
                 alt="Close"
                 width={32}
                 height={32}
-                className="absolute top-[-4px] sm:top-2 right-2 sm:right-11 cursor-pointer w-[20px] h-[20px] sm:w-10 sm:h-10"
+                className="absolute top-[-px] sm:top-2 right-2 sm:right-11 cursor-pointer w-[20px] h-[20px] sm:w-10 sm:h-10"
                 onClick={() => {
                   setIsClose(false);
                   onClose();
