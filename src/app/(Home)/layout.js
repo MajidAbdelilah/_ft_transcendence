@@ -15,7 +15,7 @@ export default function RootLayout({ children }) {
     return (
         <div className={`flex flex-col h-screen ${montserrat.className}`}>
         <Navbar />
-        <div className="flex flex-1 flex-wrap">
+        <div className="flex flex-1 overflow-y-auto flex-wrap">
           <Sidebar />
           {children}
         </div>

@@ -112,8 +112,8 @@ export default function MainComponent() {
     <>
       <div className={`flex-1 overflow-y-auto flex flex-wrap items-center justify-center ${isMobile ? '' : 'p-4'} ${showTournament ? 'blur-sm' : ''}`}>
         <motion.div
-          className={`${isMobile ? 'w-full mt-4 ' : 'rounded-3xl border-solid border-[#BCBCC9] bg-[#F4F4FF] rounded-3xl border-[#BCBCC9] bg-[#F4F4FF] '} flex flex-col shadow-lg shadow-[#BCBCC9] items-center 
-              md:w-[90%] h-auto sm:h-[80%] md:h-[90%] bg-[#F4F4FF] justify-center p-4`}
+          className={`${isMobile ? 'w-full mt-4 ' : 'rounded-3xl border-solid border-[#BCBCC9] bg-[#F4F4FF] rounded-3xl border-[#BCBCC9] bg-[#F4F4FF] '} overflow-y-auto scrollbar-hide custom-scrollbar flex flex-col shadow-lg shadow-[#BCBCC9] items-center 
+              md:w-[90%] max-h-[1000px] sm:h-[80%] md:h-[90%] bg-[#F4F4FF] justify-center p-4`}
           initial={{ scale: 0 }}
           animate={{ scale: 1 }}
           transition={{
@@ -122,7 +122,7 @@ export default function MainComponent() {
             damping: 20
           }}
         >
-          <div className="w-full mt-2 md:mt-2 lg:mt-16 flex flex-col items-center space-y-8 pb-10">
+          <div className="w-full mt-2 md:mt-2 lg:mt-[200px] flex flex-col items-center space-y-8 pb-10">
             <h1 className="text-2xl lg:text-5xl md:text-3xl font-extrabold content-center tracking-wide text-[#242F5C] animate-fadeinbounceright">
               CHOOSE YOUR MAP
             </h1>
