@@ -10,7 +10,7 @@ function MatchHistory() {
     <div
       className={`${!DashData.isMobile
           ? "shadow-md shadow-[#BCBCC9] rounded-3xl border-[#BCBCC9] bg-[#F4F4FF] w-[90%] md:w-[70%] h-[48%] md:h-[400px] lg:w-full lg:h-[500px] ml-[5%] mt-[50px] mr-[5%]"
-          : "shadow-md shadow-[#BCBCC9] rounded-3xl bg-[#F4F4FF]/75 border-[#BCBCC9]/25 bg-[#F4F4FF] w-[90%] h-[48%] ml-[5%] mt-[50px] mr-[5%]"
+          : "shadow-md shadow-[#BCBCC9] rounded-3xl bg-[#F4F4FF]/75 border-[#BCBCC9]/25 bg-[#F4F4FF] w-[90%] h-[30%] ml-[5%] mt-[50px] mr-[5%]"
         }`}
     >
       <motion.h1 className="text-[#444E74]  h-[18%] font-black text-center pt-5 tracking-wider lg:text-4xl md:text-3xl text-lg md:text-xl lg:text-2xl "

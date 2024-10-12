@@ -60,7 +60,7 @@ function Friends() {
     <div className={`flex-1 overflow-y-auto flex flex-wrap items-center justify-center h-full  ${isMobile ? '' : 'p-4'}`}>
       <div
         className={` ${isMobile ? 'w-full mt-4' : 'rounded-3xl border-solid border-[#BCBCC9] bg-[#F4F4FF] rounded-3xl border-[#BCBCC9] bg-[#F4F4FF]'} flex flex-col  shadow-lg shadow-[#BCBCC9] items-center 
-            md:w-[90%] h-full sm:h-[80%] md:h-[90%] bg-[#F4F4FF] justify-center p-4`}
+            md:w-[90%] h-[80vh] sm:h-[80vh]  bg-[#F4F4FF] justify-center p-4`}
       >
         <div className="w-full p-2 max-w-[1300px] h-full mt-2 md:mt-2 lg:mt-5 flex flex-col items-center justify-center space-y-8">
           <h1 className="text-3xl lg:text-5xl md:text-3xl font-extrabold content-center tracking-wide text-[#242F5C] animate-fadeinbounceright">

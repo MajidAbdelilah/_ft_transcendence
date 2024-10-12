@@ -84,14 +84,19 @@ function Sidebar() {
             ? `fixed top-0 left-0 h-full w-64 transform ${isMobileMenuOpen ? "translate-x-0" : "-translate-x-full"
             } transition-transform duration-300 ease-in-out z-40`
             : "w-64 h-full"
-          } bg-[#F4F4FF] p-8 flex justify-between shadow-md shadow-[#BCBCC9] flex-col  ${montserrat.className
+          } bg-[#F4F4FF] items-center flex justify-center  shadow-md shadow-[#BCBCC9] flex-col fixed top-0 z-[10] ${montserrat.className
           } `}
         animate={isMobile ? (isMobileMenuOpen ? "open" : "closed") : "open"}
         variants={variants}
         initial={isMobile ? "closed" : "open"}
         transition={{ duration: 0.3, ease: "easeInOut" }}
       >
-        <ul className="flex flex-col gap-8 sm:mt-5 mt-10 pt-12 h-[80%]">
+        {!isMobile && (
+          <div className="flex items-center justify-center">
+          <Image src="/images/logo.png" alt="Logo" width={100} height={100} className="w-[120px] h-[100px]" />
+        </div>)
+        }
+        <ul className="flex flex-col gap-8 pt-20 h-[80%]">
           <li>
             <Link
               href="/Dashboard"
@@ -169,7 +174,7 @@ function Sidebar() {
           </li>
         </ul>
         <div className="w-full  max-w-[100%] sm:mb-10 ">
-          <hr className="border-[#242F5C] border-t-1" />
+          <hr className="border-[#242F5C] border-t-1 m-auto w-[80%]" />
           <div className="flex items-center justify-center mt-8 gap-4">
             <Image
               src="/images/avatarprofile.svg"

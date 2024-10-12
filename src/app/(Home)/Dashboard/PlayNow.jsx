@@ -17,7 +17,7 @@ function PlayNow() {
         damping: 20
       }}
       className={` ${!DashData.isMobile
-          ? "bg-[#F4F4FF] drop-shadow-md rounded-3xl border-[#BCBCC9] mt-10 md:w-[70%] shadow-md shadow-[#BCBCC9] md:h-[48%] lg:w-[800px] lg:h-[500px] "
+          ? "bg-[#F4F4FF] drop-shadow-md rounded-3xl border-[#BCBCC9] mt-10 shadow-md shadow-[#BCBCC9] md:h-[48%] lg:w-[800px] lg:h-[500px] "
           : "min-h-[235px]"
         } w-[90%] h-[25%] relative p-4 flex flex-col justify-center items-center `}
     >
