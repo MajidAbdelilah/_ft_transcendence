@@ -33,9 +33,9 @@ function TournamentPage({ onClose }) {
   function InviteFriends() {
     return(
 
-      <div className={`w-[90%] mx-auto h-20 lg:h-[12%] md:h[20%] sm:mt-20 mt-10 rounded-xl bg-[#D8D8F7] shadow-md shadow-[#BCBCC9] relative ${isMobile ? 'w-[95%]' : ' min-h-[90px] '} ${montserrat.className}`}>
-      <div className="flex items-center h-full p-2">
-          <div className="flex flex-row items-center justify-center lg:w-[10%] lg:h-[90%] md:w-[10%] md:h-[90%] w-[20%] h-[90%] ">
+      <div className={`w-[90%] mx-auto h-auto  sm:mt-20 mt-10 rounded-xl bg-[#D8D8F7] shadow-md shadow-[#BCBCC9] relative ${isMobile ? 'w-[95%]' : ' min-h-[90px] '} ${montserrat.className}`}>
+      <div className="flex items-center h-auto p-2">
+          <div className="flex flex-row items-center justify-center lg:w-[10%] lg:h-auto md:w-[10%] md:h-[90%] w-[20%] h-[90%] ">
             <Image priority src="./images/avatarInvite.svg" alt="profile" width={50} height={50} className="lg:w-[90%] lg:h-[90%] md:w-[80%] md:h-[80%] w-[100%] h-[100%]" />
           </div>
           <div className="ml-4 flex flex-col justify-center">
@@ -110,7 +110,7 @@ export default function MainComponent() {
 
   return (
     <>
-      <div className={`flex-1 overflow-y-auto flex flex-wrap items-center justify-center h-full ${isMobile ? '' : 'p-4'} ${showTournament ? 'blur-sm' : ''}`}>
+      <div className={`flex-1 overflow-y-auto flex flex-wrap items-center justify-center ${isMobile ? '' : 'p-4'} ${showTournament ? 'blur-sm' : ''}`}>
         <motion.div
           className={`${isMobile ? 'w-full mt-4 ' : 'rounded-3xl border-solid border-[#BCBCC9] bg-[#F4F4FF] rounded-3xl border-[#BCBCC9] bg-[#F4F4FF] '} flex flex-col shadow-lg shadow-[#BCBCC9] items-center 
               md:w-[90%] h-auto sm:h-[80%] md:h-[90%] bg-[#F4F4FF] justify-center p-4`}
@@ -122,7 +122,7 @@ export default function MainComponent() {
             damping: 20
           }}
         >
-          <div className="w-full mt-2 md:mt-2 lg:mt-2 flex flex-col items-center space-y-8 pb-10">
+          <div className="w-full mt-2 md:mt-2 lg:mt-16 flex flex-col items-center space-y-8 pb-10">
             <h1 className="text-2xl lg:text-5xl md:text-3xl font-extrabold content-center tracking-wide text-[#242F5C] animate-fadeinbounceright">
               CHOOSE YOUR MAP
             </h1>
