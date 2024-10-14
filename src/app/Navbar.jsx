@@ -6,7 +6,8 @@ import { useState, useRef, useEffect } from "react";
 import { motion } from "framer-motion"
 import Link from "next/link";
 // import authService from './authService';
-
+import { IoIosSearch } from "react-icons/io";
+import axios from 'axios'; 
 
 
 const montserrat = Montserrat({
@@ -95,6 +96,56 @@ function Navbar() {
     };
 
   }, []);
+// ---------------------------------------------------------------------------------------------
+  const inputRef = useRef(null); // Create a ref for the input
+
+
+  const handleSearch = async (e) => {
+
+    if (e.type === 'click' || (e.code === 'Enter')) {
+      const searchTerm = inputRef.current.value; 
+      
+      if (searchTerm.trim() !== '') {
+        // console.log(searchTerm); // Log the search term to the console
+        const response = await axios.get('/users.json');
+        console.log(response.data);
+
+        const users = response.data;
+                  // Check if the username exists
+                  const userExists = users.some(user => user.username === searchTerm);
+
+                  if (userExists) {
+                    console.log('User exist'); // Display message if user exists
+                  } else {
+                    // create the User does not exist div
+                    const messageDiv = document.createElement('div');
+                    messageDiv.textContent = 'User Does Not Exist';
+                    messageDiv.className = "fixed top-32 left-1/2 transform -translate-x-1/2 -translate-y-1/2 p-4 text-md lg-p6 lg:text-lg  bg-[#D7D7EA] text-[#242F5C] rounded-2xl shadow-lg z-50"; // Tailwind classes
+                    document.body.appendChild(messageDiv); // Add the message div to the body
+            
+                    // Hide the message after 2 seconds
+                    setTimeout(() => {
+                      messageDiv.remove(); // Remove the div from the DOM
+                    }, 2000);
+
+
+
+
+
+
+
+                  }
+
+
+
+        inputRef.current.value = ''; // Clear the input after logging
+      }
+
+    }
+  };
+
+
+
 
 
   return (
@@ -102,26 +153,38 @@ function Navbar() {
       className={`bg-[#F4F4FF] py-4 h-[90px] flex items-center shadow-md shadow-[#BCBCC9] z-[9] ${montserrat.className}`}
     >
       <div className="flex justify-end flex-auto sm:gap-5 gap-3 sm:mr-10">
+        
+        {/* -------------------------------------------------------------------- */}
         <div className="relative">
           <input
             type="text"
             placeholder="Search..."
             className="sm:py-3 shadow-sm shadow-[#BCBCC9] sm:w-[280px] py-[8px] w-[200px]  pl-[2.5rem] rounded-full bg-[#D7D7EA] text-[#242F5C] focus:outline-none focus:ring-2 focus:ring-[#3CDCDE5]"
+            onKeyUp={handleSearch}
+            ref={inputRef}
           />
-          <svg
-            className="absolute left-3 top-1/2 transform -translate-y-1/2 op h-5 w-5 text-gray-400"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+          <IoIosSearch 
+            className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400 " 
+            onClick={handleSearch}
             />
-          </svg>
+          
+
         </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
         <div ref={notificationDropdownRef}>
           <Image
             onClick={toggleNotificationDropdown}

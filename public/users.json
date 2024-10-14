@@ -1,6 +1,7 @@
 [
-    { "id": "hed-dyb", "name": "Hassan Ed-Dyb" },
-    { "id": "johndoe", "name": "John Doe" },
-    { "id": "janesmith", "name": "Jane Smith" }
-  ]
-  
+  { "username": "alice" },
+  { "username": "bob" },
+  { "username": "charlie" },
+  { "username": "david" },
+  { "username": "eve" }
+]
