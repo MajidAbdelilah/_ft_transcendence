@@ -212,7 +212,7 @@ const [selectedConversation, setSelectedConversation] = useState(null);
       );
     }
     return (
-      <div className="messagesBox w-full lg:w-3/5 p-2 h-[88vh] rounded-tr-xl rounded-br-xl flex flex-col ">
+      <div className="messagesBox w-full lg:w-3/5 p-2 h-full rounded-tr-xl rounded-br-xl flex flex-col ">
         {/* FriendChatInfo ---------------------------------------------------------------------------------------*/}
         <FriendChatInfo
           friend={friend}
