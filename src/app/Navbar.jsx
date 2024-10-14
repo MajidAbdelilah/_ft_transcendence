@@ -41,8 +41,9 @@ function Navbar() {
     <nav
       className={`bg-[#F4F4FF] py-4 h-[90px] flex items-center shadow-md shadow-[#BCBCC9] ${montserrat.className}`}
     >
+      {/* ------------------------------------------------------------------------------------- */}
       <div className="flex justify-end flex-auto sm:gap-5 gap-3 sm:mr-10 ml-5">
-      <div className="relative">
+        <div className="relative">
             <input
               type="text"
               placeholder="Search..."
@@ -61,7 +62,22 @@ function Navbar() {
                 d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
               />
             </svg>
-          </div>
+        </div>
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
         <div ref={notificationDropdownRef}>
           <Image
             onClick={toggleNotificationDropdown}
