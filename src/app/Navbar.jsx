@@ -5,7 +5,7 @@ import { Montserrat } from "next/font/google";
 import { useState, useRef, useEffect } from "react";
 import { motion } from "framer-motion"
 import Link from "next/link";
-
+import authService from './authService';
 
 
 
@@ -14,9 +14,19 @@ const montserrat = Montserrat({
   variable: "--font-montserrat",
 });
 
+const logout = async () => {
+  try {
+    await authService.logout();
+    // Handle successful logout (e.g., clear app state, redirect)
+  } catch (error) {
+    console.error('Logout failed', error);
+  }
+};
+
+
 const LogoutProfile = () => {
   return (
-    <div className="flex flex-row items-center m-3 justify-content relative gap-2 cursor-pointer">
+    <div className="flex flex-row items-center m-3 justify-content relative gap-2 cursor-pointer" onClick={logout}>
       <Image src="/images/logout.svg" alt="profile" width={50} height={50} className="w-[18px] h-[18px]" />
       <h1 className="text-base font-medium text-[#242F5C]">Log Out</h1>
     </div>

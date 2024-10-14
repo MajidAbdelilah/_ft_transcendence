@@ -4,11 +4,16 @@ import Image from "next/image";
 import Link from "next/link";
 import { useState, useEffect, useRef } from "react";
 import { useFormik } from 'formik';
+import axios from 'axios';
+import authService from './authService';
 
 const montserrat = Montserrat({
   subsets: ["latin"],
   variable: "--font-montserrat",
 });
+
+// Configure axios to send credentials (cookies) with every request
+axios.defaults.withCredentials = true;
 
 const validate = values => {
   const errors = {};
@@ -75,21 +80,21 @@ function Signup_page() {
     },
   });
 
-  const handleSubmit = (values) => {
-    const FinalValues = {
-      username: values.username,
-      email: values.email,
-      password: values.password,
-    }
+  // const handleSubmit = async (values) => {
+  //   const FinalValues = {
+  //     username: values.username,
+  //     email: values.email,
+  //     password: values.password,
+  //   }
 
-    // try {
-    //     const response = await axios.post('/api/signup', values);
-    //     console.log(response);
-    // } catch (error) {
-    //     console.log(error);
-    // }
-    console.log(FinalValues);
-  }
+  //   try {
+  //       const response = await authService.signup(FinalValues.username, FinalValues.email, FinalValues.password);
+  //       console.log(response);
+  //   } catch (error) {
+  //       console.log(error);
+  //   }
+  //   console.log(FinalValues);
+  // }
 
   return (
     <div

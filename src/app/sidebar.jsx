@@ -1,14 +1,13 @@
 import { Inter, Montserrat } from "next/font/google";
 import Image from "next/image";
-import { FaBars } from "react-icons/fa";
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { FaBarsStaggered } from "react-icons/fa6";
 import { useClickAway } from "@uidotdev/usehooks";
-import { useRef } from "react";
 import { motion } from "framer-motion";
 import axios from "axios";
+import authService from './authService';
+
 
 const montserrat = Montserrat({
   subsets: ["latin"],
@@ -26,6 +25,18 @@ const variants = {
 //     this.avatar = avatar;
 //   }
 // }
+
+
+
+const logout = async () => {
+  try {
+    await authService.logout();
+    // Handle successful logout (e.g., clear app state, redirect)
+  } catch (error) {
+    console.error('Logout failed', error);
+  }
+};
+
 
 function Sidebar() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -198,6 +209,7 @@ function Sidebar() {
               width={20}
               height={20}
               className="cursor-pointer"
+              onClick={logout}
             />
             </div>
         </div>

@@ -6,6 +6,7 @@ import Link from "next/link";
 import { useFormik } from "formik";
 import axios from "axios";
 import { useEffect, useState } from "react";
+import authService from './authService';
 
 
 const montserrat = Montserrat({
@@ -51,15 +52,15 @@ function Login_page() {
     },
   });
 
-  const handleSubmit = async (values) => {
-    // try {
-    //   const response = await axios.get('/api/login', values);
-    //   console.log(response);
-    // } catch (error) {
-    //   console.log(error);
-    // }
-    console.log(values);
-  };
+  // const handleSubmit = async (values) => {
+  //   try {
+  //     const response = await authService.login(values.email, values.password);
+  //     console.log(response);
+  //   }
+  //   catch (error) {
+  //     console.log(error);
+  //   }
+  // };
 
 
   useEffect(() => {
