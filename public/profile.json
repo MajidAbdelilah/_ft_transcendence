@@ -1,0 +1,30 @@
+[
+    {
+      "userName": "John Wick",
+      "avatar": "/images/avatarprofile.svg",
+      "status": "Online",
+      "level": 1,
+      "score": "5-4",
+      "result": "Win",
+      "map": "Blue"
+    },
+    {
+      "userName": "Ali",
+      "avatar": "/images/avatar3.svg",
+      "status": "Offline",
+      "level": 2,
+      "score": "5-4",
+      "result": "Win",
+      "map": "Blue"
+    },
+    {
+      "userName": "Malcom Smith",
+      "avatar": "/images/avatarprofile.svg",
+      "status": "Offline",
+      "level": 3,
+      "score": "3-4",
+      "result": "Lose",
+      "map": "Blue"
+    }
+  ]
+  

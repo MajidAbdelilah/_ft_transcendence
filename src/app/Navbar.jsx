@@ -1,13 +1,24 @@
-'use client';
+"use client";
 import Image from "next/image";
 import { useClickAway } from "@uidotdev/usehooks";
 import { Montserrat } from "next/font/google";
 import { useState, useRef, useEffect } from "react";
-import { motion } from "framer-motion"
+import { motion } from "framer-motion";
 import Link from "next/link";
 // import authService from './authService';
 import { IoIosSearch } from "react-icons/io";
-import axios from 'axios'; 
+//----------------------------------------------
+import axios from "axios";
+import { showAlert } from "../components/Navbar/utils";
+import { useRouter } from 'next/navigation';
+
+
+
+
+
+
+
+
 
 
 const montserrat = Montserrat({
@@ -20,47 +31,66 @@ const logout = async () => {
     await authService.logout();
     // Handle successful logout (e.g., clear app state, redirect)
   } catch (error) {
-    console.error('Logout failed', error);
+    console.error("Logout failed", error);
   }
 };
 
-
 const LogoutProfile = () => {
   return (
-    <div className="flex flex-row items-center m-3 justify-content relative gap-2 cursor-pointer" onClick={logout}>
-      <Image src="/images/logout.svg" alt="profile" width={50} height={50} className="w-[18px] h-[18px]" />
+    <div
+      className="flex flex-row items-center m-3 justify-content relative gap-2 cursor-pointer"
+      onClick={logout}
+    >
+      <Image
+        src="/images/logout.svg"
+        alt="profile"
+        width={50}
+        height={50}
+        className="w-[18px] h-[18px]"
+      />
       <h1 className="text-base font-medium text-[#242F5C]">Log Out</h1>
     </div>
   );
-}
-
+};
 
 const ProfileSetting = () => {
   return (
     <Link href="/Settings">
       <div className="flex flex-row items-center m-3 justify-content relative gap-2 cursor-pointer">
-        <Image src="/images/settings.svg" alt="profile" width={50} height={50} className="w-[18px] h-[18px]" />
-        <h1 className="text-base font-medium text-[#242F5C]">Account Settings</h1>
+        <Image
+          src="/images/settings.svg"
+          alt="profile"
+          width={50}
+          height={50}
+          className="w-[18px] h-[18px]"
+        />
+        <h1 className="text-base font-medium text-[#242F5C]">
+          Account Settings
+        </h1>
       </div>
     </Link>
   );
-}
+};
 
 const ProfileInfo = () => {
   return (
     <div className="flex flex-row items-center m-3 justify-content relative gap-2 cursor-pointer">
-      <Image src="/images/avatarAcc.svg" alt="profile" width={50} height={50} className="w-[18px] h-[18px]" />
+      <Image
+        src="/images/avatarAcc.svg"
+        alt="profile"
+        width={50}
+        height={50}
+        className="w-[18px] h-[18px]"
+      />
       <h1 className="text-base font-medium text-[#242F5C]">View Profile</h1>
     </div>
   );
-}
+};
 
 function Navbar() {
-
   const [userDropdown, setUserDropdown] = useState(false);
   const [notificationDropdown, setNotificationDropdown] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
-
 
   const userDropdownRef = useRef(null);
   const notificationDropdownRef = useRef(null);
@@ -75,13 +105,13 @@ function Navbar() {
 
   const toggleUserDropdown = (e) => {
     e.stopPropagation();
-    setUserDropdown(prev => !prev);
+    setUserDropdown((prev) => !prev);
     setNotificationDropdown(false);
   };
 
   const toggleNotificationDropdown = (e) => {
     e.stopPropagation();
-    setNotificationDropdown(prev => !prev);
+    setNotificationDropdown((prev) => !prev);
     setUserDropdown(false);
   };
 
@@ -94,66 +124,40 @@ function Navbar() {
     return () => {
       window.removeEventListener("resize", handleResize);
     };
-
   }, []);
-// ---------------------------------------------------------------------------------------------
+  // ---------------------------------------------------------------------------------------------
   const inputRef = useRef(null); // Create a ref for the input
-
-
+  const router = useRouter();
   const handleSearch = async (e) => {
+    if (e.type === "click" || e.code === "Enter") {
+      const searchTerm = inputRef.current.value;
 
-    if (e.type === 'click' || (e.code === 'Enter')) {
-      const searchTerm = inputRef.current.value; 
-      
-      if (searchTerm.trim() !== '') {
+      if (searchTerm.trim() !== "") {
         // console.log(searchTerm); // Log the search term to the console
-        const response = await axios.get('/users.json');
+        const response = await axios.get("/users.json");
         console.log(response.data);
 
         const users = response.data;
-                  // Check if the username exists
-                  const userExists = users.some(user => user.username === searchTerm);
+        // Check if the username exists
+        const userExists = users.some((user) => user.username === searchTerm);
 
-                  if (userExists) {
-                    console.log('User exist'); // Display message if user exists
-                  } else {
-                    // create the User does not exist div
-                    const messageDiv = document.createElement('div');
-                    messageDiv.textContent = 'User Does Not Exist';
-                    messageDiv.className = "fixed top-32 left-1/2 transform -translate-x-1/2 -translate-y-1/2 p-4 text-md lg-p6 lg:text-lg  bg-[#D7D7EA] text-[#242F5C] rounded-2xl shadow-lg z-50"; // Tailwind classes
-                    document.body.appendChild(messageDiv); // Add the message div to the body
-            
-                    // Hide the message after 2 seconds
-                    setTimeout(() => {
-                      messageDiv.remove(); // Remove the div from the DOM
-                    }, 2000);
+        if (userExists) {
+          console.log("User exist"); // Display message if user exists
+          router.push(`/Profile/${searchTerm}`)
+        } else {
+          showAlert("User does not exist");
+        }
 
-
-
-
-
-
-
-                  }
-
-
-
-        inputRef.current.value = ''; // Clear the input after logging
+        inputRef.current.value = ""; // Clear the input after logging
       }
-
     }
   };
-
-
-
-
 
   return (
     <nav
       className={`bg-[#F4F4FF] py-4 h-[90px] flex items-center shadow-md shadow-[#BCBCC9] z-[9] ${montserrat.className}`}
     >
       <div className="flex justify-end flex-auto sm:gap-5 gap-3 sm:mr-10">
-        
         {/* -------------------------------------------------------------------- */}
         <div className="relative">
           <input
@@ -163,27 +167,11 @@ function Navbar() {
             onKeyUp={handleSearch}
             ref={inputRef}
           />
-          <IoIosSearch 
-            className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400 " 
+          <IoIosSearch
+            className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400 "
             onClick={handleSearch}
-            />
-          
-
+          />
         </div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
         <div ref={notificationDropdownRef}>
           <Image
@@ -195,7 +183,8 @@ function Navbar() {
             height="20"
           />
         </div>
-        <div ref={userDropdownRef}
+        <div
+          ref={userDropdownRef}
           className="flex items-center justify-center sm:w-12 sm:h-12 w-10 h-10 rounded-full bg-white text-white relative mr-2"
           onClick={toggleUserDropdown}
         >
@@ -228,10 +217,12 @@ function Navbar() {
               transition={{
                 type: "spring",
                 stiffness: 260,
-                damping: 30
+                damping: 30,
               }}
             >
-              <h1 className="text-lg font-medium text-[#242F5C] p-4">My Account</h1>
+              <h1 className="text-lg font-medium text-[#242F5C] p-4">
+                My Account
+              </h1>
               <hr className="w-[100%] h-[1px] bg-[#CDCDE5] border-none rounded-full" />
               <ProfileInfo />
               <ProfileSetting />
@@ -246,7 +237,7 @@ function Navbar() {
               transition={{
                 type: "spring",
                 stiffness: 260,
-                damping: 30
+                damping: 30,
               }}
               className="w-[250px] h-[200px] sm:w-[400px] sm:h-[200px] bg-[#EAEAFF] absolute bottom-[-210px] right-[70px] z-[10] rounded-[5px] border-2 border-solid border-[#C0C7E0] shadow shadow-[#BCBCC9]"
             ></motion.div>
