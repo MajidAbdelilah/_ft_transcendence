@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useState, useEffect, useRef } from "react";
 import { useFormik } from 'formik';
 import axios from 'axios';
-// import authService from './authService';
+import authService from '../authService';
 
 const montserrat = Montserrat({
   subsets: ["latin"],
@@ -80,21 +80,20 @@ function Signup_page() {
     },
   });
 
-  // const handleSubmit = async (values) => {
-  //   const FinalValues = {
-  //     username: values.username,
-  //     email: values.email,
-  //     password: values.password,
-  //   }
+  const handleSubmit = async (values) => {
+    const FinalValues = {
+      username: values.username,
+      email: values.email,
+      password: values.password,
+    }
 
-  //   try {
-  //       const response = await authService.signup(FinalValues.username, FinalValues.email, FinalValues.password);
-  //       console.log(response);
-  //   } catch (error) {
-  //       console.log(error);
-  //   }
-  //   console.log(FinalValues);
-  // }
+    try {
+        const response = await authService.signup(FinalValues.username, FinalValues.email, FinalValues.password);
+        console.log(response);
+    } catch (error) {
+        console.log(error);
+    }
+  }
 
   return (
     <div

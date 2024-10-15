@@ -6,7 +6,7 @@ import Link from "next/link";
 import { useFormik } from "formik";
 import axios from "axios";
 import { useEffect, useState } from "react";
-// import authService from './authService';
+import authService from '../authService';
 
 
 const montserrat = Montserrat({
@@ -52,9 +52,10 @@ function Login_page() {
     },
   });
 
-  // const handleSubmit = async (values) => {
+
+  // const handl42_API = async () => {
   //   try {
-  //     const response = await authService.login(values.email, values.password);
+  //     const response = await authService._42API();
   //     console.log(response);
   //   }
   //   catch (error) {
@@ -62,8 +63,28 @@ function Login_page() {
   //   }
   // };
 
+  const handleSubmit = async (values) => {
+    try {
+      const response = await authService.login(values.email, values.password);
+      console.log(response);
+    }
+    catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handle42API = async (e) => {
+    e.preventDefault(); // Prevent form submission
+    try {
+      const response = await authService._42API();
+      console.log(response);
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   useEffect(() => {
+
     const handleResize = () => {
       setIsMobile(window.innerWidth <= 768);
     };
@@ -132,18 +153,18 @@ function Login_page() {
             </span>
           </p>
           <button
-            type="submit"
-            className=" flex itemes-center justify-center gap-4 text-black bg-[#BFD5F6] focus:ring-4 focus:outline-none focus:ring-blue-300 sm:w-[80%] sm:w-[70%] font-semibold rounded-[10px] text-base sm:px-10 sm:py-3 px-5 py-5 text-center dark:bg-blue-600 mt-5 mb-2 transition-transform duration-300 ease-in-out transform hover:scale-105"
+            type="button"
+            className="flex items-center justify-center gap-4 text-black bg-[#BFD5F6] focus:ring-4 focus:outline-none focus:ring-blue-300 sm:w-[80%] sm:w-[70%] font-semibold rounded-[10px] text-base sm:px-10 sm:py-3 px-5 py-5 text-center dark:bg-blue-600 mt-5 mb-2 transition-transform duration-300 ease-in-out transform hover:scale-105"
+            onClick={handle42API}
           >
-            {" "}
             <Image
               src="images/42_Logo 1.svg"
               alt="Logo"
               width="40"
               height="40"
-            />{" "}
+            />
             Login Intra
-          </button>{" "}
+          </button>
         </div>
       </form>
     </div>
