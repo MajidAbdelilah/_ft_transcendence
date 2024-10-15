@@ -108,7 +108,7 @@ class LoginView(APIView):
                     return redirect('SendEmail')
                 return response
         else:
-            return Response({"message" : "Invalid email or password !", "data": None}, status=status.HTTP_404_NOT_FOUND)
+            return Response({"message" : "Invalid email or password !", "data": None})
         
 
 class User_view(APIView):

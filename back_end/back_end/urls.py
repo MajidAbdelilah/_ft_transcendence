@@ -20,6 +20,6 @@ from authapp import urls
 from _42provider import urls
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', include('authapp.urls')),
+    path('api/', include('authapp.urls')),
     path('oauth/', include('_42provider.urls')),
 ]
