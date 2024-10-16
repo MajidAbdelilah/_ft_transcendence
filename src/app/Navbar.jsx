@@ -9,7 +9,7 @@ import Link from "next/link";
 import { IoIosSearch } from "react-icons/io";
 //----------------------------------------------
 import axios from "axios";
-import { showAlert } from "../components/Navbar/utils";
+import { showAlert } from "./components/utils";
 import { useRouter } from 'next/navigation';
 
 
