@@ -68,7 +68,7 @@ export default function Profile() {
       if(usr)
         {
           setUserData(usr);
-          console.log(usr);
+          // console.log(usr);
         }
       else
         {

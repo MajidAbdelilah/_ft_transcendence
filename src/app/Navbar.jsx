@@ -135,7 +135,7 @@ function Navbar() {
       if (searchTerm.trim() !== "") {
         // console.log(searchTerm); // Log the search term to the console
         const response = await axios.get("/users.json");
-        console.log(response.data);
+        // console.log(response.data);
 
         const users = response.data;
         // Check if the username exists

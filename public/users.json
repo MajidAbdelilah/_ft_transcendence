@@ -1,7 +1,5 @@
 [
   { "username": "john" },
   { "username": "lucy" },
-  { "username": "malcom" },
-  { "username": "david" },
-  { "username": "eve" }
+  { "username": "malcom" }
 ]
