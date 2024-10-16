@@ -1,6 +1,7 @@
 [
     {
-      "userName": "John Wick",
+      "userName": "john",
+      "name" : "John Doe",
       "avatar": "/images/avatarprofile.svg",
       "status": "Online",
       "level": 1,
@@ -9,7 +10,8 @@
       "map": "Blue"
     },
     {
-      "userName": "Ali",
+      "userName": "lucy",
+      "name" : "lucy wilimas",
       "avatar": "/images/avatar3.svg",
       "status": "Offline",
       "level": 2,
@@ -18,7 +20,8 @@
       "map": "Blue"
     },
     {
-      "userName": "Malcom Smith",
+      "userName": "malcom",
+      "name" : "Malcom smith",
       "avatar": "/images/avatarprofile.svg",
       "status": "Offline",
       "level": 3,

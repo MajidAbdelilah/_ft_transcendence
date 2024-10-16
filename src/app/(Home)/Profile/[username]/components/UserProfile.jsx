@@ -26,7 +26,7 @@ function Part1({user}) {
         className="absolute w-20 h-20 rounded-full border-2 border-[#BCBCC9] -top-10  shadow-md shadow-[#BCBCC9]"
         />
       <div className="mt-12 text-sm md:text-md lg:text-lg xl:text-xl font-bold text-[#242F5C]">
-        {user.name}
+        {user.userName}
       </div>
       <span className="text-xs md:text-sm lg:text-md xl:text-lg mt-1 text-[#8988DE]">{user.status}</span>
 
@@ -75,8 +75,9 @@ function Part2({user}) {
 
 export default function UserProfile({user}) {
   
-
-  return (
+    if(!user)
+      return (<div></div>);
+    return (
     <div className="flex shadow-md shadow-[#BCBCC9] border border-[#BCBCC9] rounded-2xl bg-[#F4F4FF] h-40 w-[80%] mt-10">
       
       <Part1 user={user} />

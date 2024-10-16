@@ -1,5 +1,7 @@
 "use client";
 
+
+
 import MatchHistory from "../../Dashboard/MatchHistory";
 import DashProvider from "../../Dashboard/Dashcontext";
 
@@ -8,7 +10,7 @@ import LeaderBoard from "./components/LeaderBoard";
 
 import { useParams } from 'next/navigation'; 
 import axios from "axios";
-
+import { useEffect, useState } from "react";
 
 import { Inter, Montserrat } from "next/font/google";
 const montserrat = Montserrat({
@@ -17,7 +19,7 @@ const montserrat = Montserrat({
 });
 
 // //data ------------------------------------------
-let userSearchedFor = {
+let user1 = {
   userName: "John Wick",
   avatar: "/images/avatarprofile.svg",
   status: "Online",
@@ -47,20 +49,55 @@ let user3 = {
   level: 3,
 };
 
+
 export default function Profile() {
 
-  
   const params = useParams();
-  const username = params.username;
+  const userSearchedFor = params.username;
+
+  const [userData, setUserData] = useState(null);
+
+  useEffect(() => {
+    const fetchUserData = async () => 
+    {
+      const response = await axios.get("/profile.json");
+      const users = response.data;
+
+      const usr = users.find((user) => user.userName === userSearchedFor);
+
+      if(usr)
+        {
+          setUserData(usr);
+          console.log(usr);
+        }
+      else
+        {
+          console.log("User not found)");
+        }
+
+    };
+    fetchUserData();
   
+  }, [userSearchedFor]);
+
+
+  
+
+  
+   
   return (
     <DashProvider>
       <div
         className={`flex-1 overflow-y-auto p-4 flex flex-wrap items-center justify-center h-full ${montserrat.variable}`}
       >
         <div className="flex flex-col lg:flex-row w-full lg:mx-8 items-center justify-center gap-8">
-          <UserProfile user={userSearchedFor} />
-          <LeaderBoard first={userSearchedFor} second={user2} third={user3} />
+          {userData ? 
+            (<UserProfile user={userData} />)
+            :
+            (<div>NULL OBJECT</div>)
+          }
+
+          <LeaderBoard first={user3} second={user2} third={user3} />
         </div>
 
         <MatchHistory />
