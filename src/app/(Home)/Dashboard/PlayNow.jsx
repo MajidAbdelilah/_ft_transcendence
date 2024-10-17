@@ -35,7 +35,7 @@ function PlayNow() {
           fill
           className="object-contain rounded-xl"
           sizes="100%"
-          onLoadingComplete={() => setImageLoading(false)}
+          onLoad={() => setImageLoading(false)}
         />
       </div>
       <button className="absolute 

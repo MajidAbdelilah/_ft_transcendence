@@ -201,7 +201,7 @@ function Sidebar() {
               width={50}
               height={50}
               className={`rounded-full object-cover w-14 h-14 border-[1px] border-transparent outline outline-2 outline-offset-2 outline-[#242F5C] transition-opacity duration-300 ${avatarLoading ? 'opacity-0' : 'opacity-100'}`}
-              onLoadingComplete={() => setAvatarLoading(false)}
+              onLoad={() => setAvatarLoading(false)}
             />
           </div>
             <div className="">

@@ -38,7 +38,7 @@ function FriendsList() {
           width={50} 
           height={50} 
           className={`absolute inset-0 lg:w-[90%] lg:h-[90%] md:w-[80%] md:h-[80%] w-[100%] h-[100%] transition-opacity duration-300 ${imageLoading ? 'opacity-0' : 'opacity-100'}`}
-          onLoadingComplete={() => setImageLoading(false)}
+          onLoad={() => setImageLoading(false)}
         />
       </div>
         <div className="ml-4 flex flex-col justify-center">
