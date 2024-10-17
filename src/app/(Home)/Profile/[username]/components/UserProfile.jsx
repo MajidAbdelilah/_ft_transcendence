@@ -29,11 +29,10 @@ function Part1({user, isSelf}) {
         {user.userName}
       </div>
       <span className="text-xs md:text-sm lg:text-md xl:text-lg mt-1 text-[#8988DE]">{user.status}</span>
-      {isSelf === false &&
-      (<div className="flex flex-row mt-2 text-[#242F5C] ">
+      <div className={`flex flex-row mt-2 text-[#242F5C] ${isSelf === true ? "invisible" : "visible"}`}>
         <BsChatLeftText className="mr-1 text-lg lg:text-xl" />
         <MdOutlinePersonAddAlt className="ml-1 text-xl lg:text-2xl" />
-      </div>)}
+      </div>
     </div>
   </div>
   );
