@@ -90,15 +90,18 @@ let tournament = {
   ],
 };
 
-// -- data ---------------------------------------------------------------------------------------------------------------
 
 export default function ChatPage() {
-  // -------------------------------------------------------
-
-
+  // loggedInUser -------------------------------------------------------
 
   let UserId = 1; // Assume this is the logged-in user's ID
   let [loggedInUser, setLoggedInUser] = useState(null);
+  if (!loggedInUser) return null;
+
+
+
+
+  // Fetch data -------------------------------------------------------
   let [fullFriendConversations, setFullFriendConversations] = useState([]);
   
   useEffect(() => {
@@ -241,7 +244,7 @@ const [selectedConversation, setSelectedConversation] = useState(null);
     );
   }
 
-  if (!loggedInUser) return null;
+
   return (
 
 

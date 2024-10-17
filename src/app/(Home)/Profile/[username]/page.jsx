@@ -51,7 +51,14 @@ let user3 = {
 
 
 export default function Profile() {
+  // loggedInUser -------------------------------------------------------
 
+  let UserId = 1; // Assume this is the logged-in user's ID
+  let [loggedInUser, setLoggedInUser] = useState(null);
+  // if (!loggedInUser) return null;
+
+
+  // userSearchedFor -------------------------------------------------------
   const params = useParams();
   const userSearchedFor = params.username;
 
@@ -90,13 +97,13 @@ export default function Profile() {
       <div
         className={`flex-1 overflow-y-auto p-4 flex flex-wrap items-center justify-center h-full ${montserrat.variable}`}
       >
-        <div className="flex flex-col lg:flex-row w-full lg:mx-8 items-center justify-center gap-8">
+        <div className="flex flex-col lg:flex-row w-full  items-center justify-center lg:gap-10 xl:gap-32 2xl:gap-60      lg:mx-10 xl:mx-28 2xl:mx-40">
           {userData ? 
             (<UserProfile user={userData} />)
             :
             (<div>NULL OBJECT</div>)
           }
-
+          
           <LeaderBoard first={user3} second={user2} third={user3} />
         </div>
 

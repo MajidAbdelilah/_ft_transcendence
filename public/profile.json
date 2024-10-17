@@ -1,6 +1,7 @@
 [
     {
       "userName": "john",
+      "userId": 1,
       "name" : "John Doe",
       "avatar": "/images/avatarprofile.svg",
       "status": "Online",
@@ -11,6 +12,7 @@
     },
     {
       "userName": "lucy",
+      "userId": 2,
       "name" : "lucy wilimas",
       "avatar": "/images/avatar3.svg",
       "status": "Offline",
@@ -21,10 +23,11 @@
     },
     {
       "userName": "malcom",
+      "userId": 3,
       "name" : "Malcom smith",
       "avatar": "/images/avatarprofile.svg",
       "status": "Offline",
-      "level": 3,
+      "level": 1,
       "score": "3-4",
       "result": "Lose",
       "map": "Blue"
