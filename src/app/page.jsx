@@ -7,6 +7,7 @@ import { useState, useEffect } from 'react'
 import TextGenerateEffect from '/src/components/ui/text-generate-effect'
 import { motion } from 'framer-motion'
 
+
 const montserrat = Montserrat({
   subsets: ['latin'],
   variable: '--font-montserrat',
@@ -16,6 +17,8 @@ const montserrat = Montserrat({
 export default function App() {
 
   const [isScrolled, setIsScrolled] = useState(false);
+  const [mounted, setMounted] = useState(false);
+
 
   useEffect(() => {
     const handleScroll = () => {
@@ -46,7 +49,7 @@ export default function App() {
 
 
   return (
-    <body className="relative">
+    <body className="relative" suppressHydrationWarning={true}>
       <div className={`relative z-10 h-[100vh]  ${montserrat.className}`}>
         <nav className={`flex justify-between sm:pl-20 sm:pt-18 sm:pr-20 w-full sm:items-center sm:h-[200px] fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${isScrolled ? 'bg-white bg-opacity-15 backdrop-blur-md shadow-md' : 'bg-transparent'
           }`}>
@@ -93,7 +96,7 @@ export default function App() {
                 alt="Pong"
                 width={600}
                 height={400}
-                className="pongImg xl:w-full lg:w-[90%] md:w-[90%] w-[90%] ml-5"
+                className="pongImg xl:w-[95%] lg:w-[90%] md:w-[90%] w-[90%] ml-5"
                 priority
               />
             </motion.div>

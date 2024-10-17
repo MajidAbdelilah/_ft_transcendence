@@ -6,6 +6,10 @@ import { useState, useEffect, useRef } from "react";
 import { useFormik } from 'formik';
 import axios from 'axios';
 import authService from '../authService';
+import toast, { Toaster } from 'react-hot-toast';
+
+
+
 
 const montserrat = Montserrat({
   subsets: ["latin"],
@@ -89,22 +93,60 @@ function Signup_page() {
 
     try {
         const response = await authService.signup(FinalValues.username, FinalValues.email, FinalValues.password);
-        console.log(response);
+        if(!response.data.data){
+          const errorMsg = response.data.message;
+          console.log(errorMsg);
+          toast.error(
+            errorMsg['username']?.[0] ||
+            errorMsg['email']?.[0] ||
+            errorMsg['password']?.[0] ||
+            'Something Went Wrong!'
+          );
+        }
+        else {
+          console.log("User created successfully");
+        }
     } catch (error) {
         console.log(error);
     }
   }
 
+
   return (
+    
     <div
       className={`h-[100vh] flex justify-center items-center ${montserrat.className}`}
     >
+      <Toaster
+        position="top-center"
+        reverseOrder={false}
+        toastOptions={{
+          duration: 5000,
+          style: {
+            background: '#363636',
+            color: '#fff',
+            boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.25)',
+          },
+          success: {
+            duration: 3000,
+            theme: {
+              primary: '#111B47',
+            },
+          },
+          error: {
+            duration: 4000,
+            theme: {
+              primary: 'red',
+            },
+          },
+        }}
+      />
       <form
         className={`${!isMobile ? "bg-[rgba(66,74,120,0.05)]" : "border-none"} max-w-[700px] w-[90%]  bg-blend-hard-light ${!isMobile ? "shadow-[inset_0px_0px_4.6px_#A8B4FF]" : ""} p-8 rounded-xl  w-[600px] flex flex-col items-center`}
         onSubmit={formik.handleSubmit}
       >
         <div className="w-full flex justify-center">
-          <Image src="/images/logo.png" alt="Logo" width="100" height="100" />
+          <Image src="/images/logo.png" alt="Logo" width={100} height={100} className="w-[100px] h-[100px] object-contain"/>
         </div>
         <h1 className="sm:text-4xl text-xl text-center text-[#111B47] font-bold">
           Create your account
@@ -195,6 +237,7 @@ function Signup_page() {
           </p>
         </div>
       </form>
+
     </div>
   );
 }

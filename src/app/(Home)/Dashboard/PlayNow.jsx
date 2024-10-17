@@ -27,6 +27,7 @@ function PlayNow() {
           alt="Game Image"
           fill
           className="object-contain rounded-xl"
+          sizes="100%"
         />
       </div>
       <button className="absolute 

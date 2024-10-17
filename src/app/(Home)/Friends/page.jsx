@@ -100,7 +100,7 @@ function Friends() {
                   alt={item.name}
                   width={35}
                   height={35}
-                  className="cursor-pointer transition-opacity duration-200 hover:opacity-80"
+                  className="cursor-pointer transition-opacity duration-200 hover:opacity-80 w-[35px] h-[35px]"
                   onClick={() => { setActiveIcon(item.activeImg); setActiveItem(item.name); }}
                 />
               ))}

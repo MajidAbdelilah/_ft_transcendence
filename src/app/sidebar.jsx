@@ -58,19 +58,19 @@ function Sidebar() {
     };
   }, []);
 
-  useEffect(() => {
-    const fetchUserData = async () => {
-      try {
-        const response = await axios.get('http://127.0.0.1:5500/user.json');
-        const data = await response.data;
-        console.log(data);
-        setUserData(new UserData(data.user, data.email, data.image));
-      } catch (error) {
-        console.error('Error fetching user data:', error);
-      }
-    };
-    fetchUserData();
-  }, []);
+  // useEffect(() => {
+  //   const fetchUserData = async () => {
+  //     try {
+  //       const response = await axios.get('http://127.0.0.1:5500/user.json');
+  //       const data = await response.data;
+  //       console.log(data);
+  //       setUserData(new UserData(data.user, data.email, data.image));
+  //     } catch (error) {
+  //       console.error('Error fetching user data:', error);
+  //     }
+  //   };
+  //   fetchUserData();
+  // }, []);
 
 
 
@@ -104,7 +104,7 @@ function Sidebar() {
       >
         {!isMobile && (
           <div className="flex items-center justify-center">
-          <Image src="/images/logo.png" alt="Logo" width={100} height={100} className="w-[120px] h-[100px]" />
+          <Image src="/images/logo.png" alt="Logo" width={120} height={100} className="w-[120px] h-[100px]" />
         </div>)
         }
         <ul className="flex flex-col gap-8 pt-20 h-[80%]">
@@ -118,7 +118,7 @@ function Sidebar() {
                 alt="Dashboard"
                 width={30}
                 height={30}
-                className="mr-3"
+                className="mr-3 w-[30px] h-[30px]"
               />
               Dashboard
             </Link>
@@ -133,7 +133,7 @@ function Sidebar() {
                 alt="Friends"
                 width={30}
                 height={30}
-                className="mr-3"
+                className="mr-3 w-[30px] h-[30px]"
               />
               Friends
             </Link>
@@ -148,7 +148,7 @@ function Sidebar() {
                 alt="Chat"
                 width={30}
                 height={30}
-                className="mr-3"
+                className="mr-3 w-[30px] h-[30px]"
               />
               Chat
             </a>
@@ -163,7 +163,7 @@ function Sidebar() {
                 alt="Game"
                 width={30}
                 height={30}
-                className="mr-3"
+                className="mr-3 w-[30px] h-[30px]"
               />
               Game
             </a>
@@ -178,7 +178,7 @@ function Sidebar() {
                 alt="Settings"
                 width={30}
                 height={30}
-                className="mr-3"
+                className="mr-3 w-[30px] h-[30px]"
               />
               Settings
             </a>
@@ -187,13 +187,12 @@ function Sidebar() {
         <div className="w-full  max-w-[100%] sm:mb-10 ">
           <hr className="border-[#242F5C] border-t-1 m-auto w-[80%]" />
           <div className="flex items-center justify-center mt-8 gap-4">
-            <Image
+          <Image
               src="/images/avatarprofile.svg"
               alt="avatarprofile"
               width={50}
               height={50}
               className="rounded-full object-cover w-14 h-14 border-[1px] border-transparent outline outline-2 outline-offset-2 outline-[#242F5C]"
-              objectFit="cover"
             />
             <div className="">
               <p className="text-center text-lg font-normal text-[#242F5C]">
@@ -208,7 +207,7 @@ function Sidebar() {
               alt="arrow"
               width={20}
               height={20}
-              className="cursor-pointer"
+              className="cursor-pointer w-[20px] h-[20px]"
               onClick={logout}
             />
             </div>

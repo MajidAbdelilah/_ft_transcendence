@@ -1,12 +1,14 @@
 "use client";
 
-import { Inter, Montserrat } from "next/font/google";
+import { Montserrat } from "next/font/google";
 import Image from "next/image";
 import Link from "next/link";
 import { useFormik } from "formik";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import authService from '../authService';
+import toast, { Toaster } from 'react-hot-toast';
+
 
 
 const montserrat = Montserrat({
@@ -66,7 +68,16 @@ function Login_page() {
   const handleSubmit = async (values) => {
     try {
       const response = await authService.login(values.email, values.password);
-      console.log(response);
+      if(!response.data.data){
+        const errorMsg = response.data.message;
+        console.log(errorMsg);
+        toast.error(
+          errorMsg?errorMsg:'Something Went Wrong!'
+        );
+      }
+      else {
+        console.log("logged in");
+      }
     }
     catch (error) {
       console.log(error);
@@ -94,13 +105,38 @@ function Login_page() {
       window.removeEventListener("resize", handleResize);
     };
   }, []);
+
+  
   return (
     <div
       className={`h-[100vh] flex justify-center items-center ${montserrat.className}`}
     >
+       <Toaster
+        position="top-center"
+        reverseOrder={false}
+        toastOptions={{
+          duration: 5000,
+          style: {
+            background: '#363636',
+            color: '#fff',
+          },
+          success: {
+            duration: 3000,
+            theme: {
+              primary: '#111B47',
+            },
+          },
+          error: {
+            duration: 4000,
+            theme: {
+              primary: 'red',
+            },
+          },
+        }}
+      />
       <form onSubmit={formik.handleSubmit} className={`${!isMobile ? "bg-[rgba(66,74,120,0.05)]" : "border-none"} max-w-[700px] z-[10] absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[90%]  bg-blend-hard-light ${!isMobile ? "shadow-[inset_0px_0px_4.6px_#A8B4FF]" : ""} p-8 rounded-xl h-[700px] w-[600px] flex flex-col items-center`}>
         <div className="w-full flex justify-center">
-          <Image src="/images/logo.png" alt="Logo" width="100" height="100" />
+          <Image src="/images/logo.png" alt="Logo" width={100} height={100} className="w-[100px] h-[100px] object-contain"/>
         </div>
         <h1 className="sm:text-4xl  text-xl text-center text-[#111B47] font-bold">
           Login to your account
@@ -160,8 +196,9 @@ function Login_page() {
             <Image
               src="images/42_Logo 1.svg"
               alt="Logo"
-              width="40"
-              height="40"
+              width={40}
+              height={40}
+              className="w-[40px] h-[40px] object-contain"
             />
             Login Intra
           </button>

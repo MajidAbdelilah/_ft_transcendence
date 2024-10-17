@@ -49,7 +49,7 @@ function Achievements() {
               alt={achievement.alt}
               width={100}
               height={100}
-              className={`w-[50%] sm:w-[70%] max-w-[80px] md:max-w-[90px] lg:max-w-[100px] object-contain ${
+              className={`w-[50%] sm:w-[70%] max-w-[80px] md:max-w-[90px] lg:max-w-[100px] h-auto object-contain ${
                 !achievement.unlocked ? 'opacity-50' : ''
               }`}
             />
