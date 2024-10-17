@@ -57,25 +57,40 @@ export default function Profile() {
   let [loggedInUser, setLoggedInUser] = useState(null);
   // if (!loggedInUser) return null;
 
+  useEffect(() =>  {
+    async function fetchLoggedInUser() {
+      const response = await axios.get("/profile.json");
+      const users = response.data;
 
-  // userSearchedFor -------------------------------------------------------
+      // find the loggedInUser
+      const usr = users.find((user) => user.userId === UserId);
+      console.log("LoggedInUser : ",usr);
+      setLoggedInUser(usr);
+    }
+    fetchLoggedInUser()
+  }, [])
+  
+  
+
+  // searchedText - Searched user from the URL -------------------------------------------------------
   const params = useParams();
-  const userSearchedFor = params.username;
+  const searchedText = params.username;
 
-  const [userData, setUserData] = useState(null);
+  const [userSearchedFor, setuserSearchedFor] = useState(null);
 
   useEffect(() => {
-    const fetchUserData = async () => 
+    const fetchuserSearchedFor = async () => 
     {
       const response = await axios.get("/profile.json");
       const users = response.data;
 
-      const usr = users.find((user) => user.userName === userSearchedFor);
+      const usr = users.find((user) => user.userName === searchedText);
 
       if(usr)
         {
-          setUserData(usr);
-          // console.log(usr);
+          setuserSearchedFor(usr);
+          console.log("LoggedInUser : ",usr);
+
         }
       else
         {
@@ -83,12 +98,16 @@ export default function Profile() {
         }
 
     };
-    fetchUserData();
+    fetchuserSearchedFor();
   
-  }, [userSearchedFor]);
+  }, [searchedText]);
 
 
-  
+  if(loggedInUser === null || userSearchedFor === null) {
+    return null;
+  }
+
+  let isSelf = loggedInUser && loggedInUser.userName === searchedText;
 
   
    
@@ -98,11 +117,7 @@ export default function Profile() {
         className={`flex-1 overflow-y-auto p-4 flex flex-wrap items-center justify-center h-full ${montserrat.variable}`}
       >
         <div className="flex flex-col lg:flex-row w-full  items-center justify-center lg:gap-10 xl:gap-32 2xl:gap-60      lg:mx-10 xl:mx-28 2xl:mx-40">
-          {userData ? 
-            (<UserProfile user={userData} />)
-            :
-            (<div>NULL OBJECT</div>)
-          }
+          {userSearchedFor && (<UserProfile user={userSearchedFor} isSelf={isSelf}/>)}
           
           <LeaderBoard first={user3} second={user2} third={user3} />
         </div>

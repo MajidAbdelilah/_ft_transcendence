@@ -142,7 +142,7 @@ function Navbar() {
         const userExists = users.some((user) => user.username === searchTerm);
 
         if (userExists) {
-          console.log("User exist"); // Display message if user exists
+          // console.log("User exist"); // Display message if user exists
           router.push(`/Profile/${searchTerm}`)
         } else {
           showAlert("User does not exist");

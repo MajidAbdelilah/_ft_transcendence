@@ -14,7 +14,7 @@ import { LuUserX } from "react-icons/lu";
 
 
 
-function Part1({user}) {
+function Part1({user, isSelf}) {
   return (
     <div className="part1 relative w-1/3 p-2 rounded-l-2xl bg-[#F4F4FF] border-[#BCBCC9] border-r-2 min-w-32 ">
 
@@ -29,21 +29,21 @@ function Part1({user}) {
         {user.userName}
       </div>
       <span className="text-xs md:text-sm lg:text-md xl:text-lg mt-1 text-[#8988DE]">{user.status}</span>
-
-      <div className="flex flex-row mt-2 text-[#242F5C] ">
+      {isSelf === false &&
+      (<div className="flex flex-row mt-2 text-[#242F5C] ">
         <BsChatLeftText className="mr-1 text-lg lg:text-xl" />
         <MdOutlinePersonAddAlt className="ml-1 text-xl lg:text-2xl" />
-      </div>
+      </div>)}
     </div>
   </div>
   );
 }
 
-function Part2({user}) {
+function Part2({user, isSelf}) {
   return (
       <div className="part2 w-2/3 p-4 flex flex-col items-end ml-auto   ">
 
-      <LuUserX className="blockIcon text-[#242F5C] text-3xl" />
+      <LuUserX  className={`blockIcon text-[#242F5C] text-3xl ${isSelf === true ? "invisible" : "visible"}`} />
 
       <div className="level flex flex-col items-start w-full mb-4">
         <span className=" text-[#242F5C] font-semibold text-xs ">Level {user.level}</span>
@@ -66,23 +66,23 @@ function Part2({user}) {
 
       </div>
       <button className="gameStats bg-[#242F5C] p-1  px-2 text-[#F4F4FF] text-xs rounded-full font-semibold">
-          GAME STATS
+          Level  {user.level}
       </button>
     </div>
   )
 }
 
 
-export default function UserProfile({user}) {
+export default function UserProfile({user, isSelf}) {
   
     if(!user)
       return (<div></div>);
     return (
     <div className="flex shadow-md shadow-[#BCBCC9] border border-[#BCBCC9] rounded-2xl bg-[#F4F4FF] h-40 w-[80%] mt-10">
       
-      <Part1 user={user} />
+      <Part1 user={user} isSelf={isSelf}/>
       
-      <Part2 user={user}/>
+      <Part2 user={user} isSelf={isSelf}/>
 
     </div>
   );
