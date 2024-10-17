@@ -20,38 +20,44 @@ const montserrat = Montserrat({
 
 // //data ------------------------------------------
 let user1 = {
-  userName: "John Wick",
-  avatar: "/images/avatarprofile.svg",
-  status: "Online",
-  level: 1,
-  score: "5-4",
-  result: "Win",
-  map: "Blue",
+  "userName": "john",
+  "userId": 1,
+  "name" : "John Doe",
+  "avatar": "/images/avatarprofile.svg",
+  "status": "Online",
+  "level": 1,
+  "score": "5-4",
+  "result": "Win",
+  "map": "Blue"
 };
 
 let user2 = {
-  avatar: "/images/avatar3.svg",
-  userName: "Ali",
-  score: "5-4",
-  result: "Win",
-  map: "Blue",
-  status: "Offline",
-  level: 2,
+  "userName": "lucy",
+  "userId": 2,
+  "name" : "lucy wilimas",
+  "avatar": "/images/avatar3.svg",
+  "status": "Offline",
+  "level": 2,
+  "score": "5-4",
+  "result": "Win",
+  "map": "Blue"
 };
 
 let user3 = {
-  avatar: "/images/avatarprofile.svg",
-  userName: "Malcom Smith",
-  score: "3-4",
-  result: "Lose",
-  map: "Blue",
-  status: "Offline",
-  level: 3,
+  "userName": "malcom",
+  "userId": 3,
+  "name" : "Malcom smith",
+  "avatar": "/images/avatarprofile.svg",
+  "status": "Offline",
+  "level": 1,
+  "score": "3-4",
+  "result": "Lose",
+  "map": "Blue"
 };
 
 
 export default function Profile() {
-  // loggedInUser -------------------------------------------------------
+  // loggedInUser -----------------------------------------------------------------------------------
 
   let UserId = 1; // Assume this is the logged-in user's ID
   let [loggedInUser, setLoggedInUser] = useState(null);

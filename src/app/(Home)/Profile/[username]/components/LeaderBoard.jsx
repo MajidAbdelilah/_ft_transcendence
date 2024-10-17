@@ -11,7 +11,7 @@ function BoardTemplate({ number, user }) {
         height={50}
         className="absolute w-50 h-50 transform -translate-x-[-40px] translate-y-[-50%] top-[50%] overflow-hidden"
       />
-      <h2 className="ml-20 left-60 font-bold">{user.name}</h2>
+      <h2 className="ml-20 left-60 font-bold">{user.userName}</h2>
     </div>
   );
 }
