@@ -1,11 +1,13 @@
 import Image from "next/image";
 import { DashContext } from "./Dashcontext";
-import { useContext } from "react";
+import { useContext, useState} from "react";
 import { motion } from "framer-motion"
 
 
 function PlayNow() {
   const DashData = useContext(DashContext);
+  const [imageLoading, setImageLoading] = useState(true);
+
 
   return (
     <motion.div
@@ -22,12 +24,18 @@ function PlayNow() {
         } w-[90%] h-[25%] relative p-4 flex flex-col justify-center items-center `}
     >
       <div className="w-full h-[80%] relative mb-4">
+          {imageLoading && (
+            <div className="absolute inset-0 flex items-center justify-center border-[#242F5C] rounded-xl">
+              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#242F5C]"></div>
+            </div>
+          )}
         <Image
           src="/images/playNow.webp"
           alt="Game Image"
           fill
           className="object-contain rounded-xl"
           sizes="100%"
+          onLoadingComplete={() => setImageLoading(false)}
         />
       </div>
       <button className="absolute 

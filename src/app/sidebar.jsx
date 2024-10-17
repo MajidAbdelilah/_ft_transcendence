@@ -42,6 +42,8 @@ function Sidebar() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
   // const [userData, setUserData] = useState(new UserData());
+  const [avatarLoading, setAvatarLoading] = useState(true);
+
 
   const sideRef = useClickAway(() => {
     setIsMobileMenuOpen(false);
@@ -187,13 +189,21 @@ function Sidebar() {
         <div className="w-full  max-w-[100%] sm:mb-10 ">
           <hr className="border-[#242F5C] border-t-1 m-auto w-[80%]" />
           <div className="flex items-center justify-center mt-8 gap-4">
-          <Image
+          <div className="relative w-14 h-14">
+            {avatarLoading && (
+              <div className="absolute inset-0 flex items-center justify-center rounded-full border-[#242F5C]">
+                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#242F5C]"></div>
+              </div>
+            )}
+            <Image
               src="/images/avatarprofile.svg"
               alt="avatarprofile"
               width={50}
               height={50}
-              className="rounded-full object-cover w-14 h-14 border-[1px] border-transparent outline outline-2 outline-offset-2 outline-[#242F5C]"
+              className={`rounded-full object-cover w-14 h-14 border-[1px] border-transparent outline outline-2 outline-offset-2 outline-[#242F5C] transition-opacity duration-300 ${avatarLoading ? 'opacity-0' : 'opacity-100'}`}
+              onLoadingComplete={() => setAvatarLoading(false)}
             />
+          </div>
             <div className="">
               <p className="text-center text-lg font-normal text-[#242F5C]">
                 Abdellah
