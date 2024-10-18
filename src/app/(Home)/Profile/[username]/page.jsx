@@ -70,7 +70,7 @@ export default function Profile() {
 
       // find the loggedInUser
       const usr = users.find((user) => user.userId === UserId);
-      console.log("LoggedInUser : ",usr);
+      // console.log("LoggedInUser : ",usr);
       setLoggedInUser(usr);
     }
     fetchLoggedInUser()

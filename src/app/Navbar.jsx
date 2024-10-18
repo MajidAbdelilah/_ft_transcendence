@@ -72,9 +72,9 @@ const ProfileSetting = () => {
   );
 };
 
-const ProfileInfo = () => {
+const ProfileInfo = ({onClick}) => {
   return (
-    <div className="flex flex-row items-center m-3 justify-content relative gap-2 cursor-pointer">
+    <div className="flex flex-row items-center m-3 justify-content relative gap-2 cursor-pointer" onClick={onClick}>
       <Image
         src="/images/avatarAcc.svg"
         alt="profile"
@@ -86,6 +86,9 @@ const ProfileInfo = () => {
     </div>
   );
 };
+
+
+
 
 function Navbar() {
   const [userDropdown, setUserDropdown] = useState(false);
@@ -125,6 +128,25 @@ function Navbar() {
       window.removeEventListener("resize", handleResize);
     };
   }, []);
+    // loggedInUser -----------------------------------------------------------------------------------
+
+    let UserId = 1; // Assume this is the logged-in user's ID
+    let [loggedInUser, setLoggedInUser] = useState(null);
+    // if (!loggedInUser) return null;
+
+    useEffect(() =>  {
+      async function fetchLoggedInUser() {
+        const response = await axios.get("/profile.json");
+        const users = response.data;
+  
+        // find the loggedInUser
+        const usr = users.find((user) => user.userId === UserId);
+        // console.log("LoggedInUser : ",usr);
+        setLoggedInUser(usr);
+      }
+      fetchLoggedInUser()
+    }, [])
+
   // ---------------------------------------------------------------------------------------------
   const inputRef = useRef(null); // Create a ref for the input
   const router = useRouter();
@@ -133,7 +155,7 @@ function Navbar() {
       const searchTerm = inputRef.current.value;
 
       if (searchTerm.trim() !== "") {
-        // console.log(searchTerm); // Log the search term to the console
+        
         const response = await axios.get("/users.json");
         // console.log(response.data);
 
@@ -224,7 +246,10 @@ function Navbar() {
                 My Account
               </h1>
               <hr className="w-[100%] h-[1px] bg-[#CDCDE5] border-none rounded-full" />
-              <ProfileInfo />
+              {/* /Profile/${loggedInUser.userName} */}
+              <ProfileInfo onClick={() => router.push(`/Profile/${loggedInUser.userName}`)} />
+
+
               <ProfileSetting />
               <hr className="w-[100%] h-[1px] bg-[#CDCDE5] border-none rounded-full" />
               <LogoutProfile />
