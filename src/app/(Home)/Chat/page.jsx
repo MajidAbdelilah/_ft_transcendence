@@ -96,8 +96,7 @@ export default function ChatPage() {
 
   let UserId = 1; // Assume this is the logged-in user's ID
   let [loggedInUser, setLoggedInUser] = useState(null);
-  if (!loggedInUser) return null;
-
+ 
 
 
 
@@ -112,6 +111,7 @@ export default function ChatPage() {
   
         // Find the logged-in user
         const usr = data.find((user) => user.userId === UserId);
+        // console.log("LoggedInUser : ",usr);
         setLoggedInUser(usr);
   
         if (usr && usr.conversations) {
@@ -139,7 +139,7 @@ export default function ChatPage() {
   
     mainFetch();
   }, []);
-  console.log("Full Friend Conversations outside mainFetch:", fullFriendConversations);
+  // console.log("Full Friend Conversations outside mainFetch:", fullFriendConversations);
 //  stage one get an array of the id and teh converstaon
 // create a cecond array where you change the id with the user data, cause you need his name and avatar.
 
@@ -244,6 +244,7 @@ const [selectedConversation, setSelectedConversation] = useState(null);
     );
   }
 
+  if (loggedInUser === null) return (<div>loggedInUser is null...</div>);
 
   return (
 

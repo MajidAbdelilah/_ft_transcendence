@@ -246,7 +246,7 @@ function Navbar() {
                 My Account
               </h1>
               <hr className="w-[100%] h-[1px] bg-[#CDCDE5] border-none rounded-full" />
-              {/* /Profile/${loggedInUser.userName} */}
+              
               <ProfileInfo onClick={() => router.push(`/Profile/${loggedInUser.userName}`)} />
 
 
