@@ -226,7 +226,7 @@ function Signup_page() {
               type="submit"
               className="text-white bg-[#111B47] focus:ring-4 focus:outline-none font-semibold rounded-[10px] text-lg w-full px-20 py-3 text-center dark:bg-blue-600 dark:hover:bg-blue-600 dark:focus:ring-blue-800 mb-5 transition-transform duration-300 ease-in-out transform hover:scale-105"
             >
-              Login
+              Sign up
             </button>
           </div>
           <p className="font-medium text-[#111B47] pb-2  flex justify-center">
