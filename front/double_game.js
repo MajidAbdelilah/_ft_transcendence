@@ -1,9 +1,4 @@
-const myCanvas = document.getElementById("gameCanvas");
-const ctx = myCanvas.getContext("2d");
-
-
-function render(ctx, player1_pos, p1_rect, player2_pos, p2_rect, ball_pos, ball_radius, player1_score, player2_score)
-{
+function render(ctx, player1_pos, p1_rect, player2_pos, p2_rect, ball_pos, ball_radius, player1_score, player2_score) {
     ctx.clearRect(0, 0, myCanvas.width, myCanvas.height);
     ctx.fillStyle = "black";
     ctx.fillRect(player1_pos.x, player1_pos.y, p1_rect.width, p1_rect.height);
@@ -18,31 +13,6 @@ function render(ctx, player1_pos, p1_rect, player2_pos, p2_rect, ball_pos, ball_
     ctx.fillText(player2_score, 3 * myCanvas.width / 4, 50);
     ctx.stroke();
 }
-
-
-const canvas_dim = {width: 800, height: 600};
-const players_dim = {width: 10, height: 100};
-myCanvas.width = canvas_dim.width;
-myCanvas.height = canvas_dim.height;
-
-player1_score = 0;
-player2_score = 0;
- player1_pos = {x: 0, y: canvas_dim.height / 2 - players_dim.height / 2};
- player2_pos = {x: canvas_dim.width - players_dim.width, y: canvas_dim.height / 2 - players_dim.height / 2};
- ball_pos = {x: canvas_dim.width / 2 - 5, y: canvas_dim.height / 2 - 5};
- ball_speed = {x: 5, y: 5};
-const ball_radius = 5;
-ball_direction = {x: 1, y: 1};
-round_winner = 0;
-let keyState = {};
-
-document.addEventListener("keydown", function(event) {
-    keyState[event.key] = true;
-});
-
-document.addEventListener("keyup", function(event) {
-    keyState[event.key] = false;
-});
 
 function collision(ball_pos, ball_radius, player1_pos, players_dim, player2_pos, ball_speed) {
     if (ball_pos.x - ball_radius <= player1_pos.x + players_dim.width &&
@@ -73,7 +43,6 @@ function collision(ball_pos, ball_radius, player1_pos, players_dim, player2_pos,
     }
 }
 
-
 function goal(ball_pos, ball_radius) {
     if (ball_pos.x - ball_radius <= 0) {
         return 2;
@@ -83,7 +52,6 @@ function goal(ball_pos, ball_radius) {
     }
     return 0;
 }
-
 
 function game() {
     collision(ball_pos, ball_radius, player1_pos, players_dim, player2_pos, ball_speed);
@@ -103,12 +71,12 @@ function game() {
     }
     ball_pos.x += ball_speed.x * ball_direction.x;
     ball_pos.y += ball_speed.y * ball_direction.y;
-    if(goal(ball_pos, ball_radius) === 1) {
+    if (goal(ball_pos, ball_radius) === 1) {
         round_winner = 1;
         player1_score++;
         init();
     }
-    if(goal(ball_pos, ball_radius) === 2) {
+    if (goal(ball_pos, ball_radius) === 2) {
         round_winner = 2;
         player2_score++;
         init();
@@ -116,8 +84,6 @@ function game() {
     render(ctx, player1_pos, players_dim, player2_pos, players_dim, ball_pos, ball_radius, player1_score, player2_score);
     window.requestAnimationFrame(game);
 }
-
-game();
 
 function init() {
     myCanvas.width = canvas_dim.width;
@@ -137,13 +103,69 @@ function init() {
 
     if (player1_score === 5) {
         alert("Player 1 wins the game!");
+        sendMatchData(player1_score, player2_score, "Player1");
         player1_score = 0;
         player2_score = 0;
     }
     if (player2_score === 5) {
         alert("Player 2 wins the game!");
+        sendMatchData(player1_score, player2_score, "Player2");
         player1_score = 0;
         player2_score = 0;
     }
     keyState = {};
 }
+
+const BACKEND_URL = 'http://127.0.0.1:8000/api/match-history/';
+function sendMatchData(player1_score, player2_score, winner) {
+    const data = {
+        player1_score: player1_score,
+        player2_score: player2_score,
+        winner: winner
+    };
+    console.log('Sending data:', data);
+    fetch(BACKEND_URL, {
+        method: 'POST',
+        headers: {
+            'Access-Control-Allow-Origin': '*',
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        return response.json();
+    })
+    .then(data => console.log('Success:', data))
+    .catch((error) => console.error('Error:', error));
+}
+const myCanvas = document.getElementById("gameCanvas");
+const ctx = myCanvas.getContext("2d");
+
+const canvas_dim = {width: 800, height: 600};
+const players_dim = {width: 10, height: 100};
+myCanvas.width = canvas_dim.width;
+myCanvas.height = canvas_dim.height;
+
+let player1_score = 0;
+let player2_score = 0;
+let player1_pos = {x: 0, y: canvas_dim.height / 2 - players_dim.height / 2};
+let player2_pos = {x: canvas_dim.width - players_dim.width, y: canvas_dim.height / 2 - players_dim.height / 2};
+let ball_pos = {x: canvas_dim.width / 2 - 5, y: canvas_dim.height / 2 - 5};
+let ball_speed = {x: 5, y: 5};
+const ball_radius = 5;
+let ball_direction = {x: 1, y: 1};
+let round_winner = 0;
+let keyState = {};
+
+document.addEventListener("keydown", function(event) {
+    keyState[event.key] = true;
+});
+
+document.addEventListener("keyup", function(event) {
+    keyState[event.key] = false;
+});
+
+game();
