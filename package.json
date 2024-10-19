@@ -29,6 +29,7 @@
     "react-hot-toast": "^2.4.1",
     "react-toastify": "^10.0.6",
     "sass": "^1.79.1",
+    "styled-components": "^6.1.13",
     "tailwind-merge": "^2.5.2",
     "tailwindcss-animate": "^1.0.7",
     "vercel": "^37.6.0"

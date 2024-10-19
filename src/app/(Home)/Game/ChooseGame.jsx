@@ -3,8 +3,7 @@ import React, { useState, useEffect} from 'react';
 import Image from 'next/image';
 import { motion } from 'framer-motion';
 import { Montserrat } from "next/font/google";
-import Checkbox from './utils'; // Assuming this is your Checkbox component
-
+import Checkbox from './utils'; 
 
 
 

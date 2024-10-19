@@ -7,7 +7,6 @@ import { useState, useEffect } from 'react'
 import TextGenerateEffect from '/src/components/ui/text-generate-effect'
 import { motion } from 'framer-motion'
 
-
 const montserrat = Montserrat({
   subsets: ['latin'],
   variable: '--font-montserrat',
@@ -99,6 +98,7 @@ export default function App() {
                 className="pongImg xl:w-[95%] lg:w-[90%] md:w-[90%] w-[90%] ml-5"
                 priority
               />
+
             </motion.div>
           </div>
         </div>
