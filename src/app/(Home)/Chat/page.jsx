@@ -21,6 +21,8 @@ import { FriendChatInfo } from "./components/FriendChatInfo";
 import { ConversationsHeader } from "./components/BasicComp";
 import { SendMsgBox } from "./components/SendMsgBox";
 
+
+
 // -- font -----------------------------------------------------
 import { Inter, Montserrat } from "next/font/google";
 import path from "path";

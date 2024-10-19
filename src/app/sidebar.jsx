@@ -90,8 +90,8 @@ function Sidebar() {
             </Link>
           </li>
           <li>
-            <a
-              href="/Chat"
+            <Link
+              href="/chat"
               className="flex items-center py-2 px-4 rounded font-semibold transition-transform duration-200 ease-in-out transform hover:scale-110 text-xl text-[#242F5C] cursor-pointer transition-colors"
             >
               <Image
@@ -102,7 +102,7 @@ function Sidebar() {
                 className="mr-3"
               />
               Chat
-            </a>
+            </Link>
           </li>
           <li>
             <a
