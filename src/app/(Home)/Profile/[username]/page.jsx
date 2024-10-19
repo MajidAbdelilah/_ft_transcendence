@@ -123,7 +123,7 @@ export default function Profile() {
         className={`flex-1 overflow-y-auto p-4 flex flex-wrap items-center justify-center h-full ${montserrat.variable}`}
       >
         <div className="flex flex-col lg:flex-row w-full  items-center justify-center lg:gap-10 xl:gap-32 2xl:gap-60      lg:mx-10 xl:mx-28 2xl:mx-40">
-          {userSearchedFor && (<UserProfile user={userSearchedFor} isSelf={isSelf}/>)}
+          {userSearchedFor && (<UserProfile loggedInUser={loggedInUser} user={userSearchedFor} isSelf={isSelf}/>)}
           
           <LeaderBoard first={user3} second={user2} third={user3} />
         </div>
