@@ -93,7 +93,7 @@ let tournament = {
 };
 
 
-export default function ChatPage() {
+export default function Chat() {
   // loggedInUser -------------------------------------------------------
 
   let UserId = 1; // Assume this is the logged-in user's ID

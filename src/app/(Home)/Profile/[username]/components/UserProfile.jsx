@@ -31,6 +31,7 @@ const handleTextUser = async (loggedInUser, user) => {
   // const response = await axios.post('https://jsonplaceholder.typicode.com/posts', {})
 }
 
+
 function Part1({loggedInUser, user, isSelf}) {
   return (
     <div className="part1 relative w-1/3 p-2 rounded-l-2xl bg-[#F4F4FF] border-[#BCBCC9] border-r-2 min-w-32 ">
