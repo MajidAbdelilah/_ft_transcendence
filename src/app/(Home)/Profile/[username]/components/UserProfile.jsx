@@ -16,7 +16,7 @@ import axios from "axios";
 
 const handleAddFriend = async (loggedInUser, user) => {
   // const response = await axios.post('https://jsonplaceholder.typicode.com/posts', 
-//   { userId: loggedInUser.userId, friendId: user.userId, }
+//   { userId: loggedInUser.userId, friendId: user.userId, } //depends on the the info back end needs ...
 // );
 
   // console.log("response.data : ", response.data);
@@ -33,9 +33,11 @@ const handleTextUser = async (loggedInUser, user) => {
 
 
 const handleBlockUser = async (loggedInUser, user) => {
-  const response = await axios.post('https://jsonplaceholder.typicode.com/posts', 
-    {blockerId: loggedInUser.userId, blockedId: user.userId}
-  );
+  // const response = await axios.post('https://jsonplaceholder.typicode.com/posts', 
+  //   {blockerId: loggedInUser.userId, blockedId: user.userId}//depends on the the info back end needs ...
+  // );
+
+  // console.log("response.data : ", response.data);
 }
 
 function Part1({loggedInUser, user, isSelf}) {
@@ -66,7 +68,9 @@ function Part2({loggedInUser, user, isSelf}) {
   return (
       <div className="part2 w-2/3 p-4 flex flex-col items-end ml-auto   ">
 
-      <LuUserX  className={`blockUser text-[#242F5C] text-3xl ${isSelf === true ? "invisible" : "visible"} cursor-pointer`} />
+      <LuUserX  
+      onClick={handleBlockUser(loggedInUser, user)}
+      className={`blockUser text-[#242F5C] text-3xl ${isSelf === true ? "invisible" : "visible"} cursor-pointer`} />
 
       <div className="level flex flex-col items-start w-full mb-4">
         <span className=" text-[#242F5C] font-semibold text-xs ">Level {user.level}</span>
