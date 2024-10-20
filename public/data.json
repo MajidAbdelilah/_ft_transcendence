@@ -1,5 +1,6 @@
 [
       {
+        "userName": "john",
         "userId": 1,
         "name": "John Wick",
         "avatar": "/images/avatarprofile.svg",
@@ -52,8 +53,9 @@
         ]
       },
       {
+        "userName": "lucy",
         "userId": 2,
-        "name": "Henry Smith",
+        "name": "lucy wilimas",
         "avatar": "/images/avatar3.svg",
         "status": "Online",
         "level": 2,
@@ -104,8 +106,9 @@
         ]
       },
       {
+        "userName": "malcom",
         "userId": 3,
-        "name": "Lucy Smith",
+        "name": "Malcom Smith",
         "avatar": "/images/avatarprofile.svg",
         "status": "Offline",
         "level": 3,

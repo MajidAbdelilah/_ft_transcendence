@@ -2,7 +2,7 @@
     {
       "userName": "john",
       "userId": 1,
-      "name" : "John Doe",
+      "name" : "John Wick",
       "avatar": "/images/avatarprofile.svg",
       "status": "Online",
       "level": 1,

@@ -7,6 +7,7 @@ import { LuUserX } from "react-icons/lu";
 import { IoIosChatboxes } from "react-icons/io";
 import { FaAngleDown } from "react-icons/fa";
 
+import { useRouter } from "next/router";
 
 
 export function HisProfile ({path, name, status}) {
@@ -46,11 +47,12 @@ export function PleaseSelectAConversation() {
 }
 
 export function ProfileOption({onClick}) {
+
     return (
-        <li onClick={onClick} className="cursor-pointer">
-        <a className="p-2 text-lg text-[#242F5C] flex items-center border-[#C6C6E1] border-b-2">
-        <IoPersonOutline /> <span className="ml-2">Profile</span>
-        </a>
+        <li className="cursor-pointer" onClick={onClick} >
+          <a className="p-2 text-lg text-[#242F5C] flex items-center border-[#C6C6E1] border-b-2">
+          <IoPersonOutline /> <span className="ml-2">Profile</span>
+          </a>
         </li>
 );
 }
@@ -76,12 +78,22 @@ export function PlayWithOption ({onClick}) {
     );
   }
 
-  export function FriendChatInfo({ friend, ...rest }) {
+  export function FriendChatInfo({ loggedInUser, friend, ...rest }) {
+    // const router = useRouter();
+
+    // pushToFriendProfile = () => {
+    //   router.push(`/Profile/${friend.name}`);
+    //   rest.setIconState({ dropDownState: false });
+    // };
+
+
+  
     return (
       <div className="friendChatInfo p-5 flex items-center border-b-2 mb-4 border-[#9191D6] border-opacity-30 ">
         {/* ChatListIcon  -------------------------------------------------------------- */}
 
         <IoIosChatboxes
+          
           className="ChatListIcon block lg:hidden text-6xl text-[#242F5C] mr-8 cursor-pointer"
           onClick={rest.switchChatState}
         />
@@ -109,7 +121,12 @@ export function PlayWithOption ({onClick}) {
             ref={rest.dropDownRef}
             className="list absolute right-16 top-20 bg-[#EAEAFF] border-[#C6C6E1] border-2 rounded-xl shadow-lg w-36 "
           >
-            <ProfileOption onClick={() => {window.open('https://google.com'); rest.setIconState({dropDownState: false });}}/>
+            {/* <ProfileOption onClick={pushToFriendProfile} /> */}
+            
+            
+            
+            
+            
             <PlayWithOption onClick={() => {window.open('https://facebook.com'); rest.setIconState({dropDownState: false });}}/>
             <BlockOption onClick={() => {window.open('https://instagram.com'); rest.setIconState({dropDownState: false });}}/>
 

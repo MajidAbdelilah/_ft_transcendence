@@ -198,13 +198,14 @@ const [selectedConversation, setSelectedConversation] = useState(null);
 
   // -------------------------------------------------------
 
-  function MessagesBox({ friend, conversation }) {
+  function MessagesBox({ loggedInUser, friend, conversation }) {
     // no friend selected yet just return FriendChatInfo compomet with empty friend object
     if (friend == null) {
       let noFriendYet = { avatar: "", name: "", status: "" };
       return (
         <div className="messagesBox w-full lg:w-3/5 p-2 h-full rounded-tr-xl rounded-br-xl  flex flex-col ">
           <FriendChatInfo
+          loggedInUser={loggedInUser}
             friend={noFriendYet}
             switchChatState={switchChatState}
             selectedFriend={selectedFriend}
@@ -220,6 +221,7 @@ const [selectedConversation, setSelectedConversation] = useState(null);
       <div className="messagesBox w-full lg:w-3/5 p-2 h-full rounded-tr-xl rounded-br-xl flex flex-col ">
         {/* FriendChatInfo ---------------------------------------------------------------------------------------*/}
         <FriendChatInfo
+          loggedInUser={loggedInUser}
           friend={friend}
           switchChatState={switchChatState}
           selectedFriend={selectedFriend}
@@ -301,7 +303,7 @@ const [selectedConversation, setSelectedConversation] = useState(null);
               </div>
             </div>
 
-            <MessagesBox friend={selectedFriend}  conversation={selectedConversation}/>
+            <MessagesBox loggedInUser={loggedInUser} friend={selectedFriend}  conversation={selectedConversation}/>
           </div>
         </div>
 
