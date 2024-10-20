@@ -259,11 +259,11 @@ const [selectedConversation, setSelectedConversation] = useState(null);
               ref={iconState.chatState ? chatRef : null}
               className={`menuList w-full lg:w-2/5 h-full flex-col lg:block absolute z-50 lg:relative bg-[#F4F4FF] rounded-xl ${
                 iconState.chatState
-                  ? "block bg-[#F4F4FF]  w-full top-32 lg:top-0 "
-                  : "hidden"
+                  ? "block bg-[#F4F4FF]  w-full top-32 lg:top-0  h-4/5 lg:h-full"
+                  : "hidden "
               } `}
             >
-              <div className="friendsBox  p-2 rounded-tl-xl rounded-bl-xl  border-r-2  border-[#C6C6E1] h-full  flex-col flex-grow overflow-y-auto custom-scrollbar bg-[#F4F4FF]">
+              <div className="friendsBox  p-2 rounded-tl-xl rounded-bl-xl  border-r-2  border-[#C6C6E1]  flex-col flex-grow overflow-y-auto custom-scrollbar  h-4/5 lg:h-full ">
               
                 <ProfileInfo avatar={loggedInUser.avatar} name={loggedInUser.name} status={loggedInUser.status}/>
 
@@ -296,6 +296,7 @@ const [selectedConversation, setSelectedConversation] = useState(null);
                       setIconState({ chatState: false, dropDownState: false });
                     }}
                   />
+                  
                 </div>
               </div>
             </div>

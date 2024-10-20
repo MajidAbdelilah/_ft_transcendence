@@ -15,10 +15,9 @@ import axios from "axios";
 
 
 const handleAddFriend = async (loggedInUser, user) => {
-  // const response = await axios.post('https://jsonplaceholder.typicode.com/posts', {
-  //   userId: loggedInUser.userId,
-  //   friendId: user.userId,
-  // });
+  // const response = await axios.post('https://jsonplaceholder.typicode.com/posts', 
+//   { userId: loggedInUser.userId, friendId: user.userId, }
+// );
 
   // console.log("response.data : ", response.data);
   // console.log("loggedInUser.userId : ", loggedInUser.userId);
@@ -31,6 +30,13 @@ const handleTextUser = async (loggedInUser, user) => {
   // const response = await axios.post('https://jsonplaceholder.typicode.com/posts', {})
 }
 
+
+
+const handleBlockUser = async (loggedInUser, user) => {
+  const response = await axios.post('https://jsonplaceholder.typicode.com/posts', 
+    {blockerId: loggedInUser.userId, blockedId: user.userId}
+  );
+}
 
 function Part1({loggedInUser, user, isSelf}) {
   return (

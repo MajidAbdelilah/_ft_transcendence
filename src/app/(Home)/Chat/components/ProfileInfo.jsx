@@ -4,7 +4,7 @@ import Image from "next/image";
 
 export default function ProfileInfo({ avatar, name, status }) {
     return (
-      <div className="profileInfo  w-full flex items-center overflow-hidden py-5 pl-5">
+      <div className="profileInfo  w-full flex items-center overflow-hidden py-5 pl-5 ">
         <Image
           src={avatar}
           alt="avatarprofile"
