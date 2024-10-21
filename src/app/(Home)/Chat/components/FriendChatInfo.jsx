@@ -6,7 +6,7 @@ import { IoGameControllerOutline } from "react-icons/io5";
 import { LuUserX } from "react-icons/lu";
 import { IoIosChatboxes } from "react-icons/io";
 import { FaAngleDown } from "react-icons/fa";
-
+import Link from 'next/link';
 import { useRouter } from "next/router";
 
 
@@ -46,20 +46,21 @@ export function PleaseSelectAConversation() {
 )
 }
 
-export function ProfileOption({onClick}) {
-
-    return (
-        <li className="cursor-pointer" onClick={onClick} >
-          <a className="p-2 text-lg text-[#242F5C] flex items-center border-[#C6C6E1] border-b-2">
+export function ProfileOption({ href, onClick }) {
+  return (
+    <li className="cursor-pointer">
+      <Link href={href} onClick={onClick}>
+        <span className="p-2 text-lg text-[#242F5C] flex items-center border-[#C6C6E1] border-b-2">
           <IoPersonOutline /> <span className="ml-2">Profile</span>
-          </a>
-        </li>
-);
+        </span>
+      </Link>
+    </li>
+  );
 }
 
-export function PlayWithOption ({onClick}) {
+export function PlayWithOption () {
     return (
-      <li onClick={onClick } className="cursor-pointer">
+      <li className="cursor-pointer">
       <a className="p-2 text-lg text-[#242F5C] flex items-center">
         <IoGameControllerOutline />
         <span className="ml-2">Play with</span>
@@ -79,12 +80,8 @@ export function PlayWithOption ({onClick}) {
   }
 
   export function FriendChatInfo({ loggedInUser, friend, ...rest }) {
-    // const router = useRouter();
+    
 
-    // pushToFriendProfile = () => {
-    //   router.push(`/Profile/${friend.name}`);
-    //   rest.setIconState({ dropDownState: false });
-    // };
 
 
   
@@ -121,8 +118,10 @@ export function PlayWithOption ({onClick}) {
             ref={rest.dropDownRef}
             className="list absolute right-16 top-20 bg-[#EAEAFF] border-[#C6C6E1] border-2 rounded-xl shadow-lg w-36 "
           >
-            {/* <ProfileOption onClick={pushToFriendProfile} /> */}
-            
+            <ProfileOption href={`/Profile/${friend.userName}`} onClick={() => rest.setIconState({ dropDownState: false })} />
+
+          
+
             
             
             
