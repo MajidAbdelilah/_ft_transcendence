@@ -91,12 +91,12 @@ function Sidebar() {
           </li>
           <li>
             <Link
-              href="/chat"
+              href="/Chatt"
               className="flex items-center py-2 px-4 rounded font-semibold transition-transform duration-200 ease-in-out transform hover:scale-110 text-xl text-[#242F5C] cursor-pointer transition-colors"
             >
               <Image
                 src="/images/chat.svg"
-                alt="Chat"
+                alt="Chatt"
                 width={30}
                 height={30}
                 className="mr-3"
