@@ -3,7 +3,8 @@ import React, { useState, useEffect} from 'react';
 import Image from 'next/image';
 import { motion } from 'framer-motion';
 import { Montserrat } from "next/font/google";
-import Checkbox from './utils'; 
+import { Check } from 'lucide-react';
+import Checkbox from '../../CheckBox';
 
 
 
@@ -179,6 +180,7 @@ export default function MainComponent() {
               </button>
             </div>
             <Checkbox selected={selected} handleChange={handleChange} />
+
             <hr className="lg:w-[50%] lg:h-[3px] md:w-[40%] md:h-[3px] w-[65%] h-[3px] bg-[#CDCDE5] border-none rounded-full" />
             <button className="w-full sm:w-auto py-6 px-4 md:py-2 md:px-4 lg:py-5 lg:w-[25%] bg-[#242F5C] rounded-xl sm:rounded-full cursor-pointer overflow-hidden font-extrabold text-lg sm:text-base lg:text-lg text-[#fff] shadow flex items-center justify-center gap-2 transition-transform duration-300 ease-in-out hover:scale-105">
               PLAY
