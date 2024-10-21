@@ -13,3 +13,8 @@
     z-index: 5;
     display: block;
 }
+
+#game_container
+{
+    display: none;
+}

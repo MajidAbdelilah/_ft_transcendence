@@ -54,34 +54,36 @@ function goal(ball_pos, ball_radius) {
 }
 
 function game() {
-    collision(ball_pos, ball_radius, player1_pos, players_dim, player2_pos, ball_speed);
-    // get arrow input
-    if (keyState["ArrowUp"]) {
-        player1_pos.y -= 10;
+    if (game_started) {
+        collision(ball_pos, ball_radius, player1_pos, players_dim, player2_pos, ball_speed);
+        // get arrow input
+        if (keyState["ArrowUp"]) {
+            player2_pos.y -= 10;
+        }
+        if (keyState["ArrowDown"]) {
+            player2_pos.y += 10;
+        }
+        // get w, s input
+        if (keyState["w"]) {
+            player1_pos.y -= 10;
+        }
+        if (keyState["s"]) {
+            player1_pos.y += 10;
+        }
+        ball_pos.x += ball_speed.x * ball_direction.x;
+        ball_pos.y += ball_speed.y * ball_direction.y;
+        if (goal(ball_pos, ball_radius) === 1) {
+            round_winner = 1;
+            player1_score++;
+            init();
+        }
+        if (goal(ball_pos, ball_radius) === 2) {
+            round_winner = 2;
+            player2_score++;
+            init();
+        }
+        render(ctx, player1_pos, players_dim, player2_pos, players_dim, ball_pos, ball_radius, player1_score, player2_score);
     }
-    if (keyState["ArrowDown"]) {
-        player1_pos.y += 10;
-    }
-    // get w, s input
-    if (keyState["w"]) {
-        player2_pos.y -= 10;
-    }
-    if (keyState["s"]) {
-        player2_pos.y += 10;
-    }
-    ball_pos.x += ball_speed.x * ball_direction.x;
-    ball_pos.y += ball_speed.y * ball_direction.y;
-    if (goal(ball_pos, ball_radius) === 1) {
-        round_winner = 1;
-        player1_score++;
-        init();
-    }
-    if (goal(ball_pos, ball_radius) === 2) {
-        round_winner = 2;
-        player2_score++;
-        init();
-    }
-    render(ctx, player1_pos, players_dim, player2_pos, players_dim, ball_pos, ball_radius, player1_score, player2_score);
     window.requestAnimationFrame(game);
 }
 
@@ -116,18 +118,18 @@ function init() {
     keyState = {};
 }
 
-const BACKEND_URL = 'http://127.0.0.1:8000/api/match-history/';
 function sendMatchData(player1_score, player2_score, winner) {
     const data = {
+        player1: player1,
+        player2: player2,
         player1_score: player1_score,
         player2_score: player2_score,
         winner: winner
     };
     console.log('Sending data:', data);
-    fetch(BACKEND_URL, {
+    fetch('http://127.0.0.1:8000/api/matches/', {
         method: 'POST',
         headers: {
-            'Access-Control-Allow-Origin': '*',
             'Content-Type': 'application/json'
         },
         body: JSON.stringify(data)
@@ -159,6 +161,9 @@ const ball_radius = 5;
 let ball_direction = {x: 1, y: 1};
 let round_winner = 0;
 let keyState = {};
+let game_started = false;
+let player1;
+let player2;
 
 document.addEventListener("keydown", function(event) {
     keyState[event.key] = true;
@@ -169,3 +174,15 @@ document.addEventListener("keyup", function(event) {
 });
 
 game();
+
+// if inputs with id player1 and player2  in the html code are not empty, and the button with id start is clicked, register the usernames and start the game
+document.getElementById("start").addEventListener("click", function() {
+    player1 = document.getElementById("player1").value;
+    player2 = document.getElementById("player2").value;
+    if (player1 !== "" && player2 !== "") {
+        game_started = true;
+        // set the div with id game_container to display block, and the div with id get_player_info to display none
+        document.getElementById("game_container").style.display = "block";
+        document.getElementById("get_player_info").style.display = "none";
+    }
+});
