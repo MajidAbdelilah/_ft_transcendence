@@ -10,7 +10,7 @@ export default function ProfileInfo({ avatar, name, status }) {
           alt="avatarprofile"
           width={75}
           height={75}
-          className="left-0 top-0 "
+          className="left-0 top-0 w-[75px] h-[75px] "
         />
         <div className=" ml-4  ">
           <h3 className="text-3xl  top-0 left-0 text-[#242F5C] ">

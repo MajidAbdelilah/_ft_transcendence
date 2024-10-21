@@ -20,7 +20,7 @@ export default function FriendInfo({ avatar, name, conversation, onClick }) {
           alt="avatarprofile"
           width={45}
           height={45}
-          className="rounded-full left-0 top-0 "
+          className="rounded-full left-0 top-0 w-[45px] h-[45px] "
         />
       )}
 

@@ -9,7 +9,7 @@ function BoardTemplate({ number, user }) {
         alt="avatarprofile"
         width={50}
         height={50}
-        className="absolute w-50 h-50 transform -translate-x-[-40px] translate-y-[-50%] top-[50%] overflow-hidden"
+        className="absolute w-[50px] h-[50px]  transform -translate-x-[-40px] translate-y-[-50%] top-[50%] overflow-hidden"
       />
       <h2 className="ml-20 left-60 font-bold">{user.userName}</h2>
     </div>

@@ -24,7 +24,7 @@ export function HisProfile ({path, name, status}) {
             alt="avatarprofile"
             width={75}
             height={75}
-            className=" rounded-full left-0 top-0"
+            className=" rounded-full left-0 top-0 w-[75px] h-[75px] "
           />
         )}
 
