@@ -129,12 +129,13 @@ export default function MainComponent() {
             <hr className="lg:w-[50%] lg:h-[3px] md:w-[40%] md:h-[3px] w-[65%] h-[3px] bg-[#CDCDE5] border-none rounded-full" />
             <div className="flex sm:flex-row justify-center gap-20 w-full h-[calc(50%-100px)] pt-10">
               <div className="w-full sm:w-auto px-1 sm:px-0 mb-8 sm:mb-0 ">
-                <Image 
+              <Image 
                   src="/images/WhiteMap.svg" 
                   alt="WhiteMap" 
                   width={500} 
                   height={500} 
-                  className="w-full max-w-[300px] sm:max-w-[400px] lg:max-w-[500px] cursor-pointer transition-transform duration-500 ease-in-out hover:scale-[1.05]" 
+                  className="w-full max-w-[300px] sm:max-w-[400px] lg:max-w-[500px] cursor-pointer transition-transform duration-500 ease-in-out hover:scale-[1.05]"
+                  priority
                 />
                 <h1 className="text-xs lg:text-3xl md:text-2xl font-extrabold tracking-wide text-[#242F5C] text-center p-4">
                   White Map
@@ -146,7 +147,8 @@ export default function MainComponent() {
                   alt="BlueMap" 
                   width={500} 
                   height={500} 
-                  className="w-full max-w-[300px] sm:max-w-[400px] lg:max-w-[500px] cursor-pointer transition-transform duration-500 ease-in-out hover:scale-[1.05]" 
+                  className="w-full max-w-[300px] sm:max-w-[400px] lg:max-w-[500px] cursor-pointer transition-transform duration-500 ease-in-out hover:scale-[1.05]"
+                  priority
                 />
                 <h1 className="text-xs lg:text-3xl md:text-2xl font-extrabold tracking-wide text-[#242F5C] text-center p-4">
                   Blue Map
