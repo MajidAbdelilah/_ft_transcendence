@@ -54,15 +54,16 @@ export default function Chat() {
   const userAgent = navigator.userAgent;
   let UserId; // Assume this is the logged-in user's ID
   let [loggedInUser, setLoggedInUser] = useState(null);
- 
+  
   if (userAgent.includes("Chrome")) {
     UserId = 1; // Chrome
   } else if (userAgent.includes("Firefox")) {
-    UserId = 2; // Firefox
+    UserId = 3; // Firefox
+
   } else {
     UserId = 3; // Default for other browsers
   }
-
+  
 
   // Fetch data -------------------------------------------------------
   let [fullFriendConversations, setFullFriendConversations] = useState([]);
