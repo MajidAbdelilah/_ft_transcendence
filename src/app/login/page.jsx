@@ -85,13 +85,9 @@ function Login_page() {
   };
 
   const handle42API = async (e) => {
-    e.preventDefault(); // Prevent form submission
-    try {
-      const response = await authService._42API();
-      console.log(response);
-    } catch (error) {
-      console.log(error);
-    }
+    let  client_code = "u-s4t2ud-788f47b5210638c4d801d7251098849b5390423a6c8ec84c5d96f6d5ab819990";
+   let redirec_url = "http://localhost:8000/oauth/user_data";
+    window.location.href = `https://api.intra.42.fr/oauth/authorize?client_id=${client_code}&redirect_uri=${redirec_url}/&response_type=code&scope=public%20projects&prompt=consent` ;
   };
 
   useEffect(() => {

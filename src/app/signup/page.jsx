@@ -17,7 +17,7 @@ const montserrat = Montserrat({
 });
 
 // Configure axios to send credentials (cookies) with every request
-axios.defaults.withCredentials = true;
+// axios.defaults.withCredentials = true;
 
 const validate = values => {
   const errors = {};
@@ -96,6 +96,7 @@ function Signup_page() {
         if(!response.data.data){
           const errorMsg = response.data.message;
           console.log(errorMsg);
+         
           toast.error(
             errorMsg['username']?.[0] ||
             errorMsg['email']?.[0] ||
@@ -105,6 +106,7 @@ function Signup_page() {
         }
         else {
           console.log("User created successfully");
+          console.log(response);
         }
     } catch (error) {
         console.log(error);
