@@ -34,52 +34,7 @@ const montserrat = Montserrat({
 // -- colors -----------------------------------------------------co
 //  #F4F4FF   #242F5C   #8988DE   #BCBCC9   #F4F4FF   #EAEAFF   #C0C7E0
 
-// -- data for testing -----------------------------------------------------
 
-let user = {
-  name: "John Wick",
-  path: "/images/avatarprofile.svg",
-  status: "Online",
-};
-
-let friend1 = {
-  name: "Henry smith",
-  path: "/images/avatar3.svg",
-  status: "Online",
-  conversation: [
-    {
-      time: "02:22 PM",
-      msg: "Hi John, up for a ping pong match this evening?",
-      sender: "friend",
-    },
-    {
-      time: "02:22 PM",
-      msg: "Hi John, up for a ping pong match this evenihtrerthwrehwerhwrehwerhwerhwrehwherhrehehewhrhwerrhwerherheng?",
-      sender: "friend",
-    },
-    { time: "02:23 PM", msg: "Sure, I'm in!", sender: "me" },
-    { time: "02:24 PM", msg: "Great, see you at 7 PM!", sender: "friend" },
-    { time: "02:25 PM", msg: "Perfect, see you then!", sender: "me" },
-  ],
-};
-let friend2 = {
-  name: "Lucy Smith",
-  path: "/images/avatarprofile.svg",
-  status: "Offline",
-  conversation: [
-    { time: "09:15 AM", msg: "Good morning, how are you?", sender: "friend" },
-    {
-      time: "09:16 AM",
-      msg: "I'm doing well, thanks! How about you?",
-      sender: "me",
-    },
-    {
-      time: "09:18 AM",
-      msg: "I'm good too. Have a great day!",
-      sender: "friend",
-    },
-  ],
-};
 
 let tournament = {
   name: "tournament", // ###############  WARNING   ########## the tournament must be named like that , casue i ve built the logic so that the name is tournament. path: "/images/avatarprofile.svg", status: "Online",
@@ -96,10 +51,17 @@ let tournament = {
 export default function Chat() {
   // loggedInUser -------------------------------------------------------
 
-  let UserId = 1; // Assume this is the logged-in user's ID
+  const userAgent = navigator.userAgent;
+  let UserId; // Assume this is the logged-in user's ID
   let [loggedInUser, setLoggedInUser] = useState(null);
  
-
+  if (userAgent.includes("Chrome")) {
+    UserId = 1; // Chrome
+  } else if (userAgent.includes("Firefox")) {
+    UserId = 2; // Firefox
+  } else {
+    UserId = 3; // Default for other browsers
+  }
 
 
   // Fetch data -------------------------------------------------------
