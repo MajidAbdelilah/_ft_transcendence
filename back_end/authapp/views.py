@@ -45,13 +45,26 @@ class Logout_view(APIView):
         user = request.user
         resp = Response()
         token = request.COOKIES.get('access_token')
-        if token:
+        if token is not None :
             resp.delete_cookie('access_token')
             resp.data = {
                 "data":None,
                 "message": "Logged out successfully"
             }
             return resp
+        token = request.COOKIES.get('intra_token')
+        if token is not None :
+            user_response = requests.get(settings.FORTY_TWO_USER_PROFILE_URL, headers={'Authorization': f'Bearer {token}'})
+            if token is None:
+                return JsonResponse({'error': 'Failed to get access token'}, status=400)
+            else:
+                response = Response()
+                response.delete_cookie('intra_token')
+                response.data = {
+                    'message': 'Logged out successfully'
+                }
+                request.session.flush()
+                return response
         else:
             resp.data = {
                 "data":None,
@@ -90,6 +103,7 @@ class LoginView(APIView):
         if password is None:
             return Response({"message" : "set password !", "data": None})
         user = authenticate(email=email, password=password)
+        userserialize = UserSerializer(user)
         if user is not None:
                 data = get_tokens_for_user(user)
                 if data["access"] :
@@ -102,7 +116,7 @@ class LoginView(APIView):
                         samesite = settings.SIMPLE_JWT['AUTH_COOKIE_SAMESITE']
                     )
                 # csrf.get_token(request)
-                response.data = {"message" : "Login successfully","data":data}
+                response.data = {"message" : "Login successfully","data":{"user": userserialize.data , "tokens":data }}
                 if user.is_2fa == False:
                     response.data = {"2fa" : True}
                     return redirect('SendEmail')
@@ -130,3 +144,35 @@ class User_view(APIView):
             raise AuthenticationFailed('User not found!')
         serializer = UserSerializer(user)
         return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+class Update_user(APIView):
+    permission_classes = [IsAuthenticated]
+    def post(self , request):
+        response = Response ()
+        user = User.objects.get(email=request.user)
+        new_password = request.data['new_password']
+        current_password = request.data['current_password']
+        username = request.data['username']
+        profile_photo = request.data['profile_photo']
+        if user is not None  and current_password is not None and  user.check_password(current_password) :
+            if username is not None : 
+                otheruser =  User.objects.filter(username=request.data['username']).first()
+            else:
+                otheruser = None
+            if otheruser is not None and otheruser.id != user.id:
+                response.data = {"data" : None , "message" : "username already exist"}
+                return response
+            if username is not None :
+                user.username = username
+            if new_password is not None:
+                user.set_password(new_password)
+            if profile_photo is not None:
+                user.profile_photo  = profile_photo
+            user.save()
+            userserialize=UserSerializer(user)
+            response.data = {"data" : userserialize.data , "message" : "updated succefully ! "}
+            return response
+        else:
+            response.data = {"data" : None , "message" : "credentiels error"}
+            return response

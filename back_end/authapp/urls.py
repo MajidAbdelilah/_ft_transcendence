@@ -6,5 +6,6 @@ urlpatterns = [
     path('login/', views.LoginView.as_view()),
     path('logout/', views.Logout_view.as_view()),
     path('sendcode/', views.Send2FAcode.as_view(), name='SendEmail'),
-    path('CodeVerification/', views.Send2FAcode.as_view(), name='GetCode'),
+    path('CodeVerification/', views.CodeVerification.as_view(), name='GetCode'),
+    path('update_user/', views.Update_user.as_view(), name='Update_user')
 ]

@@ -12,12 +12,14 @@ from authapp.models import User
 from django.shortcuts import redirect, render
 from django.http import JsonResponse
 from django.core.mail import send_mail
+import random
+import string
 
 class Send2FAcode(APIView):
     permission_classes = [IsAuthenticated]
     def get (self , request):
         code = "".join(map(str, random.sample(range(0, 10), 6)))
-        send_mail("2FA AUTHENTICATION", "AUTH CODE IS "+code, settings.EMAIL_HOST_USER, ["ghayaghizlane2@gmail.com"], fail_silently=False,)
+        send_mail("2FA AUTHENTICATION", "AUTH CODE IS "+code, settings.EMAIL_HOST_USER, [request.user], fail_silently=False,)
         useremail = request.user
         user = User.objects.get(email=useremail)
         user._2fa_code = code
@@ -32,6 +34,6 @@ class CodeVerification(APIView):
     def post (self , request):
         user = request.user
         if  user.is_2fa == True  and  user._2fa_code == request.data.get('code'):
-            return Response('2fa is done')
+            return Response({"message":"2fa is done"})
         else:
-            return Response("2fa is disabled")
+            return Response({"message":"2fa code not correct"})
