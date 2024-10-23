@@ -1,28 +1,36 @@
 import Image from "next/image";
 import { DashContext } from "./Dashcontext";
 import { useContext } from "react";
+import { motion } from "framer-motion"
+
 
 function MatchHistory() {
   const DashData = useContext(DashContext);
   return (
     <div
-      className={`${
-        !DashData.isMobile
+      className={`${!DashData.isMobile
           ? "shadow-md shadow-[#BCBCC9] rounded-3xl border-[#BCBCC9] bg-[#F4F4FF] w-[90%] md:w-[70%] h-[48%] md:h-[400px] lg:w-full lg:h-[500px] ml-[5%] mt-[50px] mr-[5%]"
-          : "shadow-md shadow-[#BCBCC9] rounded-3xl bg-[#F4F4FF]/75 border-[#BCBCC9]/25 bg-[#F4F4FF] w-[90%] h-[48%] ml-[5%] mt-[50px] mr-[5%]"
-      }`}
+          : "shadow-md shadow-[#BCBCC9] rounded-3xl bg-[#F4F4FF]/75 border-[#BCBCC9]/25 bg-[#F4F4FF] w-[90%] h-[30%] ml-[5%] mt-[50px] mr-[5%]"
+        }`}
     >
-      <h1 className="text-[#444E74]  h-[18%] font-black text-center pt-5 tracking-wider lg:text-4xl md:text-3xl text-lg md:text-xl lg:text-2xl ">
+      <motion.h1 className="text-[#444E74]  h-[18%] font-black text-center pt-5 tracking-wider lg:text-4xl md:text-3xl text-lg md:text-xl lg:text-2xl "
+        initial={{ scale: 0 }}
+        animate={{ scale: 1 }}
+        transition={{
+          type: "spring",
+          stiffness: 260,
+          damping: 30
+        }}
+      >
         MATCH HISTORY
-      </h1>
+      </motion.h1>
       <div className="flex flex-col justify-content overflow-auto overflow-y-scroll custom-scrollbar h-[95%]">
         <div className="flex flex-col aspect-square overflow-y-auto gap-2 overflow-hidden">
           <div
-            className={`flex flex-col w-full px-2 py-1 overflow-y-auto overflow-hidden custom-scrollbar pr-[5%] h-[80%] transition-all duration-300 ${
-              DashData.isScrolled
+            className={`flex flex-col w-full px-2 py-1 overflow-y-auto overflow-hidden custom-scrollbar pr-[5%] h-[80%] transition-all duration-300 ${DashData.isScrolled
                 ? "bg-white/30 backdrop-blur-lg backdrop-filter"
                 : "bg-transparent"
-            }`}
+              }`}
           >
             <table className="w-full">
               <thead>
@@ -59,13 +67,14 @@ function MatchHistory() {
                     className="text-center font-semibold text-xs sm:text-sm md:text-base lg:text-lg text-[#4E5981]"
                   >
                     <td className="flex items-center justify-center py-2 sm:py-3 md:py-4">
-                      <div className="w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 lg:w-[70px] lg:h-[70px] overflow-hidden rounded-full">
+                      <div className="w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 lg:w-[70px] lg:h-[70px] overflow-hidden rounded-full outline outline-2 outline-offset-2 outline-[#242F5C]">
                         <Image
-                          src="/images/avatar1.svg"
+                          src="/images/avatar1.webp"
                           alt="avatar"
                           width={64}
                           height={64}
                           className="w-full h-full object-cover"
+                          priority
                         />
                       </div>
                     </td>

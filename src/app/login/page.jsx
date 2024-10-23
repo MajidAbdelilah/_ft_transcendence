@@ -1,11 +1,15 @@
 "use client";
 
-import { Inter, Montserrat } from "next/font/google";
-import BackgroundBeams from "/src/components/ui/background-beams";
+import { Montserrat } from "next/font/google";
 import Image from "next/image";
 import Link from "next/link";
 import { useFormik } from "formik";
 import axios from "axios";
+import { useEffect, useState } from "react";
+import authService from '../authService';
+import toast, { Toaster } from 'react-hot-toast';
+
+
 
 const montserrat = Montserrat({
   subsets: ["latin"],
@@ -31,6 +35,9 @@ const validate = (values) => {
 };
 
 function Login_page() {
+
+  const [isMobile, setIsMobile] = useState(false);
+
   const formik = useFormik({
     initialValues: {
       email: "",
@@ -47,23 +54,85 @@ function Login_page() {
     },
   });
 
-    const handleSubmit = async (values) => {
-      // try {
-      //   const response = await axios.get('/api/login', values);
-      //   console.log(response);
-      // } catch (error) {
-      //   console.log(error);
-      // }
-      console.log(values);
-    };
 
+  // const handl42_API = async () => {
+  //   try {
+  //     const response = await authService._42API();
+  //     console.log(response);
+  //   }
+  //   catch (error) {
+  //     console.log(error);
+  //   }
+  // };
+
+  const handleSubmit = async (values) => {
+    try {
+      const response = await authService.login(values.email, values.password);
+      if(!response.data.data){
+        const errorMsg = response.data.message;
+        console.log(errorMsg);
+        toast.error(
+          errorMsg?errorMsg:'Something Went Wrong!'
+        );
+      }
+      else {
+        console.log("logged in");
+      }
+    }
+    catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handle42API = async (e) => {
+    let  client_code = "u-s4t2ud-788f47b5210638c4d801d7251098849b5390423a6c8ec84c5d96f6d5ab819990";
+   let redirec_url = "http://localhost:8000/oauth/user_data";
+    window.location.href = `https://api.intra.42.fr/oauth/authorize?client_id=${client_code}&redirect_uri=${redirec_url}/&response_type=code&scope=public%20projects&prompt=consent` ;
+  };
+
+  useEffect(() => {
+
+    const handleResize = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+    handleResize();
+    window.addEventListener("resize", handleResize);
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
+
+  
   return (
     <div
       className={`h-[100vh] flex justify-center items-center ${montserrat.className}`}
     >
-      <form onSubmit={formik.handleSubmit} className="max-w-[700px] z-[10] absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[90%] bg-[rgba(66,74,120,0.05)] bg-blend-hard-light shadow-[inset_0px_0px_4.6px_#A8B4FF] p-8 rounded-xl h-[700px] w-[600px] flex flex-col items-center">
+       <Toaster
+        position="top-center"
+        reverseOrder={false}
+        toastOptions={{
+          duration: 5000,
+          style: {
+            background: '#363636',
+            color: '#fff',
+          },
+          success: {
+            duration: 3000,
+            theme: {
+              primary: '#111B47',
+            },
+          },
+          error: {
+            duration: 4000,
+            theme: {
+              primary: 'red',
+            },
+          },
+        }}
+      />
+      <form onSubmit={formik.handleSubmit} className={`${!isMobile ? "bg-[rgba(66,74,120,0.05)]" : "border-none"} max-w-[700px] z-[10] absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[90%]  bg-blend-hard-light ${!isMobile ? "shadow-[inset_0px_0px_4.6px_#A8B4FF]" : ""} p-8 rounded-xl h-[700px] w-[600px] flex flex-col items-center`}>
         <div className="w-full flex justify-center">
-          <Image src="images/logo.svg" alt="Logo" width="100" height="100" />
+          <Image src="/images/logo.png" alt="Logo" width={100} height={100} className="w-[100px] h-[100px] object-contain"/>
         </div>
         <h1 className="sm:text-4xl  text-xl text-center text-[#111B47] font-bold">
           Login to your account
@@ -116,18 +185,19 @@ function Login_page() {
             </span>
           </p>
           <button
-            type="submit"
-            className=" flex itemes-center justify-center gap-4 text-black bg-[#BFD5F6] focus:ring-4 focus:outline-none focus:ring-blue-300 sm:w-[80%] sm:w-[70%] font-semibold rounded-[10px] text-base sm:px-10 sm:py-3 px-5 py-5 text-center dark:bg-blue-600 mt-5 mb-2 transition-transform duration-300 ease-in-out transform hover:scale-105"
+            type="button"
+            className="flex items-center justify-center gap-4 text-black bg-[#BFD5F6] focus:ring-4 focus:outline-none focus:ring-blue-300 sm:w-[80%] sm:w-[70%] font-semibold rounded-[10px] text-base sm:px-10 sm:py-3 px-5 py-5 text-center dark:bg-blue-600 mt-5 mb-2 transition-transform duration-300 ease-in-out transform hover:scale-105"
+            onClick={handle42API}
           >
-            {" "}
             <Image
               src="images/42_Logo 1.svg"
               alt="Logo"
-              width="40"
-              height="40"
-            />{" "}
+              width={40}
+              height={40}
+              className="w-[40px] h-[40px] object-contain"
+            />
             Login Intra
-          </button>{" "}
+          </button>
         </div>
       </form>
     </div>
