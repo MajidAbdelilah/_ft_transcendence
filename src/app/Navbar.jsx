@@ -20,6 +20,7 @@ const logout = async () => {
     // Handle successful logout (e.g., clear app state, redirect)
   } catch (error) {
     console.error('Logout failed', error);
+    
   }
 };
 
