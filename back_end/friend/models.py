@@ -11,3 +11,11 @@ class Friend(models.Model):
     class Meta:
         db_table = "friend"
         unique_together = ("user_from", "user_to") # This is to ensure that a user can only send one friend request to another user
+
+
+class notification(models.Model):
+    ssage = models.CharField(max_length=255) # This is the field that will be used to store the notification message
+    is_read = models.BooleanField(default=False) # This is the field that will be used to determine if the notification has been read or not
+    class Meta:
+        db_table = "notification"
+

@@ -1,7 +1,6 @@
 from rest_framework_simplejwt.authentication import JWTAuthentication
 from django.conf import settings
 from django.http import JsonResponse
-
 from rest_framework.authentication import CSRFCheck
 from rest_framework import exceptions
 from authapp.models import User
@@ -27,13 +26,18 @@ class CustomAuthentication(JWTAuthentication):
                     "Authorization": f"Bearer {raw_token}",  # Pass the token in the Authorization header
                 }
                 response = requests.get(url, headers=headers)
+                data = response.json()
                 if response.status_code == 200 :
-                    user_data = response.json()
-                    return User.objects.filter(email=user_data['email']).first() , raw_token
+                    user_data = User.objects.get(email = data['email'])
+                    print(user_data)
+                    return user_data, raw_token
                 else:
-                    return None
+                    return user_data , raw_token
         validated_token = self.get_validated_token(raw_token)
-        return self.get_user(validated_token), validated_token
+        print ("validated_token " ,validated_token )
+        user = (self.get_user(validated_token))
+        print ("self.get_user(validated_token) " ,user)
+        return user, validated_token
 
 # from rest_framework_simplejwt.authentication import JWTAuthentication
 # from django.conf import settings

@@ -24,10 +24,16 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # SECURITY WARNING: don't run with debug turned on in production!
 # DEBUG = True
-
 ALLOWED_HOSTS = ['*']
-
-
+#EMAIL
+import certifi, os
+os.environ['SSL_CERT_FILE'] = certifi.where()
+EMAIL_BACKEND = os.getenv('EMAIL_BACKEND')
+EMAIL_HOST = os.getenv('EMAIL_HOST')
+EMAIL_PORT = os.getenv('EMAIL_PORT')
+EMAIL_USE_TLS = os.getenv('EMAIL_USE_TLS')
+EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
 #.env settings
 import os
 from dotenv import load_dotenv
@@ -57,9 +63,6 @@ INSTALLED_APPS = [
     'allauth.socialaccount.providers.oauth2',
     '_42provider'  ,
     'chat',
-    # 'rest_framework',
-    # 'rest_framework.authtoken',
-    # 'rest_auth',
 ]
 
 MIDDLEWARE = [
@@ -148,16 +151,11 @@ STATIC_URL = 'static/'
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
-        'authapp.authenticate.CustomAuthentication',
-        'rest_framework.authentication.SessionAuthentication',
-        'rest_framework.authentication.BasicAuthentication',
-        #  'oauth2_provider.contrib.rest_framework.OAuth2Authentication',
+         'authapp.authenticate.CustomAuthentication',
     ),
     'DEFAULT_PERMISSION_CLASSES': (
         'rest_framework.permissions.IsAuthenticated',
-        # 'rest_framework_simplejwt.authentication.JWTAuthentication'
     )
-
 }
 
 # Default primary key field type
@@ -168,12 +166,9 @@ AUTH_USER_MODEL = 'authapp.User'
 
 #cors haeader settings
 CORS_ALLOW_CREDENTIALS = True
-
-
 CORS_ALLOWED_ORIGINS = [
     "http://127.0.0.1:3000",
     "http://localhost:3000",
-    "http://localhost:8000",
 ]
 
 
@@ -221,17 +216,18 @@ SIMPLE_JWT = {
 
 SITE_ID = 1
 
-# SOCIALACCOUNT_PROVIDERS = {
-#     'intra42': '_42provider.providers.Intra42Provider',
-# }
-
 
 # 42 OAuth2 Credentials
 FORTY_TWO_CLIENT_ID = os.getenv('INTRA_CLIENT_ID')
 FORTY_TWO_CLIENT_SECRET = os.getenv('INTRA_SECRET_ID')
-FORTY_TWO_REDIRECT_URI = 'http://localhost:8000/oauth/user_data/'
-FORTY_TWO_AUTHORIZE_URL = 'https://api.intra.42.fr/oauth/authorize'
-FORTY_TWO_ACCESS_TOKEN_URL = 'https://api.intra.42.fr/oauth/token'
-FORTY_TWO_USER_PROFILE_URL = 'https://api.intra.42.fr/v2/me'
+FORTY_TWO_REDIRECT_URI = os.getenv('FORTY_TWO_REDIRECT_URI')
+FORTY_TWO_AUTHORIZE_URL = os.getenv('FORTY_TWO_AUTHORIZE_URL')
+
+FORTY_TWO_ACCESS_TOKEN_URL = os.getenv('FORTY_TWO_ACCESS_TOKEN_URL')
+FORTY_TWO_USER_PROFILE_URL = os.getenv('FORTY_TWO_USER_PROFILE_URL')
+
 os.environ['OAUTHLIB_INSECURE_TRANSPORT'] = '1'
 
+#Media
+MEDIA_URL = '/images/'
+MEDIA_ROOT = BASE_DIR /'images'
