@@ -4,27 +4,33 @@ import { RiSendPlaneLine } from "react-icons/ri";
 import { getCurrentTime, createFriendMsgBox, createMyMsgBox } from './peerToPeer';
 
 
-export function sendMessage(e) {
 
-    if (e.code !== "Enter" && e.type !== "click") return;
-
-
-      let inputText = document.getElementsByClassName("msgToSend")[0];
-
-      if (inputText.value.trim() === "") return ;
-        
-        
-        let time = getCurrentTime();
-        let theMsg = createMyMsgBox(time, inputText.value);
-        let conv = document.getElementsByClassName("peerToPeer")[0];
-        conv.appendChild(theMsg);
-        conv.scrollTop = conv.scrollHeight;
-        inputText.value = ""; // Clear the input
-      
-    
-  }
   
   export function SendMsgBox({ friend}) {
+  
+    const sendMessage = async (e) => {
+
+      if (e.code !== "Enter" && e.type !== "click") return;
+      let inputText = document.getElementsByClassName("msgToSend")[0];
+      if (inputText.value.trim() === "") return ;
+        
+      const messageContent = inputText.value;
+      console.log(messageContent);
+  
+          //the rest of the code 
+          // let time = getCurrentTime();
+          // let theMsg = createMyMsgBox(time, inputText.value);
+          // let conv = document.getElementsByClassName("peerToPeer")[0];
+          // conv.appendChild(theMsg);
+          // conv.scrollTop = conv.scrollHeight;
+          
+          inputText.value = ""; // Clear the input
+        
+      
+    }
+
+
+
     return (
       <div className="sendMsgBox mx-8 my-5 relative ">
         <input
