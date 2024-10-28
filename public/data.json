@@ -19,11 +19,6 @@
                 "sender": "friend"
               },
               {
-                "time": "02:23 PM",
-                "msg": "Absolutely! What time works for you?",
-                "sender": "user"
-              },
-              {
                 "time": "02:25 PM",
                 "msg": "How about 7 PM?",
                 "sender": "friend"

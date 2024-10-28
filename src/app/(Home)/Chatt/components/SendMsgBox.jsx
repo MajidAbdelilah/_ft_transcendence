@@ -5,31 +5,23 @@ import { getCurrentTime, createFriendMsgBox, createMyMsgBox } from './peerToPeer
 
 
 export function sendMessage(e) {
-    //forr testing createFriendMsgBox .. delete later -----------------
-    if (e.code === "Enter" || e.type === "click") {
+
+    if (e.code !== "Enter" && e.type !== "click") return;
+
+
       let inputText = document.getElementsByClassName("msgToSend")[0];
 
-      if (inputText.value.trim() === "receive") {
-        let time = getCurrentTime();
-        let theMsg = createFriendMsgBox(time, inputText.value);
-        let conv = document.getElementsByClassName("peerToPeer")[0];
-        conv.appendChild(theMsg);
-        conv.scrollTop = conv.scrollHeight;
-        inputText.value = ""; // Clear the input
-      }
-    }
-    if (e.code === "Enter" || e.type === "click") {
-      let inputText = document.getElementsByClassName("msgToSend")[0];
-
-      if (inputText.value.trim() !== "") {
+      if (inputText.value.trim() === "") return ;
+        
+        
         let time = getCurrentTime();
         let theMsg = createMyMsgBox(time, inputText.value);
         let conv = document.getElementsByClassName("peerToPeer")[0];
         conv.appendChild(theMsg);
         conv.scrollTop = conv.scrollHeight;
         inputText.value = ""; // Clear the input
-      }
-    }
+      
+    
   }
   
   export function SendMsgBox({ friend}) {

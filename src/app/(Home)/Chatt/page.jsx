@@ -49,33 +49,33 @@ let tournament = {
 
 
 export default function Chat() {
-  // loggedInUser -------------------------------------------------------
+  // loggedInUser -----------------------------------------------------------------------------------------
 
-  const userAgent = navigator.userAgent;
-  let UserId; // Assume this is the logged-in user's ID
+  // const userAgent = navigator.userAgent;
+  let UserId = 1; // Assume this is the logged-in user's ID
   let [loggedInUser, setLoggedInUser] = useState(null);
   
-  if (userAgent.includes("Chrome")) {
-    UserId = 1; // Chrome
-  } else if (userAgent.includes("Firefox")) {
-    UserId = 3; // Firefox
+  // if (userAgent.includes("Chrome")) {
+  //   UserId = 1; // Chrome
+  // } else if (userAgent.includes("Firefox")) {
+  //   UserId = 3; // Firefox
 
-  } else {
-    UserId = 3; // Default for other browsers
-  }
+  // } else {
+  //   UserId = 3; // Default for other browsers
+  // }
   
-  const checkAccessToken = () => {
-    const token = localStorage.getItem('accessToken'); // Get the token from localStorage
+  // const checkAccessToken = () => {
+  //   const token = localStorage.getItem('accessToken'); // Get the token from localStorage
   
-    if (token) {
-      console.log("Access Token:", token); // Log the token if it exists
-    } else {
-      console.log("No access token found."); // Log a message if no token exists
-    }
-  };
+  //   if (token) {
+  //     console.log("Access Token:", token); // Log the token if it exists
+  //   } else {
+  //     console.log("No access token found."); // Log a message if no token exists
+  //   }
+  // };
   
-  // Call the function to check the token value
-  checkAccessToken();
+  // // Call the function to check the token value
+  // checkAccessToken();
 
 
 
@@ -83,7 +83,7 @@ export default function Chat() {
 
 
   
-  // Fetch data -------------------------------------------------------
+  // Fetch data -----------------------------------------------------------------------------------------
   let [fullFriendConversations, setFullFriendConversations] = useState([]);
   
   useEffect(() => {
@@ -132,7 +132,37 @@ export default function Chat() {
 const [selectedFriend, setSelectedFriend] = useState(null);
 const [selectedConversation, setSelectedConversation] = useState(null);
 
-  // Clicking on icons -------------------------------------------------------
+
+// Web Socket -----------------------------------------------------------------------------------------
+
+useEffect(() => {
+  // Set up WebSocket connection
+  const socket = new WebSocket('wss://your-websocket-server');
+
+  // Handle incoming messages
+  socket.onmessage = (event) => {
+    const message = JSON.parse(event.data);
+
+    // Update fullFriendConversations with the new message
+    setFullFriendConversations((prevConversations) =>
+      prevConversations.map((friendConversation) => {
+        if (friendConversation.friendData.id === message.senderId || friendConversation.friendData.id === message.receiverId) {
+          // Update the messages array for the corresponding friend
+          return {
+            ...friendConversation,
+            messages: [...friendConversation.messages, message],
+          };
+        }
+        return friendConversation;
+      })
+    );
+  };
+
+  // Cleanup WebSocket connection on component unmount
+  return () => socket.close();
+}, []);
+
+// Clicking on icons -----------------------------------------------------------------------------------------
   const [iconState, setIconState] = useState({
     chatState: false,
     dropDownState: false,
@@ -153,7 +183,7 @@ const [selectedConversation, setSelectedConversation] = useState(null);
     }));
   };
 
-  // Hide components when clikcing outside  -------------------------------------------------------
+// Hide components when clikcing outside  -----------------------------------------------------------------------------------------
 
   const chatRef = useRef();
   const dropDownRef = useRef();
@@ -177,7 +207,7 @@ const [selectedConversation, setSelectedConversation] = useState(null);
     };
   }, []);
 
-  // -------------------------------------------------------
+// -----------------------------------------------------------------------------------------
 
   function MessagesBox({ loggedInUser, friend, conversation }) {
     // no friend selected yet just return FriendChatInfo compomet with empty friend object
