@@ -64,7 +64,25 @@ export default function Chat() {
     UserId = 3; // Default for other browsers
   }
   
+  const checkAccessToken = () => {
+    const token = localStorage.getItem('accessToken'); // Get the token from localStorage
+  
+    if (token) {
+      console.log("Access Token:", token); // Log the token if it exists
+    } else {
+      console.log("No access token found."); // Log a message if no token exists
+    }
+  };
+  
+  // Call the function to check the token value
+  checkAccessToken();
 
+
+
+
+
+
+  
   // Fetch data -------------------------------------------------------
   let [fullFriendConversations, setFullFriendConversations] = useState([]);
   
@@ -241,26 +259,28 @@ const [selectedConversation, setSelectedConversation] = useState(null);
                       setIconState({ chatState: false, dropDownState: false });
                     }}
                   /> */}
-                  <FriendInfo  
-                  name={fullFriendConversations[0].friendData.name} 
-                  avatar={fullFriendConversations[0].friendData.avatar} 
-                  conversation={fullFriendConversations[0].messages} 
-                    onClick={() => {
-                      setSelectedFriend(fullFriendConversations[0].friendData);
-                      setSelectedConversation(fullFriendConversations[0].messages);
-                      setIconState({ chatState: false, dropDownState: false });
-                    }}
-                  />
-                  <FriendInfo friend={fullFriendConversations[1].friendData} 
-                  name={fullFriendConversations[1].friendData.name} 
-                  avatar={fullFriendConversations[1].friendData.avatar}   
-                  conversation={fullFriendConversations[1].messages} 
-                    onClick={() => {
-                      setSelectedFriend(fullFriendConversations[1].friendData);
-                      setSelectedConversation(fullFriendConversations[1].messages);
-                      setIconState({ chatState: false, dropDownState: false });
-                    }}
-                  />
+
+  
+                  {fullFriendConversations.map((friendConversation, index) => (
+                    <FriendInfo
+                      key={index}
+                      name={friendConversation.friendData.name}
+                      avatar={friendConversation.friendData.avatar}
+                      conversation={friendConversation.messages}
+                      onClick={() => {
+                        setSelectedFriend(friendConversation.friendData);
+                        setSelectedConversation(friendConversation.messages);
+                        setIconState({ chatState: false, dropDownState: false });
+                      }}
+                    />
+                  ))}
+
+
+
+
+
+
+
                   
                 </div>
               </div>
@@ -286,39 +306,4 @@ const [selectedConversation, setSelectedConversation] = useState(null);
 
 
 
-
-
-
-// "use client"; // Add this directive to make the component a Client Component
-
-// import React from 'react';
-// import axios from 'axios';
-
-// export default function UserRegistration() {
-//     // Function to send the POST request
-//     const test = () => {
-//       const userData = {
-//           username: "user10",
-//           password: "user10",
-//           email: "user1gdgf0@gmail.com"
-//       };
-  
-//       console.log('Sending user data:', userData); // Log the user data
-  
-//       axios.post('http://127.0.0.1:8000/register/', userData)
-//           .then(response => {
-//               console.log('User created successfully:', response.data);
-//           })
-//           .catch(error => {
-//               console.error('There was an error creating the user!', error.response.data); // Log the error response
-//           });
-//   };
-
-//     return (
-//         <div>
-//             <h1>User Registration</h1>
-//             <button onClick={test}>Create User</button>
-//         </div>
-//     );
-// }
 
