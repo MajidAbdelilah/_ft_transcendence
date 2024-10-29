@@ -6,7 +6,7 @@ import { getCurrentTime, createFriendMsgBox, createMyMsgBox } from './peerToPeer
 
 
   
-  export function SendMsgBox({ friend}) {
+  export function SendMsgBox({ loggedInUser, friend}) {
   
     const sendMessage = async (e) => {
 
@@ -15,14 +15,24 @@ import { getCurrentTime, createFriendMsgBox, createMyMsgBox } from './peerToPeer
       if (inputText.value.trim() === "") return ;
         
       const messageContent = inputText.value;
-      console.log(messageContent);
+
+      // Send message to the backend
+      const response = await axios.post('http://localhost:8000/Chat/', {
+        message: messageContent,
+        sender: loggedInUser.userId,
+        receiver: friend.userId
+      });
+
+
+      
+      // console.log(messageContent);
   
           //the rest of the code 
           // let time = getCurrentTime();
           // let theMsg = createMyMsgBox(time, inputText.value);
           // let conv = document.getElementsByClassName("peerToPeer")[0];
           // conv.appendChild(theMsg);
-          // conv.scrollTop = conv.scrollHeight;
+          conv.scrollTop = conv.scrollHeight;
           
           inputText.value = ""; // Clear the input
         

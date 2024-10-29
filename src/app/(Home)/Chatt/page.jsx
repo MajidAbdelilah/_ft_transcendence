@@ -254,7 +254,7 @@ useEffect(() => {
         </div>
 
         {/*  SendMsgBox ---------------------------------------------------------------------------------------*/}
-        <SendMsgBox friend={friend} />
+        <SendMsgBox loggedInUser={loggedInUser} friend={friend} />
       </div>
     );
   }
