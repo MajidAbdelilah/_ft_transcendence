@@ -98,10 +98,11 @@ export default function Chat() {
         setLoggedInUser(usr);
   
 
-      
+        // 2 - create and full the conversationsWithFriends
+
         if (usr && usr.conversations) {
-          // Create a new array to store friend objects and their conversations
-          const conversationsWithFriends = usr.conversations.map((conversation) => {
+          const conversationsWithFriends = usr.conversations.map((conversation) => 
+          {
             // Find the friend object based on the friendId
             const friend = data.find((users) => users.userId === conversation.friendId);
   
@@ -110,16 +111,7 @@ export default function Chat() {
               messages: conversation.messages, // Include the conversation messages
             };
           });
-  
-          // Store this array in state for later processing
           setFullFriendConversations(conversationsWithFriends);
-
-
-          // console.log("Full Friend Conversations:", conversationsWithFriends);
-
-
-          // Log the result to the console for now
-          // console.log("Full Friend Conversations:", conversationsWithFriends);
         }
 
     }
