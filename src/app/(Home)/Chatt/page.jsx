@@ -83,26 +83,27 @@ export default function Chat() {
 
 
   
-  // Fetch/find looged in user  -----------------------------------------------------------------------------------------
+  // Fetch/find looged in user  and conversatios -----------------------------------------------------------------------------------------
   let [fullFriendConversations, setFullFriendConversations] = useState([]);
   
   useEffect(() => {
     async function mainFetch() {
-      try {
+
+
+        // 1 - Find and set the logged-in user
         const response = await fetch('/data.json');
         const data = await response.json();
-  
-        // Find the logged-in user
-        const usr = data.find((user) => user.userId === UserId);
-
-        // console.log("LoggedInUser : ",usr);
+        
+        const usr = data.find((users) => users.userId === UserId);
         setLoggedInUser(usr);
   
+
+      
         if (usr && usr.conversations) {
           // Create a new array to store friend objects and their conversations
           const conversationsWithFriends = usr.conversations.map((conversation) => {
             // Find the friend object based on the friendId
-            const friend = data.find((user) => user.userId === conversation.friendId);
+            const friend = data.find((users) => users.userId === conversation.friendId);
   
             return {
               friendData: friend, // Include full friend details (name, status, etc.)
@@ -114,21 +115,21 @@ export default function Chat() {
           setFullFriendConversations(conversationsWithFriends);
 
 
-          console.log("Full Friend Conversations:", conversationsWithFriends);
+          // console.log("Full Friend Conversations:", conversationsWithFriends);
 
-          
+
           // Log the result to the console for now
           // console.log("Full Friend Conversations:", conversationsWithFriends);
         }
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      }
+
     }
   
     mainFetch();
   }, []);
 
-  // fetch conversations -----------------------------------------------------------------------------------------
+
+
+
 
 
 const [selectedFriend, setSelectedFriend] = useState(null);
@@ -183,9 +184,7 @@ const [selectedConversation, setSelectedConversation] = useState(null);
   }, []);
 
 
-  // (message.senderId === friend.userId && message.receiverId === loggedInUser.userId) ||
-  //       (message.senderId === loggedInUser.userId && message.receiverId === friend.userId)
-  //     ) {
+
 
 // -----------------------------------------------------------------------------------------
 
