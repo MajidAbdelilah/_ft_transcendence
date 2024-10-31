@@ -14,14 +14,16 @@
             "friendId": 2,
             "messages": [
               {
+                "content": "Hi John, let's meet for the game tonight!",
                 "time": "02:22 PM",
-                "msg": "Hi John, let's meet for the game tonight!",
-                "sender": "friend"
+                "sender": 2,
+                "reciever": 1
               },
               {
                 "time": "02:25 PM",
-                "msg": "How about 7 PM?",
-                "sender": "friend"
+                "content": "How about 7 PM?",
+                "sender": 1,
+                "reciever": 2
               }
             ]
           },
@@ -30,18 +32,21 @@
             "messages": [
               {
                 "time": "09:10 AM",
-                "msg": "Good morning John, are you joining the competition?",
-                "sender": "friend"
+                "content": "Good morning John, are you joining the competition?",
+                "sender": 3,
+                "reciever": 1
               },
               {
                 "time": "09:12 AM",
-                "msg": "Good morning! Yes, I'll be there!",
-                "sender": "user"
+                "content": "Good morning! Yes, I'll be there!",
+                "sender": 1,
+                "reciever": 3
               },
               {
                 "time": "09:14 AM",
-                "msg": "Great! See you there.",
-                "sender": "friend"
+                "content": "Great! See you there.",
+                "sender": 3,
+                "reciever": 1
               }
             ]
           }
@@ -63,18 +68,21 @@
             "messages": [
               {
                 "time": "02:22 PM",
-                "msg": "Hi John, let's meet for the game tonight!",
-                "sender": "user"
+                "content": "Hi John, let's meet for the game tonight!",
+                "sender": 2,
+                "reciever": 1
               },
               {
                 "time": "02:23 PM",
-                "msg": "Absolutely! What time works for you?",
-                "sender": "friend"
+                "content": "Absolutely! What time works for you?",
+                "sender": 1,
+                "reciever": 2
               },
               {
                 "time": "02:25 PM",
-                "msg": "How about 7 PM?",
-                "sender": "user"
+                "content": "How about 7 PM?",
+                "sender": 2,
+                "reciever": 1
               }
             ]
           },
@@ -83,18 +91,21 @@
             "messages": [
               {
                 "time": "03:30 PM",
-                "msg": "Hey Max, are we still on for tomorrow?",
-                "sender": "user"
+                "content": "Hey Max, are we still on for tomorrow?",
+                "sender": 2,
+                "reciever": 3
               },
               {
                 "time": "03:35 PM",
-                "msg": "Yeah, looking forward to it!",
-                "sender": "friend"
+                "content": "Yeah, looking forward to it!",
+                "sender": 3,
+                "reciever": 2
               },
               {
                 "time": "03:37 PM",
-                "msg": "Awesome, see you then.",
-                "sender": "user"
+                "content": "Awesome, see you then.",
+                "sender": 2,
+                "reciever": 3
               }
             ]
           }
@@ -116,18 +127,21 @@
             "messages": [
               {
                 "time": "09:10 AM",
-                "msg": "Good morning John, are you joining the competition?",
-                "sender": "user"
+                "content": "Good morning John, are you joining the competition?",
+                "sender": 3,
+                "reciever": 1
               },
               {
                 "time": "09:12 AM",
-                "msg": "Good morning! Yes, I'll be there!",
-                "sender": "friend"
+                "content": "Good morning! Yes, I'll be there!",
+                "sender": 1,
+                "reciever": 3
               },
               {
                 "time": "09:14 AM",
-                "msg": "Great! See you there.",
-                "sender": "user"
+                "content": "Great! See you there.",
+                "sender": 3,
+                "reciever": 1
               }
             ]
           },
@@ -136,18 +150,22 @@
             "messages": [
               {
                 "time": "10:00 AM",
-                "msg": "Max, did you complete the task?",
-                "sender": "user"
+                "content": "Max, did you complete the task?",
+                "sender": 3,
+                "reciever": 4
+
               },
               {
                 "time": "10:05 AM",
-                "msg": "Yes, all set!",
-                "sender": "friend"
+                "content": "Yes, all set!",
+                "sender": 4,
+                "reciever": 3
               },
               {
                 "time": "10:10 AM",
-                "msg": "Great! Let's catch up later.",
-                "sender": "user"
+                "content": "Great! Let's catch up later.",
+                "sender": 3,
+                "reciever": 4
               }
             ]
           }
@@ -168,18 +186,21 @@
             "messages": [
               {
                 "time": "03:30 PM",
-                "msg": "Hey Max, are we still on for tomorrow?",
-                "sender": "friend"
+                "content": "Hey Max, are we still on for tomorrow?",
+                "sender": 2,
+                "reciever": 4
               },
               {
                 "time": "03:35 PM",
-                "msg": "Yeah, looking forward to it!",
-                "sender": "user"
+                "content": "Yeah, looking forward to it!",
+                "sender": 4,
+                "reciever":2
               },
               {
                 "time": "03:37 PM",
-                "msg": "Awesome, see you then.",
-                "sender": "friend"
+                "content": "Awesome, see you then.",
+                "sender": 2,
+                "reciever":4
               }
             ]
           },
@@ -188,18 +209,21 @@
             "messages": [
               {
                 "time": "10:00 AM",
-                "msg": "Max, did you complete the task?",
-                "sender": "friend"
+                "content": "Max, did you complete the task?",
+                "sender": 3,
+                "reciever":4
               },
               {
                 "time": "10:05 AM",
-                "msg": "Yes, all set!",
-                "sender": "user"
+                "content": "Yes, all set!",
+                "sender": 4,
+                "reciever":3
               },
               {
                 "time": "10:10 AM",
-                "msg": "Great! Let's catch up later.",
-                "sender": "friend"
+                "content": "Great! Let's catch up later.",
+                "sender": 3,
+                "reciever":4
               }
             ]
           }

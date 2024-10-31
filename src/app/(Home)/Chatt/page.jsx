@@ -122,10 +122,6 @@ export default function Chat() {
   
     mainFetch();
   }, []);
-  // console.log("Full Friend Conversations outside mainFetch:", fullFriendConversations);
-//  stage one get an array of the id and teh converstaon
-// create a cecond array where you change the id with the user data, cause you need his name and avatar.
-
 
 
 
@@ -133,34 +129,7 @@ const [selectedFriend, setSelectedFriend] = useState(null);
 const [selectedConversation, setSelectedConversation] = useState(null);
 
 
-// Web Socket -----------------------------------------------------------------------------------------
 
-useEffect(() => {
-  // Set up WebSocket connection
-  const socket = new WebSocket('wss://your-websocket-server');
-
-  // Handle incoming messages
-  socket.onmessage = (event) => {
-    const message = JSON.parse(event.data);
-
-    // Update fullFriendConversations with the new message
-    setFullFriendConversations((prevConversations) =>
-      prevConversations.map((friendConversation) => {
-        if (friendConversation.friendData.id === message.senderId || friendConversation.friendData.id === message.receiverId) {
-          // Update the messages array for the corresponding friend
-          return {
-            ...friendConversation,
-            messages: [...friendConversation.messages, message],
-          };
-        }
-        return friendConversation;
-      })
-    );
-  };
-
-  // Cleanup WebSocket connection on component unmount
-  return () => socket.close();
-}, []);
 
 // Clicking on icons -----------------------------------------------------------------------------------------
   const [iconState, setIconState] = useState({
@@ -207,9 +176,45 @@ useEffect(() => {
     };
   }, []);
 
+
+  // (message.senderId === friend.userId && message.receiverId === loggedInUser.userId) ||
+  //       (message.senderId === loggedInUser.userId && message.receiverId === friend.userId)
+  //     ) {
+
 // -----------------------------------------------------------------------------------------
 
   function MessagesBox({ loggedInUser, friend, conversation }) {
+
+    // websocket -----------------------------------------------------------------------------------------
+      // const [socket, setSokcet] = useState(null);
+      // const [messages, setMessages] = useState(conversation);
+
+
+      // useEffect(() =>{
+
+      //   // step 1 : Initialize the WebSocket connection
+      //   const socketInstance = new WebSocket('ws://localhost:8000');
+      //   setSokcet(socketInstance);
+
+      //   // step 2 :  check that the loogedInUser and the friend are part of the message - and add the message to the conversation
+      //   socketInstance.onmessage = (event) => {
+      //     const message = JSON.parse(event.data);
+      //     if(
+      //       (message.sender === friend.userId       && message.reciever === loggedInUser.userId) || // case loggedInUser recieves a message
+      //       (message.sender === loggedInUser.userId && message.reciever === friend.userId))         // case loggedInUser sends a message
+      //       {
+      //         setMessages((prevMessages) => [...prevMessages, message]);
+      //       }
+      //   };
+
+      //   // step 3 :  cleanup the WebSocket on component unmount
+      //   return () => { socketInstance.close();};
+
+
+      // }, [friend, loggedInUser]);
+
+
+
     // no friend selected yet just return FriendChatInfo compomet with empty friend object
     if (friend == null) {
       let noFriendYet = { avatar: "", name: "", status: "" };
@@ -229,6 +234,7 @@ useEffect(() => {
       );
     }
     return (
+      // console.log(conversation),
       <div className="messagesBox w-full lg:w-3/5 p-2 h-full rounded-tr-xl rounded-br-xl flex flex-col ">
         {/* FriendChatInfo ---------------------------------------------------------------------------------------*/}
         <FriendChatInfo
@@ -245,10 +251,10 @@ useEffect(() => {
         {/* peerToPeer ---------------------------------------------------------------------------------------*/}
         <div className="peerToPeer flex flex-col  flex-grow overflow-y-auto custom-scrollbar break-all ">
           {conversation.map((message, index) =>
-            message.sender === "friend" ? (
-              <FriendMsgBox key={index} time={message.time} msg={message.msg} />
+            message.sender === friend.userId ? (
+              <FriendMsgBox key={index} time={message.time} msg={message.content} />
             ) : (
-              <MyMsgBox key={index} time={message.time} msg={message.msg} />
+              <MyMsgBox key={index} time={message.time} msg={message.content} />
             )
           )}
         </div>
@@ -258,7 +264,7 @@ useEffect(() => {
       </div>
     );
   }
-
+  
   if (loggedInUser === null) return (<div>loggedInUser is null...</div>);
 
   return (

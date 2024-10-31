@@ -16,27 +16,33 @@ import { getCurrentTime, createFriendMsgBox, createMyMsgBox } from './peerToPeer
         
       const messageContent = inputText.value;
 
-      // Send message to the backend
-      const response = await axios.post('http://localhost:8000/Chat/', {
-        message: messageContent,
+      //  -----  using post request -------------------------------------------------------
+      // const response = await axios.post('http://localhost:8000/Chat/', {
+      //   message: messageContent,
+      //   sender: loggedInUser.userId,
+      //   receiver: friend.userId
+      // });
+
+
+
+      //  -----  using websocket  -------------------------------------------------------
+      const message = {
+        content: messageContent,
+        time: getCurrentTime(),
         sender: loggedInUser.userId,
         receiver: friend.userId
-      });
+      };
+
+      // Send the message to WebSocket server
+      socket.send(JSON.stringify(message));
+
+
 
 
       
-      // console.log(messageContent);
-  
-          //the rest of the code 
-          // let time = getCurrentTime();
-          // let theMsg = createMyMsgBox(time, inputText.value);
-          // let conv = document.getElementsByClassName("peerToPeer")[0];
-          // conv.appendChild(theMsg);
+
           conv.scrollTop = conv.scrollHeight;
-          
           inputText.value = ""; // Clear the input
-        
-      
     }
 
 
