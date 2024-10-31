@@ -100,6 +100,7 @@ export default function Chat() {
 
         // 2 - create and full the conversationsWithFriends
 
+
         if (usr && usr.conversations) {
           const conversationsWithFriends = usr.conversations.map((conversation) => 
           {
