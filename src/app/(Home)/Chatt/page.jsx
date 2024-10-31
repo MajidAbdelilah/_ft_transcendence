@@ -83,7 +83,7 @@ export default function Chat() {
 
 
   
-  // Fetch data -----------------------------------------------------------------------------------------
+  // Fetch/find looged in user  -----------------------------------------------------------------------------------------
   let [fullFriendConversations, setFullFriendConversations] = useState([]);
   
   useEffect(() => {
@@ -94,6 +94,7 @@ export default function Chat() {
   
         // Find the logged-in user
         const usr = data.find((user) => user.userId === UserId);
+
         // console.log("LoggedInUser : ",usr);
         setLoggedInUser(usr);
   
@@ -111,7 +112,11 @@ export default function Chat() {
   
           // Store this array in state for later processing
           setFullFriendConversations(conversationsWithFriends);
-  
+
+
+          console.log("Full Friend Conversations:", conversationsWithFriends);
+
+          
           // Log the result to the console for now
           // console.log("Full Friend Conversations:", conversationsWithFriends);
         }
@@ -123,6 +128,7 @@ export default function Chat() {
     mainFetch();
   }, []);
 
+  // fetch conversations -----------------------------------------------------------------------------------------
 
 
 const [selectedFriend, setSelectedFriend] = useState(null);
