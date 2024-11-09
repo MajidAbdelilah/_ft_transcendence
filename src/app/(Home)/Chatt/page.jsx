@@ -87,13 +87,13 @@ export default function Chat() {
 
 
 
-    const response = await axios.get('http://127.0.0.1:8000/api/', {
-      headers: {
-        'Authorization': `Bearer ${token}`,
-      },
-    });
+    // const response = await axios.get('http://127.0.0.1:8000/api/', {
+    //   headers: {
+    //     'Authorization': `Bearer ${token}`,
+    //   },
+    // });
     
-    console.log("Logged in user data:", response.data);
+    // console.log("Logged in user data:", response.data);
   };
   
   // Call the function to test it
