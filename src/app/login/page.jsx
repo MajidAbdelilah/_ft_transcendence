@@ -82,8 +82,10 @@ function Login_page() {
       }
       else {
         console.log(response.data);
-        if(response.data.data.refresh){
-          localStorage.setItem('token', response.data.data.refresh);
+        if(response.data.data.tokens.refresh){
+          console.log("logged");
+
+          localStorage.setItem('token', response.data.data.tokens.refresh);
           router.push('/Dashboard');
         }
       }
