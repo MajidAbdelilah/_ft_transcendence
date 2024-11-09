@@ -6,6 +6,7 @@ import { useState, useRef, useEffect } from "react";
 import { motion } from "framer-motion"
 import Link from "next/link";
 import authService from './authService';
+import { useRouter } from 'next/navigation';
 
 
 
@@ -14,19 +15,20 @@ const montserrat = Montserrat({
   variable: "--font-montserrat",
 });
 
-const logout = async () => {
-  try {
-    await authService.logout();
-    // Handle successful logout (e.g., clear app state, redirect)
-  } catch (error) {
-    console.error('Logout failed', error);
-    
-  }
-};
+
 
 
 const LogoutProfile = () => {
+  const router = useRouter();
+
+
+  const logout = async () => {
+    localStorage.removeItem('token')
+    localStorage.removeItem('lastRoute')
+    await router.replace('/login')
+  };
   return (
+
     <div className="flex flex-row items-center m-3 justify-content relative gap-2 cursor-pointer" onClick={logout}>
       <Image src="/images/logout.svg" alt="profile" width={50} height={50} className="w-[18px] h-[18px]" />
       <h1 className="text-base font-medium text-[#242F5C]">Log Out</h1>

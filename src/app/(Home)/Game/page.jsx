@@ -1,11 +1,13 @@
-import ChooseGame from "./ChooseGame";
+'use client'
 
+import ChooseGame from "./ChooseGame"
+import withAuth from "../../HOC.tsx";
 
-function Game() {
-  
+const Game = () => {
   return (
     <ChooseGame/>
-  );
+  )
 }
 
-export default Game;
+const ProtectedGame = withAuth(Game)
+export default ProtectedGame
