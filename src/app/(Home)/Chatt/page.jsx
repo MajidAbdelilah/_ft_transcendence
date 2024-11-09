@@ -51,29 +51,27 @@ let tournament = {
 export default function Chat() {
   // loggedInUser -----------------------------------------------------------------------------------------
 
-  // const userAgent = navigator.userAgent;
+  
   let UserId = 1; // Assume this is the logged-in user's ID
   let [loggedInUser, setLoggedInUser] = useState(null);
   
-  // if (userAgent.includes("Chrome")) {
-  //   UserId = 1; // Chrome
-  // } else if (userAgent.includes("Firefox")) {
-  //   UserId = 3; // Firefox
 
-  // } else {
-  //   UserId = 3; // Default for other browsers
-  // }
+
+
   
-  // const checkAccessToken = () => {
-  //   const token = localStorage.getItem('accessToken'); // Get the token from localStorage
+  const checkAccessToken = () => {
+    const token = localStorage.getItem('token'); // Get the token from localStorage
   
-  //   if (token) {
-  //     console.log("Access Token:", token); // Log the token if it exists
-  //   } else {
-  //     console.log("No access token found."); // Log a message if no token exists
-  //   }
-  // };
+    if (token) {
+      console.log("Access Token:", token); // Log the token if it exists
+    } else {
+      console.log("No access token found."); // Log a message if no token exists
+    }
+  };
   
+  // Call the function
+checkAccessToken();
+
   // // Call the function to check the token value
   // checkAccessToken();
 
