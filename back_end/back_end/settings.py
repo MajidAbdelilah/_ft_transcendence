@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 
 from pathlib import Path
 
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -41,20 +42,21 @@ load_dotenv()
 
 
 SECRET_KEY = os.getenv('SECRET_KEY')
-DEBUG = os.getenv('DEBUG')
+DEBUG = True
 SECRET = os.getenv('SECRET')
 
 # Application definition
 
 INSTALLED_APPS = [
     'django.contrib.admin',
+    'daphne',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
-    'channels',
+    'channels_redis',
     'corsheaders',
     'authapp',
     'allauth',
@@ -95,6 +97,7 @@ TEMPLATES = [
     },
 ]
 
+ASGI_APPLICATION = 'back_end.asgi.application'
 WSGI_APPLICATION = 'back_end.wsgi.application'
 
 
@@ -172,7 +175,14 @@ CORS_ALLOWED_ORIGINS = [
 ]
 
 
-
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels_redis.core.RedisChannelLayer",
+        "CONFIG": {
+            "hosts": [('localhost', 6379)],   # Change localhost to the ip in which you have redis server running on.
+        },
+    },
+}
 
 
 from datetime import timedelta

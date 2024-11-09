@@ -21,6 +21,13 @@ services:
        - 8080:8080
       networks:
         - nat
+    redis:
+      ports:
+        - 6379:6379
+      image: redis
+      restart: always
+      networks:
+          - nat
 networks:
    nat:
     driver: bridge
