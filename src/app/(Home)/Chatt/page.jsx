@@ -20,7 +20,7 @@ import { FriendMsgBox, MyMsgBox } from "./components/peerToPeer";
 import { FriendChatInfo } from "./components/FriendChatInfo";
 import { ConversationsHeader } from "./components/BasicComp";
 import { SendMsgBox } from "./components/SendMsgBox";
-
+import axios from 'axios';
 
 
 // -- font -----------------------------------------------------
@@ -70,11 +70,35 @@ export default function Chat() {
   };
   
   // Call the function
-checkAccessToken();
-
-  // // Call the function to check the token value
   // checkAccessToken();
 
+
+
+
+  const getLoggedInUser = async () => {
+    const token = localStorage.getItem('token'); // Make sure this matches your stored key
+    if (token) {
+      console.log("Access Token:", token); // Log the token if it exists
+    } else {
+      console.log("No access token found."); // Log a message if no token exists
+    }
+
+
+
+
+
+    const response = await axios.get('http://127.0.0.1:8000/api/', {
+      headers: {
+        'Authorization': `Bearer ${token}`,
+      },
+    });
+    
+    console.log("Logged in user data:", response.data);
+  };
+  
+  // Call the function to test it
+  getLoggedInUser();
+  
 
 
 
