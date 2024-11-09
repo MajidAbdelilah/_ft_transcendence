@@ -291,14 +291,14 @@ const [selectedConversation, setSelectedConversation] = useState(null);
 
 
         <div className="chattSection flex-1 p-5 md:p-10 h-full w-full ">
-          <div className="boxes relative flex h-full w-full border-2 border-[#C6C6E1] bg-[#F4F4FF] rounded-xl flex-row-revers ">
+          <div className="boxes relative flex h-full w-full border-2 border-[#C6C6E1] bg-[#F4F4FF] rounded-xl flex-row-revers overflow-auto">
             {/* friendsBox ------------------------------------------------------- */}
 
             <div
               ref={iconState.chatState ? chatRef : null}
               className={`menuList w-full lg:w-2/5 h-full flex-col lg:block absolute z-50 lg:relative bg-[#F4F4FF] rounded-xl ${
                 iconState.chatState
-                  ? "block bg-[#F4F4FF]  w-full top-32 lg:top-0  h-4/5 lg:h-full"
+                  ? "block bg-[#F4F4FF]  w-full top-32 lg:top-0  h-4/5 lg:h-full "
                   : "hidden "
               } `}
             >
