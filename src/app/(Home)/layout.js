@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import Navbar from "./../Navbar";
 import Sidebar from "./../sidebar";
 import { Montserrat } from "next/font/google";
+import withAuth from "../HOC"; // Add this import
 
 
 
@@ -15,7 +16,7 @@ const montserrat = Montserrat({
   });
   
 
-export default function RootLayout({ children }) {
+function RootLayout({ children }) {
   const [isMobile, setIsMobile] = useState(false); // You might want to implement actual mobile detection
 
   
@@ -44,3 +45,5 @@ export default function RootLayout({ children }) {
       </div>
     );
 }
+
+export default withAuth(RootLayout);

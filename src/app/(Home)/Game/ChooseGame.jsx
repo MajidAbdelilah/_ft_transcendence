@@ -87,7 +87,7 @@ function TournamentPage({ onClose }) {
   );
 }
 
-export default function MainComponent() {
+function MainComponent() {
   const [selected, setSelected] = useState(null);
   const [showTournament, setShowTournament] = useState(false);
   const [isMobile, setIsMobile] = useState(false); // You might want to implement actual mobile detection
@@ -205,3 +205,5 @@ export default function MainComponent() {
     </>
   );
 }
+
+export default MainComponent;

@@ -7,6 +7,7 @@ import { useClickAway } from "@uidotdev/usehooks";
 import { motion } from "framer-motion";
 import axios from "axios";
 import authService from './authService';
+import { useRouter } from 'next/navigation';
 
 
 const montserrat = Montserrat({
@@ -28,17 +29,18 @@ const variants = {
 
 
 
-const logout = async () => {
-  try {
-    await authService.logout();
-    // Handle successful logout (e.g., clear app state, redirect)
-  } catch (error) {
-    console.error('Logout failed', error);
-  }
-};
 
 
 function Sidebar() {
+
+  const router = useRouter();
+
+
+  const logout = async () => {
+    localStorage.removeItem('token')
+    localStorage.removeItem('lastRoute')
+    await router.replace('/login')
+  };
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
   // const [userData, setUserData] = useState(new UserData());

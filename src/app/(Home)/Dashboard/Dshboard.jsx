@@ -7,6 +7,8 @@ import Achievements from "./Achievements";
 import MatchHistory from "./MatchHistory";
 import PlayNow from "./PlayNow";
 import Link from "next/link";
+import withAuth from "../../HOC.tsx";
+
 
 
 function Dashboard() {
@@ -48,4 +50,4 @@ function Dashboard() {
   );
 }
 
-export default Dashboard;
+export default withAuth(Dashboard);

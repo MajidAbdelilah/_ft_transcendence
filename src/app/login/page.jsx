@@ -8,6 +8,9 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import authService from '../authService';
 import toast, { Toaster } from 'react-hot-toast';
+import { useRouter } from 'next/navigation';
+
+
 
 
 
@@ -37,6 +40,8 @@ const validate = (values) => {
 function Login_page() {
 
   const [isMobile, setIsMobile] = useState(false);
+  const router = useRouter();
+
 
   const formik = useFormik({
     initialValues: {
@@ -76,7 +81,13 @@ function Login_page() {
         );
       }
       else {
-        console.log("logged in");
+        console.log(response.data);
+        if(response.data.data.tokens.refresh){
+          console.log("logged");
+
+          localStorage.setItem('token', response.data.data.tokens.refresh);
+          router.push('/Dashboard');
+        }
       }
     }
     catch (error) {

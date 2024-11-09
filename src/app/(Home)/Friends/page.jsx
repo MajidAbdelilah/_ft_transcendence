@@ -8,6 +8,8 @@ import FriendsComponent from "./FriendsList";
 import ScrollBlur from "./ScrollBlur";
 import FriendRequests from "./FriendRequests";
 import BlockedFriends from "./BlockedFriends";
+import withAuth from "../../HOC.tsx";
+
 
 
 const montserrat = Montserrat({
@@ -157,4 +159,4 @@ function Friends() {
   );
 }
 
-export default Friends;
+export default withAuth(Friends);
