@@ -6,14 +6,44 @@ import React, { useState } from 'react';
 
 export default function UpdateProfile({setIsProfile}) 
 {
+    const [errors, setErrors] = useState({});
+    const validate = (formData) => {
+        const errors = {};
+      
+        if (!formData.usernameSt) {
+          errors.usernameSt = 'Username is required';
+        } else if (formData.usernameSt.length > 15) {
+          errors.usernameSt = 'Username must be 15 characters or less';
+        } else if (formData.usernameSt.length < 2) {
+          errors.usernameSt = 'Username must be at least 2 characters';
+        }
+      
+        if (!formData.currentPasswordSt) {
+          errors.currentPasswordSt = 'Current Password is required';
+        } 
+      
+        if (!formData.newPasswordSt) {
+          errors.newPasswordSt = 'New password is required';
+        } else if (formData.newPasswordSt.length < 6) {
+          errors.newPasswordSt = 'Password must be at least 6 characters';
+        }
+      
+        if (!formData.confirmPasswordSt) {
+          errors.confirmPasswordSt = 'Confirm password is required';
+        } else if (formData.confirmPasswordSt !== formData.newPasswordSt) {
+          errors.confirmPasswordSt = 'Passwords do not match';
+        }
+        console.log(errors);
+        return errors;
+      };
     // Part 1 : handling updating image   ######################################################################
     // Part 2 : handel updating informations   ######################################################################
 
     const [formData, setFormData] = useState({
-        username: '',
-        currentPassword: '',
-        newPassword: '',
-        confirmPassword: ''
+        usernameSt: '',
+        currentPasswordSt: '',
+        newPasswordSt: '',
+        confirmPasswordSt: ''
     });
 
     const handleOnChange = (e) => 
@@ -27,14 +57,24 @@ export default function UpdateProfile({setIsProfile})
 
     // part 3 : handle the submiting the form   ######################################################################
     const handleSubmit = (e) => {
-        const data = {
-            username: formData.username,
-            current_password: formData.currentPassword,
-            new_password: formData.newPassword,
-            // confirmPassword: formData.confirmPassword,
-          };
+        e.preventDefault();  // Prevent the default form submission
 
-          console .log(data);
+        // Reset previous errors before validating
+        setErrors({});
+
+        const validationErrors = validate(formData);
+        if (Object.keys(validationErrors).length > 0) {
+            setErrors(validationErrors);  // Set the errors if validation fails
+        } else {
+            const data = {
+                username: formData.usernameSt,
+                current_password: formData.currentPasswordSt,
+                new_password: formData.newPasswordSt,
+            };
+    
+            // console.log(data);
+            // Continue with your submit logic here
+        }
     }
 
 
@@ -87,53 +127,60 @@ export default function UpdateProfile({setIsProfile})
             <input 
               type="text" 
               id="username" 
-              name="username" 
               className="bg-[#F8FBFF] border text-gray-900 text-sm rounded-[10px] focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 sm:p-3.5" 
               placeholder="Username" 
               required 
               pattern="^[^\s]*$" 
               title="Username should not contain spaces"
-              value={formData.username}
+              value={formData.usernameSt}
               onChange={handleOnChange}
+              name="usernameSt" 
 
             />
+            {errors.usernameSt && <p className="text-sm text-red-500">{errors.usernameSt}</p>}
 
             <label htmlFor="Current Password" className="block mb-1 sm:mb-2 mt-3 sm:mt-5 text-sm sm:text-lg font-bold text-[#242F5C]">Current Password *</label>
             <input 
               type="password" 
               id="Current Password" 
-              className="bg-[#F8FBFF] border text-gray-900 text-sm rounded-[10px] focus:ring-blue-500 mb-3 sm:mb-5 focus:border-blue-500 block w-full p-2.5 sm:p-3.5" 
+              className="bg-[#F8FBFF] border text-gray-900 text-sm rounded-[10px] focus:ring-blue-500  focus:border-blue-500 block w-full p-2.5 sm:p-3.5" 
               placeholder="Current Password" 
               required 
-              value={formData.currentPassword} 
+              value={formData.currentPasswordSt} 
               onChange={handleOnChange}
+              name="currentPasswordSt"
             />
+            {errors.currentPasswordSt && <p className="text-sm text-red-500">{errors.currentPasswordSt}</p>}
 
             <label htmlFor="New Password" className="block mb-1 sm:mb-2 mt-3 sm:mt-5 text-sm sm:text-lg font-bold text-[#242F5C]">New Password</label>
             <input 
               type="password" 
               id="New Password" 
-              className="bg-[#F8FBFF] border text-gray-900 text-sm rounded-[10px] focus:ring-blue-500 mb-3 sm:mb-5 focus:border-blue-500 block w-full p-2.5 sm:p-3.5" 
+              className="bg-[#F8FBFF] border text-gray-900 text-sm rounded-[10px] focus:ring-blue-500  focus:border-blue-500 block w-full p-2.5 sm:p-3.5" 
               placeholder="Enter your password" 
               required 
-              value={formData.newPassword}
+              value={formData.newPasswordSt}
               onChange={handleOnChange}
+              name="newPasswordSt"
             />
+            {errors.newPasswordSt && <p className="text-sm text-red-500">{errors.newPasswordSt}</p>}
 
             <label htmlFor="Confirm Password" className="block mb-1 sm:mb-2 mt-3 sm:mt-5 text-sm sm:text-lg font-bold text-[#242F5C]">Confirm Password</label>
             <input 
               type="password" 
               id="Confirm Password" 
-              className="bg-[#F8FBFF] border text-gray-900 text-sm rounded-[10px] focus:ring-blue-500 mb-3 sm:mb-5 focus:border-blue-500 block w-full p-2.5 sm:p-3.5" 
+              className="bg-[#F8FBFF] border text-gray-900 text-sm rounded-[10px] focus:ring-blue-500  focus:border-blue-500 block w-full p-2.5 sm:p-3.5" 
               placeholder="Confirm your password" 
               required 
-              value={formData.confirmPassword}
+              value={formData.confirmPasswordSt}
               onChange={handleOnChange}
+              name="confirmPasswordSt"
             />
+            {errors.confirmPasswordSt && <p className="text-sm text-red-500">{errors.confirmPasswordSt}</p>}
 
             <button 
               type="submit" 
-              className="text-white bg-[#111B47] focus:ring-4 focus:outline-none font-semibold rounded-[10px] text-sm sm:text-lg w-full px-4 sm:px-20 py-2.5 sm:py-3 text-center mb-4 sm:mb-5 transition-transform duration-300 ease-in-out transform hover:scale-105"
+              className="text-white mt-5 bg-[#111B47] focus:ring-4 focus:outline-none font-semibold rounded-[10px] text-sm sm:text-lg w-full px-4 sm:px-20 py-2.5 sm:py-3 text-center mb-4 sm:mb-5 transition-transform duration-300 ease-in-out transform hover:scale-105"
               onClick={(e) => handleSubmit(e)}
             >
               Update
