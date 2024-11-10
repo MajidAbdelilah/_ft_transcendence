@@ -6,6 +6,7 @@ import { validate } from './validate';
 
 export default function UpdateProfile({setIsProfile}) 
 {
+    // Handel errors   ######################################################################
     const [errors, setErrors] = useState({});
 
     // Part 1 : handling updating image   ######################################################################
@@ -27,24 +28,25 @@ export default function UpdateProfile({setIsProfile})
     // part 3 : handle the submiting the form   ######################################################################
     const handleSubmit = (e) => {
         
-        
+        e.preventDefault(); 
         setErrors({});// reset errors
         const validationErrors = validate(formData);
 
         if (Object.keys(validationErrors).length > 0) {
             setErrors(validationErrors);  // update errors
-            e.preventDefault(); 
-        } 
-        else {
-            const data = {
-                username: formData.usernameSt,
-                current_password: formData.currentPasswordSt,
-                new_password: formData.newPasswordSt,
-            };
-    
-            console.log(data);
             
-        }
+            return ;
+        } 
+
+        const data = {
+            username: formData.usernameSt,
+            current_password: formData.currentPasswordSt,
+            new_password: formData.newPasswordSt,
+        };
+
+        console.log(data);
+            
+        
     }
 
 
