@@ -2,40 +2,12 @@
 
 import Image from 'next/image';
 import React, { useState } from 'react';
-
+import { validate } from './validate'; 
 
 export default function UpdateProfile({setIsProfile}) 
 {
     const [errors, setErrors] = useState({});
-    const validate = (formData) => {
-        const errors = {};
-      
-        if (!formData.usernameSt) {
-          errors.usernameSt = 'Username is required';
-        } else if (formData.usernameSt.length > 15) {
-          errors.usernameSt = 'Username must be 15 characters or less';
-        } else if (formData.usernameSt.length < 2) {
-          errors.usernameSt = 'Username must be at least 2 characters';
-        }
-      
-        if (!formData.currentPasswordSt) {
-          errors.currentPasswordSt = 'Current Password is required';
-        } 
-      
-        if (!formData.newPasswordSt) {
-          errors.newPasswordSt = 'New password is required';
-        } else if (formData.newPasswordSt.length < 6) {
-          errors.newPasswordSt = 'Password must be at least 6 characters';
-        }
-      
-        if (!formData.confirmPasswordSt) {
-          errors.confirmPasswordSt = 'Confirm password is required';
-        } else if (formData.confirmPasswordSt !== formData.newPasswordSt) {
-          errors.confirmPasswordSt = 'Passwords do not match';
-        }
-        console.log(errors);
-        return errors;
-      };
+
     // Part 1 : handling updating image   ######################################################################
     // Part 2 : handel updating informations   ######################################################################
 
@@ -52,9 +24,6 @@ export default function UpdateProfile({setIsProfile})
         setFormData({...formData, [name]: value});
     }
 
-
-
-
     // part 3 : handle the submiting the form   ######################################################################
     const handleSubmit = (e) => {
         e.preventDefault();  // Prevent the default form submission
@@ -63,16 +32,18 @@ export default function UpdateProfile({setIsProfile})
         setErrors({});
 
         const validationErrors = validate(formData);
+
         if (Object.keys(validationErrors).length > 0) {
             setErrors(validationErrors);  // Set the errors if validation fails
-        } else {
+        } 
+        else {
             const data = {
                 username: formData.usernameSt,
                 current_password: formData.currentPasswordSt,
                 new_password: formData.newPasswordSt,
             };
     
-            // console.log(data);
+            console.log(data);
             // Continue with your submit logic here
         }
     }
