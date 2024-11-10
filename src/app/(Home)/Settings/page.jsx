@@ -61,6 +61,11 @@ function Settings() {
           <div className="w-full flex justify-center">
             <hr className="w-full h-[3px] bg-[#CDCDE5] border-none rounded-full my-2" />
           </div>
+
+
+
+
+          {/* My chnages --------------------------------------------------------------------------- */}
           <div onClick={() => { setIsProfile(!isProfile) }} className="w-full max-w-md rounded-xl flex items-center justify-center bg-[#D7D7EA] shadow-md shadow-[#BCBCC9] p-4 cursor-pointer hover:bg-[#E1E1EF] transition-colors duration-300 transition-transform duration-300 transform hover:scale-105 ease-in-out">
             <Image src="/images/profile.svg" alt="Profile" width={64} height={64} className="w-12 h-12 sm:w-16 sm:h-16" />
             {!isIcon && (
@@ -73,6 +78,12 @@ function Settings() {
               <h1 className="ml-4 text-xl sm:text-xl md:text-2xl font-bold tracking-wide text-[#242F5C]">2FA Authentication</h1>
             )}
           </div>
+
+
+
+
+
+          
         </div>
       </motion.div>
       {isProfile && (
