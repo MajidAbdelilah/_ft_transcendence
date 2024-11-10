@@ -26,15 +26,14 @@ export default function UpdateProfile({setIsProfile})
 
     // part 3 : handle the submiting the form   ######################################################################
     const handleSubmit = (e) => {
-        e.preventDefault();  // Prevent the default form submission
-
-        // Reset previous errors before validating
-        setErrors({});
-
+        
+        
+        setErrors({});// reset errors
         const validationErrors = validate(formData);
 
         if (Object.keys(validationErrors).length > 0) {
-            setErrors(validationErrors);  // Set the errors if validation fails
+            setErrors(validationErrors);  // update errors
+            e.preventDefault(); 
         } 
         else {
             const data = {
@@ -44,7 +43,7 @@ export default function UpdateProfile({setIsProfile})
             };
     
             console.log(data);
-            // Continue with your submit logic here
+            
         }
     }
 
