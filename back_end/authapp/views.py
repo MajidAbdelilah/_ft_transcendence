@@ -125,25 +125,25 @@ class LoginView(APIView):
             return Response({"message" : "Invalid email or password !", "data": None})
         
 
-class User_view(APIView):
-    permission_classes = [IsAuthenticated]
-    def get(self, request):
-        token = request.COOKIES.get(settings.SIMPLE_JWT['AUTH_COOKIE'])
-        secret = settings.SECRET_KEY
-        print("**"+ secret)
-        if not token:
-            raise  AuthenticationFailed('Unauthenticated !')
-        try:
-            payload = jwt.decode(token, secret, algorithms=['HS256'])
-        except jwt.ExpiredSignatureError:
-            raise AuthenticationFailed('Token has expired!')
-        except jwt.DecodeError:
-            raise AuthenticationFailed('Malformed token!')
-        user = User.objects.filter(id=payload['user_id']).first()
-        if user is None:
-            raise AuthenticationFailed('User not found!')
-        serializer = UserSerializer(user)
-        return Response(serializer.data, status=status.HTTP_200_OK)
+# class User_view(APIView):
+#     permission_classes = [IsAuthenticated]
+#     def get(self, request):
+#         token = request.COOKIES.get(settings.SIMPLE_JWT['AUTH_COOKIE'])
+#         secret = settings.SECRET_KEY
+#         print("**"+ secret)
+#         if not token:
+#             raise  AuthenticationFailed('Unauthenticated !')
+#         try:
+#             payload = jwt.decode(token, secret, algorithms=['HS256'])
+#         except jwt.ExpiredSignatureError:
+#             raise AuthenticationFailed('Token has expired!')
+#         except jwt.DecodeError:
+#             raise AuthenticationFailed('Malformed token!')
+#         user = User.objects.filter(id=payload['user_id']).first()
+#         if user is None:
+#             raise AuthenticationFailed('User not found!')
+#         serializer = UserSerializer(user)
+#         return Response(serializer.data, status=status.HTTP_200_OK)
 
 
 class Update_user(APIView):
@@ -176,3 +176,18 @@ class Update_user(APIView):
         else:
             response.data = {"data" : None , "message" : "credentiels error"}
             return response
+
+class User_view(APIView):
+    permission_classes = [IsAuthenticated]
+    def post(self, request):
+        response = Response()
+        token = request.COOKIES.get(settings.SIMPLE_JWT['AUTH_COOKIE']) if request.COOKIES.get(settings.SIMPLE_JWT['AUTH_COOKIE']) is not None else  request.COOKIES.get(settings.SIMPLE_JWT['intra_token'])
+        if token == request.data['access']:
+            user = User.objects.get(email = request.user)
+            serializer = UserSerializer(user)
+            response.data = {"user": serializer.data}
+            return response
+        else:
+            response.data = {"user": {"massage": "Error in getting user informations"}}
+            return response
+            
