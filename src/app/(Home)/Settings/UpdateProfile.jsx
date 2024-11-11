@@ -54,7 +54,7 @@ export default function UpdateProfile({setIsProfile})
       // 3 send the data to the backend ------------------------------------------------
       const result = await Services.updateProfileService(data);
       // console.log(data);
-      // console.log("Profile updated successfully:", result);
+      console.log("Profile update backend response  :", result);
             
         
     }
