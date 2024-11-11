@@ -1,4 +1,4 @@
-import axios from 'axios';
+
 
     // # endpoints:
     // # update profile : localhost:8000/api/update_user/{ username , current_password, new_password } post 
@@ -11,13 +11,29 @@ import axios from 'axios';
 
     // # logout : localhost:8000/api/logout post 
 //-------------------------------------------
+'use client'; 
+import axios from 'axios';
 
 
-const token = localStorage.getItem('token');
+const getToken = () => {
+   
+    if (typeof window !== 'undefined') {
+      return localStorage.getItem('token');
+    } else {
+
+      return null;
+    }
+  };
+
+  
+const token = getToken();
 
 
 const Services = {
+    
+
     updateProfileService: async (data) => {
+        const token = getToken();
         // return axios.post('http://localhost:8000/api/update_user/', 
         // {
         //     username: data.username, 
