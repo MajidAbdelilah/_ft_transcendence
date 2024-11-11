@@ -13,12 +13,17 @@ export const validate = (formData) => {
       errors.usernameSt = 'Username must contain only letters and numbers with no spaces';
     }
   
-    if (formData.currentPasswordSt === '' && formData.newPasswordSt !== '') {
+    if (formData.currentPasswordSt === '') {
       errors.currentPasswordSt = 'Current password is missing';
     }
-    if (formData.currentPasswordSt !== '' && formData.newPasswordSt === '') {
-      errors.newPasswordSt = 'New password is missing';
-    }
+
+    
+    // if (formData.currentPasswordSt === '' && formData.newPasswordSt !== '') {
+    //   errors.currentPasswordSt = 'Current password is missing';
+    // }
+    // if (formData.currentPasswordSt !== '' && formData.newPasswordSt === '') {
+    //   errors.newPasswordSt = 'New password is missing';
+    // }
     
     if (formData.newPasswordSt !== '' && formData.newPasswordSt.length < 6) {
       errors.newPasswordSt = 'Password must be at least 6 characters';

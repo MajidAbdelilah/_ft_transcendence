@@ -7,14 +7,15 @@ const token = localStorage.getItem('token');
 
 const Services = {
     updateProfileService: (data) => {
-        return axios.post('http://localhost:8000/api/update_user/', 
-        {
-            username: data.username, 
-            current_password: data.current_password, 
-            new_password: data.new_password
-        }, {
-            headers: {'Authorization': `Bearer ${token}`,}
-        });
+        // return axios.post('http://localhost:8000/api/update_user/', 
+        // {
+        //     username: data.username, 
+        //     current_password: data.current_password, 
+        //     new_password: data.new_password
+        // }, {
+        //     headers: {'Authorization': `Bearer ${token}`,}
+        // });
+        console.log(data);
     }
 };
 
