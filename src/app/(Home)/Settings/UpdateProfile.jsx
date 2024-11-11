@@ -25,9 +25,16 @@ export default function UpdateProfile({setIsProfile})
         setFormData({...formData, [name]: value});
     }
 
+
+    // # update profile : http://localhost:8000/api/update_user/{ username , current_password, new_password } post 
+
+
+
+
     // part 3 : handle the submiting the form   ######################################################################
     const handleSubmit = (e) => {
         
+      // 1 validation  ------------------------------------------------
         e.preventDefault(); 
         setErrors({});// reset errors
         const validationErrors = validate(formData);
@@ -38,11 +45,22 @@ export default function UpdateProfile({setIsProfile})
             return ;
         } 
 
+        // 2 update the data object ------------------------------------------------
         const data = {
             username: formData.usernameSt,
             current_password: formData.currentPasswordSt,
             new_password: formData.newPasswordSt,
         };
+
+        if(data.username === '') {
+            data.username = null;
+        }
+        if(data.current_password === '') {
+            data.current_password = null;
+        } 
+        if(data.new_password === '') {
+            data.new_password = null;
+        }
 
         console.log(data);
             
