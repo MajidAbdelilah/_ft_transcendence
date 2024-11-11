@@ -33,26 +33,36 @@ const Services = {
     
 
     updateProfileService: async (data) => {
-        const token = getToken();
+        console.log('=== send ; ', data.username, ' ', data.current_password, ' ', data.new_password);// remove later
+
         // return axios.post('http://localhost:8000/api/update_user/', 
         // {
         //     username: data.username, 
         //     current_password: data.current_password, 
         //     new_password: data.new_password
-        // }, 
-        // {
-        //     headers: {'Authorization': `Bearer ${token}`,}
-        // });
-        // console.log(data);
+        // },
+        // { headers: {'Authorization': `Bearer ${token}`,} });
+        
     },
 
     sendCodeService: async () => {
+        console.log("=== sendCodeService function has been caled ");// remove later
+
         // return axios.post('localhost:8000/api/sendcode/',
-        // {
-        //     headers: {'Authorisation' : `Bearer ${token}`,}
-        // }
-        // );
-        console.log("sendCodeService has been caled ");
+        // { headers: {'Authorisation' : `Bearer ${token}`,} 
+        // });
+
+
+        
+    },
+    handleVerifyService: async (code) => {
+        // console.log('=== Verifying code :', code);
+
+        // return axios.post('http://localhost:8000/api/CodeVerification/', 
+        //     {code : code},
+        //     { headers: {'Authorization': `Bearer ${token}`,} });
+        
+        
     }
 };
 

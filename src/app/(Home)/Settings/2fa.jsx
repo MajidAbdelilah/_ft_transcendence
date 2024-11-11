@@ -17,13 +17,7 @@ function TwoFA({setIs2FA}) {
   }
 
 
-
-
-
-
-
-
-  const handleVerify = (e) => {
+  const handleVerify = async(e) => {
     e.preventDefault();
     if (!code.trim()) {
       setError('Please enter the security code.');
@@ -32,9 +26,8 @@ function TwoFA({setIs2FA}) {
       setError('Please enter a valid security code.');
     } 
     else {
-      // Perform verification logic here
-      console.log('Verifying code:', code);
-      // Clear error if verification is successful
+      // console.log('Verifying code:', code);
+      const result = await Services.handleVerifyService(code);
       setError('');
     }
   };
