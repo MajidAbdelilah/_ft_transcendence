@@ -73,6 +73,7 @@ function Login_page() {
   const handleSubmit = async (values) => {
     try {
       const response = await authService.login(values.email, values.password);
+      console.log('response : ', response.data.data); //33333333333333333333333333333333333333333333333333
       if(!response.data.data){
         const errorMsg = response.data.message;
         console.log(errorMsg);
@@ -81,7 +82,8 @@ function Login_page() {
         );
       }
       else {
-        console.log(response.data);
+        console.log("data : ", response.data);
+        console.log("data.data : ", response.data.data);
         if(response.data.data.tokens.refresh){
           console.log("logged");
 

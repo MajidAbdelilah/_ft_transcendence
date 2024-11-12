@@ -4,6 +4,7 @@ const API_URL = process.env.SIGNUP_API;
 
 const authService = {
   login: (email, password) => {
+
     return axios.post('http://localhost:8000/api/login/', { email, password });
   },
   signup: (username, email, password) => {

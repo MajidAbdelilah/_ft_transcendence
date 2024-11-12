@@ -6,12 +6,16 @@ import { motion } from "framer-motion"
 import TwoFA from "./2fa";
 import withAuth from "../../HOC.tsx";
 import UpdateProfile from "./UpdateProfile"
-
+import toast, { Toaster } from 'react-hot-toast';
 
 const montserrat = Montserrat({
   subsets: ["latin"],
   variable: "--font-montserrat",
 });
+
+
+
+
 
 function Settings() {
 
@@ -19,6 +23,13 @@ function Settings() {
   const [isIcon, setIsIcon] = useState(false);
   const [isProfile, setIsProfile] = useState(false);
   const [is2FA, setIs2FA] = useState(false);
+
+
+
+
+
+
+
 
   useEffect(() => {
     const handleResize = () => {
@@ -35,6 +46,7 @@ function Settings() {
   return (
 
     <div className={`flex-1 overflow-y-auto flex flex-wrap items-center justify-center relative h-full ${isMobile ? '' : 'p-4'}`}>
+      <Toaster /> 
       <motion.div
         className={` ${isMobile ? 'w-full mt-4' : 'rounded-3xl border-solid border-[#BCBCC9] bg-[#F4F4FF] rounded-3xl border-[#BCBCC9] bg-[#F4F4FF]'} flex flex-col min-w-[500px] min-h-[600px] relative shadow-lg shadow-[#BCBCC9] items-center 
             md:w-[45%] h-full sm:h-[80%] md:h-[72%] bg-[#F4F4FF] justify-center p-4`}

@@ -52,9 +52,17 @@ export default function UpdateProfile({setIsProfile})
       };
 
       // 3 send the data to the backend ------------------------------------------------
-      const result = await Services.updateProfileService(data);
-      // console.log(data);
-      console.log("Profile update backend response  :", result);
+      
+      try {
+        const result = await Services.updateProfileService(data);
+        // if(!result.data.data)
+          // console.log(data);
+          // console.log("Profile update backend response  :", result);
+      }
+      catch (error) {
+        // console.log("Profile update backend error  :", error);
+      }
+
             
         
     }

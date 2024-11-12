@@ -2,6 +2,7 @@
 import Image from "next/image";
 import { useState } from "react";
 import Services from './services';
+import toast, { Toaster } from 'react-hot-toast';
 
 
 function TwoFA({setIs2FA}) {
@@ -12,8 +13,30 @@ function TwoFA({setIs2FA}) {
 
   const sendCode = async() => 
   {
-    const result = await Services.sendCodeService();
-    console.log("sendCode has been called");
+
+    try {
+      
+      const result = await Services.sendCodeService();
+      // console.log("--- sendCode has been called : ", result.data.data);
+      if(!result.data.data) {
+        const errorMsg = result.data.message;
+        console.log(errorMsg);
+        toast.error( errorMsg?errorMsg:'Something Went Wrong!');
+        // setError(errorMsg);
+      }
+      else {
+        const successMsg = result.data.message;
+        console.log(successMsg);
+        toast.success(successMsg);
+
+        // console.log(result.data);
+      }
+
+    }
+
+    catch (error) {
+      console.log("### http request failed; ", error);
+    }
   }
 
 
@@ -40,6 +63,7 @@ function TwoFA({setIs2FA}) {
   };
     return (
       <div className="fixed inset-0 backdrop-blur-sm flex justify-center items-center animate-fadeIn  absolute top-0 left-0">
+            
             <div className="bg-[#F4F4FF] flex flex-col items-center shadow-lg rounded-xl w-[95%] h-[80%] sm:h-[90%] border-solid border-[#BCBCC9] border-2 max-w-[900px] max-h-[900px] min-h-[580px] rounded-xl pt-8 animate-scaleIn">
               <div className="relative flex flex-col items-center w-full h-full">
                 <h1 className="text-lg sm:text-3xl font-bold tracking-wide text-[#242F5C] pt-4 sm:pt-8 text-center">Two Factor Authenticator</h1>
