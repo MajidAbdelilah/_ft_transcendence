@@ -3,7 +3,7 @@ import Image from "next/image";
 import { useState } from "react";
 import Services from './services';
 import toast, { Toaster } from 'react-hot-toast';
-
+import { sendCode, handleVerify } from './onClickFunc';
 
 function TwoFA({setIs2FA}) {
   const [code, setCode] = useState("");
@@ -11,49 +11,13 @@ function TwoFA({setIs2FA}) {
 
   //-------------------------------------------------------------------------------------
 
-  const sendCode = async() => 
-  {
 
-    try {
-      
-      const result = await Services.sendCodeService();
-      // console.log("--- sendCode has been called : ", result.data.data);
-      if(!result.data.data) {
-        const errorMsg = result.data.message;
-        console.log(errorMsg);
-        toast.error( errorMsg?errorMsg:'Something Went Wrong!');
-        // setError(errorMsg);
-      }
-      else {
-        const successMsg = result.data.message;
-        console.log(successMsg);
-        toast.success(successMsg);
-
-        // console.log(result.data);
-      }
-
-    }
-
-    catch (error) {
-      console.log("### http request failed; ", error);
-    }
-  }
-
-
-  const handleVerify = async(e) => {
+  const handleVerifyClick = async (e) => {
     e.preventDefault();
-    if (!code.trim()) {
-      setError('Please enter the security code.');
-    }
-    else if (code.length < 4) {
-      setError('Please enter a valid security code.');
-    } 
-    else {
-      // console.log('Verifying code:', code);
-      const result = await Services.handleVerifyService(code);
-      setError('');
-    }
+    await handleVerify(code, setError);
   };
+
+
   
   const handleChange = (e) => {
     const value = e.target.value;
@@ -61,6 +25,9 @@ function TwoFA({setIs2FA}) {
       setCode(value);
     }
   };
+
+
+  
     return (
       <div className="fixed inset-0 backdrop-blur-sm flex justify-center items-center animate-fadeIn  absolute top-0 left-0">
             
@@ -94,7 +61,7 @@ function TwoFA({setIs2FA}) {
                 
                 {error && <p className="text-red-500 text-lg font-semibold">{error}</p>}
                 {/* Verify button ---------------------------------*/}
-                <button onClick={handleVerify} type="submit" className="shadow shadow-lg text-white bg-[#111B47] focus:ring-4 focus:outline-none font-semibold rounded-full text-lg w-[60%] sm:w-[20%] py-3 sm:h-[6%] text-center dark:bg-blue-600 dark:hover:bg-blue-600 dark:focus:ring-blue-800 transition-transform duration-300 ease-in-out transform hover:scale-105 mt-4 sm:mt-4">Verify</button>
+                <button onClick={handleVerifyClick} type="submit" className="shadow shadow-lg text-white bg-[#111B47] focus:ring-4 focus:outline-none font-semibold rounded-full text-lg w-[60%] sm:w-[20%] py-3 sm:h-[6%] text-center dark:bg-blue-600 dark:hover:bg-blue-600 dark:focus:ring-blue-800 transition-transform duration-300 ease-in-out transform hover:scale-105 mt-4 sm:mt-4">Verify</button>
                 
                 
                 

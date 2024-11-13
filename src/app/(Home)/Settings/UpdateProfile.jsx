@@ -4,6 +4,7 @@ import Image from 'next/image';
 import React, { useState } from 'react';
 import { validate } from './validate'; 
 import Services from './services';
+import toast from 'react-hot-toast';
 export default function UpdateProfile({setIsProfile}) 
 {
     // Handel errors   ######################################################################
@@ -31,7 +32,7 @@ export default function UpdateProfile({setIsProfile})
 
     // part 3 : handle the submiting the form   ######################################################################
     const handleSubmit = async (e) => {
-        
+      
       // 1 validation  ------------------------------------------------
         e.preventDefault(); 
         setErrors({});// reset errors
@@ -52,15 +53,29 @@ export default function UpdateProfile({setIsProfile})
       };
 
       // 3 send the data to the backend ------------------------------------------------
-      
+
       try {
         const result = await Services.updateProfileService(data);
-        // if(!result.data.data)
-          // console.log(data);
-          // console.log("Profile update backend response  :", result);
+        console.log(" ------- result : --------");
+        console.log(result);
+
+
+        if(!result.data.data) {
+          const errorMsg = result.data.message;
+          console.log(errorMsg);
+          toast.error( errorMsg?errorMsg:'Something Went Wrong!');
+          setErrors(errorMsg);
+        }
+        else {
+          const successMsg = result.data.message;
+          console.log(successMsg);
+          toast.success(successMsg);
+        }
       }
       catch (error) {
-        // console.log("Profile update backend error  :", error);
+        console.log("### http request failed: ", error);
+
+
       }
 
             
