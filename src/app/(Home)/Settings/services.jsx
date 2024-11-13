@@ -33,15 +33,15 @@ const Services = {
     
 
     updateProfileService: async (data) => {
-        // console.log('=== send ; ', data.username, ' ', data.current_password, ' ', data.new_password);// remove later
-        // console.log('=== token : ', token);// remove later
-        // return axios.post('http://localhost:8000/api/update_user/', 
-        // {
-        //     username: data.username, 
-        //     current_password: data.current_password, 
-        //     new_password: data.new_password
-        // },
-        // { headers: {'Authorization': `Bearer ${token}`} });
+        console.log('=== send ; ', data.username, ' ', data.current_password, ' ', data.new_password);// remove later
+        console.log('=== token : ', token);// remove later
+        return axios.post('http://localhost:8000/api/update_user/', 
+        {
+            username: data.username, 
+            current_password: data.current_password, 
+            new_password: data.new_password
+        },
+        { headers: {'Authorization': `Bearer ${token}`} });
         
     },
 

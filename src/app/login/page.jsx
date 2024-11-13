@@ -87,7 +87,7 @@ function Login_page() {
         if(response.data.data.tokens.refresh){
           console.log("logged");
 
-          localStorage.setItem('token', response.data.data.tokens.refresh);
+          localStorage.setItem('token', response.data.data.tokens.access);
           router.push('/Dashboard');
         }
       }

@@ -49,6 +49,56 @@ let tournament = {
 
 
 export default function Chat() {
+
+
+
+// test -----------------------------------------------------------------------------------------
+
+  const [currentUser, setCurrentUser] = useState(null); // State to store the current user
+
+  // Function to fetch the logged-in user
+  const fetchCurrentUser = async () => {
+    try {
+      const token = localStorage.getItem("token"); // Make sure this matches your stored key
+
+      if (!token) {
+        console.log("No access token found.");
+        return;
+      }
+
+      console.log("Access Token:", token); // Log the token if it exists
+
+      // Sending a POST request to get the logged-in user's data
+      const response = await axios.post("http://127.0.0.1:8000/api/user/", 
+      {
+        access: `${token}`,
+      },
+    {
+      headers: {
+        Authorization: `Bearer ${token}`, // Send the token in the Authorization header
+      },
+    });
+
+      console.log("Fetched current user data:", response.data);
+      setCurrentUser(response.data); // Update state with user data
+
+    } catch (error) {
+      console.error("Error fetching user data:", error);
+    }
+  };
+
+  // Fetch the current user on initial page load
+  useEffect(() => {
+    fetchCurrentUser();
+  }, []);
+
+//-----------------------------------------------------------------------------------------
+
+
+
+
+
+
   // loggedInUser -----------------------------------------------------------------------------------------
 
   
