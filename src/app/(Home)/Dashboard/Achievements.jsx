@@ -22,17 +22,10 @@ function Achievements() {
 
   return (
     <motion.div
-      initial={{ scale: 0 }}
-      animate={{ scale: 1 }}
-      transition={{
-        type: "spring",
-        stiffness: 260,
-        damping: 20
-      }}
       className={`${!DashData.isMobile
           ? "shadow-md shadow-[#BCBCC9] rounded-3xl border-[#BCBCC9] bg-[#F4F4FF] md:w-[70%] md:h-[48%] lg:w-[800px] lg:h-[500px] w-[90%] h-[48%] ml-[5%] mt-[50px] mr-[5%]"
           : "shadow-md shadow-[#BCBCC9] border-[#BCBCC9]/25 border-solid bg-[#F4F4FF]/75 rounded-3xl border-[#BCBCC9] bg-[#F4F4FF]md:w-[70%] md:h-[48%] lg:w-[800px] lg:h-[500px] w-[90%] h-[30%] ml-[5%] mt-[50px] mr-[5%]"
-        }`}
+        } motion-preset-pop `}
     >
       <div className="animation-wrapper">
 

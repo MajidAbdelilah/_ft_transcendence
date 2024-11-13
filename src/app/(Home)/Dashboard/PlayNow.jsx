@@ -12,19 +12,19 @@ function PlayNow() {
 
   return (
     <motion.div
-      initial={{ scale: 0 }}
-      animate={{ scale: 1 }}
-      transition={{
-        type: "spring",
-        stiffness: 260,
-        damping: 20
-      }}
+      // initial={{ scale: 0 }}
+      // animate={{ scale: 1 }}
+      // transition={{
+      //   type: "spring",
+      //   stiffness: 260,
+      //   damping: 20
+      // }}
       className={` ${!DashData.isMobile
           ? "bg-[#F4F4FF] drop-shadow-md rounded-3xl border-[#BCBCC9] mt-10 shadow-md shadow-[#BCBCC9] md:h-[48%] lg:w-[800px] lg:h-[500px] "
           : "min-h-[235px]"
-        } w-[90%] h-[25%] relative p-4 flex flex-col justify-center items-center `}
+        } w-[90%] h-[25%] relative p-4 flex flex-col justify-center items-center motion-preset-pop `}
     >
-      <div className="w-full h-[80%] relative mb-4">
+      <div className="w-full h-[80%] relative mb-4 ">
           {imageLoading && (
             <div className="absolute inset-0 flex items-center justify-center border-[#242F5C] rounded-xl">
               <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#242F5C]"></div>
@@ -52,7 +52,7 @@ function PlayNow() {
                 before:absolute before:top-0 before:-left-full before:w-full before:h-full 
                 before:bg-gradient-to-r before:from-[#242F5C] before:to-[#7C829D] 
                 before:transition-all before:duration-500 before:ease-in-out before:z-[-1] 
-                font-extrabold before:rounded-xl hover:before:left-0 text-[#fff]" >
+                font-extrabold before:rounded-xl hover:before:left-0 text-[#fff] motion-preset-seesaw" >
         PLAY NOW
       </button>
     </motion.div>

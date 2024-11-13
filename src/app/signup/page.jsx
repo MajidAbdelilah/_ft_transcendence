@@ -144,10 +144,10 @@ function Signup_page() {
         }}
       />
       <form
-        className={`${!isMobile ? "bg-[rgba(66,74,120,0.05)]" : "border-none"} max-w-[700px] w-[90%]  bg-blend-hard-light ${!isMobile ? "shadow-[inset_0px_0px_4.6px_#A8B4FF]" : ""} p-8 rounded-xl  w-[600px] flex flex-col items-center`}
+        className={`${!isMobile ? "bg-[rgba(66,74,120,0.05)]" : "border-none"} motion-preset-expand max-w-[700px] w-[90%]  bg-blend-hard-light ${!isMobile ? "shadow-[inset_0px_0px_4.6px_#A8B4FF]" : ""} p-8 rounded-xl  w-[600px] flex flex-col items-center`}
         onSubmit={formik.handleSubmit}
       >
-        <div className="w-full flex justify-center">
+        <div className="w-full flex justify-center motion-scale-in-[0.5] motion-translate-x-in-[-120%] motion-translate-y-in-[-60%] motion-opacity-in-[33%] motion-rotate-in-[-380deg] motion-blur-in-[10px] motion-delay-[0.38s]/scale motion-duration-[0.38s]/opacity motion-duration-[1.20s]/rotate motion-duration-[0.15s]/blur motion-delay-[0.60s]/blur motion-ease-spring-bouncier">
           <Image src="/images/logo.png" alt="Logo" width={100} height={100} className="w-[100px] h-[100px] object-contain"/>
         </div>
         <h1 className="sm:text-4xl text-xl text-center text-[#111B47] font-bold">

@@ -41,9 +41,9 @@ export default function App() {
     router.push('/signup');
   }
 
-  const handleDash = () => {
-    router.push('/Dashboard');
-  }
+  // const handleDash = () => {
+  //   router.push('/Dashboard');
+  // }
 
 
 
@@ -53,20 +53,22 @@ export default function App() {
         <nav className={`flex justify-between sm:pl-20 sm:pt-18 sm:pr-20 w-full sm:items-center sm:h-[200px] fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${isScrolled ? 'bg-white bg-opacity-15 backdrop-blur-md shadow-md' : 'bg-transparent'
           }`}>
           <motion.div
-            initial={{ scale: 0 }}
-            animate={{ scale: 1 }}
-            transition={{
-              type: "spring",
-              stiffness: 260,
-              damping: 20,
-            }}
+            // initial={{ scale: 0 }}
+            // animate={{ scale: 1 }}
+            // transition={{
+            //   type: "spring",
+            //   stiffness: 260,
+            //   damping: 20,
+            // }}
           >
-            <Image priority src="/images/logo.webp" alt="Logo" width={150} height={150} className="sm:h-[170px] sm:w-[160px] w-[80px] h-[80px]" />
+            <Image priority src="/images/logo.webp" alt="Logo" width={150} height={150} className="sm:h-[170px] sm:w-[160px] w-[80px] h-[80px] 
+            motion-scale-in-[0.5] motion-translate-x-in-[-120%] motion-translate-y-in-[-60%] motion-opacity-in-[33%] 
+            motion-rotate-in-[-380deg] motion-blur-in-[10px] motion-delay-[0.38s]/scale 
+            motion-duration-[0.38s]/opacity motion-duration-[1.20s]/rotate motion-duration-[0.15s]/blur motion-delay-[0.60s]/blur motion-ease-spring-bouncier" />
           </motion.div>
           <div className="flex gap-2 pt-5">
-            <button onClick={handleDash} type="button" className="text-white bg-[#111B47] hover:bg-[#0e1739] hover:ring-4 focus:ring-[#1d2f7a] font-bold rounded-full text-xs h-[45px] w-[80px] sm:text-lg sm:h-[70px] sm:w-[180px] text-center me-2 mb-2 transition duration-300 ease-in-out shadow-[rgba(50,50,93,0.25)_0px_6px_12px_-2px,_rgba(0,0,0,0.3)_0px_3px_7px_-3px] border-solid border-b-4 border-gray-600">Dashboard</button>
-            <button onClick={handleSignUp} type="button" className="text-white bg-[#111B47] hover:bg-[#0e1739] hover:ring-4 focus:ring-[#1d2f7a] font-bold rounded-full text-xs h-[45px] w-[80px] sm:text-lg sm:h-[70px] sm:w-[180px] text-center me-2 mb-2 transition duration-300 ease-in-out shadow-[rgba(50,50,93,0.25)_0px_6px_12px_-2px,_rgba(0,0,0,0.3)_0px_3px_7px_-3px] border-solid border-b-4 border-gray-600">Sign up</button>
-            <button onClick={handleLogin} type="button" className="text-white bg-[#111B47] hover:bg-[#0e1739] hover:ring-4 focus:ring-[#1d2f7a] font-bold rounded-full text-xs h-[45px] w-[80px] sm:text-lg sm:h-[70px] sm:w-[180px] text-center me-2 mb-2 transition duration-300 ease-in-out shadow-[rgba(50,50,93,0.25)_0px_6px_12px_-2px,_rgba(0,0,0,0.3)_0px_3px_7px_-3px] border-solid border-b-4 border-gray-600">Login</button>
+            <button onClick={handleSignUp} type="button" className="motion-preset-expand  text-white bg-[#111B47] hover:bg-[#0e1739] hover:ring-4 focus:ring-[#1d2f7a] font-bold rounded-full text-xs h-[45px] w-[80px] sm:text-lg sm:h-[70px] sm:w-[180px] text-center me-2 mb-2 transition duration-300 ease-in-out shadow-[rgba(50,50,93,0.25)_0px_6px_12px_-2px,_rgba(0,0,0,0.3)_0px_3px_7px_-3px] border-solid border-b-4 border-gray-600 ">Sign up</button>
+            <button onClick={handleLogin} type="button" className="motion-preset-expand  text-white bg-[#111B47] hover:bg-[#0e1739] hover:ring-4 focus:ring-[#1d2f7a] font-bold rounded-full text-xs h-[45px] w-[80px] sm:text-lg sm:h-[70px] sm:w-[180px] text-center me-2 mb-2 transition duration-300 ease-in-out shadow-[rgba(50,50,93,0.25)_0px_6px_12px_-2px,_rgba(0,0,0,0.3)_0px_3px_7px_-3px] border-solid border-b-4 border-gray-600">Login</button>
           </div>
         </nav>
         <div className="w-full flex justify-center items-center">
@@ -80,22 +82,23 @@ export default function App() {
               <TextGenerateEffect words="Welcome to Ultimate Pong Arena, where the classic game meets modern competition." />
               <TextGenerateEffect words="Dive into fast-paced matches, climb the leaderboards, and join a community of enthusiasts." />
               <TextGenerateEffect words="Ready for action?  Let the games begin!" />
+              
             </div>
-            <motion.div className="sm:w-[50%] sm:max-w-[600px] "
-              initial={{ scale: 0 }}
-              animate={{ scale: 1 }}
-              transition={{
-                type: "spring",
-                stiffness: 260,
-                damping: 20
-              }}
+            <motion.div className="sm:w-[50%] sm:max-w-[600px] motion-preset-oscillate motion-duration-[8000ms]"
+              // initial={{ scale: 0 }}
+              // animate={{ scale: 1 }}
+              // transition={{
+              //   type: "spring",
+              //   stiffness: 260,
+              //   damping: 20
+              // }}
             >
               <Image
                 src="images/pong.svg"
                 alt="Pong"
                 width={600}
                 height={400}
-                className="pongImg xl:w-[95%] lg:w-[90%] md:w-[90%] w-[90%] ml-5"
+                className="pongImg xl:w-[95%] lg:w-[90%] md:w-[90%] w-[85%] ml-5"
                 priority
               />
 
