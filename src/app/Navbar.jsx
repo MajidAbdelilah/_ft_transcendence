@@ -8,6 +8,8 @@ import Link from "next/link";
 import authService from './authService';
 import { useRouter } from 'next/navigation';
 import { useUser } from './UserContext';
+import { Skeleton}  from "../compo/ui/Skeleton";
+
 
 
 
@@ -144,6 +146,11 @@ function Navbar() {
           className="flex items-center justify-center sm:w-12 sm:h-12 w-10 h-10 rounded-full bg-white text-white relative mr-2"
           onClick={toggleUserDropdown}
         >
+          {isLoading ? (
+            <>
+            <Skeleton className="sm:w-10 sm:h-10 w-8 h-8 rounded-full bg-[#d1daff]" />
+          </>
+          ) : (
           <Image
             id="avatarButton"
             className="sm:w-10 sm:h-10 w-8 h-8 rounded-full bg-[#D7D7EA] cursor-pointer rounded-full"
@@ -151,24 +158,26 @@ function Navbar() {
             alt="User dropdown"
             width={100}
             height={100}
-          />
+            />
+          )}
           <Image
             className="w-4 h-8 cursor-pointer absolute bottom-[-10px] right-0"
             src="/images/Frame21.svg"
             alt="User dropdown"
             width="50"
             height="50"
-          />
+            />
+         
           {userDropdown && (
             <motion.div
-              className="w-[220px] h-[210px] bg-[#EAEAFF] border-2 border-solid border-[#C0C7E0] absolute bottom-[-215px] right-[3px] z-[10] rounded-[5px] shadow shadow-[#BCBCC9]"
-              initial={{ scale: 0 }}
-              animate={{ scale: 1 }}
-              transition={{
-                type: "spring",
-                stiffness: 260,
-                damping: 30
-              }}
+            className="w-[220px] h-[210px] bg-[#EAEAFF] border-2 border-solid border-[#C0C7E0] absolute bottom-[-215px] right-[3px] z-[10] rounded-[5px] shadow shadow-[#BCBCC9]"
+            initial={{ scale: 0 }}
+            animate={{ scale: 1 }}
+            transition={{
+              type: "spring",
+              stiffness: 260,
+              damping: 30
+            }}
             >
               <h1 className="text-lg font-medium text-[#242F5C] p-4">My Account</h1>
               <hr className="w-[100%] h-[1px] bg-[#CDCDE5] border-none rounded-full" />

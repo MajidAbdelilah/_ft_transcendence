@@ -9,6 +9,7 @@ import { useClickAway } from "@uidotdev/usehooks";
 import { motion } from "framer-motion";
 import { useRouter } from 'next/navigation';
 import { useUser } from './UserContext';
+import { Skeleton}  from "../compo/ui/Skeleton";
 
 const montserrat = Montserrat({
   subsets: ["latin"],
@@ -162,10 +163,10 @@ export default function Sidebar() {
           <div className="flex items-center justify-center mt-8 gap-4">
             {isLoading ? (
               <>
-                <div className="w-14 h-14 rounded-full bg-gray-200 animate-pulse"></div>
-                <div className="flex flex-col gap-2">
-                  <div className="h-4 w-20 bg-gray-200 animate-pulse"></div>
-                  <div className="h-3 w-16 bg-gray-200 animate-pulse"></div>
+                <Skeleton className="w-14 h-14 rounded-full bg-[#d1daff]" />
+                <div className="flex flex-col gap-2 ">
+                  <Skeleton className="h-4 w-20 bg-[#d1daff]" />
+                  <Skeleton className="h-3 w-16 bg-[#d1daff]" />
                 </div>
               </>
             ) : (

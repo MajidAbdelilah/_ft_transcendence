@@ -1,40 +1,13 @@
-const {
-  default: flattenColorPalette,
-} = require("tailwindcss/lib/util/flattenColorPalette");
-
-const defaultTheme = require("tailwindcss/defaultTheme");
-
-/** @type {import('tailwindcss').Config} */
-module.exports = {
-  content: ["./src/**/*.{ts,tsx}"],
-  darkMode: "class",
-  theme: {
-    // rest of the code
-  },
-  plugins: [addVariablesForColors],
-};
-
-function addVariablesForColors({
-  addBase,
-  theme
-}) {
-  let allColors = flattenColorPalette(theme("colors"));
-  let newVars = Object.fromEntries(Object.entries(allColors).map(([key, val]) => [`--${key}`, val]));
-
-  addBase({
-    ":root": newVars,
-  });
-}
-
+const { default: flattenColorPalette } = require("tailwindcss/lib/util/flattenColorPalette");
 
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   darkMode: ["class"],
   content: [
-    './pages/**/*.{js,jsx}',
-    './components/**/*.{js,jsx}',
-    './app/**/*.{js,jsx}',
-    './src/**/*.{js,jsx}',
+    './pages/**/*.{js,jsx,ts,tsx}',
+    './components/**/*.{js,jsx,ts,tsx}',
+    './app/**/*.{js,jsx,ts,tsx}',
+    './src/**/*.{js,jsx,ts,tsx}',
   ],
   prefix: "",
   theme: {
@@ -44,7 +17,6 @@ module.exports = {
       screens: {
         "2xl": "1400px",
       },
-      plugins: [addVariablesForColors],
     },
     extend: {
       colors: {
@@ -91,74 +63,52 @@ module.exports = {
         "accordion-down": {
           from: { height: "0" },
           to: { height: "var(--radix-accordion-content-height)" },
-          aurora: {
-            from: {
-              backgroundPosition: "50% 50%, 50% 50%",
-            },
-            to: {
-              backgroundPosition: "350% 50%, 350% 50%",
-            },
-          },
         },
         "accordion-up": {
           from: { height: "var(--radix-accordion-content-height)" },
           to: { height: "0" },
         },
-        "browse-in": {
-                    "0%": {
-                        transform: "scale(0.8) translateZ(0px)",
-                        zIndex: "-1"
-                    },
-                    "10%": {
-                        transform: "scale(0.8) translateZ(0px)",
-                        zIndex: "-1",
-                        opacity: "0.7",
-                    },
-                    "80%": {
-                        transform: "scale(1.05) translateZ(0px)",
-                        zIndex: "999",
-                        opacity: "1",
-                    },
-                    "100%": {
-                        transform: "scale(1) translateZ(0px)",
-                        zIndex: "999"
-                    },
+        aurora: {
+          from: {
+            backgroundPosition: "50% 50%, 50% 50%",
+          },
+          to: {
+            backgroundPosition: "350% 50%, 350% 50%",
+          },
         },
-        tada: {
+        "browse-in": {
           "0%": {
-              transform: "scale3d(1, 1, 1)",
+            transform: "scale(0.8) translateZ(0px)",
+            zIndex: "-1"
           },
-          "10%, 20%": {
-              transform: "scale3d(0.9, 0.9, 0.9) rotate3d(0, 0, 1, -3deg)",
+          "10%": {
+            transform: "scale(0.8) translateZ(0px)",
+            zIndex: "-1",
+            opacity: "0.7",
           },
-          "30%, 50%, 70%, 90%": {
-              transform: "scale3d(1.1, 1.1, 1.1) rotate3d(0, 0, 1, 3deg)",
-          },
-          "40%, 60%, 80%": {
-              transform: "scale3d(1.1, 1.1, 1.1) rotate3d(0, 0, 1, -3deg)",
+          "80%": {
+            transform: "scale(1.05) translateZ(0px)",
+            zIndex: "999",
+            opacity: "1",
           },
           "100%": {
-              transform: "scale3d(1, 1, 1)",
+            transform: "scale(1) translateZ(0px)",
+            zIndex: "999"
           },
         },
+        tada: {
+          "0%": { transform: "scale3d(1, 1, 1)" },
+          "10%, 20%": { transform: "scale3d(0.9, 0.9, 0.9) rotate3d(0, 0, 1, -3deg)" },
+          "30%, 50%, 70%, 90%": { transform: "scale3d(1.1, 1.1, 1.1) rotate3d(0, 0, 1, 3deg)" },
+          "40%, 60%, 80%": { transform: "scale3d(1.1, 1.1, 1.1) rotate3d(0, 0, 1, -3deg)" },
+          "100%": { transform: "scale3d(1, 1, 1)" },
+        },
         "fade-in-bounce-right": {
-                    "0%": {
-                        opacity: 0,
-                        transform: "translate3d(100%, 0%, 0)",
-                    },
-                    "33%": {
-                        opacity: 0.5,
-                        transform: "translate3d(0%, 0%, 0)",
-                    },
-                    "66%": {
-                        opacity: 0.7,
-                        transform: "translate3d(20%, 0%, 0)",
-                    },
-                    "100%": {
-                        opacity: 1,
-                        transform: "translate3d(0, 0, 0)",
-                    },
-                },
+          "0%": { opacity: 0, transform: "translate3d(100%, 0%, 0)" },
+          "33%": { opacity: 0.5, transform: "translate3d(0%, 0%, 0)" },
+          "66%": { opacity: 0.7, transform: "translate3d(20%, 0%, 0)" },
+          "100%": { opacity: 1, transform: "translate3d(0, 0, 0)" },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
@@ -172,6 +122,20 @@ module.exports = {
       },
     },
   },
-  plugins: [require("tailwindcss-animate")],
-  plugins: [require('tailwindcss-motion')], 
+  plugins: [
+    require("tailwindcss-animate"),
+    require('tailwindcss-motion'),
+    addVariablesForColors
+  ],
+}
+
+function addVariablesForColors({ addBase, theme }) {
+  let allColors = flattenColorPalette(theme("colors"));
+  let newVars = Object.fromEntries(
+    Object.entries(allColors).map(([key, val]) => [`--${key}`, val])
+  );
+
+  addBase({
+    ":root": newVars,
+  });
 }

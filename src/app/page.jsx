@@ -4,7 +4,7 @@ import Image from "next/image";
 import { Montserrat } from 'next/font/google'
 import { useRouter } from "next/navigation";
 import { useState, useEffect } from 'react'
-import TextGenerateEffect from '/src/components/ui/text-generate-effect'
+import TextGenerateEffect from '/src/compo/ui/text-generate-effect'
 import { motion } from 'framer-motion'
 
 const montserrat = Montserrat({

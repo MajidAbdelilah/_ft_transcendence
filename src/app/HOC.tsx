@@ -8,13 +8,13 @@ interface AuthProps {
   children: React.ReactNode
 }
 
-function LoadingLayout() {
-  return (
-    <div className="flex items-center justify-center min-h-screen bg-[#F0F1FF]">
-      <div className="w-16 h-16 border-4 border-[#B8BEFF] border-t-[#8A8EFF] rounded-full animate-spin"></div>
-    </div>
-  )
-}
+// function LoadingLayout() {
+//   return (
+//     <div className="flex items-center justify-center min-h-screen bg-[#F0F1FF]">
+//       <div className="w-16 h-16 border-4 border-[#B8BEFF] border-t-[#8A8EFF] rounded-full animate-spin"></div>
+//     </div>
+//   )
+// }
 
 export function AuthProvider({ children }: AuthProps) {
   const router = useRouter()
@@ -39,7 +39,7 @@ export function AuthProvider({ children }: AuthProps) {
   }, [router, pathname])
 
   if (isLoading) {
-    return <LoadingLayout />
+    return null
   }
 
   if (!isAuthorized) {
