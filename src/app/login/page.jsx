@@ -14,6 +14,7 @@ import { useRouter } from 'next/navigation';
 
 
 
+
 const montserrat = Montserrat({
   subsets: ["latin"],
   variable: "--font-montserrat",
@@ -59,16 +60,6 @@ function Login_page() {
     },
   });
 
-
-  // const handl42_API = async () => {
-  //   try {
-  //     const response = await authService._42API();
-  //     console.log(response);
-  //   }
-  //   catch (error) {
-  //     console.log(error);
-  //   }
-  // };
 
   const handleSubmit = async (values) => {
     try {

@@ -7,6 +7,8 @@ import { motion } from "framer-motion"
 import Link from "next/link";
 import authService from './authService';
 import { useRouter } from 'next/navigation';
+import { useUser } from './UserContext';
+
 
 
 
@@ -57,7 +59,10 @@ const ProfileInfo = () => {
   );
 }
 
+
 function Navbar() {
+  const { userData, isLoading } = useUser();
+
 
   const [userDropdown, setUserDropdown] = useState(false);
   const [notificationDropdown, setNotificationDropdown] = useState(false);
@@ -67,11 +72,11 @@ function Navbar() {
   const userDropdownRef = useRef(null);
   const notificationDropdownRef = useRef(null);
 
-  useClickAway(userDropdownRef, () => {
+  useClickAway([userDropdownRef], () => {
     setUserDropdown(false);
   });
 
-  useClickAway(notificationDropdownRef, () => {
+  useClickAway([notificationDropdownRef], () => {
     setNotificationDropdown(false);
   });
 
@@ -141,19 +146,13 @@ function Navbar() {
         >
           <Image
             id="avatarButton"
-            type="button"
-            dropdown-toggle="userDropdown"
-            dropdown-placement="bottom-start"
             className="sm:w-10 sm:h-10 w-8 h-8 rounded-full bg-[#D7D7EA] cursor-pointer rounded-full"
-            src="/images/avatar.svg"
+            src={userData?.avatar || "/images/avatar.svg"}
             alt="User dropdown"
-            width="100"
-            height="100"
+            width={100}
+            height={100}
           />
           <Image
-            type="button"
-            dropdown-toggle="userDropdown"
-            dropdown-placement="bottom-start"
             className="w-4 h-8 cursor-pointer absolute bottom-[-10px] right-0"
             src="/images/Frame21.svg"
             alt="User dropdown"

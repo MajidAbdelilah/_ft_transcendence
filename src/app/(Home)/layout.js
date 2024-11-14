@@ -2,9 +2,11 @@
 
 import { useEffect, useState } from "react";
 import Navbar from "./../Navbar";
-import Sidebar from "./../sidebar";
+import Sidebar from "./../sidebar.tsx";
 import { Montserrat } from "next/font/google";
 import withAuth from "../HOC"; // Add this import
+import { UserProvider } from '../UserContext';
+
 
 
 
@@ -34,6 +36,7 @@ function RootLayout({ children }) {
   }, []);
 
     return (
+      <UserProvider>
         <div className={`flex flex-col h-screen ${montserrat.className}`}>
         <Navbar />
         <div className="flex flex-1 overflow-y-auto flex-wrap">
@@ -43,6 +46,7 @@ function RootLayout({ children }) {
           </div>
         </div>
       </div>
+      </UserProvider>
     );
 }
 
