@@ -41,7 +41,7 @@ function RootLayout({ children }) {
         <Navbar />
         <div className="flex flex-1 overflow-y-auto flex-wrap">
           <Sidebar />
-          <div className={`flex-1 overflow-y-auto flex flex-wrap items-center justify-center ${isMobile ? '' : 'ml-64'}`}>
+          <div className={`flex-1 flex flex-wrap items-center justify-center ${isMobile ? '' : 'ml-64'}`}>
             {children}
           </div>
         </div>

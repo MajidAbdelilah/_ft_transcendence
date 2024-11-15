@@ -38,15 +38,8 @@ function Settings() {
 
     <div className={`flex-1 overflow-y-auto flex flex-wrap items-center justify-center relative h-full ${isMobile ? '' : 'p-4'}`}>
       <motion.div
-        className={` ${isMobile ? 'w-full mt-4' : 'rounded-3xl border-solid border-[#BCBCC9] bg-[#F4F4FF] rounded-3xl border-[#BCBCC9] bg-[#F4F4FF]'} flex flex-col min-w-[500px] min-h-[600px] relative shadow-lg shadow-[#BCBCC9] items-center 
+        className={` ${isMobile ? 'w-full mt-4' : 'motion-preset-expand rounded-3xl border-solid border-[#BCBCC9] bg-[#F4F4FF] rounded-3xl border-[#BCBCC9] bg-[#F4F4FF]'} flex flex-col min-w-[500px] min-h-[600px] relative shadow-lg shadow-[#BCBCC9] items-center 
             md:w-[45%] h-full sm:h-[80%] md:h-[72%] bg-[#F4F4FF] justify-center p-4`}
-        initial={{ scale: 0 }}
-        animate={{ scale: 1 }}
-        transition={{
-          type: "spring",
-          stiffness: 260,
-          damping: 20
-        }}
 
       >
         <div className="w-[70%] xl:w-[70%] lg:w-[70%]  md:w-[70%] h-full mt-2 md:mt-2 lg:mt-5 flex flex-col items-center space-y-16 relative">
@@ -77,8 +70,8 @@ function Settings() {
       </motion.div>
       {isProfile && (
         <div className="fixed inset-0 backdrop-blur-sm flex justify-center items-start sm:items-center absolute top-0 left-0 w-full h-full animate-fadeIn p-4">
-        <div className="bg-[#F4F4FF] flex flex-col items-center shadow-lg rounded-xl w-[95%] sm:w-full h-[85vh] sm:h-auto border-solid border-[#BCBCC9] border-2 max-w-[800px] sm:mt-[160px] max-h-[100vh] sm:max-h-[900px] min-h-[500px] sm:min-h-[800px] overflow-y-auto pt-4 sm:pt-8 animate-scaleIn">
-          <div className="relative flex flex-col items-center w-full h-full px-3 sm:px-0">
+        <div className=" bg-[#F4F4FF] flex flex-col items-center shadow-lg rounded-xl w-[95%] sm:w-full h-[85vh] sm:h-auto border-solid border-[#BCBCC9] border-2 max-w-[800px] sm:mt-[160px] max-h-[100vh] sm:max-h-[900px] min-h-[500px] sm:min-h-[800px] overflow-y-auto pt-4 sm:pt-8 animate-scaleIn">
+          <div className="relative flex flex-col items-center w-full h-full px-3 sm:px-0 motion-preset-expand">
             <Image
               src="/images/close.svg"
               alt="Close"

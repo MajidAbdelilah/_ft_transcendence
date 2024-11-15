@@ -38,7 +38,7 @@ function TwoFA({setIs2FA}) {
     return (
       <div className="fixed inset-0 backdrop-blur-sm flex justify-center items-center animate-fadeIn  absolute top-0 left-0">
             <div className="bg-[#F4F4FF] flex flex-col items-center shadow-lg rounded-xl w-[95%] h-[80%] sm:h-[90%] border-solid border-[#BCBCC9] border-2 max-w-[900px] max-h-[900px] min-h-[580px] rounded-xl pt-8 animate-scaleIn">
-              <div className="relative flex flex-col items-center w-full h-full">
+              <div className="relative flex flex-col items-center w-full h-full motion-preset-expand">
                 <h1 className="text-lg sm:text-3xl font-bold tracking-wide text-[#242F5C] pt-4 sm:pt-8 text-center">Two Factor Authenticator</h1>
                 <hr className="w-[70%] h-[3px] bg-[#CDCDE5] border-none rounded-full mt-4 sm:mt-8" />
                 <h1 className="text-sm sm:text-xl font-bold tracking-wide text-[#242F5C] pt-4 sm:pt-8 text-center pt-20 pb-8">Please click on Send to get your E-mail security code.</h1>

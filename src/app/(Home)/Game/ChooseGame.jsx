@@ -112,18 +112,18 @@ function MainComponent() {
     <>
       <div className={`flex-1 overflow-y-auto flex flex-wrap items-center justify-center ${isMobile ? '' : 'p-4'} ${showTournament ? 'blur-sm' : ''}`}>
         <motion.div
-          className={`${isMobile ? 'w-full mt-4 ' : 'rounded-3xl border-solid border-[#BCBCC9] bg-[#F4F4FF] rounded-3xl border-[#BCBCC9] bg-[#F4F4FF] '} flex flex-col shadow-lg shadow-[#BCBCC9] items-center 
+          className={`${isMobile ? 'w-full mt-4 ' : 'motion-preset-expand  rounded-3xl border-solid border-[#BCBCC9] bg-[#F4F4FF] rounded-3xl border-[#BCBCC9] bg-[#F4F4FF] '} flex flex-col shadow-lg shadow-[#BCBCC9] items-center 
               md:w-[90%] sm:h-full md:h-[90%] bg-[#F4F4FF] justify-center p-4`}
-          initial={{ scale: 0 }}
-          animate={{ scale: 1 }}
-          transition={{
-            type: "spring",
-            stiffness: 260,
-            damping: 20
-          }}
+          // initial={{ scale: 0 }}
+          // animate={{ scale: 1 }}
+          // transition={{
+          //   type: "spring",
+          //   stiffness: 260,
+          //   damping: 20
+          // }}
         >
           <div className="w-full mt-2 md:mt-2 min-h-[80vh] flex flex-col items-center justify-center space-y-8 pb-10">
-            <h1 className="text-2xl lg:text-4xl md:text-xl mt-4 font-extrabold content-center tracking-wide text-[#242F5C] animate-fadeinbounceright">
+            <h1 className="text-2xl lg:text-4xl md:text-xl mt-4 font-extrabold content-center tracking-wide text-[#242F5C] motion-preset-compress  ">
               CHOOSE YOUR MAP
             </h1>
             <hr className="lg:w-[50%] lg:h-[3px] md:w-[40%] md:h-[3px] w-[65%] h-[3px] bg-[#CDCDE5] border-none rounded-full" />
@@ -184,7 +184,7 @@ function MainComponent() {
             <Checkbox selected={selected} handleChange={handleChange} />
 
             <hr className="lg:w-[50%] lg:h-[3px] md:w-[40%] md:h-[3px] w-[65%] h-[3px] bg-[#CDCDE5] border-none rounded-full" />
-            <button className="w-full sm:w-auto py-6 px-4 md:py-2 md:px-4 lg:py-5 lg:w-[25%] bg-[#242F5C] rounded-xl sm:rounded-full cursor-pointer overflow-hidden font-extrabold text-lg sm:text-base lg:text-lg text-[#fff] shadow flex items-center justify-center gap-2 transition-transform duration-300 ease-in-out hover:scale-105">
+            <button className=" w-full sm:w-auto py-6 px-4 md:py-2 md:px-4 lg:py-5 lg:w-[25%] bg-[#242F5C] rounded-xl sm:rounded-full cursor-pointer overflow-hidden font-extrabold text-lg sm:text-base lg:text-lg text-[#fff] shadow flex items-center justify-center gap-2 transition-transform duration-300 ease-in-out hover:scale-105">
               PLAY
             </button>
             <button 
