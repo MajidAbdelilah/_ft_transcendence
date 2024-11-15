@@ -65,7 +65,7 @@ function Sidebar() {
   // useEffect(() => {
   //   const fetchUserData = async () => {
   //     try {
-  //       const response = await axios.get('http://127.0.0.1:5500/user.json');
+  //       const response = await axios.get('http://localhost:5500/user.json');
   //       const data = await response.data;
   //       console.log(data);
   //       setUserData(new UserData(data.user, data.email, data.image));

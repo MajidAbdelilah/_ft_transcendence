@@ -57,26 +57,16 @@ export default function Chat() {
   const [currentUser, setCurrentUser] = useState(null); // State to store the current user
 
   // Function to fetch the logged-in user
+
+  document.cookie
   const fetchCurrentUser = async () => {
     try {
-      const token = localStorage.getItem("token"); // Make sure this matches your stored key
-
-      if (!token) {
-        console.log("No access token found.");
-        return;
-      }
-
-      console.log("Access Token:", token); // Log the token if it exists
-
       // Sending a POST request to get the logged-in user's data
-      const response = await axios.post("http://127.0.0.1:8000/api/user/", 
+      const response = await axios.get("http://127.0.0.1:8000/api/user/", 
       {
-        access: `${token}`,
+        withCredentials: true,
       },
     {
-      headers: {
-        Authorization: `Bearer ${token}`, // Send the token in the Authorization header
-      },
     });
 
       console.log("Fetched current user data:", response.data);
@@ -113,7 +103,7 @@ export default function Chat() {
     const token = localStorage.getItem('token'); // Get the token from localStorage
   
     if (token) {
-      console.log("Access Token:", token); // Log the token if it exists
+      // console.log("Access Token:", token); // Log the token if it exists
     } else {
       console.log("No access token found."); // Log a message if no token exists
     }
@@ -128,7 +118,7 @@ export default function Chat() {
   const getLoggedInUser = async () => {
     const token = localStorage.getItem('token'); // Make sure this matches your stored key
     if (token) {
-      console.log("Access Token:", token); // Log the token if it exists
+      // console.log("Access Token:", token); // Log the token if it exists
     } else {
       console.log("No access token found."); // Log a message if no token exists
     }
@@ -137,7 +127,7 @@ export default function Chat() {
 
 
 
-    // const response = await axios.get('http://127.0.0.1:8000/api/', {
+    // const response = await axios.get('http://localhost:8000/api/', {
     //   headers: {
     //     'Authorization': `Bearer ${token}`,
     //   },

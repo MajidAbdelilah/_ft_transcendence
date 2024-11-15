@@ -47,7 +47,7 @@ const Services = {
 
     sendCodeService: async () => {
         // console.log("=== sendCodeService function has been caled ");// remove later
-        // http://127.0.0.1:8000/api/
+        // http://localhost:8000/api/
         
         const token = getToken();
         // console.log('=== token : ', token);// remove later
