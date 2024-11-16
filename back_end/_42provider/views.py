@@ -20,6 +20,7 @@ from django.shortcuts import redirect, render
 from django.http import JsonResponse
 from authapp.serializers import UserSerializer
 from authapp.authenticate import CustomAuthentication
+from django.http import HttpResponseRedirect
 
 class login (APIView):
     permission_classes=[AllowAny]
@@ -49,7 +50,7 @@ class callback(APIView):
         token_data = response.json()
         access_token = token_data.get('access_token')
         user_response = requests.get(settings.FORTY_TWO_USER_PROFILE_URL, headers={'Authorization': f'Bearer {access_token}'})
-        resp = Response()
+        resp = HttpResponseRedirect("http://127.0.0.1:3000/Dashboard")
         resp.set_cookie(
                     key = 'intra_token',
                     value = access_token,

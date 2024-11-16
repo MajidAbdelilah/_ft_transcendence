@@ -179,11 +179,10 @@ class Update_user(APIView):
 
 class User_view(APIView):
     permission_classes = [IsAuthenticated]
-    def post(self, request):
+    def get(self, request):
         response = Response()
-        token = request.COOKIES.get(settings.SIMPLE_JWT['AUTH_COOKIE']) if request.COOKIES.get(settings.SIMPLE_JWT['AUTH_COOKIE']) is not None else  request.COOKIES.get(settings.SIMPLE_JWT['intra_token'])
-        if token == request.data['access']:
-            user = User.objects.get(email = request.user)
+        user = User.objects.get(email = request.user)
+        if user is not None :
             serializer = UserSerializer(user)
             response.data = {"user": serializer.data}
             return response
