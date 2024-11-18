@@ -5,10 +5,12 @@ import customAxios from './customAxios';
 
 
 interface UserData {
-  name: string;
+  username: string;
   email: string;
-  avatar: string;
+  profile_photo: string;
+  is_2fa: boolean;
   id: number;
+  _2fa_code: string;
   status: 'online' | 'offline';
 }
 
@@ -28,7 +30,8 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
     const fetchUserData = async () => {
       try {
         const response = await customAxios.get("http://127.0.0.1:8000/api/user/");
-        setUserData(response.data);
+        console.log(response.data.user);
+        setUserData(response.data.user);
       } catch (error) {
         console.error('Error fetching user data:', error);
       } finally {

@@ -7,6 +7,8 @@ import { useFormik } from 'formik';
 import axios from 'axios';
 import authService from '../authService';
 import toast, { Toaster } from 'react-hot-toast';
+import { useRouter } from 'next/navigation';
+
 
 
 
@@ -55,6 +57,8 @@ const validate = values => {
 
 
 function Signup_page() {
+  const router = useRouter();
+
   const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
@@ -107,8 +111,7 @@ function Signup_page() {
           );
         }
         else {
-          console.log("User created successfully");
-          console.log(response);
+          router.push('/login');
         }
     } catch (error) {
         console.log(error);

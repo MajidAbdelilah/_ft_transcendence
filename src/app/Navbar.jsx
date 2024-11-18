@@ -7,13 +7,14 @@ import { motion } from "framer-motion";
 import Link from "next/link";
 // import authService from './authService';
 import { IoIosSearch } from "react-icons/io";
+import authService from "./authService";
+
 //----------------------------------------------
 import axios from "axios";
 import { showAlert } from "./components/utils";
 import { useRouter } from 'next/navigation';
-import { useUser } from './UserContext';
+import { useUser } from './UserContext.tsx';
 import { Skeleton}  from "../compo/ui/Skeleton";
-
 
 
 
@@ -30,20 +31,27 @@ const montserrat = Montserrat({
   variable: "--font-montserrat",
 });
 
-const logout = async () => {
+const logout = async ({ setUserData }) => {
+
   try {
-    await authService.logout();
-    // Handle successful logout (e.g., clear app state, redirect)
+    const response = await authService.logout();
+    if (response.status !== 200) {
+      throw new Error('Logout failed');
+    }
+    
+    document.cookie = 'accessToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+    setUserData(null);
+    window.location.href = '/login';
   } catch (error) {
-    console.error("Logout failed", error);
+    console.error('Logout failed:', error);
   }
 };
 
-const LogoutProfile = () => {
+const LogoutProfile = ({ setUserData }) => {
   return (
     <div
       className="flex flex-row items-center m-3 justify-content relative gap-2 cursor-pointer"
-      onClick={logout}
+      onClick={() => logout({ setUserData })}
     >
       <Image
         src="/images/logout.svg"
@@ -97,7 +105,8 @@ const ProfileInfo = ({onClick}) => {
 
 
 function Navbar() {
-  const { userData, isLoading } = useUser();
+  const { userData, isLoading, setUserData } = useUser();
+
 
   const [userDropdown, setUserDropdown] = useState(false);
   const [notificationDropdown, setNotificationDropdown] = useState(false);
@@ -261,7 +270,7 @@ function Navbar() {
 
               <ProfileSetting />
               <hr className="w-[100%] h-[1px] bg-[#CDCDE5] border-none rounded-full" />
-              <LogoutProfile />
+              <LogoutProfile setUserData={setUserData} />
             </motion.div>
           )}
           {notificationDropdown && (

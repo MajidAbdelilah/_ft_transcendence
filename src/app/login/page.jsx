@@ -64,7 +64,6 @@ function Login_page() {
   const handleSubmit = async (values) => {
     try {
       const response = await authService.login(values.email, values.password);
-      console.log('response : ', response.data.data); //33333333333333333333333333333333333333333333333333
       if(!response.data.data){
         const errorMsg = response.data.message;
         console.log(errorMsg);
@@ -73,12 +72,7 @@ function Login_page() {
         );
       }
       else {
-        console.log(response.data);
         if(response.data.data.tokens.access){
-          console.log("logged");
-          console.log(response.data.data.tokens.access);
-
-          // document.cookie = `accessToken=${response.data.data.tokens.access}; path=/;`;
           router.push('/Dashboard');
         }
       }

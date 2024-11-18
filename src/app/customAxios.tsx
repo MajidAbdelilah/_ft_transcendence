@@ -1,5 +1,5 @@
 import axios, { AxiosResponse, AxiosError } from 'axios';
-import { get } from 'http';
+// import Cookies from 'js-cookie';
 
 
 
@@ -9,9 +9,9 @@ const customAxios = axios.create({
     // Optional: Set default headers
     withCredentials: true, 
     headers: {
-      'Content-Type': 'application/json',
-        'Accept': 'application/json',
-        // 'Authorization': `Bearer ${getCookie('token')}`
+    //   'Content-Type': 'application/json',
+    //     'Accept': 'application/json',
+        // 'Authorization': `Bearer ${getCookie('accessToken')}`
     }
     
   });

@@ -31,6 +31,8 @@ export default function Sidebar() {
   const [isMobile, setIsMobile] = useState(false);
   const [avatarLoading, setAvatarLoading] = useState(true);
 
+  // console.log(userData.name);
+
   const sideRef = useClickAway<HTMLDivElement>(() => {
     setIsMobileMenuOpen(false);
   });
@@ -191,7 +193,7 @@ export default function Sidebar() {
                     </div>
                   )}
                   <Image
-                    src={userData?.avatar || "/images/avatarprofile.svg"}
+                    src={"/images/avatarprofile.svg"}
                     alt="User avatar"
                     width={50}
                     height={50}
@@ -202,7 +204,8 @@ export default function Sidebar() {
                 </div>
                 <div className="">
                   <p className="text-center text-lg font-normal text-[#242F5C]">
-                    {userData?.name || "Guest"}
+                    
+                    {userData?.username || "Guest"}
                   </p>
                   <p className="text-center text-[12px] mt-[-5px] font-light text-[#8988DE]">
                     My Account

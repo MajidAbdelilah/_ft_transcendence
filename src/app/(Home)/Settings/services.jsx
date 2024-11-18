@@ -35,7 +35,7 @@ const Services = {
     updateProfileService: async (data) => {
         console.log('=== send ; ', data.username, ' ', data.current_password, ' ', data.new_password);// remove later
         console.log('=== token : ', token);// remove later
-        return axios.post('http://localhost:8000/api/update_user/', 
+        return axios.post('http://127.0.0.1:8000/api/update_user/', 
         {
             username: data.username, 
             current_password: data.current_password, 
@@ -47,11 +47,11 @@ const Services = {
 
     sendCodeService: async () => {
         // console.log("=== sendCodeService function has been caled ");// remove later
-        // http://localhost:8000/api/
+        // http://127.0.0.1:8000/api/
         
         const token = getToken();
         // console.log('=== token : ', token);// remove later
-        return axios.post('http://localhost:8000/api/sendcode/',
+        return axios.post('http://127.0.0.1:8000/api/sendcode/',
         // { withCredentials: true },
         { headers: {'Authorization' : `Bearer ${token}`}}
       );
@@ -62,7 +62,7 @@ const Services = {
     handleVerifyService: async (code) => {
         // console.log('=== Verifying code :', code);
 
-        // return axios.post('http://localhost:8000/api/CodeVerification/', 
+        // return axios.post('http://127.0.0.1:8000/api/CodeVerification/', 
         //     {code : code},
         //     { headers: {'Authorization': `Bearer ${token}`} });
         
