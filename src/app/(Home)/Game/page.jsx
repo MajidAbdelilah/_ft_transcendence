@@ -1,7 +1,6 @@
 'use client'
 
 import ChooseGame from "./ChooseGame"
-import withAuth from "../../HOC.tsx";
 
 const Game = () => {
   return (
@@ -9,5 +8,5 @@ const Game = () => {
   )
 }
 
-const ProtectedGame = withAuth(Game)
-export default ProtectedGame
+
+export default Game;

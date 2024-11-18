@@ -4,7 +4,6 @@ import { useEffect, useState } from "react";
 import Navbar from "./../Navbar";
 import Sidebar from "./../sidebar.tsx";
 import { Montserrat } from "next/font/google";
-import withAuth from "../HOC"; // Add this import
 import { UserProvider } from '../UserContext';
 
 

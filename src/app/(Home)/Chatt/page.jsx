@@ -8,6 +8,7 @@ import Image from "next/image";
 import { useState } from "react";
 import { useEffect } from "react";
 import { useRef } from "react";
+import { useUser } from "../../UserContext";
 
 // -- components -----------------------------------------------------
 
@@ -50,37 +51,10 @@ let tournament = {
 
 export default function Chat() {
 
-
+  const userdata = useUser();
 
 // test -----------------------------------------------------------------------------------------
 
-  const [currentUser, setCurrentUser] = useState(null); // State to store the current user
-
-  // Function to fetch the logged-in user
-
-  document.cookie
-  const fetchCurrentUser = async () => {
-    try {
-      // Sending a POST request to get the logged-in user's data
-      const response = await axios.get("http://127.0.0.1:8000/api/user/", 
-      {
-        withCredentials: true,
-      },
-    {
-    });
-
-      console.log("Fetched current user data:", response.data);
-      setCurrentUser(response.data); // Update state with user data
-
-    } catch (error) {
-      console.error("Error fetching user data:", error);
-    }
-  };
-
-  // Fetch the current user on initial page load
-  useEffect(() => {
-    fetchCurrentUser();
-  }, []);
 
 //-----------------------------------------------------------------------------------------
 

@@ -86,7 +86,7 @@ export default function UpdateProfile({setIsProfile})
     return (
     <div className="fixed inset-0 backdrop-blur-sm flex justify-center items-start sm:items-center absolute top-0 left-0 w-full h-full animate-fadeIn p-4">
     <div className="bg-[#F4F4FF] flex flex-col items-center shadow-lg rounded-xl w-[95%] sm:w-full h-[85vh] sm:h-auto border-solid border-[#BCBCC9] border-2 max-w-[800px] sm:mt-[160px] max-h-[100vh] sm:max-h-[900px] min-h-[500px] sm:min-h-[800px] overflow-y-auto pt-4 sm:pt-8 animate-scaleIn">
-      <div className="relative flex flex-col items-center w-full h-full px-3 sm:px-0">
+      <div className="relative flex flex-col items-center w-full h-full px-3 sm:px-0 motion-preset-expand">
       {/* closeWindowIcon --------------------------------------------------------------------------------------- */}
         <Image
           src="/images/close.svg"

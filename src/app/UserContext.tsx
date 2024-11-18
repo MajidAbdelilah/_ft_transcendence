@@ -8,6 +8,8 @@ interface UserData {
   name: string;
   email: string;
   avatar: string;
+  id: number;
+  status: 'online' | 'offline';
 }
 
 interface UserContextType {
