@@ -1,7 +1,8 @@
 'use client'
 
 import React, { createContext, useState, useContext, useEffect } from 'react';
-import axios from 'axios';
+import customAxios from './customAxios';
+
 
 interface UserData {
   name: string;
@@ -24,7 +25,7 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        const response = await axios.get('/api/user');
+        const response = await customAxios.get("http://127.0.0.1:8000/api/user/");
         setUserData(response.data);
       } catch (error) {
         console.error('Error fetching user data:', error);

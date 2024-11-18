@@ -10,6 +10,8 @@ import { motion } from "framer-motion";
 import { useRouter } from 'next/navigation';
 import { useUser } from './UserContext';
 import { Skeleton}  from "../compo/ui/Skeleton";
+import authService from "./authService";
+
 
 const montserrat = Montserrat({
   subsets: ["latin"],
@@ -23,6 +25,7 @@ const variants = {
 
 export default function Sidebar() {
   const router = useRouter();
+  const { setUserData } = useUser(); 
   const { userData, isLoading } = useUser();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
@@ -33,9 +36,18 @@ export default function Sidebar() {
   });
 
   const logout = async () => {
-    localStorage.removeItem('token')
-    localStorage.removeItem('lastRoute')
-    await router.replace('/login')
+    try {
+      const response = await authService.logout();
+      if (response.status !== 200) {
+        throw new Error('Logout failed');
+      }
+      
+      document.cookie = 'accessToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+      setUserData(null);
+      window.location.href = '/login';
+    } catch (error) {
+      console.error('Logout failed:', error);
+    }
   };
 
   useEffect(() => {

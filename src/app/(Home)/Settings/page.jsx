@@ -4,7 +4,6 @@ import { useState, useEffect } from "react";
 import Image from "next/image";
 import { motion } from "framer-motion"
 import TwoFA from "./2fa";
-import withAuth from "../../HOC.tsx";
 
 
 
@@ -167,4 +166,4 @@ function Settings() {
   );
 }
 
-export default withAuth(Settings);
+export default Settings;

@@ -73,10 +73,10 @@ function Login_page() {
       }
       else {
         console.log(response.data);
-        if(response.data.data.tokens.refresh){
+        if(response.data.data.tokens.access){
           console.log("logged");
 
-          localStorage.setItem('token', response.data.data.tokens.refresh);
+          // document.cookie = `accessToken=${response.data.data.tokens.access}; path=/;`;
           router.push('/Dashboard');
         }
       }
@@ -88,7 +88,7 @@ function Login_page() {
 
   const handle42API = async (e) => {
     let  client_code = "u-s4t2ud-788f47b5210638c4d801d7251098849b5390423a6c8ec84c5d96f6d5ab819990";
-   let redirec_url = "http://localhost:8000/oauth/user_data";
+    let redirec_url = "http://127.0.0.1:8000/oauth/user_data";
     window.location.href = `https://api.intra.42.fr/oauth/authorize?client_id=${client_code}&redirect_uri=${redirec_url}/&response_type=code&scope=public%20projects&prompt=consent` ;
   };
 

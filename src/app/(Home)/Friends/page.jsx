@@ -7,7 +7,6 @@ import FriendsComponent from "./FriendsList"
 import ScrollBlur from "./ScrollBlur"
 import FriendRequests from "./FriendRequests.tsx"
 import BlockedFriends from "./BlockedFriends.tsx"
-import withAuth from "../../HOC"
 import axios from "axios"
 import { Loader2 } from 'lucide-react'
 
@@ -191,4 +190,4 @@ function Friends() {
   )
 }
 
-export default withAuth(Friends)
+export default Friends

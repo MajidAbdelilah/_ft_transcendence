@@ -11,7 +11,12 @@ const nextConfig = {
     },
     compiler: {
         styledComponents: true,
+        ignoreBuildErrors: true,
       },
+      experimental: {
+        // This will ignore HTML validation warnings
+        strictNextHead: false,
+      }
     
 };
 

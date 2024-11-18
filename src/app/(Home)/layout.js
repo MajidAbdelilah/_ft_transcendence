@@ -50,4 +50,4 @@ function RootLayout({ children }) {
     );
 }
 
-export default withAuth(RootLayout);
+export default RootLayout;
