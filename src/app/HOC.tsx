@@ -24,7 +24,7 @@ export function AuthProvider({ children }: AuthProps) {
 
   useEffect(() => {
     const checkAuth = async () => {
-      const token = localStorage.getItem('token')
+      const token = document.cookie
       
       if (!token) {
         await router.replace('/login')

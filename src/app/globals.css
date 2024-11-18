@@ -132,26 +132,14 @@
       transform: translateY(-2000px);
     }
   }
-.animatedInputError{
-
-  animation-name: slide;
-    animation-duration: 2s;
-    animation-timing-function: linear;
-    animation-iteration-count: infinite;
-}
-
-
-@keyframes slide {
-  0% {
-    transform: translateX(0);
-  }
-  10% {
-    transform: translateX(-2px);
-  }
-  20% {
-    transform: translateX(2px);
+  
+  body {
+    background-image: url('/images/background.svg');
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-position: center;
   }
   30% {
     transform: translateX(-2px);
   }
-}

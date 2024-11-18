@@ -4,13 +4,23 @@ import { useState, useEffect } from "react";
 import Image from "next/image";
 import { motion } from "framer-motion"
 import TwoFA from "./2fa";
+<<<<<<< HEAD
 
 
+=======
+import withAuth from "../../HOC.tsx";
+import UpdateProfile from "./UpdateProfile"
+import toast, { Toaster } from 'react-hot-toast';
+>>>>>>> origin/frontend-hed-dyb
 
 const montserrat = Montserrat({
   subsets: ["latin"],
   variable: "--font-montserrat",
 });
+
+
+
+
 
 function Settings() {
 
@@ -18,6 +28,13 @@ function Settings() {
   const [isIcon, setIsIcon] = useState(false);
   const [isProfile, setIsProfile] = useState(false);
   const [is2FA, setIs2FA] = useState(false);
+
+
+
+
+
+
+
 
   useEffect(() => {
     const handleResize = () => {
@@ -29,13 +46,12 @@ function Settings() {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  const handleFileUpload = (e) => {
-    console.log(e.target.files[0]);
-  };
+
 
   return (
 
     <div className={`flex-1 overflow-y-auto flex flex-wrap items-center justify-center relative h-full ${isMobile ? '' : 'p-4'}`}>
+      <Toaster /> 
       <motion.div
         className={` ${isMobile ? 'w-full mt-4' : 'motion-preset-expand rounded-3xl border-solid border-[#BCBCC9] bg-[#F4F4FF] rounded-3xl border-[#BCBCC9] bg-[#F4F4FF]'} flex flex-col min-w-[500px] min-h-[600px] relative shadow-lg shadow-[#BCBCC9] items-center 
             md:w-[45%] h-full sm:h-[80%] md:h-[72%] bg-[#F4F4FF] justify-center p-4`}
@@ -53,6 +69,11 @@ function Settings() {
           <div className="w-full flex justify-center">
             <hr className="w-full h-[3px] bg-[#CDCDE5] border-none rounded-full my-2" />
           </div>
+
+
+
+
+          
           <div onClick={() => { setIsProfile(!isProfile) }} className="w-full max-w-md rounded-xl flex items-center justify-center bg-[#D7D7EA] shadow-md shadow-[#BCBCC9] p-4 cursor-pointer hover:bg-[#E1E1EF] transition-colors duration-300 transition-transform duration-300 transform hover:scale-105 ease-in-out">
             <Image src="/images/profile.svg" alt="Profile" width={64} height={64} className="w-12 h-12 sm:w-16 sm:h-16" />
             {!isIcon && (
@@ -65,8 +86,15 @@ function Settings() {
               <h1 className="ml-4 text-xl sm:text-xl md:text-2xl font-bold tracking-wide text-[#242F5C]">2FA Authentication</h1>
             )}
           </div>
+
+
+
+
+
+
         </div>
       </motion.div>
+<<<<<<< HEAD
       {isProfile && (
         <div className="fixed inset-0 backdrop-blur-sm flex justify-center items-start sm:items-center absolute top-0 left-0 w-full h-full animate-fadeIn p-4">
         <div className=" bg-[#F4F4FF] flex flex-col items-center shadow-lg rounded-xl w-[95%] sm:w-full h-[85vh] sm:h-auto border-solid border-[#BCBCC9] border-2 max-w-[800px] sm:mt-[160px] max-h-[100vh] sm:max-h-[900px] min-h-[500px] sm:min-h-[800px] overflow-y-auto pt-4 sm:pt-8 animate-scaleIn">
@@ -162,6 +190,11 @@ function Settings() {
       {is2FA && (
         <TwoFA setIs2FA={setIs2FA}/>
       )}
+=======
+      {/* My chnages --------------------------------------------------------------------------- */}
+      {isProfile && (<UpdateProfile setIsProfile={setIsProfile} />)} 
+      {is2FA && (    <TwoFA         setIs2FA={setIs2FA}       /> )}
+>>>>>>> origin/frontend-hed-dyb
     </div>
   );
 }
