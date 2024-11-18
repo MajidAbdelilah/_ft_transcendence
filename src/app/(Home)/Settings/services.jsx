@@ -15,26 +15,44 @@
 import axios from 'axios';
 
 
-const getToken = () => {
-   
-    if (typeof window !== 'undefined') {
-      return localStorage.getItem('token');
-    } else {
 
-      return null;
-    }
-  };
+// const axiosInstance = axios.create({
+//   baseURL: 'http://127.0.0.1:8000',
+//   withCredentials: true,
+//   headers: {}
+// });
 
   
+//----------------------------
+
+// axios.get('http://127.0.0.1:8000/api/getuserinfo/', {
+//     headers: {
+//         Authorization: `Bearer ${token}` // Authentication token (if needed)
+//     },
+//     withCredentials: true // Send cookies if necessary
+// })
+// .then(response => {
+//     console.log(response.data);
+// })
+// .catch(error => {
+//     console.error(error);
+// });
+
+
+
 
 
 
 const Services = {
     
 
+
+
+
+
+
     updateProfileService: async (data) => {
-        console.log('=== send ; ', data.username, ' ', data.current_password, ' ', data.new_password);// remove later
-        console.log('=== token : ', token);// remove later
+
         return axios.post('http://127.0.0.1:8000/api/update_user/', 
         {
             username: data.username, 
@@ -46,25 +64,21 @@ const Services = {
     },
 
     sendCodeService: async () => {
-        // console.log("=== sendCodeService function has been caled ");// remove later
-        // http://127.0.0.1:8000/api/
-        
-        const token = getToken();
-        // console.log('=== token : ', token);// remove later
-        return axios.post('http://127.0.0.1:8000/api/sendcode/',
-        // { withCredentials: true },
-        { headers: {'Authorization' : `Bearer ${token}`}}
-      );
-      
+      return axios.post('http://127.0.0.1:8000/api/sendcode/', 
+      {},
+      { withCredentials: true, headers: {} });
+        // return axiosInstance.post('/api/sendcode/');
 
-        
+
     },
+
+
     handleVerifyService: async (code) => {
         // console.log('=== Verifying code :', code);
 
-        // return axios.post('http://127.0.0.1:8000/api/CodeVerification/', 
-        //     {code : code},
-        //     { headers: {'Authorization': `Bearer ${token}`} });
+        return axios.post('http://127.0.0.1:8000/api/CodeVerification/', 
+            {code : code},
+            { withCredentials: true, headers: {} });
         
         
     }

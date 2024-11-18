@@ -27,7 +27,7 @@ export const sendCode = async() =>
       }
   
       catch (error) {
-        console.log("### http request failed; ", error);
+        console.log("sendCode http request failed; ", error);
       }
     }
 
@@ -59,7 +59,7 @@ export    const handleVerify = async(code, setError) => {
             }
         }
         catch (error) {
-          console.log("### http request failed; ", error);
+          console.log("handleVerify http request failed; ", error);
         }
 
           
