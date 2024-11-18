@@ -9,7 +9,7 @@ import { useEffect, useState } from "react";
 import authService from '../authService';
 import toast, { Toaster } from 'react-hot-toast';
 import { useRouter } from 'next/navigation';
-
+import customAxios from '../customAxios';
 
 
 
@@ -99,6 +99,30 @@ function Login_page() {
       window.removeEventListener("resize", handleResize);
     };
   }, []);
+
+  useEffect(() => {
+    const checkAuth = async () => {
+      try {
+        const response = await customAxios.get("http://127.0.0.1:8000/api/user/", {
+          withCredentials: true,
+        });
+  
+        if (response.status === 200) { // User is authenticated
+          console.log("User is authenticated");
+          // If the user is authenticated and trying to access login/signup, redirect them
+          if (window.location.pathname === '/login') {
+            console.log("***********",window.location.pathname );
+            router.replace('/Dashboard');
+          }
+        }
+      } catch (error) {
+        console.log("User is not authenticated");
+      }
+    };
+  
+    checkAuth();
+  
+  }, [router]);
 
   
   return (

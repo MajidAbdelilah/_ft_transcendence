@@ -5,6 +5,7 @@ import Navbar from "./../Navbar";
 import Sidebar from "./../sidebar.tsx";
 import { Montserrat } from "next/font/google";
 import { UserProvider } from '../UserContext';
+import { useRouter } from 'next/navigation';
 
 
 
@@ -19,6 +20,7 @@ const montserrat = Montserrat({
 
 function RootLayout({ children }) {
   const [isMobile, setIsMobile] = useState(false); // You might want to implement actual mobile detection
+  const router = useRouter();
 
   
 

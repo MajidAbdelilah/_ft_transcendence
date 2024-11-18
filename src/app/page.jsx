@@ -6,6 +6,8 @@ import { useRouter } from "next/navigation";
 import { useState, useEffect } from 'react'
 import TextGenerateEffect from '/src/compo/ui/text-generate-effect'
 import { motion } from 'framer-motion'
+import axios from 'axios'
+
 
 const montserrat = Montserrat({
   subsets: ['latin'],
@@ -17,7 +19,38 @@ export default function App() {
 
   const [isScrolled, setIsScrolled] = useState(false);
   const [mounted, setMounted] = useState(false);
+  const router = useRouter();
+  const handleLogin = () => {
+    router.push('/login');
+  }
+  const handleSignUp = () => {
+    router.push('/signup');
+  }
 
+
+  useEffect(() => {
+    const checkAuth = async () => {
+      try {
+        const response = await axios.get("http://127.0.0.1:8000/api/login/", {
+          withCredentials: true,
+        });
+  
+        if (response.status === 200) { // User is authenticated
+          console.log("User is authenticated");
+          // If the user is authenticated and trying to access login/signup, redirect them
+          if (window.location.pathname === '/') {
+            console.log("***********");
+            router.replace('/Dashboard');;// Redirect authenticated users to Dashboard
+          }
+        }
+      } catch (error) {
+        // console.log("User is not authenticated");
+      }
+    };
+  
+    checkAuth();
+  
+  }, [router]);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -33,14 +66,8 @@ export default function App() {
     }
   })
 
-  const router = useRouter();
-  const handleLogin = () => {
-    router.push('/login');
-  }
-  const handleSignUp = () => {
-    router.push('/signup');
-  }
-
+ 
+ 
   // const handleDash = () => {
   //   router.push('/Dashboard');
   // }
@@ -48,6 +75,8 @@ export default function App() {
 
 
   return (
+ 
+
     <body className="relative" suppressHydrationWarning={true}>
       <div className={`relative z-10 h-[100vh]  ${montserrat.className}`}>
         <nav className={`flex justify-between sm:pl-20 sm:pt-18 sm:pr-20 w-full sm:items-center sm:h-[200px] fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${isScrolled ? 'bg-white bg-opacity-15 backdrop-blur-md shadow-md' : 'bg-transparent'

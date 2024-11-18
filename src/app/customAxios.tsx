@@ -28,7 +28,7 @@ customAxios.interceptors.response.use(
 
       switch (status) {
         case 401:
-            // window.location.href = '/';
+                // window.location.href = '/login';
           break;
         case 400:
           console.log('Bad request:', error.response.data);

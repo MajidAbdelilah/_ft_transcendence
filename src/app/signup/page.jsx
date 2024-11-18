@@ -8,6 +8,7 @@ import axios from 'axios';
 import authService from '../authService';
 import toast, { Toaster } from 'react-hot-toast';
 import { useRouter } from 'next/navigation';
+import customAxios from '../customAxios';
 
 
 
@@ -60,6 +61,30 @@ function Signup_page() {
   const router = useRouter();
 
   const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkAuth = async () => {
+      try {
+        const response = await customAxios.get("http://127.0.0.1:8000/api/user/", {
+          withCredentials: true,
+        });
+  
+        if (response.status === 200) { // User is authenticated
+          console.log("User is authenticated");
+          // If the user is authenticated and trying to access login/signup, redirect them
+          if (window.location.pathname === '/signup') {
+            console.log("***********");
+            router.replace('/Dashboard');;// Redirect authenticated users to Dashboard
+          }
+        }
+      } catch (error) {
+        console.log("User is not authenticated");
+      }
+    };
+  
+    checkAuth();
+  
+  }, [router]);
 
   useEffect(() => {
     const handleResize = () => {
