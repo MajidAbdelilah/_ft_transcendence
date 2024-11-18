@@ -37,6 +37,27 @@ const montserrat = Montserrat({
 
 
 
+
+// email: "user1user1@gmail.com"
+// fullname: ""
+// id
+// : 1
+// is_2fa
+// : 
+// true
+// profile_photo
+// : 
+// "/images/profilepng.png"
+// userna
+// : 
+// "user1user1"
+// _2fa_code
+// : 
+// ""
+
+
+
+
 let tournament = {
   name: "tournament", // ###############  WARNING   ########## the tournament must be named like that , casue i ve built the logic so that the name is tournament. path: "/images/avatarprofile.svg", status: "Online",
   conversation: [
@@ -52,13 +73,6 @@ let tournament = {
 export default function Chat() {
 
   const userdata = useUser();
-
-// test -----------------------------------------------------------------------------------------
-
-
-//-----------------------------------------------------------------------------------------
-
-
 
 
 
