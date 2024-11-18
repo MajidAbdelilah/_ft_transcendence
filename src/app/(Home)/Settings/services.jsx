@@ -59,7 +59,7 @@ const Services = {
             current_password: data.current_password, 
             new_password: data.new_password
         },
-        { headers: {'Authorization': `Bearer ${token}`} });
+        { withCredentials: true, headers: {} });
         
     },
 
