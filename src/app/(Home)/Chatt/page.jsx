@@ -38,22 +38,7 @@ const montserrat = Montserrat({
 
 
 
-// email: "user1user1@gmail.com"
-// fullname: ""
-// id
-// : 1
-// is_2fa
-// : 
-// true
-// profile_photo
-// : 
-// "/images/profilepng.png"
-// userna
-// : 
-// "user1user1"
-// _2fa_code
-// : 
-// ""
+
 
 
 
@@ -72,7 +57,12 @@ let tournament = {
 
 export default function Chat() {
 
-  const userdata = useUser();
+  const LoggedInUser = useUser();
+  console.log("LoggedInUser", LoggedInUser.userData);
+
+
+
+
 
 
 
@@ -86,47 +76,7 @@ export default function Chat() {
 
 
 
-  
-  const checkAccessToken = () => {
-    const token = localStorage.getItem('token'); // Get the token from localStorage
-  
-    if (token) {
-      // console.log("Access Token:", token); // Log the token if it exists
-    } else {
-      console.log("No access token found."); // Log a message if no token exists
-    }
-  };
-  
-  // Call the function
-  // checkAccessToken();
 
-
-
-
-  const getLoggedInUser = async () => {
-    const token = localStorage.getItem('token'); // Make sure this matches your stored key
-    if (token) {
-      // console.log("Access Token:", token); // Log the token if it exists
-    } else {
-      console.log("No access token found."); // Log a message if no token exists
-    }
-
-
-
-
-
-    // const response = await axios.get('http://localhost:8000/api/', {
-    //   headers: {
-    //     'Authorization': `Bearer ${token}`,
-    //   },
-    // });
-    
-    // console.log("Logged in user data:", response.data);
-  };
-  
-  // Call the function to test it
-  getLoggedInUser();
-  
 
 
 

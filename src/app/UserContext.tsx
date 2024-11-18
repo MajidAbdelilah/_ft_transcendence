@@ -30,7 +30,7 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
     const fetchUserData = async () => {
       try {
         const response = await customAxios.get("http://127.0.0.1:8000/api/user/");
-        console.log(response.data.user);
+        // console.log(response.data.user);
         setUserData(response.data.user);
       } catch (error) {
         console.error('Error fetching user data:', error);
