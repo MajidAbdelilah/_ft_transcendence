@@ -15,15 +15,6 @@ from pathlib import Path
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
-
-# SECURITY WARNING: keep the secret key used in production secret!
-# SECRET_KEY = 'django-insecure-kh3afnr1^%bi41&ln3(hir(fo#vu9c11e5i&f4936kw)3-27-%'
-
-# SECURITY WARNING: don't run with debug turned on in production!
-# DEBUG = True
 ALLOWED_HOSTS = []
 #EMAIL
 import certifi, os
@@ -61,6 +52,9 @@ INSTALLED_APPS = [
     'allauth.socialaccount',
     'allauth.socialaccount.providers.oauth2',
     '_42provider'  ,
+    'double_game',#needed
+    'channels',#needed
+    'tournament',#needed
 ]
 
 MIDDLEWARE = [
@@ -76,7 +70,14 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = 'back_end.urls'
+ASGI_APPLICATION = 'tournamentasgi.application'
+ASGI_APPLICATION = 'game.asgi.application'
 
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels.layers.InMemoryChannelLayer',
+    },
+}
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
