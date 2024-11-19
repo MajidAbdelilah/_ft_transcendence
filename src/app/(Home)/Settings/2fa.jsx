@@ -21,7 +21,7 @@ function TwoFA({setIs2FA}) {
   
   const handleChange = (e) => {
     const value = e.target.value;
-    if (/^\d{0,4}$/.test(value)) {
+    if (/^\d{0,6}$/.test(value)) {
       setCode(value);
     }
   };
@@ -42,9 +42,10 @@ function TwoFA({setIs2FA}) {
                 
                 <div className="flex flex-col items-center bg-[#DAE4FF] w-[90%] sm:w-[70%] h-[10%] rounded-xl my-28 sm:my-28 relative shadow">
                   <input 
-                    type="text"  
+                    type="number"  
                     value={code} 
                     max="9999"
+                    // maxLength={6} 
                     id="code"
                     onChange={handleChange} 
                     onKeyDown={(e) => {

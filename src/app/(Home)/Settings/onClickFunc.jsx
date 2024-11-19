@@ -9,20 +9,20 @@ export const sendCode = async() =>
       try {
         
         const result = await Services.sendCodeService();
-        // console.log("--- sendCode has been called : ", result.data.data);
-        if(!result.data.data) {
-          const errorMsg = result.data.message;
-          console.log(errorMsg);
-          toast.error( errorMsg?errorMsg:'Something Went Wrong!');
-          // setError(errorMsg);
-        }
-        else {
+        console.log("--- sendCode has been called : ", result);
+        // if(!result.data.data) {
+        //   const errorMsg = result.data.message;
+        //   console.log(errorMsg);
+        //   toast.error( errorMsg?errorMsg:'Something Went Wrong!');
+        //   // setError(errorMsg);
+        // }
+        // else {
           const successMsg = result.data.message;
           console.log(successMsg);
-          toast.success(successMsg);
+          toast.success(successMsg);//
   
           // console.log(result.data);
-        }
+        // }
   
       }
   
@@ -46,6 +46,7 @@ export    const handleVerify = async(code, setError) => {
 
         try {
             const result = await Services.handleVerifyService(code);
+            console.log("--- handleVerify has been called : ", result);
             if(!result.data.data) {
                 const errorMsg = result.data.message;
                 console.log(errorMsg);
@@ -56,6 +57,7 @@ export    const handleVerify = async(code, setError) => {
                 const successMsg = result.data.message;
                 console.log(successMsg);
                 toast.success(successMsg);
+                
             }
         }
         catch (error) {
