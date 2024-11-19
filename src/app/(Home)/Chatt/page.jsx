@@ -63,9 +63,11 @@ export default function Chat() {
   // console.log("LoggedInUser", LoggedInUser.userData);
   // if (LoggedInUser.userData === null) return (<div>LoggedInUser Loading...</div>);
 
-// LoggedInUser -----------------------------------------------------------------------------------------
+// LoggedInUser and conversatios -----------------------------------------------------------------------------------------
   
-  let UserId = 1; // Assume this is the logged-in user's ID
+
+  let [fullFriendConversations, setFullFriendConversations] = useState([]);
+
   let [loggedInUser, setLoggedInUser] = useState(
     {
       userName: "",
@@ -81,10 +83,6 @@ export default function Chat() {
   );
 
   
-  // Fetch/find looged in user  and conversatios -----------------------------------------------------------------------------------------
-  let [fullFriendConversations, setFullFriendConversations] = useState([]);
-  
-
   useEffect(() => {
 
     if (LoggedInUser.userData !== null) {
@@ -112,6 +110,18 @@ export default function Chat() {
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
   
 
   //       // 2 - create and full the conversationsWithFriends
@@ -134,15 +144,12 @@ export default function Chat() {
   //     }, []);
 
 
+// -----------------------------------------------------------------------------------------
 
-
-
-
-const [selectedFriend, setSelectedFriend] = useState(null);
-const [selectedConversation, setSelectedConversation] = useState(null);
-
-
-
+  const [selectedFriend, setSelectedFriend] = useState(null);
+  const [selectedConversation, setSelectedConversation] = useState(null);
+  
+  
 
 // Clicking on icons -----------------------------------------------------------------------------------------
   const [iconState, setIconState] = useState({
@@ -322,7 +329,7 @@ const [selectedConversation, setSelectedConversation] = useState(null);
                     />
                   ))}
 
-
+                  
 
 
 
