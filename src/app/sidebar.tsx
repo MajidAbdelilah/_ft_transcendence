@@ -30,6 +30,7 @@ export default function Sidebar() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
   const [avatarLoading, setAvatarLoading] = useState(true);
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
 
 
   const sideRef = useClickAway<HTMLDivElement>(() => {
@@ -38,16 +39,20 @@ export default function Sidebar() {
 
   const logout = async () => {
     try {
+      setIsLoggingOut(true);
       const response = await authService.logout();
       if (response.status !== 200) {
         throw new Error('Logout failed');
       }
       
       document.cookie = 'accessToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+      
       setUserData(null);
       window.location.href = '/login';
     } catch (error) {
       console.error('Logout failed:', error);
+    }finally {
+      setIsLoggingOut(false);
     }
   };
 
@@ -175,7 +180,7 @@ export default function Sidebar() {
         <div className="w-full max-w-[100%] sm:mb-10">
           <hr className="border-[#242F5C] border-t-1 m-auto w-[80%]" />
           <div className="flex items-center justify-center mt-8 gap-4">
-            {isLoading ? (
+            {isLoading || isLoggingOut ?  (
               <>
                 <Skeleton className="w-14 h-14 rounded-full bg-[#d1daff]" />
                 <div className="flex flex-col gap-2 ">
@@ -204,7 +209,7 @@ export default function Sidebar() {
                 <div className="">
                   <p className="text-center text-lg font-normal text-[#242F5C]">
                     
-                    {userData?.username || "Guest"}
+                    {userData?.username}
                   </p>
                   <p className="text-center text-[12px] mt-[-5px] font-light text-[#8988DE]">
                     My Account

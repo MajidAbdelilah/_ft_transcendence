@@ -7,6 +7,7 @@ import { useState, useEffect } from 'react'
 import TextGenerateEffect from '/src/compo/ui/text-generate-effect'
 import { motion } from 'framer-motion'
 import axios from 'axios'
+import Spinner from './components/Loading';
 
 
 const montserrat = Montserrat({
@@ -20,6 +21,8 @@ export default function App() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [mounted, setMounted] = useState(false);
   const router = useRouter();
+  const [isLoading, setIsLoading] = useState(true);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
   const handleLogin = () => {
     router.push('/login');
   }
@@ -28,30 +31,7 @@ export default function App() {
   }
 
 
-  useEffect(() => {
-    const checkAuth = async () => {
-      try {
-        const response = await axios.get("http://127.0.0.1:8000/api/login/", {
-          withCredentials: true,
-        });
   
-        if (response.status === 200) { // User is authenticated
-          console.log("User is authenticated");
-          // If the user is authenticated and trying to access login/signup, redirect them
-          if (window.location.pathname === '/') {
-            console.log("***********");
-            router.replace('/Dashboard');;// Redirect authenticated users to Dashboard
-          }
-        }
-      } catch (error) {
-        // console.log("User is not authenticated");
-      }
-    };
-  
-    checkAuth();
-  
-  }, [router]);
-
   useEffect(() => {
     const handleScroll = () => {
       if (window.scrollY > 0) {
@@ -65,15 +45,39 @@ export default function App() {
       window.removeEventListener('scroll', handleScroll);
     }
   })
+  useEffect(() => {
+    async function checkAuth() {
+      try {
+        setIsLoading(true)
+        const response = await customAxios.get("http://127.0.0.1:8000/api/user/", {
+          withCredentials: true,
+        })
+  
+        if (response.status === 200) {
+          console.log("User is authenticated")
+          setIsAuthenticated(true)
+          router.replace('/Dashboard')
+        }
+      } catch (error) {
+        console.log("User is not authenticated")
+        setIsAuthenticated(false)
+      } finally {
+        setIsLoading(false)
+      }
+    }
+  
+    checkAuth()
+  }, [router])
 
- 
- 
-  // const handleDash = () => {
-  //   router.push('/Dashboard');
-  // }
-
-
-
+  if (isLoading || isAuthenticated) {
+    return (
+      <div className="flex flex-col items-center justify-center h-screen">
+        <Spinner />
+      </div>
+    )
+  }
+  
+  
   return (
  
 

@@ -9,6 +9,7 @@ import authService from '../authService';
 import toast, { Toaster } from 'react-hot-toast';
 import { useRouter } from 'next/navigation';
 import customAxios from '../customAxios';
+import Spinner from '../components/Loading';
 
 
 
@@ -58,30 +59,40 @@ function Signup_page() {
   const router = useRouter();
 
   const [isMobile, setIsMobile] = useState(false);
+  const [isLoading, setIsLoading] = useState(true)
+  const [isAuthenticated, setIsAuthenticated] = useState(false)
 
   useEffect(() => {
-    const checkAuth = async () => {
+    async function checkAuth() {
       try {
+        setIsLoading(true)
         const response = await customAxios.get("http://127.0.0.1:8000/api/user/", {
           withCredentials: true,
-        });
+        })
   
-        if (response.status === 200) { // User is authenticated
-          console.log("User is authenticated");
-          // If the user is authenticated and trying to access login/signup, redirect them
-          if (window.location.pathname === '/signup') {
-            console.log("***********");
-            router.replace('/Dashboard');;// Redirect authenticated users to Dashboard
-          }
+        if (response.status === 200) {
+          console.log("User is authenticated")
+          setIsAuthenticated(true)
+          router.replace('/Dashboard')
         }
       } catch (error) {
-        console.log("User is not authenticated");
+        console.log("User is not authenticated")
+        setIsAuthenticated(false)
+      } finally {
+        setIsLoading(false)
       }
-    };
+    }
   
-    checkAuth();
-  
-  }, [router]);
+    checkAuth()
+  }, [router])
+
+  if (isLoading || isAuthenticated) {
+    return (
+      <div className="flex flex-col items-center justify-center h-screen">
+        <Spinner />
+      </div>
+    )
+  }
 
   useEffect(() => {
     const handleResize = () => {
