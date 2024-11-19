@@ -97,7 +97,7 @@ export default function Sidebar() {
         {!isMobile && (
           <div className="flex items-center justify-center motion-scale-in-[0.5] motion-translate-x-in-[-120%] motion-translate-y-in-[-60%] motion-opacity-in-[33%] motion-rotate-in-[-380deg] motion-blur-in-[10px] motion-delay-[0.38s]/scale 
           motion-duration-[0.38s]/opacity motion-duration-[1.20s]/rotate motion-duration-[0.15s]/blur motion-delay-[0.60s]/blur motion-ease-spring-bouncier">
-            <Image src="/images/logo.png" alt="Logo" width={120} height={100} className="w-[120px] h-[100px]" />
+            <Image src="/images/logo.png" alt="Logo" width={120} height={100} className="w-[120px] h-[100px]" priority/>
           </div>
         )}
         <ul className="flex flex-col gap-8 pt-20 h-[80%]">
@@ -204,6 +204,7 @@ export default function Sidebar() {
                     className={`rounded-full object-cover w-14 h-14 border-[1px] border-transparent 
                       outline outline-2 outline-offset-2 outline-[#242F5C] transition-opacity duration-300 ${avatarLoading ? 'opacity-0' : 'opacity-100'}`}
                     onLoad={() => setAvatarLoading(false)}
+                    priority
                   />
                 </div>
                 <div className="">

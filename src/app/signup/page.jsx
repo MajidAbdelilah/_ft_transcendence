@@ -59,51 +59,7 @@ function Signup_page() {
   const router = useRouter();
 
   const [isMobile, setIsMobile] = useState(false);
-  const [isLoading, setIsLoading] = useState(true)
-  const [isAuthenticated, setIsAuthenticated] = useState(false)
-
-  useEffect(() => {
-    async function checkAuth() {
-      try {
-        setIsLoading(true)
-        const response = await customAxios.get("http://127.0.0.1:8000/api/user/", {
-          withCredentials: true,
-        })
-  
-        if (response.status === 200) {
-          console.log("User is authenticated")
-          setIsAuthenticated(true)
-          router.replace('/Dashboard')
-        }
-      } catch (error) {
-        console.log("User is not authenticated")
-        setIsAuthenticated(false)
-      } finally {
-        setIsLoading(false)
-      }
-    }
-  
-    checkAuth()
-  }, [router])
-
-  if (isLoading || isAuthenticated) {
-    return (
-      <div className="flex flex-col items-center justify-center h-screen">
-        <Spinner />
-      </div>
-    )
-  }
-
-  useEffect(() => {
-    const handleResize = () => {
-      setIsMobile(window.innerWidth <= 768);
-    };
-    handleResize();
-    window.addEventListener("resize", handleResize);
-    return () => {
-      window.removeEventListener("resize", handleResize);
-    };
-  }, []);
+  const [isLoading, setIsLoading] = useState(true);
 
   const formik = useFormik({
     initialValues: {
@@ -150,6 +106,50 @@ function Signup_page() {
         console.log(error);
     }
   }
+
+  useEffect(() => {
+    function handleResize() {
+      setIsMobile(window.innerWidth <= 768);
+    }
+    handleResize();
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  useEffect(() => {
+    async function checkAuth() {
+      try {
+        setIsLoading(true);
+        const response = await customAxios.get(
+          "http://127.0.0.1:8000/api/user/",
+          {
+            withCredentials: true,
+          }
+        );
+
+        if (response.status === 200) {
+          console.log("User is authenticated");
+          router.replace("/Dashboard");
+        } else {
+          setIsLoading(false);
+        }
+      } catch (error) {
+        console.log("User is not authenticated");
+        setIsLoading(false);
+      }
+    }
+
+    checkAuth();
+  }, []);
+
+  if (isLoading) {
+    return (
+      <div className="flex flex-col items-center justify-center h-screen">
+        <Spinner />
+      </div>
+    );
+  }
+
 
 
   return (

@@ -34,9 +34,9 @@ function Friends() {
     "Blocked Friends",
   ])
   const friendsData = [
-    { id: '1', name: 'John Doe', avatar: '/images/avatar2.svg', status: 'online' },
-    { id: '2', name: 'Jane Smith', avatar: '/images/avatar2.svg', status: 'offline' },
-    { id: '2', name: 'Jane Smith', avatar: '/images/avatar2.svg', status: 'offline' },
+    { id: '1', name: 'John Doe', avatar: '/images/avatarAcc.svg', status: 'online' },
+    { id: '2', name: 'Jane Smith', avatar: '/images/avatarAcc.svg', status: 'offline' },
+    { id: '3', name: 'Jane Smith', avatar: '/images/avatarAcc.svg', status: 'offline' },
 
     // ... more friends
   ];

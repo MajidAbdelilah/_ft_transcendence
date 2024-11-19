@@ -38,8 +38,6 @@ function LoginPage() {
   const [isMobile, setIsMobile] = useState(false);
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(true);
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [isSumbitting, setIsSubmitting] = useState(false);
 
   const formik = useFormik({
     initialValues: {
@@ -52,7 +50,6 @@ function LoginPage() {
 
   async function handleSubmit(values) {
     try {
-      // setIsSubmitting(true)
       const response = await authService.login(values.email, values.password);
       if (!response.data.data) {
         const errorMsg = response.data.message;
@@ -66,8 +63,6 @@ function LoginPage() {
     } catch (error) {
       console.log(error);
       toast.error("Login failed. Please try again.");
-    } finally {
-      // setIsSubmitting(false)
     }
   }
 
@@ -100,7 +95,6 @@ function LoginPage() {
 
         if (response.status === 200) {
           console.log("User is authenticated");
-          // setIsAuthenticated(true)
           router.replace("/Dashboard");
         } else {
           setIsLoading(false);
@@ -109,9 +103,6 @@ function LoginPage() {
         console.log("User is not authenticated");
         setIsLoading(false);
       }
-      // finally {
-      //   setIsLoading(false)
-      // }
     }
 
     checkAuth();
@@ -167,6 +158,7 @@ function LoginPage() {
             width={100}
             height={100}
             className="w-[100px] h-[100px] object-contain"
+            priority
           />
         </div>
         <h1 className="sm:text-4xl text-xl text-center text-[#111B47] font-bold">
@@ -242,6 +234,7 @@ function LoginPage() {
               width={40}
               height={40}
               className="w-[40px] h-[40px] object-contain"
+              priority
             />
             Login Intra
           </button>
