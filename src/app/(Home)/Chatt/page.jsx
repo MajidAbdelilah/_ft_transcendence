@@ -57,68 +57,81 @@ let tournament = {
 
 export default function Chat() {
 
+
+  // LoggedInUser -----------------------------------------------------------------------------------------
   const LoggedInUser = useUser();
-  console.log("LoggedInUser", LoggedInUser.userData);
+  // console.log("LoggedInUser", LoggedInUser.userData);
+  // if (LoggedInUser.userData === null) return (<div>LoggedInUser Loading...</div>);
 
-
-
-
-
-
-
-
-  // loggedInUser -----------------------------------------------------------------------------------------
-
+// LoggedInUser -----------------------------------------------------------------------------------------
   
   let UserId = 1; // Assume this is the logged-in user's ID
-  let [loggedInUser, setLoggedInUser] = useState(null);
-  
-
-
-
-
-
-
-
-
+  let [loggedInUser, setLoggedInUser] = useState(
+    {
+      userName: "",
+      userId: 10,
+      name: "",
+      avatar: "/images/avatarprofile.svg",
+      status: "Online",
+      level: 1,
+      score: "",
+      result: "",
+      map: "",
+    }
+  );
 
   
   // Fetch/find looged in user  and conversatios -----------------------------------------------------------------------------------------
   let [fullFriendConversations, setFullFriendConversations] = useState([]);
   
+
   useEffect(() => {
-    async function mainFetch() {
 
+    if (LoggedInUser.userData !== null) {
 
-        // 1 - Find and set the logged-in user
-        const response = await fetch('/data.json');
-        const data = await response.json();
-        
-        const usr = data.find((users) => users.userId === UserId);
-        setLoggedInUser(usr);
+      const filledUser = {
+        userName: LoggedInUser.userData.username || '',   
+        userId: LoggedInUser.userData.id || null,        
+        name: LoggedInUser.userData.username || 'Unknown', 
+        avatar: "/images/avatarprofile.svg", 
+        status: 'Online', 
+        level: 0,
+        score: "",
+        result: "",
+        map: "",
+      };
   
-
-        // 2 - create and full the conversationsWithFriends
-
-
-        if (usr && usr.conversations) {
-          const conversationsWithFriends = usr.conversations.map((conversation) => 
-          {
-            // Find the friend object based on the friendId
-            const friend = data.find((users) => users.userId === conversation.friendId);
-  
-            return {
-              friendData: friend, // Include full friend details (name, status, etc.)
-              messages: conversation.messages, // Include the conversation messages
-            };
-          });
-          setFullFriendConversations(conversationsWithFriends);
-        }
+      // Update the state with the filled user data
+      setLoggedInUser(filledUser);
+      // console.log("filledUser", filledUser);
+      console.log("loggedInUser ============= ", loggedInUser);
 
     }
+  }, [LoggedInUser]); 
+
+
+
+
   
-    mainFetch();
-  }, []);
+
+  //       // 2 - create and full the conversationsWithFriends
+
+
+  //       // if (usr && usr.conversations) {
+  //       //   const conversationsWithFriends = usr.conversations.map((conversation) => 
+  //       //   {
+  //       //     // Find the friend object based on the friendId
+  //       //     const friend = data.find((users) => users.userId === conversation.friendId);
+  
+  //       //     return {
+  //       //       friendData: friend, // Include full friend details (name, status, etc.)
+  //       //       messages: conversation.messages, // Include the conversation messages
+  //       //     };
+  //       //   });
+  //       //   setFullFriendConversations(conversationsWithFriends);
+  //       // }
+
+  //     }, []);
 
 
 
@@ -320,7 +333,7 @@ const [selectedConversation, setSelectedConversation] = useState(null);
               </div>
             </div>
 
-            <MessagesBox loggedInUser={loggedInUser} friend={selectedFriend}  conversation={selectedConversation}/>
+            <MessagesBox loggedInUser={loggedInUser} friend={selectedFriend} conversation={selectedConversation}/>
           </div>
         </div>
 
