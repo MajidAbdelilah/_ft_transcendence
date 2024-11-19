@@ -31,7 +31,6 @@ export default function Sidebar() {
   const [isMobile, setIsMobile] = useState(false);
   const [avatarLoading, setAvatarLoading] = useState(true);
 
-  // console.log(userData.name);
 
   const sideRef = useClickAway<HTMLDivElement>(() => {
     setIsMobileMenuOpen(false);

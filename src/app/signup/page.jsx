@@ -19,9 +19,6 @@ const montserrat = Montserrat({
   variable: "--font-montserrat",
 });
 
-// Configure axios to send credentials (cookies) with every request
-// axios.defaults.withCredentials = true;
-
 const validate = values => {
   const errors = {};
   if (!values.username) {
