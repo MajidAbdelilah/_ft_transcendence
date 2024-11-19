@@ -57,14 +57,15 @@ const Services = {
         {
             username: data.username, 
             current_password: data.current_password, 
-            new_password: data.new_password
+            new_password: data.new_password,
+            profile_photo: ''
         },
         { withCredentials: true, headers: {} });
         
     },
 
     sendCodeService: async () => {
-      return axios.post('http://127.0.0.1:8000/api/sendcode/', 
+      return axios.get('http://127.0.0.1:8000/api/sendcode/', 
       {},
       { withCredentials: true, headers: {} });
         // return axiosInstance.post('/api/sendcode/');

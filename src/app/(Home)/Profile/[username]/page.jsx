@@ -18,6 +18,7 @@ const montserrat = Montserrat({
   variable: "--font-montserrat",
 });
 
+import { useUser } from "../../../UserContext";
 // //data ------------------------------------------
 let user1 = {
   "userName": "john",
@@ -59,24 +60,70 @@ let user3 = {
 export default function Profile() {
   // loggedInUser -----------------------------------------------------------------------------------
 
-  let UserId = 1; // Assume this is the logged-in user's ID
-  let [loggedInUser, setLoggedInUser] = useState(null);
-  // if (!loggedInUser) return null;
+  // let UserId = 1; // Assume this is the logged-in user's ID
+  // let [loggedInUser, setLoggedInUser] = useState(null);
+  // // if (!loggedInUser) return null;
 
-  useEffect(() =>  {
-    async function fetchLoggedInUser() {
-      const response = await axios.get("/profile.json");
-      const users = response.data;
+  // useEffect(() =>  {
+  //   async function fetchLoggedInUser() {
+  //     const response = await axios.get("/profile.json");
+  //     const users = response.data;
 
-      // find the loggedInUser
-      const usr = users.find((user) => user.userId === UserId);
-      // console.log("LoggedInUser : ",usr);
-      setLoggedInUser(usr);
+  //     // find the loggedInUser
+  //     const usr = users.find((user) => user.userId === UserId);
+  //     // console.log("LoggedInUser : ",usr);
+  //     setLoggedInUser(usr);
+  //   }
+  //   fetchLoggedInUser()
+  // }, [])
+
+  
+  const LoggedInUser = useUser();
+
+  let [loggedInUser, setLoggedInUser] = useState(
+    {
+      userName: "",
+      userId: 10,
+      name: "",
+      avatar: "/images/avatarprofile.svg",
+      status: "Online",
+      level: 1,
+      score: "",
+      result: "",
+      map: "",
     }
-    fetchLoggedInUser()
-  }, [])
+  );
+
   
+  useEffect(() => {
+
+    if (LoggedInUser.userData !== null) {
+
+      const filledUser = {
+        userName: LoggedInUser.userData.username || '',   
+        userId: LoggedInUser.userData.id || null,        
+        name: LoggedInUser.userData.username || 'Unknown', 
+        avatar: "/images/avatarprofile.svg", 
+        status: 'Online', 
+        level: 0,
+        score: "",
+        result: "",
+        map: "",
+      };
   
+      // Update the state with the filled user data
+      setLoggedInUser(filledUser);
+      // console.log("filledUser", filledUser);
+      console.log("loggedInUser ============= ", loggedInUser);
+
+    }
+  }, [LoggedInUser]); 
+
+
+
+
+
+
 
   // searchedText - Searched user from the URL -------------------------------------------------------
   const params = useParams();

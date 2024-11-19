@@ -63,10 +63,10 @@ export default function Chat() {
   // console.log("LoggedInUser", LoggedInUser.userData);
   // if (LoggedInUser.userData === null) return (<div>LoggedInUser Loading...</div>);
 
-// LoggedInUser and conversatios -----------------------------------------------------------------------------------------
+// LoggedInUser -----------------------------------------------------------------------------------------
   
 
-  let [fullFriendConversations, setFullFriendConversations] = useState([]);
+
 
   let [loggedInUser, setLoggedInUser] = useState(
     {
@@ -108,6 +108,8 @@ export default function Chat() {
   }, [LoggedInUser]); 
 
 
+//  -----------------------------------------------------------------------------------------
+let [fullFriendConversations, setFullFriendConversations] = useState([]);
 
 
 
@@ -329,7 +331,7 @@ export default function Chat() {
                     />
                   ))}
 
-                  
+
 
 
 
