@@ -12,13 +12,13 @@ class TournamentConsumer(AsyncWebsocketConsumer):
     matches = {}  # Dictionary to store match states
     waiting_players = []  # List to store players waiting to be matched
     round_winners = []  # List to store winners of each round
-
+    tournement_started = False
     async def broadcast_game_state(self):
         await self.channel_layer.group_send(
             self.room_group_name,
             {
                 'type': 'game_update',
-                'message': [self.players, self.matches, self.waiting_players, self.round_winners, self.room_name, self.room_group_name, self.channel_name, self.MAX_PLAYERS, self.round_winners, self.players]
+                'message': [self.players, self.matches, self.waiting_players, self.round_winners, self.tournement_started, self.room_name, self.room_group_name, self.channel_name, self.MAX_PLAYERS, self.round_winners, self.players]
             }
         )
 
@@ -91,7 +91,8 @@ class TournamentConsumer(AsyncWebsocketConsumer):
                 'player2': player2,
                 'player1_score': 0,
                 'player2_score': 0,
-                'winner': None
+                'winner': None,
+                'started': False
             }
             await self.broadcast_match_state(match_id)
         print("Match created", len(self.waiting_players))
@@ -121,9 +122,10 @@ class TournamentConsumer(AsyncWebsocketConsumer):
 
     async def start_tournament(self):
         # Logic to start the tournament
-        await self.send(text_data=json.dumps({
-            'message': 'Tournament has started!'
-        }))
+        self.tournement_started = True
+        for(match_id, match_data) in self.matches.items():
+            match_data['started'] = True
+        await self.broadcast_game_state()
 
     async def handle_match_winner(self, match_id, winner):
         self.round_winners.append(winner)
