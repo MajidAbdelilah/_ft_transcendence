@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Game</title>
+    <link rel="stylesheet" href="tournament.css">
+</head>
+<body>
+    <div id="get_player_info"> 
+        <!-- username filed with button to join a tournement -->
+        <input type="text" id="player1" placeholder="Player 1">
+        <button id="start">Start</button>
+    </div>
+    <!-- dive to hold tournement usernames that have been joined -->
+    <div id="joined_players">
+        <h2>Joined Players</h2>
+        <ul id="players">
+        </ul>
+        <h2>matches</h2>
+        <ul id="matches">
+        </ul>
+        <button id="leave">Leave</button>
+        <button id="update">Update</button>
+    </div>
+    <div id="game_container">
+        <h1>Game</h1>
+        <div id="game">
+            <h2 id="user_vs_user"></h2>
+            <canvas id="gameCanvas" width="800" height="600">
+            </canvas>
+        </div>
+    </div>
+    <script src="tournament.js"></script>
+</body>
+</html>

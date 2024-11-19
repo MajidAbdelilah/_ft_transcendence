@@ -1,6 +1,6 @@
 from django.db import models
 
-class Match(models.Model):
+class DoubleGameMatch(models.Model):
     player1 = models.CharField(max_length=100)
     player2 = models.CharField(max_length=100)
     player1_score = models.IntegerField()

@@ -37,9 +37,11 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'double_game',#needed
     'corsheaders',
     'rest_framework',
-    'double_game',
+    'channels',#needed
+    'tournament',#needed
 ]
 
 MIDDLEWARE = [
@@ -50,9 +52,11 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'corsheaders.middleware.CorsMiddleware',
-    'django.middleware.common.CommonMiddleware',
+    'corsheaders.middleware.CorsMiddleware',#needed
+    'django.middleware.common.CommonMiddleware',#needed
 ]
+
+ASGI_APPLICATION = 'tournamentasgi.application'
 
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:8000",
@@ -61,7 +65,7 @@ CORS_ALLOWED_ORIGINS = [
 
 CORS_ALLOW_ALL_ORIGINS = True
 
-ROOT_URLCONF = 'game.urls'
+ROOT_URLCONF = 'game.urls'#needed
 
 TEMPLATES = [
     {
@@ -79,8 +83,14 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'game.wsgi.application'
+ASGI_APPLICATION = 'game.asgi.application'
 
+# Configure the channel layer
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels.layers.InMemoryChannelLayer',
+    },
+}
 
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
@@ -132,4 +142,4 @@ STATIC_URL = 'static/'
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
-DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'#needed
