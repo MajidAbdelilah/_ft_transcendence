@@ -60,7 +60,7 @@ export default function Chat() {
 
   // LoggedInUser -----------------------------------------------------------------------------------------
   const LoggedInUser = useUser();
-  // console.log("LoggedInUser", LoggedInUser.userData);
+  console.log("LoggedInUser", LoggedInUser.userData);
   // if (LoggedInUser.userData === null) return (<div>LoggedInUser Loading...</div>);
 
 // LoggedInUser -----------------------------------------------------------------------------------------
@@ -102,7 +102,7 @@ export default function Chat() {
       // Update the state with the filled user data
       setLoggedInUser(filledUser);
       // console.log("filledUser", filledUser);
-      console.log("loggedInUser ============= ", loggedInUser);
+      // console.log("loggedInUser ============= ", loggedInUser);
 
     }
   }, [LoggedInUser]); 
