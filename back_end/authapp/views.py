@@ -107,22 +107,32 @@ class LoginView(APIView):
         if user is not None:
                 data = get_tokens_for_user(user)
                 if data["access"] :
-                    response.set_cookie(
-                        key = settings.SIMPLE_JWT['AUTH_COOKIE'],
-                        value = data["access"],
-                        expires = settings.SIMPLE_JWT['ACCESS_TOKEN_LIFETIME'],
-                        secure = settings.SIMPLE_JWT['AUTH_COOKIE_SECURE'],
-                        httponly = settings.SIMPLE_JWT['AUTH_COOKIE_HTTP_ONLY'],
-                        samesite = settings.SIMPLE_JWT['AUTH_COOKIE_SAMESITE'],
-                        path='/',
-                        max_age=settings.SIMPLE_JWT['ACCESS_TOKEN_LIFETIME'].total_seconds()
-                    )
-                # csrf.get_token(request)
-                response.data = {"message" : "Login successfully","data":{"user": userserialize.data , "tokens":data }}
-                if user.is_2fa == False:
-                    response.data = {"2fa" : True}
-                    return redirect('SendEmail')
-                return response
+                    if user.is_2fa == True:
+                        response.headers["Location"] = 'http://127.0.0.1:3000/settings'
+                        response.data = {"message" : "Login successfully","data":{"user": userserialize.data , "tokens":data }}
+                        response.set_cookie(
+                            key = settings.SIMPLE_JWT['AUTH_COOKIE'],
+                            value = data["access"],
+                            expires = settings.SIMPLE_JWT['ACCESS_TOKEN_LIFETIME'],
+                            secure = settings.SIMPLE_JWT['AUTH_COOKIE_SECURE'],
+                            httponly = settings.SIMPLE_JWT['AUTH_COOKIE_HTTP_ONLY'],
+                            samesite = settings.SIMPLE_JWT['AUTH_COOKIE_SAMESITE'],
+                            path='/',
+                            max_age=settings.SIMPLE_JWT['ACCESS_TOKEN_LIFETIME'].total_seconds()
+                        )
+                    else:
+                        if data["access"] :
+                            response.set_cookie(
+                                key = settings.SIMPLE_JWT['AUTH_COOKIE'],
+                                value = data["access"],
+                                expires = settings.SIMPLE_JWT['ACCESS_TOKEN_LIFETIME'],
+                                secure = settings.SIMPLE_JWT['AUTH_COOKIE_SECURE'],
+                                httponly = settings.SIMPLE_JWT['AUTH_COOKIE_HTTP_ONLY'],
+                                samesite = settings.SIMPLE_JWT['AUTH_COOKIE_SAMESITE'],
+                                path='/',
+                                max_age=settings.SIMPLE_JWT['ACCESS_TOKEN_LIFETIME'].total_seconds())
+                            response.data = {"message" : "Login successfully","data":{"user": userserialize.data , "tokens":data }}
+                    return response
         else:
             return Response({"message" : "Invalid email or password !", "data": None})
         

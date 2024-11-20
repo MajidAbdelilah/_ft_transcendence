@@ -16,28 +16,25 @@ def enforce_csrf(request):
 class CustomAuthentication(JWTAuthentication):
    def authenticate(self, request):
         raw_token = request.COOKIES.get(settings.SIMPLE_JWT['AUTH_COOKIE'])
-        if raw_token is None:
-            raw_token = request.COOKIES.get('intra_token')
-            if raw_token is None :
-                return None
-            else:
-                url = "https://api.intra.42.fr/v2/me"
-                headers = {
-                    "Authorization": f"Bearer {raw_token}",  # Pass the token in the Authorization header
-                }
-                response = requests.get(url, headers=headers)
-                data = response.json()
-                if response.status_code == 200 :
-                    user_data = User.objects.get(email = data['email'])
-                    print(user_data)
-                    return user_data, raw_token
-                else:
-                    return user_data , raw_token
-        validated_token = self.get_validated_token(raw_token)
-        print ("validated_token " ,validated_token )
-        user = (self.get_user(validated_token))
-        print ("self.get_user(validated_token) " ,user)
-        return user, validated_token
+        if raw_token is None :
+            return None
+        else:
+            url = "https://api.intra.42.fr/v2/me"
+            headers = {
+                "Authorization": f"Bearer {raw_token}",  # Pass the token in the Authorization header
+            }
+            response = requests.get(url, headers=headers)
+            data = response.json()
+        if response.status_code == 200 :
+            user_data = User.objects.get(email = data['email'])
+            print(user_data)
+            return user_data, raw_token
+        else:
+            validated_token = self.get_validated_token(raw_token)
+            print ("validated_token " ,validated_token )
+            user = (self.get_user(validated_token))
+            print ("self.get_user(validated_token) " ,user)
+            return user, validated_token
 
 # from rest_framework_simplejwt.authentication import JWTAuthentication
 # from django.conf import settings

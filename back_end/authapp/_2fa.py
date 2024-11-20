@@ -19,7 +19,7 @@ class Send2FAcode(APIView):
     permission_classes = [IsAuthenticated]
     def get (self , request):
         code = "".join(map(str, random.sample(range(0, 10), 6)))
-        send_mail("2FA AUTHENTICATION", "AUTH CODE IS "+code, settings.EMAIL_HOST_USER, [request.user], fail_silently=False,)
+        send_mail("2FA AUTHENTICATION", " THE 2 FACTORS AUTHENTICATION  CODE IS :  "+code, settings.EMAIL_HOST_USER, [request.user], fail_silently=False,)
         useremail = request.user
         user = User.objects.get(email=useremail)
         user._2fa_code = code
@@ -33,7 +33,12 @@ class CodeVerification(APIView):
     permission_classes = [IsAuthenticated]
     def post (self , request):
         user = request.user
-        if  user.is_2fa == True  and  user._2fa_code == request.data.get('code'):
+        if user._2fa_code == request.data.get('code') and len(request.data.get('code')) == 6:
+            if user.is_2fa == False :
+                user.is_2fa = True
+                user.save()
+            user._2fa_code = ""
+            user.save()
             return Response({"message":"2fa is done"})
         else:
             return Response({"message":"2fa code not correct"})

@@ -52,7 +52,7 @@ class callback(APIView):
         user_response = requests.get(settings.FORTY_TWO_USER_PROFILE_URL, headers={'Authorization': f'Bearer {access_token}'})
         resp = HttpResponseRedirect("http://127.0.0.1:3000/Dashboard")
         resp.set_cookie(
-                    key = 'intra_token',
+                    key = 'access_token',
                     value = access_token,
                     expires = settings.SIMPLE_JWT['ACCESS_TOKEN_LIFETIME'],
                     secure = settings.SIMPLE_JWT['AUTH_COOKIE_SECURE'],
