@@ -72,9 +72,9 @@ export default function UpdateProfile({setIsProfile})
 
       try {
         const result = await Services.updateProfileService(data);
-        console.log('--------------------------------------------');
-        console.log(data);
-        console.log('--------------------------------------------');
+        // console.log('--------------------------------------------');
+        // console.log(data);
+        // console.log('--------------------------------------------');
 
         // console.log(" ------- result : --------");
         console.log(result);
