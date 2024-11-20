@@ -53,13 +53,50 @@ function goal(ball_pos, ball_radius) {
     return 0;
 }
 
-function AI_Bot_1337_21()
-{
-    if (ball_pos.y < player2_pos.y + players_dim.height / 2) {
-        player2_pos.y -= 4.5;
+function vec2_dot(v1, v2) {
+    return v1.x * v2.x + v1.y * v2.y;
+}
+function vec2_len(v) {
+    return Math.sqrt(vec2_dot(v, v));
+}
+function vec2_normalize(v) {
+    let len = vec2_len(v);
+    return {x: v.x / len, y: v.y / len};
+}
+
+// make a function that calculates based or the diffrence wetween the closness of the ball to the right wall and the closness of the ball to the upper wall or the bottom wall which ever the ball is closer to calculate the perfect position for the player2 wich is our ai player to be in this ping pong game, the player2 is to the right of our game canvas. mall allah help you
+
+function AI_Bot_1337_21() {
+if(ball_pos.x < canvas_dim.width / 2){
+    return;
+}
+
+    let ball_distance_right = canvas_dim.width - ball_pos.x;
+    let ball_distance_up = ball_pos.y;
+    let ball_distance_down = canvas_dim.height - ball_pos.y;
+    let val = ball_distance_right - ball_distance_down;
+    console.log(val);
+    if(ball_direction.y > 0)
+    {
+        let val = ball_distance_right - ball_distance_down;
+        // console.log(val);
+        if(val < 0 && player2_pos.y < ball_pos.y){
+            player2_pos.y -= 10;
+        }
+        if(val > 0 && player2_pos.y < ball_pos.y / 2){
+            player2_pos.y += 10;
+        }
     }
-    if (ball_pos.y > player2_pos.y + players_dim.height / 2) {
-        player2_pos.y += 4.5;
+    if(ball_direction.y < 0)
+        {
+            let val = ball_distance_right - ball_distance_down;
+            // console.log(val);
+            if(val < 0 && player2_pos.y < ball_pos.y){
+                player2_pos.y -= 10;
+            }
+            if(val > 0 && player2_pos.y < ball_pos.y / 2){
+                player2_pos.y += 10;
+            }
     }
 }
 
@@ -112,7 +149,7 @@ function init() {
     player1_pos = {x: 0, y: canvas_dim.height / 2 - players_dim.height / 2};
     player2_pos = {x: canvas_dim.width - players_dim.width, y: canvas_dim.height / 2 - players_dim.height / 2};
     ball_pos = {x: canvas_dim.width / 2 - 5, y: canvas_dim.height / 2 - 5};
-    ball_speed = {x: 5, y: 5};
+    ball_speed = {x: 1, y: 1};
 
     if (player1_score === 5) {
         alert("Player 1 wins the game!");
@@ -167,7 +204,7 @@ let player2_score = 0;
 let player1_pos = {x: 0, y: canvas_dim.height / 2 - players_dim.height / 2};
 let player2_pos = {x: canvas_dim.width - players_dim.width, y: canvas_dim.height / 2 - players_dim.height / 2};
 let ball_pos = {x: canvas_dim.width / 2 - 5, y: canvas_dim.height / 2 - 5};
-let ball_speed = {x: 5, y: 5};
+let ball_speed = {x: 1, y: 1};
 const ball_radius = 5;
 let ball_direction = {x: 1, y: 1};
 let round_winner = 0;
