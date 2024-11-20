@@ -90,6 +90,7 @@ export default function UpdateProfile({setIsProfile})
           const successMsg = result.data.message;
           console.log(successMsg);
           toast.success(successMsg);
+          window.location.reload();
         }
       }
       catch (error) {
