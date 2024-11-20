@@ -11,6 +11,20 @@ export default function UpdateProfile({setIsProfile})
     const [errors, setErrors] = useState({});
 
     // Part 1 : handling updating image   ######################################################################
+    const handleFileUpload = (e) => {
+      const file = e.target.files[0]; // Get the first file from the input
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = () => {
+          setImagePath(reader.result); // Set the image path to the FileReader's result
+        };
+        reader.readAsDataURL(file); // Read the file as a data URL
+      }
+    };
+
+
+
+    
     // Part 2 : handel updating informations   ######################################################################
 
     const [formData, setFormData] = useState({
@@ -121,10 +135,22 @@ export default function UpdateProfile({setIsProfile})
           type="file"
           id="fileInput"
           className="hidden"
-          onChange={(e) => handleFileUpload(e)}
-        />
+          onChange={(e) => {
 
+          }}
+        />
         <h1 className="text-lg sm:text-2xl font-bold tracking-wide text-[#242F5C] pt-4 sm:pt-8">Update Profile</h1>
+
+
+
+
+
+
+
+
+
+
+
         {/*  Updating Data --------------------------------------------------------------------------------------- */}
         <form className="w-full h-full flex flex-col items-center justify-center">
           <div className='w-[85%] sm:max-w-[350px] mt-2 sm:mt-4'>
