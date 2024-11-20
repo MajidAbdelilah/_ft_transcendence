@@ -55,6 +55,7 @@ export    const handleVerify = async(code, setError) => {
                 if(successMsg === '2fa is done') {
 
                   toast.success('Operation done successfuly!');
+                  window.location.reload();
                 }
 
                 else {
