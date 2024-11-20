@@ -4,8 +4,18 @@ import { useState } from "react";
 import Services from './services';
 import toast, { Toaster } from 'react-hot-toast';
 import { sendCode, handleVerify } from './onClickFunc';
+import { useUser } from "../../UserContext";
+
 
 function TwoFA({setIs2FA}) {
+  // LoggedInUser -----------------------------------------------------------------------------------------
+  
+
+  const LoggedInUser = useUser();
+  console.log("LoggedInUser", LoggedInUser.userData);
+
+
+  //-------------------------------------------------------------------------------------
   const [code, setCode] = useState("");
   const [error, setError] = useState('');
 
@@ -35,8 +45,27 @@ function TwoFA({setIs2FA}) {
               <div className="relative flex flex-col items-center w-full h-full motion-preset-expand">
                 <h1 className="text-lg sm:text-3xl font-bold tracking-wide text-[#242F5C] pt-4 sm:pt-8 text-center">Two Factor Authenticator</h1>
                 <hr className="w-[70%] h-[3px] bg-[#CDCDE5] border-none rounded-full mt-4 sm:mt-8" />
-                <h1 className="text-sm sm:text-xl font-bold tracking-wide text-[#242F5C] pt-4 sm:pt-8 text-center pt-20 pb-8">Please click on Send to get your E-mail security code.</h1>
-                <h1 className="text-lg sm:text-xl font-bold tracking-wide text-[#242F5C] pt-4 sm:pt-8 text-right absolute top-[38%] sm:top-[25%] left-[6%] sm:left-[17%]">2FA Security code</h1>
+                <h1 className="text-sm sm:text-xl font-bold tracking-wide text-[#242F5C]  sm:pt-8 text-center pt-20 pb-4">Please click on Send to get your E-mail security code.</h1>
+                
+                
+                {/* <h1 className="text-sm sm:text-md font-bold tracking-wide text-[#242F5C]  sm:pt-2 text-center pt-4 pb-8">
+                  {LoggedInUser.is_2fa ? "(2FA is currently activated.)" : "(2FA is currently deactivated.)"}
+                </h1> */}
+
+                
+                <h1 className="text-sm sm:text-md font-bold tracking-wide text-[#242F5C] sm:pt-2 text-center pt-4 pb-8">
+                  {LoggedInUser && LoggedInUser.userData 
+                    ? (LoggedInUser.userData.is_2fa 
+                      ? "(2FA is currently activated.)" 
+                      : "(2FA is currently deactivated.)")
+                    : "Loading..."}
+                </h1>
+
+
+
+
+
+                <h1 className="text-lg sm:text-xl font-bold tracking-wide text-[#242F5C] pt-4 sm:pt-8 text-right absolute top-[38%] sm:top-[25%] left-[6%] sm:left-[17%] mt-3">2FA Security code</h1>
                 
                 
                 
