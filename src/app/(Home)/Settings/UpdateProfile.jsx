@@ -119,7 +119,7 @@ export default function UpdateProfile({setIsProfile})
         {/* Updating Image --------------------------------------------------------------------------------------- */}
         <div className="flex flex-col items-center relative">
           <Image
-            src={URL.createObjectURL(imageSrc) || "/images/DefaultAvatar.svg"}
+            src={imageSrc instanceof File ? URL.createObjectURL(imageSrc) : "/images/DefaultAvatar.svg"}
             alt="Profile"
             width={100}
             height={100}
