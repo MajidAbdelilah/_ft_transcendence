@@ -68,42 +68,71 @@ function vec2_normalize(v) {
 
 var random_boolean = Math.random() < 0.5;
 
+let time_befor_last_bot_refrech = 0;
+run_again = true;
+
+function set_run_again_to_true(){
+    run_again = true;
+}
+
+bot_ball_pos = {x: 0, y: 0};
+bot_ball_direction = {x: 0, y: 0};
+
 function AI_Bot_1337_21() {
-    if(ball_pos.x < canvas_dim.width / 2 || ball_direction.x === -1){
-        if((player2_pos.y + players_dim.height / 2) < (canvas_dim.height / 2) && (ball_pos.x < canvas_dim.width / 2))
-            {
-                player2_pos.y += 10;
-            }
-            if((player2_pos.y  + players_dim.height / 2) > (canvas_dim.height / 2) && (ball_pos.x < canvas_dim.width / 2)){
-                player2_pos.y -= 10;
-            }
-            return;
+    if(run_again === true)
+        {
+            bot_ball_direction = ball_direction;
+            bot_ball_pos = ball_pos;
+            console.log("run again", run_again)
+            run_again = false;
         }
-        console.log(random_boolean);
-        if(random_boolean)
+    if(bot_ball_direction.x === 1){
+        if((player2_pos.y + players_dim.height / 2) < (canvas_dim.height / 2 - 15) && (bot_ball_pos.x < canvas_dim.width / 2))
+        {
+            render(ctx, player1_pos, players_dim, player2_pos, players_dim, bot_ball_pos, ball_radius, player1_score, player2_score);
+            player2_pos.y += 10;
+            return ;
+        }
+        if((player2_pos.y  + players_dim.height / 2) > (canvas_dim.height / 2 + 15) && (bot_ball_pos.x < canvas_dim.width / 2)){
+            render(ctx, player1_pos, players_dim, player2_pos, players_dim, bot_ball_pos, ball_radius, player1_score, player2_score);
+            player2_pos.y -= 10;
+            return ;
+        }
+        if(bot_ball_pos.x > canvas_dim.width / 2){
+        // console.log(random_boolean);
+            if(random_boolean)
             {
-                if(ball_pos.y < (player2_pos.y - 5)){
+                if(bot_ball_pos.y < (player2_pos.y - 5)){
+                    render(ctx, player1_pos, players_dim, player2_pos, players_dim, bot_ball_pos, ball_radius, player1_score, player2_score);
                     player2_pos.y -= 10;
                     
                 }
-                if( ball_pos.y > (player2_pos.y + players_dim.height + 5)){
+                if( bot_ball_pos.y > (player2_pos.y + players_dim.height + 5)){
+                    render(ctx, player1_pos, players_dim, player2_pos, players_dim, bot_ball_pos, ball_radius, player1_score, player2_score);
                     player2_pos.y += 10;
                 }    
                 return ;
             }
-            if(ball_pos.y < (player2_pos.y + players_dim.height / 2)){
+            if(bot_ball_pos.y < (player2_pos.y + players_dim.height / 2)){
+                render(ctx, player1_pos, players_dim, player2_pos, players_dim, bot_ball_pos, ball_radius, player1_score, player2_score);
                 player2_pos.y -= 10;
                 
             }
-            if( ball_pos.y > (player2_pos.y + players_dim.height / 2)){
+            if( bot_ball_pos.y > (player2_pos.y + players_dim.height / 2)){
+                render(ctx, player1_pos, players_dim, player2_pos, players_dim, bot_ball_pos, ball_radius, player1_score, player2_score);
                 player2_pos.y += 10;
             }
-            
         }
+    }
+}
+
 
 function game() {
     if (game_started) {
-        AI_Bot_1337_21();
+        // AI_Bot_1337_21();
+        
+       AI_Bot_1337_21();
+       
         if (keyState["w"]) {
             player1_pos.y -= 10;
         }
@@ -127,6 +156,9 @@ function game() {
     }
     requestAnimationFrame(game);
 }
+
+
+setInterval(set_run_again_to_true, 1000);    
 
 function init() {
     myCanvas.width = canvas_dim.width;
@@ -187,7 +219,7 @@ function sendMatchData(player1_score, player2_score, winner) {
 const myCanvas = document.getElementById("gameCanvas");
 const ctx = myCanvas.getContext("2d");
 
-const canvas_dim = {width: 800, height: 600};
+const canvas_dim = {width: 1200, height: 800};
 const players_dim = {width: 10, height: 100};
 myCanvas.width = canvas_dim.width;
 myCanvas.height = canvas_dim.height;
