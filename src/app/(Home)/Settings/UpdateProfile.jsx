@@ -30,7 +30,8 @@ export default function UpdateProfile({setIsProfile})
         usernameSt: '',
         currentPasswordSt: '',
         newPasswordSt: '',
-        confirmPasswordSt: ''
+        confirmPasswordSt: '',
+        profile_photo: ''
     });
 
     const handleOnChange = (e) => 
@@ -63,6 +64,7 @@ export default function UpdateProfile({setIsProfile})
           username: formData.usernameSt || null,
           current_password: formData.currentPasswordSt || null,
           new_password: formData.newPasswordSt || null,
+          profile_image: imageSrc || null,
       };
 
       // 3 send the data to the backend ------------------------------------------------

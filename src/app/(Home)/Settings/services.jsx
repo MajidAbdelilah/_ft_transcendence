@@ -58,7 +58,7 @@ const Services = {
             username: data.username, 
             current_password: data.current_password, 
             new_password: data.new_password,
-            profile_photo: ''
+            profile_photo: data.profile_image
         },
         { withCredentials: true, headers: {} });
         
