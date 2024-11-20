@@ -108,7 +108,8 @@ class LoginView(APIView):
                 data = get_tokens_for_user(user)
                 if data["access"] :
                     if user.is_2fa == True:
-                        response.headers["Location"] = 'http://127.0.0.1:3000/settings'
+                        # response.headers["Location"] = 'http://127.0.0.1:3000/settings'
+                        # response.status_code = status.HTTP_302_FOUND
                         response.data = {"message" : "Login successfully","data":{"user": userserialize.data , "tokens":data }}
                         response.set_cookie(
                             key = settings.SIMPLE_JWT['AUTH_COOKIE'],
