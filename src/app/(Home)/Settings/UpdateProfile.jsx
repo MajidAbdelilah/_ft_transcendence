@@ -17,7 +17,8 @@ export default function UpdateProfile({setIsProfile})
       const file = e.target.files[0];
       if (file) {
         const fileURL = URL.createObjectURL(file); // Create an object URL for the selected file
-        setImageSrc(fileURL); // Set the file URL as the image source
+        setImageSrc(file); // Set the file URL as the image source
+        console.log(file);
       }
     };
 
@@ -71,13 +72,17 @@ export default function UpdateProfile({setIsProfile})
 
       try {
         const result = await Services.updateProfileService(data);
-        console.log(" ------- result : --------");
+        console.log('--------------------------------------------');
+        console.log(data);
+        console.log('--------------------------------------------');
+
+        // console.log(" ------- result : --------");
         console.log(result);
 
 
         if(!result.data.data) {
           const errorMsg = result.data.message;
-          console.log(errorMsg);
+          // console.log(errorMsg);
           toast.error( errorMsg?errorMsg:'Something Went Wrong!');
           setErrors(errorMsg);
         }
@@ -114,7 +119,7 @@ export default function UpdateProfile({setIsProfile})
         {/* Updating Image --------------------------------------------------------------------------------------- */}
         <div className="flex flex-col items-center relative">
           <Image
-            src={imageSrc || "/images/DefaultAvatar.svg"}
+            src={URL.createObjectURL(imageSrc) || "/images/DefaultAvatar.svg"}
             alt="Profile"
             width={100}
             height={100}
