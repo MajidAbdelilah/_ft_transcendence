@@ -11,14 +11,13 @@ export default function UpdateProfile({setIsProfile})
     const [errors, setErrors] = useState({});
 
     // Part 1 : handling updating image   ######################################################################
-    const handleFileUpload = (e) => {
-      const file = e.target.files[0]; // Get the first file from the input
+    const [imageSrc, setImageSrc] = useState(null); // State to store the image URL
+
+    const handleFileChange = (e) => {
+      const file = e.target.files[0];
       if (file) {
-        const reader = new FileReader();
-        reader.onload = () => {
-          setImagePath(reader.result); // Set the image path to the FileReader's result
-        };
-        reader.readAsDataURL(file); // Read the file as a data URL
+        const fileURL = URL.createObjectURL(file); // Create an object URL for the selected file
+        setImageSrc(fileURL); // Set the file URL as the image source
       }
     };
 
@@ -113,7 +112,7 @@ export default function UpdateProfile({setIsProfile})
         {/* Updating Image --------------------------------------------------------------------------------------- */}
         <div className="flex flex-col items-center relative">
           <Image
-            src="/images/DefaultAvatar.svg"
+            src={imageSrc || "/images/DefaultAvatar.svg"}
             alt="Profile"
             width={100}
             height={100}
@@ -135,9 +134,7 @@ export default function UpdateProfile({setIsProfile})
           type="file"
           id="fileInput"
           className="hidden"
-          onChange={(e) => {
-
-          }}
+          onChange={handleFileChange}
         />
         <h1 className="text-lg sm:text-2xl font-bold tracking-wide text-[#242F5C] pt-4 sm:pt-8">Update Profile</h1>
 
