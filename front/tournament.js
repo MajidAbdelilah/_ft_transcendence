@@ -1,171 +1,3 @@
-const socket = new WebSocket('ws://' + "127.0.0.1:8001" + '/ws/tournament/');
-console.log('ws://' + window.location.host + '/ws/tournament/');
-socket.onmessage = function(e) {
-    const data = JSON.parse(e.data);
-    if (data.message) {
-        // Update the game UI based on the received message
-        updateGameUI(data.message);
-       
-    }
-};
-
-socket.onclose = function(e) {
-    console.log('WebSocket closed');
-};
-
-// Function to send data to the backend
-function sendData(data) {
-    if (socket.readyState === WebSocket.OPEN) {
-        socket.send(JSON.stringify(data));
-        console.log('Data sent:', data);
-    } else {
-        console.error('WebSocket is not open. readyState:', socket.readyState);
-    }
-}
-
-function joinTournament(username) {
-    sendData({
-        type: 'join',
-        username: username
-    });
-}
-
-function leaveTournament(username) {
-    sendData({
-        type: 'leave',
-        username: username
-    });
-}
-
-function sendAction(username, action) {
-    sendData({
-        type: 'action',
-        username: username,
-        action: action
-    });
-}
-
-document.addEventListener('keydown', function(event) {
-    const key = event.key;
-    sendAction(player1, key);  // Replace 'player_username' with the actual username
-});
-
-function updateGameUI(message) {
-    // Implement UI update logic here
-    console.log(message);
-    // update the the player list from the message it is in index 0
-    updatePlayersList(message[0]);
-    // LOOP THROUGH THE MESSAGE AT INDEX 1 AND CHECK EVERY OBJECT IF IT HAS THE PLAYER USERNAME IN ITS FILED PLAYER1 OR PLAYER2 AND IF IT HAS IT START THE GAME AND DISPLAY THE GAME DIV
-    if(message[1] == undefined){
-        return;
-    } 
-    keys = Object.keys(message[1]);
-    console.log("MASSAGE", message[1]);
-    console.log("keys", keys);
-    for (let i = 0; i < keys.length; i++) {
-        console.log("player1", message[1][keys[i]].player1);
-        console.log("started", message[1][keys[i]].started);
-        console.log("player2", message[1][keys[i]].player2);
-        if (message[1][keys[i]].player1 === player1 || message[1][keys[i]].player2 === player1) {
-            if(message[1][keys[i]].started === true){
-                if(message[1][keys[i]].player1 === player1)
-                {
-                    player2 = message[1][keys[i]].player2;
-                }
-                else if(message[1][keys[i]].player2 === player1)
-                {
-                    player2 = message[1][keys[i]].player1;
-                }
-                document.getElementById("joined_players").style.display = "none";
-                document.getElementById("game_container").style.display = "block";
-                match_started = true;
-                if(game_started === false){
-                     game();
-                }
-                game_started = true;
-                break;
-            }
-        }
-    }
-    console.log("update game ui");
-    // check if the game has started and if the match_started and if so handle inputes for player1 and get inputs for player two from the message at the objects at the index 0 in it filters keys with player2 username and get its action that is in the message at inxex 0
-    if (game_started) {
-        if (message[1] == undefined) {
-            return;
-        }
-        keys = Object.keys(message[1]);
-        for (let i = 0; i < keys.length; i++) {
-            if (message[1][keys[i]].player2 === player1) {
-                const action = message[0][message[1][keys[i]].player1].action;
-                if (action === "ArrowUp") {
-                    player2_pos.y -= 10;
-                }
-                if (action === "ArrowDown") {
-                    player2_pos.y += 10;
-                }
-            }
-            if(message[1][keys[i]].player1 === player1){
-                const action = message[0][message[1][keys[i]].player2].action;
-                if (action === "ArrowUp") {
-                    player2_pos.y -= 10;
-                }
-                if (action === "ArrowDown") {
-                    player2_pos.y += 10;
-                }
-            }
-        }
-    }
-
-}
-
-// when the user clicks the "start" button in the HTML code, call the joinTournament function with the input value as the argument and hide the get_player_info div and show the  joined_players div
-document.getElementById("start").addEventListener("click", function() {
-    player1 = document.getElementById("player1").value;
-    joinTournament(player1);
-    document.getElementById("get_player_info").style.display = "none";
-    document.getElementById("joined_players").style.display = "block";
-});
-
-function updatePlayersList(players) {
-    const playersList = document.getElementById("players");
-    playersList.innerHTML = '';
-    if(players == undefined){
-        return;
-    }
-    console.log("this is it", players);
-
-    const keys = Object.keys(players);
-    console.log("keys", keys);
-    // loop through keys and add then to the playersList
-    for (let i = 0; i < keys.length; i++) {
-        const player = players[keys[i]];
-        const playerElement = document.createElement("li");
-
-        playerElement.innerHTML = keys[i];
-        playersList.appendChild(playerElement);
-    }
-}
-
-
-
-// when the user clicks the "update" button in the HTML code, call the send_update_list function and update the player list
-document.getElementById("update").addEventListener("click", function() {
-    sendData({
-        type: 'update_list',
-        username: username
-    });    
-    console.log("update list");
-});
-
-// when the user clicks the "leave" button in the HTML code, call the leaveTournament function with the input value as the argument and hide the joined_players div and show the get_player_info div
-document.getElementById("leave").addEventListener("click", function() {
-    const username = document.getElementById("player1").value;
-    leaveTournament(username);
-    document.getElementById("joined_players").style.display = "none";
-    document.getElementById("get_player_info").style.display = "block";
-});
-
-
 function render(ctx, player1_pos, p1_rect, player2_pos, p2_rect, ball_pos, ball_radius, player1_score, player2_score) {
     ctx.clearRect(0, 0, myCanvas.width, myCanvas.height);
     ctx.fillStyle = "black";
@@ -221,11 +53,16 @@ function goal(ball_pos, ball_radius) {
     return 0;
 }
 
-
 function game() {
-    console.log("game");
     if (game_started) {
         collision(ball_pos, ball_radius, player1_pos, players_dim, player2_pos, ball_speed);
+        // get arrow input
+        if (keyState["ArrowUp"]) {
+            player2_pos.y -= 10;
+        }
+        if (keyState["ArrowDown"]) {
+            player2_pos.y += 10;
+        }
         // get w, s input
         if (keyState["w"]) {
             player1_pos.y -= 10;
@@ -251,7 +88,6 @@ function game() {
 }
 
 function init() {
-    console.log("init");
     myCanvas.width = canvas_dim.width;
     myCanvas.height = canvas_dim.height;
     //set ball direction depending on who won the last round
@@ -269,26 +105,87 @@ function init() {
 
     if (player1_score === 5) {
         alert("Player 1 wins the game!");
+        if(match_id == 0)
+            match_0_winner = player1;
+        if(match_id == 1)
+            match_1_winner = player1;
+        if(match_id == 2)
+            match_final_winner = player1;
         sendMatchData(player1_score, player2_score, "Player1");
-        player1_score = 0;
-        player2_score = 0;
     }
     if (player2_score === 5) {
         alert("Player 2 wins the game!");
+        if(match_id == 0)
+            match_0_winner = player2;
+        if(match_id == 1)
+            match_1_winner = player2;
+        if(match_id == 2)
+            match_final_winner = player2;
         sendMatchData(player1_score, player2_score, "Player2");
+    }
+    if(player1_score === 5 || player2_score === 5)
+    {
+        
+        if(match_id == 0)
+            {
+                player1 = document.getElementById("player3").value;
+                player2 = document.getElementById("player4").value;
+                document.getElementById("user_vs_user").textContent = player1 + " vs " + player2;
+            }
+        if(match_id == 1)
+        {
+            player1 = match_0_winner;
+            player2 = match_1_winner;
+            document.getElementById("user_vs_user").textContent = player1 + " vs " + player2;
+        }
+        if(match_id == 2)
+        {
+            document.getElementById("user_vs_user").textContent = "winner is " + match_final_winner;
+            document.getElementById("gameCanvas").style.display = "none";
+            game_started = false;
+        }
+        match_id++;
         player1_score = 0;
         player2_score = 0;
+        if(match_id == 3)
+        {
+            player1_score = 0;
+            player2_score = 0;
+            player1 = "";
+            player2 = "";
+            match_id = 0;
+            match_0_winner = "";
+            match_1_winner = "";
+            match_final_winner = "";
+        }
     }
     keyState = {};
 }
-document.addEventListener("keydown", function(event) {
-    keyState[event.key] = true;
-});
-
-document.addEventListener("keyup", function(event) {
-    keyState[event.key] = false;
-});
-
+function sendMatchData(player1_score, player2_score, winner) {
+    const data = {
+        player1: player1,
+        player2: player2,
+        player1_score: player1_score,
+        player2_score: player2_score,
+        winner: winner
+    };
+    console.log('Sending data:', data);
+    fetch('http://127.0.0.1:8000/api/matches/', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        return response.json();
+    })
+    .then(data => console.log('Success:', data))
+    .catch((error) => console.error('Error:', error));
+}
 const myCanvas = document.getElementById("gameCanvas");
 const ctx = myCanvas.getContext("2d");
 
@@ -310,3 +207,31 @@ let keyState = {};
 let game_started = false;
 let player1;
 let player2;
+let match_id = 0;
+let match_0_winner = "";
+let match_1_winner = "";
+let match_final_winner = "";
+
+document.addEventListener("keydown", function(event) {
+    keyState[event.key] = true;
+});
+
+document.addEventListener("keyup", function(event) {
+    keyState[event.key] = false;
+});
+
+game();
+
+// if inputs with id player1 and player2  in the html code are not empty, and the button with id start is clicked, register the usernames and start the game
+document.getElementById("start").addEventListener("click", function() {
+    player1 = document.getElementById("player1").value;
+    player2 = document.getElementById("player2").value;
+    if (player1 !== "" && player2 !== "") {
+        game_started = true;
+        // set the div with id game_container to display block, and the div with id get_player_info to display none
+        document.getElementById("game_container").style.display = "block";
+        document.getElementById("get_player_info").style.display = "none";
+        document.getElementById("user_vs_user").textContent = player1 + " vs " + player2;
+    }
+});
+
