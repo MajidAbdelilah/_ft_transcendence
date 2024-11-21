@@ -7,7 +7,9 @@ async function handleVerification(code, router)  {
     
 
     // console.log("code : ", code);
+    // 1 send an email to the use 
 
+    // 2 handel virification 
     try {
 
         const result = await axios.post('http://127.0.0.1:8000/api/handleVerification',

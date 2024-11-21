@@ -73,6 +73,9 @@ function Login_page() {
       }
       else {
         if(response.data.data.tokens.access){
+
+          //--------------------------------------------------------------------------------
+          console.log(response.data.data.tokens.access);
           router.push('/Dashboard');
         }
       }
