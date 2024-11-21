@@ -54,7 +54,6 @@ INSTALLED_APPS = [
     '_42provider'  ,
     'double_game',#needed
     'channels',#needed
-    'tournament',#needed
 ]
 
 MIDDLEWARE = [
@@ -70,8 +69,8 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = 'back_end.urls'
-ASGI_APPLICATION = 'tournamentasgi.application'
-ASGI_APPLICATION = 'game.asgi.application'
+# ASGI_APPLICATION = 'tournamentasgi.application'
+# ASGI_APPLICATION = 'game.asgi.application'
 
 CHANNEL_LAYERS = {
     'default': {

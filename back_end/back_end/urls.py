@@ -23,5 +23,4 @@ urlpatterns = [
     path('api/', include('authapp.urls')),
     path('oauth/', include('_42provider.urls')),
     path('api/', include('double_game.urls')),
-    path('tournament/', include('tournament.urls')),
 ]
