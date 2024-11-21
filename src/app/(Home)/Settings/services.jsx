@@ -67,7 +67,8 @@ const Services = {
     sendCodeService: async () => {
       return axios.get('http://127.0.0.1:8000/api/sendcode/', 
 
-      { withCredentials: true, headers: {} });
+    //   { withCredentials: true, headers: {} }
+    );
         // return axiosInstance.post('/api/sendcode/');
 
 

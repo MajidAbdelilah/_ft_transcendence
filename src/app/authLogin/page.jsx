@@ -1,11 +1,15 @@
 'use client';
 
-import React, { useState } from 'react';
-import handleVerification from './services';
+import React, { useState, useEffect } from 'react';
+import  handleVerification from './services';
 import { useRouter } from 'next/navigation';
 import toast, { Toaster } from 'react-hot-toast';
 
+
+import { sendCode, handleVerify } from '../(Home)/Settings/onClickFunc';
+
 function auth2faPage() {
+
   const router = useRouter();
   const [code, setCode] = useState("");
 
@@ -17,7 +21,11 @@ function auth2faPage() {
     }
   };
 
+  useEffect(() => {
+    sendCode()
 
+
+  }, [] );
 
 
 
@@ -31,8 +39,6 @@ function auth2faPage() {
         <hr className="w-[70%] h-[3px] bg-[#CDCDE5] border-none rounded-full mt-4 sm:mt-8" />
         <h1 className="text-lg sm:text-xl font-bold tracking-wide text-[#242F5C] pt-4 sm:pt-8 text-center pt-20 pb-8">A verification code has been sent to your email.</h1>
         <h1 className="text-lg sm:text-xl font-bold tracking-wide text-[#242F5C] pt-4 sm:pt-8 text-right absolute top-[38%] sm:top-[25%] left-[6%] sm:left-[17%]">2FA Security code :</h1>
-
-
 
 
 

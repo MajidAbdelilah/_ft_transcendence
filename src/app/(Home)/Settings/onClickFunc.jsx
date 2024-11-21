@@ -6,30 +6,31 @@ import toast from 'react-hot-toast';
 export const sendCode = async() => 
     {
   
-      try {
+      // try {
         
-        const result = await Services.sendCodeService();
-        console.log("--- sendCode has been called : ", result);
+      //   const result = await Services.sendCodeService();
+      //   console.log("--- sendCode has been called : ", result);
 
 
-          if(result.statusText === 'OK') {
-            const successMsg = 'Email sent successfully!';
-            console.log(successMsg);
-            toast.success(successMsg);//
-            return;
-          }
-          else {
-            throw new Error (result)
-          }
+      //     if(result.statusText === 'OK') {
+      //       const successMsg = 'Email sent successfully!';
+      //       console.log(successMsg);
+      //       toast.success(successMsg);//
+      //       return;
+      //     }
+      //     else {
+      //       throw new Error (result);
+      //     }
           
 
   
-      }
+      // }
   
-      catch (error) {
-        console.log("sendCode http request failed; ", error);
-      }
-      setError('');
+      // catch (error) {
+      //   console.log("sendCode http request failed; ", error);
+      // }
+      // setError('');
+      console.log("hellooooooooooo ---");
     }
 
 export    const handleVerify = async(code, setError) => {

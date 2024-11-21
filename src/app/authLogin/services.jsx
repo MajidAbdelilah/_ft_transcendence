@@ -3,11 +3,30 @@ import axios from 'axios';
 // import { useRouter } from 'next/navigation';
 import toast, { Toaster } from 'react-hot-toast';
 
-async function handleVerification(code, router)  {
+
+// async function sendAutomaticEmail() {
+//     // console.log("sendAutomaticEmail has been called -----");
+// }
+
+export async function handleVerification(code, router)  {
     
 
     // console.log("code : ", code);
-    // 1 send an email to the use 
+    // 1 send code on email  automatically
+    // try {
+    //     const result = await axios.get('http://127.0.0.1:8000/api/sendcode/',
+    //         // {withCredentials: true, headers: {} }
+    //     );
+    //     if(result.statusText === 'OK') {
+    //         const successMsg = 'Email sent successfully!';
+    //         console.log(successMsg);
+            
+    //         return;
+    //       }
+
+    // } catch (error){
+    //     throw new Error (result);
+    // }
 
     // 2 handel virification 
     try {
@@ -34,6 +53,3 @@ async function handleVerification(code, router)  {
 
 
   }
-
-
-export default handleVerification
