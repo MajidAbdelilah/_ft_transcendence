@@ -1,3 +1,4 @@
+
 function render(ctx, player1_pos, p1_rect, player2_pos, p2_rect, ball_pos, ball_radius, player1_score, player2_score) {
     ctx.clearRect(0, 0, myCanvas.width, myCanvas.height);
     ctx.fillStyle = "black";
@@ -161,6 +162,99 @@ function init() {
     }
     keyState = {};
 }
+function init() {
+    myCanvas.width = canvas_dim.width;
+    myCanvas.height = canvas_dim.height;
+    //set ball direction depending on who won the last round
+    if (round_winner === 2) {
+        ball_direction = {x: 1, y: 1};
+    }
+    else if (round_winner === 1) {
+        ball_direction = {x: -1, y: -1};
+    }
+    player1_pos = {x: 0, y: canvas_dim.height / 2 - players_dim.height / 2};
+    player2_pos = {x: canvas_dim.width - players_dim.width, y: canvas_dim.height / 2 - players_dim.height / 2};
+    ball_pos = {x: canvas_dim.width / 2 - 5, y: canvas_dim.height / 2 - 5};
+    ball_speed = {x: 5, y: 5};
+    if (player1_score === 5) {
+        alert("Player 1 wins the game!");
+        if(match_id == 0)
+            match_0_winner = player1;
+        if(match_id == 1)
+            match_1_winner = player1;
+        if(match_id == 2)
+            match_final_winner = player1;
+        sendMatchData(player1_score, player2_score, "Player1");
+        updateMatchWinner(player1); // Call updateMatchWinner here
+    }
+    if (player2_score === 5) {
+        alert("Player 2 wins the game!");
+        if(match_id == 0)
+            match_0_winner = player2;
+        if(match_id == 1)
+            match_1_winner = player2;
+        if(match_id == 2)
+            match_final_winner = player2;
+        sendMatchData(player1_score, player2_score, "Player2");
+        updateMatchWinner(player2); // Call updateMatchWinner here
+    }
+    if(player1_score === 5 || player2_score === 5)
+    {
+        if(match_id == 0)
+        {
+            match_0_score1 = player1_score;
+            match_0_score2 = player2_score;
+            player1 = document.getElementById("player3").value;
+            player2 = document.getElementById("player4").value;
+            document.getElementById("user_vs_user").textContent = player1 + " vs " + player2;
+        }
+        if(match_id == 1)
+        {
+            match_1_score1 = player1_score;
+            match_1_score2 = player2_score;
+            player1 = match_0_winner;
+            player2 = match_1_winner;
+            document.getElementById("user_vs_user").textContent = player1 + " vs " + player2;
+        }
+        if(match_id == 2)
+        {
+            match_final_score1 = player1_score;
+            match_final_score2 = player2_score;
+            document.getElementById("user_vs_user").textContent = "winner is " + match_final_winner;
+            document.getElementById("gameCanvas").style.display = "none";
+            game_started = false;
+        }
+        match_id++;
+
+        player1_score = 0;
+        player2_score = 0;
+    }
+    keyState = {};
+}
+
+function checkMatchEnd() {
+    if (player1_score === 5) {
+        alert("Player 1 wins the match!");
+        updateMatchWinner(player1);
+        sendMatchData(player1_score, player2_score, "Player1");
+    } else if (player2_score === 5) {
+        alert("Player 2 wins the match!");
+        updateMatchWinner(player2);
+        sendMatchData(player1_score, player2_score, "Player2");
+    }
+}
+
+function updateMatchWinner(winner) {
+    if (match_id == 0) {
+        match_0_winner = winner;
+    } else if (match_id == 1) {
+        match_1_winner = winner;
+    } else if (match_id == 2) {
+        match_final_winner = winner;
+        sendTournamentData();
+    }
+}
+
 function sendMatchData(player1_score, player2_score, winner) {
     const data = {
         player1: player1,
@@ -169,7 +263,7 @@ function sendMatchData(player1_score, player2_score, winner) {
         player2_score: player2_score,
         winner: winner
     };
-    console.log('Sending data:', data);
+    console.log('Sending match data:', data);
     fetch('http://127.0.0.1:8000/api/matches/', {
         method: 'POST',
         headers: {
@@ -183,8 +277,35 @@ function sendMatchData(player1_score, player2_score, winner) {
         }
         return response.json();
     })
-    .then(data => console.log('Success:', data))
-    .catch((error) => console.error('Error:', error));
+    .then(data => console.log('Match data sent successfully:', data))
+    .catch((error) => console.error('Error sending match data:', error));
+}
+
+function sendTournamentData() {
+    const data = {
+        winner: match_final_winner,
+        matches: [
+            { player1_alias: document.getElementById("player1").value, player2_alias: document.getElementById("player2").value,player1: document.getElementById("player1").value, player2: document.getElementById("player2").value, score1: match_0_score1, score2: match_0_score2, winner: match_0_winner },
+            { player1_alias: document.getElementById("player3").value, player2_alias: document.getElementById("player4").value, player1: document.getElementById("player3").value, player2: document.getElementById("player4").value, score1: match_1_score1, score2: match_1_score2, winner: match_1_winner },
+            {player1_alias: match_0_winner, player2_alias: match_1_winner, player1: match_0_winner, player2: match_1_winner, score1: match_final_score1, score2: match_final_score2, winner: match_final_winner }
+        ]
+    };
+    console.log('Sending tournament data:', data);
+    fetch('http://127.0.0.1:8000/turn/tournaments/post/', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error([`HTTP error! status: ${response.status}`]);
+        }
+        return response.json();
+    })
+    .then(data => console.log('Tournament data sent successfully:', data))
+    .catch((error) => console.error('Error sending tournament data:', error));
 }
 const myCanvas = document.getElementById("gameCanvas");
 const ctx = myCanvas.getContext("2d");
@@ -211,6 +332,12 @@ let match_id = 0;
 let match_0_winner = "";
 let match_1_winner = "";
 let match_final_winner = "";
+let match_0_score1 = 0;
+let match_0_score2 = 0;
+let match_1_score1 = 0;
+let match_1_score2 = 0;
+let match_final_score1 = 0;
+let match_final_score2 = 0;
 
 document.addEventListener("keydown", function(event) {
     keyState[event.key] = true;

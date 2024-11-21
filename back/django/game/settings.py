@@ -41,7 +41,7 @@ INSTALLED_APPS = [
     'corsheaders',
     'rest_framework',
     'channels',#needed
-    'tournament',#needed
+    'turn',#needed
 ]
 
 MIDDLEWARE = [
@@ -61,6 +61,11 @@ ASGI_APPLICATION = 'tournamentasgi.application'
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:8000",
     "http://127.0.0.1:8000",
+]
+CSRF_TRUSTED_ORIGINS = [
+    'http://127.0.0.1:8000',
+    'http://localhost:8000',
+    # Add other trusted origins here
 ]
 
 CORS_ALLOW_ALL_ORIGINS = True
