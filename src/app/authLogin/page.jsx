@@ -2,10 +2,11 @@
 
 import React, { useState } from 'react';
 import handleVerification from './services';
-
-
+import { useRouter } from 'next/navigation';
+import toast, { Toaster } from 'react-hot-toast';
 
 function auth2faPage() {
+  const router = useRouter();
   const [code, setCode] = useState("");
 
   const handleChange = (e) => {
@@ -21,7 +22,9 @@ function auth2faPage() {
 
 
   return (
+    
     <div className="fixed inset-0 backdrop-blur-sm flex justify-center items-center animate-fadeIn  absolute top-0 left-0">
+    <Toaster /> 
     <div className="bg-[#F4F4FF] flex flex-col items-center shadow-lg rounded-xl w-[95%] h-[80%] sm:h-[90%] border-solid border-[#BCBCC9] border-2 max-w-[900px] max-h-[900px] min-h-[580px] rounded-xl pt-8 animate-scaleIn">
       <div className="relative flex flex-col items-center w-full h-full">
         <h1 className="text-2xl sm:text-3xl font-bold tracking-wide text-[#242F5C] pt-4 sm:pt-8 text-center">Two Factor Authenticator</h1>
@@ -54,7 +57,7 @@ function auth2faPage() {
                   {/* </button> */}
           </div>
 
-          <button type="submit" onClick={() => handleVerification(code)} className="text-white bg-[#111B47] focus:ring-4 focus:outline-none font-semibold rounded-full text-lg w-[60%] sm:w-[20%] py-3 sm:h-[6%] text-center dark:bg-blue-600 dark:hover:bg-blue-600 dark:focus:ring-blue-800 transition-transform duration-300 ease-in-out transform hover:scale-105 mt-4 sm:mt-0">Verify</button>
+          <button type="submit" onClick={() => handleVerification(code, router)} className="text-white bg-[#111B47] focus:ring-4 focus:outline-none font-semibold rounded-full text-lg w-[60%] sm:w-[20%] py-3 sm:h-[6%] text-center dark:bg-blue-600 dark:hover:bg-blue-600 dark:focus:ring-blue-800 transition-transform duration-300 ease-in-out transform hover:scale-105 mt-4 sm:mt-0">Verify</button>
       
           
 
