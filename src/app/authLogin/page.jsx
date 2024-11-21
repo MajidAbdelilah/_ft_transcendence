@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-
+import handleVerification from './services';
 
 
 
@@ -16,10 +16,7 @@ function auth2faPage() {
     }
   };
 
-  const handleVerification = () => {
 
-    console.log("code : ", code);
-  }
 
 
 
@@ -57,7 +54,7 @@ function auth2faPage() {
                   {/* </button> */}
           </div>
 
-          <button type="submit" onClick={handleVerification} className="text-white bg-[#111B47] focus:ring-4 focus:outline-none font-semibold rounded-full text-lg w-[60%] sm:w-[20%] py-3 sm:h-[6%] text-center dark:bg-blue-600 dark:hover:bg-blue-600 dark:focus:ring-blue-800 transition-transform duration-300 ease-in-out transform hover:scale-105 mt-4 sm:mt-0">Verify</button>
+          <button type="submit" onClick={() => handleVerification(code)} className="text-white bg-[#111B47] focus:ring-4 focus:outline-none font-semibold rounded-full text-lg w-[60%] sm:w-[20%] py-3 sm:h-[6%] text-center dark:bg-blue-600 dark:hover:bg-blue-600 dark:focus:ring-blue-800 transition-transform duration-300 ease-in-out transform hover:scale-105 mt-4 sm:mt-0">Verify</button>
       
           
 
