@@ -5,8 +5,8 @@ import toast, { Toaster } from 'react-hot-toast';
 
 async function handleVerification(code, router)  {
     
-    const router = useRouter();
-    console.log("code : ", code);
+
+    // console.log("code : ", code);
 
     try {
 
