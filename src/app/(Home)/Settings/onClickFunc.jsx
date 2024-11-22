@@ -39,7 +39,7 @@ export    const handleVerify = async(code, setError) => {
           setError('Please enter the security code.');
           return;
         }
-        if (code.length > 6) {
+        if (code.length < 6) {
           setError('Please enter a valid security code.');
           return;
         } 
