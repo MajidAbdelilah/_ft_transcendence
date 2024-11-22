@@ -4,6 +4,8 @@ import { useContext, useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import Loading from "../../components/Loading";
 import axios from "axios";
+import { IconHistory } from "@tabler/icons-react"
+
 
 function Achievements() {
   const DashData = useContext(DashContext);
@@ -45,8 +47,14 @@ function Achievements() {
             <Loading />
           </div>
         ) : achievements.length === 0 ? (
-          <div className="col-span-3 flex justify-center items-center py-10 text-[#4E5981]">
-            No achievements yet.
+          <div className="col-span-3 flex flex-col gap-3 justify-center items-center py-10 text-center">
+            <IconHistory className="w-8 h-8 text-[#4E5981] animate-pulse" />
+            <div className="flex flex-col gap-1">
+              <p className="text-[#4E5981] font-semibold text-lg">No Achievements Yet!</p>
+              <p className="text-[#6B7280] text-sm">
+                Keep playing to unlock awesome achievements !
+              </p>
+            </div>
           </div>
         ) : (
           achievements.map((achievement, index) => (

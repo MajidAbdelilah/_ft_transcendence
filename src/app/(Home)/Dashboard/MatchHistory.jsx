@@ -5,6 +5,7 @@ import { motion } from "framer-motion"
 import { useEffect, useState } from "react";
 import axios from "axios";
 import Loading from "../../components/Loading";
+import { IconHistory } from "@tabler/icons-react"
 
 
 
@@ -89,8 +90,14 @@ function MatchHistory() {
                 ) : matches.length === 0 ? (
                   <tr>
                     <td colSpan="5" className="text-center">
-                      <div className="flex justify-center items-center py-12 text-[#4E5981] font-medium">
-                        No matches found.
+                      <div className="flex flex-col gap-3 justify-center items-center py-10 text-center">
+                        <IconHistory className="w-8 h-8 text-[#4E5981] animate-pulse" />
+                        <div className="flex flex-col gap-1">
+                          <p className="text-[#4E5981] font-semibold text-lg">No Matches Yet!</p>
+                          <p className="text-[#6B7280] text-sm">
+                            Start playing to build your match history !
+                          </p>
+                        </div>
                       </div>
                     </td>
                   </tr>
