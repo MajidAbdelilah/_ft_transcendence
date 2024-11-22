@@ -12,6 +12,7 @@ function auth2faPage() {
 
   const router = useRouter();
   const [code, setCode] = useState("");
+  const [error, setError] = useState('');
 
   const handleChange = (e) => {
     const value = e.target.value;
@@ -62,8 +63,8 @@ function auth2faPage() {
                     {/* <button type="submit" onClick={sendCode} className="shadow shadow-lg text-white bg-[#111B47] focus:ring-4 focus:outline-none absolute top-[23%] left-[80%] font-semibold rounded-full text-sm sm:text-lg w-[18%] h-[50%] text-center dark:bg-blue-600 dark:hover:bg-blue-600 dark:focus:ring-blue-800 transition-transform duration-300 ease-in-out transform hover:scale-105">Send */}
                   {/* </button> */}
           </div>
-
-          <button type="submit" onClick={() => handleVerification(code, router)} className="text-white bg-[#111B47] focus:ring-4 focus:outline-none font-semibold rounded-full text-lg w-[60%] sm:w-[20%] py-3 sm:h-[6%] text-center dark:bg-blue-600 dark:hover:bg-blue-600 dark:focus:ring-blue-800 transition-transform duration-300 ease-in-out transform hover:scale-105 mt-4 sm:mt-0">Verify</button>
+          {error && <p className="text-red-500 text-lg font-semibold">{error}</p>}
+          <button type="submit" onClick={() => handleVerification(code, router, setError)} className="text-white bg-[#111B47] focus:ring-4 focus:outline-none font-semibold rounded-full text-lg w-[60%] sm:w-[20%] py-3 sm:h-[6%] text-center dark:bg-blue-600 dark:hover:bg-blue-600 dark:focus:ring-blue-800 transition-transform duration-300 ease-in-out transform hover:scale-105 mt-4 sm:mt-0">Verify</button>
       
           
 

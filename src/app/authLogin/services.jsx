@@ -6,11 +6,15 @@ import toast, { Toaster } from 'react-hot-toast';
 
 
 
-export default async function handleVerification(code, router)  {
+export default async function handleVerification(code, router, setError)  {
     
 
     console.log("code : ", code);
 
+    if (!code.trim()) {
+        setError('Please enter the security code.');
+        return;
+    }
 
 
     // try {
@@ -35,5 +39,5 @@ export default async function handleVerification(code, router)  {
     //     console.log(result);
     // }
 
-
+    setError('');
   }
