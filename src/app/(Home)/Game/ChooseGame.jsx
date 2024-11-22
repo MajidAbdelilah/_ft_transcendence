@@ -53,9 +53,10 @@ function TournamentPage({ onClose }) {
   return (
     <>
       {IsClose && (
-        <div className="fixed inset-0 backdrop-blur-sm flex justify-center items-center animate-fadeIn">
-          <div className="bg-[#F4F4FF] flex flex-col items-center shadow-lg rounded-xl w-[95%] overflow-y-auto scrollbar-hide custom-scrollbarh-[90%] mt-[80px] sm:h-[90%] border-solid border-[#BCBCC9] border-2 max-w-[900px] max-h-[500px] sm:max-h-[900px] min-h-[580px] pt-8 animate-scaleIn">
-            <div className="relative flex flex-col items-center w-full h-full overflow-y-auto scrollbar-hide custom-scrollbar">
+        <div className="fixed inset-0 backdrop-blur-sm flex justify-center items-center motion-preset-pop  ">
+          <div className="bg-[#F4F4FF] bg-re flex flex-col items-center shadow-lg rounded-xl w-[95%] overflow-y-auto scrollbar-hide custom-scrollbarh-[90%] mt-[80px] sm:h-[90%] border-solid border-[#BCBCC9] border-2 max-w-[900px] max-h-[500px] sm:max-h-[900px] min-h-[580px] pt-8 animate-scaleIn">
+            <div className="relative flex flex-col items-center w-full h-full overflow-y-auto scrollbar-hide custom-scrollbar ">
+              <InviteFriends />
               <InviteFriends />
               <InviteFriends />
               <InviteFriends />
@@ -90,8 +91,9 @@ function TournamentPage({ onClose }) {
 function MainComponent() {
   const [selected, setSelected] = useState(null);
   const [showTournament, setShowTournament] = useState(false);
-  const [isMobile, setIsMobile] = useState(false); // You might want to implement actual mobile detection
-
+  const [isMobile, setIsMobile] = useState(false); 
+  const [selectedMap, setSelectedMap] = useState(null); // State to track selected map
+  const [isMode, setIsMode] = useState(null); // State to track selected mode
   const handleChange = (value) => {
     setSelected(value);
   };
@@ -114,13 +116,6 @@ function MainComponent() {
         <motion.div
           className={`${isMobile ? 'w-full mt-4 ' : 'motion-preset-expand  rounded-3xl border-solid border-[#BCBCC9] bg-[#F4F4FF] rounded-3xl border-[#BCBCC9] bg-[#F4F4FF] '} flex flex-col shadow-lg shadow-[#BCBCC9] items-center 
               md:w-[90%] sm:h-full md:h-[90%] bg-[#F4F4FF] justify-center p-4`}
-          // initial={{ scale: 0 }}
-          // animate={{ scale: 1 }}
-          // transition={{
-          //   type: "spring",
-          //   stiffness: 260,
-          //   damping: 20
-          // }}
         >
           <div className="w-full mt-2 md:mt-2 min-h-[80vh] flex flex-col items-center justify-center space-y-8 pb-10">
             <h1 className="text-2xl lg:text-4xl md:text-xl mt-4 font-extrabold content-center tracking-wide text-[#242F5C] motion-preset-compress  ">
@@ -128,57 +123,87 @@ function MainComponent() {
             </h1>
             <hr className="lg:w-[50%] lg:h-[3px] md:w-[40%] md:h-[3px] w-[65%] h-[3px] bg-[#CDCDE5] border-none rounded-full" />
             <div className="flex sm:flex-row justify-center gap-20 w-full h-[calc(50%-100px)] pt-10">
-              <div className="w-full sm:w-auto px-1 sm:px-0 mb-8 sm:mb-0 ">
-              <Image 
+              <div className="w-full sm:w-auto px-1 sm:px-0 mb-8 sm:mb-0 relative">
+                <Image 
                   src="/images/WhiteMap.svg" 
                   alt="WhiteMap" 
                   width={500} 
                   height={500} 
-                  className="w-full max-w-[300px] sm:max-w-[400px] lg:max-w-[500px] cursor-pointer transition-transform duration-500 ease-in-out hover:scale-[1.05]"
+                  className="w-full max-w-[300px] sm:max-w-[400px] lg:max-w-[500px] cursor-pointer transition-all duration-300 ease-in-out "
                   priority
+                  onClick={() => setSelectedMap('White Map')}
                 />
+                {selectedMap === 'White Map' && (
+                  <div className="absolute top-2 right-4 bg-[#242F5C] text-white p-2 rounded-full motion-preset-expand ">
+                    <Check size={18} />
+                  </div>
+                )}
                 <h1 className="text-xs lg:text-3xl md:text-2xl font-extrabold tracking-wide text-[#242F5C] text-center p-4">
                   White Map
                 </h1>
               </div>
-              <div className="w-full sm:w-auto sm:px-0">
+              <div className="w-full sm:w-auto sm:px-0 relative">
                 <Image 
                   src="/images/BlueMap.svg" 
                   alt="BlueMap" 
                   width={500} 
                   height={500} 
-                  className="w-full max-w-[300px] sm:max-w-[400px] lg:max-w-[500px] cursor-pointer transition-transform duration-500 ease-in-out hover:scale-[1.05]"
+                  className="w-full max-w-[300px] sm:max-w-[400px] lg:max-w-[500px] cursor-pointer transition-all duration-300 ease-in-out "
                   priority
+                  onClick={() => setSelectedMap('Blue Map')}
                 />
+                {selectedMap === 'Blue Map' && (
+                  <div className="absolute top-2 right-4 bg-white text-[#242F5C]  p-2 rounded-full motion-preset-expand ">
+                    <Check size={18} />
+                  </div>
+                )}
                 <h1 className="text-xs lg:text-3xl md:text-2xl font-extrabold tracking-wide text-[#242F5C] text-center p-4">
                   Blue Map
                 </h1>
               </div>
             </div>
             <div className="flex flex-col sm:flex-row justify-center items-center gap-4 sm:gap-6 md:gap-10 lg:gap-20 w-full sm:pt-10 "> 
-              <button className="w-full sm:w-auto py-4 px-4 md:py-2 md:px-4 lg:py-5 lg:px-12 bg-[#242F5C] rounded-xl sm:rounded-full cursor-pointer overflow-hidden font-extrabold text-sm sm:text-base lg:text-lg text-[#fff] shadow flex items-center justify-center gap-2 transition-transform duration-300 ease-in-out hover:scale-105">
+              <button onClick={() => setIsMode('Random')} className="relative w-full sm:w-auto py-4 px-4 md:py-2 md:px-4 lg:py-5 lg:px-12 bg-[#242F5C] rounded-xl sm:rounded-full cursor-pointer overflow-hidden font-extrabold text-sm sm:text-base lg:text-lg text-[#fff] shadow flex items-center justify-center gap-2 transition-transform duration-300 ease-in-out hover:scale-105">
                 <img 
                   src="/images/PlayWithFriends.svg" 
                   alt="Friends icon" 
                   className="w-4 h-4 sm:w-5 sm:h-5 lg:w-6 lg:h-6"
                 />
                 Random
+                {isMode === 'Random' && (
+                <div className="absolute top-5 right-4 bg-white text-[#242F5C]  p-2 rounded-full motion-preset-expand ">
+                  <Check size={8} />
+                </div>
+              )}
               </button>
-              <button className="w-full sm:w-auto py-4 px-4 md:py-2 md:px-4 lg:py-5 lg:px-12 bg-[#242F5C] rounded-xl sm:rounded-full cursor-pointer overflow-hidden font-extrabold text-sm sm:text-base lg:text-lg text-[#fff] shadow flex items-center justify-center gap-2 transition-transform duration-300 ease-in-out hover:scale-105">
+              <button onClick={() => setIsMode('Friends')} className="relative w-full sm:w-auto py-4 px-4 md:py-2 md:px-4 lg:py-5 lg:px-12 bg-[#242F5C] rounded-xl sm:rounded-full cursor-pointer overflow-hidden font-extrabold text-sm sm:text-base lg:text-lg text-[#fff] shadow flex items-center justify-center gap-2 transition-transform duration-300 ease-in-out hover:scale-105">
                 <img 
                   src="/images/PlayWithFriends.svg" 
                   alt="Friends icon" 
                   className="w-4 h-4 sm:w-5 sm:h-5 lg:w-6 lg:h-6"
+                  
                 />
                 Friends
+                {isMode === 'Friends' && (
+                <div className="absolute top-5 right-4 bg-white text-[#242F5C]  p-2 rounded-full motion-preset-expand ">
+                  <Check size={8} />
+                </div>
+              )}
               </button>
-              <button className="w-full sm:w-auto py-4 px-4 md:py-2 md:px-4 lg:py-5 lg:px-16 bg-[#242F5C] rounded-xl sm:rounded-full cursor-pointer overflow-hidden font-extrabold text-sm sm:text-base lg:text-lg text-[#fff] shadow flex items-center justify-center gap-2 transition-transform duration-300 ease-in-out hover:scale-105">
+            
+              <button onClick={() => setIsMode('Bot')} className="relative w-full sm:w-auto py-4 px-4 md:py-2 md:px-4 lg:py-5 lg:px-16 bg-[#242F5C] rounded-xl sm:rounded-full cursor-pointer overflow-hidden font-extrabold text-sm sm:text-base lg:text-lg text-[#fff] shadow flex items-center justify-center gap-2 transition-transform duration-300 ease-in-out hover:scale-105">
                 <img 
                   src="/images/PlayWithFriends.svg" 
                   alt="Friends icon" 
                   className="w-4 h-4 sm:w-5 sm:h-5 lg:w-6 lg:h-6"
+
                 />
                 Bot
+                {isMode === 'Bot' && (
+                <div className="absolute top-5 right-4 bg-white text-[#242F5C]  p-2 rounded-full motion-preset-expand ">
+                  <Check size={8} />
+                </div>
+              )}
               </button>
             </div>
             <Checkbox selected={selected} handleChange={handleChange} />
