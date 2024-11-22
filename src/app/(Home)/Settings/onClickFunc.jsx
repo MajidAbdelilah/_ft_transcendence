@@ -30,7 +30,7 @@ export const sendCode = async() =>
       //   console.log("sendCode http request failed; ", error);
       // }
       // setError('');
-      console.log("hellooooooooooo ---");
+      console.log("sending email is commented ....");
     }
 
 export    const handleVerify = async(code, setError) => {
