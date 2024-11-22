@@ -15,6 +15,7 @@ import { showAlert } from "./components/utils";
 import { useRouter } from 'next/navigation';
 import { useUser } from './UserContext.tsx';
 import { Skeleton}  from "../compo/ui/Skeleton";
+import NotificationDropdown from './components/NotificationDropdown';
 
 
 
@@ -111,6 +112,7 @@ function Navbar() {
   const [userDropdown, setUserDropdown] = useState(false);
   const [notificationDropdown, setNotificationDropdown] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
+  const [notifications, setNotifications] = useState([]);
 
   const userDropdownRef = useRef(null);
   const notificationDropdownRef = useRef(null);
@@ -191,6 +193,21 @@ function Navbar() {
       }
     }
   };
+
+  useEffect(() => {
+    const fetchNotifications = async () => {
+      try {
+        // Replace this with your actual API call
+        const response = await axios.get("/api/notifications");
+        setNotifications(response.data);
+      } catch (error) {
+        console.error("Failed to fetch notifications:", error);
+        setNotifications([]);
+      }
+    };
+
+    fetchNotifications();
+  }, []);
 
   return (
     <nav
@@ -274,57 +291,7 @@ function Navbar() {
             </motion.div>
           )}
           {notificationDropdown && (
-            <motion.div
-              initial={{ scale: 0 }}
-              animate={{ scale: 1 }}
-              transition={{
-                type: "spring",
-                stiffness: 260,
-                damping: 30,
-              }}
-              className="w-[250px]  sm:w-[400px]  bg-[#EAEAFF] opacity-[] absolute top-[55px] right-[70px] z-[10] rounded-[5px] border-2 border-solid border-[#C0C7E0] shadow shadow-[#BCBCC9] overflow-hidden"
-            >
-               <div className="max-h-[30vh] overflow-y-auto custom-scrollbar">
-                <div className="flex flex-col items-center min-h-full">
-                  <div className="sm:w-[95%] w-[98%] min-h-[80px] mt-[20px] bg-[#CDCDE5] rounded-xl flex gap-2 items-center pl-4">
-                    <Image src="/images/avatarInvite.svg" alt="profile" width={50} height={50} className="w-[40px] h-[40px]" />
-                    <h4 className="font-semibold text-xs sm:text-base text-[#242F5C]">Abdou sent you a friend request.</h4>
-                    <Image src="/images/Notif.svg" alt="profile" width={50} height={50} className="w-[10px] h-[10px] cursor-pointer mr-2 sm:mr-0" />
-                  </div>
-                  <div className="sm:w-[95%] w-[98%] h-[70px] mt-[20px] bg-[#CDCDE5] rounded-xl flex gap-2 items-center pl-4">
-                  <Image src="/images/avatarInvite.svg" alt="profile" width={50} height={50} className="w-[40px] h-[40px]" />
-                    <h4 className="font-semibold text-xs sm:text-base text-[#242F5C]">Abdou sent you a friend request.</h4>
-                    <Image src="/images/Notif.svg" alt="profile" width={50} height={50} className="w-[10px] h-[10px] cursor-pointer  mr-2 sm:mr-0" />
-                  </div>
-                  <div className="sm:w-[95%] w-[98%] h-[70px] mt-[20px] bg-[#CDCDE5] rounded-xl flex gap-2 items-center pl-4">
-                  <Image src="/images/avatarInvite.svg" alt="profile" width={50} height={50} className="w-[40px] h-[40px]" />
-                    <h4 className="font-semibold text-xs sm:text-base text-[#242F5C]">Abdou sent you a friend request.</h4>
-                    <Image src="/images/Notif.svg" alt="profile" width={50} height={50} className="w-[10px] h-[10px] cursor-pointer  mr-2 sm:mr-0" />
-                  </div>
-                  <div className="sm:w-[95%] w-[98%] h-[70px] mt-[20px] bg-[#CDCDE5] rounded-xl flex gap-2 items-center pl-4">
-                  <Image src="/images/avatarInvite.svg" alt="profile" width={50} height={50} className="w-[40px] h-[40px]" />
-                    <h4 className="font-semibold text-xs sm:text-base text-[#242F5C]">Abdou sent you a friend request.</h4>
-                    <Image src="/images/Notif.svg" alt="profile" width={50} height={50} className="w-[10px] h-[10px] cursor-pointer  mr-2 sm:mr-0" />
-                  </div>
-                  <div className="sm:w-[95%] w-[98%] h-[70px] mt-[20px] bg-[#CDCDE5] rounded-xl flex gap-2 items-center pl-4 mb-2">
-                  <Image src="/images/avatarInvite.svg" alt="profile" width={50} height={50} className="w-[40px] h-[40px]" />
-                    <h4 className="font-semibold text-xs sm:text-base text-[#242F5C]">Abdou sent you a friend request.</h4>
-                    <Image src="/images/Notif.svg" alt="profile" width={50} height={50} className="w-[10px] h-[10px] cursor-pointer  mr-2 sm:mr-0" />
-                  </div>
-                  <div className="sm:w-[95%] w-[98%] h-[70px] mt-[20px] bg-[#CDCDE5] rounded-xl flex gap-2 items-center pl-4 mb-2">
-                  <Image src="/images/avatarInvite.svg" alt="profile" width={50} height={50} className="w-[40px] h-[40px]" />
-                    <h4 className="font-semibold text-xs sm:text-base text-[#242F5C]">Abdou sent you a friend request.</h4>
-                    <Image src="/images/Notif.svg" alt="profile" width={50} height={50} className="w-[10px] h-[10px] cursor-pointer  mr-2 sm:mr-0" />
-                  </div>
-                  <div className="sm:w-[95%] w-[98%] h-[70px] mt-[20px] bg-[#CDCDE5] rounded-xl flex gap-2 items-center pl-4 mb-2">
-                  <Image src="/images/avatarInvite.svg" alt="profile" width={50} height={50} className="w-[40px] h-[40px]" />
-                    <h4 className="font-semibold text-xs sm:text-base text-[#242F5C]">Abdou sent you a friend request.</h4>
-                    <Image src="/images/Notif.svg" alt="profile" width={50} height={50} className="w-[10px] h-[10px] cursor-pointer  mr-2 sm:mr-0" />
-                  </div>
-
-                </div>
-              </div>
-            </motion.div>
+            <NotificationDropdown notifications={notifications} />
           )}
         </div>
       </div>
