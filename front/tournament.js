@@ -291,7 +291,7 @@ function sendTournamentData() {
         ]
     };
     console.log('Sending tournament data:', data);
-    fetch('http://127.0.0.1:8000/turn/tournaments/post/', {
+    fetch('http://127.0.0.1:8000/turn/tournaments_post/', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
