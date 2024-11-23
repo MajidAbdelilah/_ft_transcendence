@@ -30,7 +30,7 @@ export function HisProfile ({path, name, status}) {
 
         <div className=" ml-4 hidden lg:block ">
           <h3 className="text-3xl  top-0 left-0 text-[#242F5C] ">{name}</h3>
-          <p className="text-sm text-[#302FA5] left ">{status}</p>
+          <p className="text-sm text-[#302FA5] left"> {status ? "Online" : "Offline"} </p>
         </div>
     </div>
     )
@@ -97,7 +97,7 @@ export function PlayWithOption () {
 
         {/* hisProfile -------------------------------------------------------------- */}
         {rest.selectedFriend !== null ? (
-          < HisProfile path={friend.image_url} name={friend.username} status={friend.status} />
+          < HisProfile path={friend.image_url} name={friend.username} status={friend.is_online} />
 
         ) : (
           < PleaseSelectAConversation/>
@@ -120,12 +120,6 @@ export function PlayWithOption () {
           >
             <ProfileOption href={`/Profile/${friend.userName}`} onClick={() => rest.setIconState({ dropDownState: false })} />
 
-          
-
-            
-            
-            
-            
             <PlayWithOption onClick={() => {window.open('https://facebook.com'); rest.setIconState({dropDownState: false });}}/>
             <BlockOption onClick={() => {window.open('https://instagram.com'); rest.setIconState({dropDownState: false });}}/>
 

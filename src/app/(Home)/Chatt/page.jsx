@@ -244,7 +244,12 @@ const getSelectedFriend = (friend) => {
           setIconState={setIconState}
         />
 
-        {/* peerToPeer ---------------------------------------------------------------------------------------*/}
+        {/* Conversataion ---------------------------------------------------------------------------------------*/}
+        {/* <ConversationsHeader /> */}
+
+
+
+
         {/* <div className="peerToPeer flex flex-col  flex-grow overflow-y-auto custom-scrollbar break-all ">
           {conversation.map((message, index) =>
             message.sender === friend.userId ? (
