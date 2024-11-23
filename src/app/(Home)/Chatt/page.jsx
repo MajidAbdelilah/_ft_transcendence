@@ -25,7 +25,6 @@ import axios from 'axios';
 
 
 import ListFriends from "./components/ListFriends";
-import ConversationSec from "./components/ConversationSec";
 
 
 // -- font -----------------------------------------------------
