@@ -16,7 +16,7 @@ import Sidebar from "../../sidebar";
 import Navbar from "../../Navbar";
 
 import ProfileInfo from "./components/ProfileInfo";
-import FriendInfo from "./components/FriendInfo";
+
 import { FriendMsgBox, MyMsgBox } from "./components/peerToPeer";
 import { FriendChatInfo } from "./components/FriendChatInfo";
 import { ConversationsHeader } from "./components/BasicComp";
@@ -73,9 +73,9 @@ export default function Chat() {
 
   let [loggedInUser, setLoggedInUser] = useState(
     {
-      userName: "Loading...",
+      userName: "userNameLoading",
       userId: 10,
-      name: "",
+      name: "nameLoading",
       avatar: "/images/avatarprofile.svg",
       status: "Online",
       level: 1,
@@ -112,6 +112,14 @@ export default function Chat() {
 
 
 //  -----------------------------------------------------------------------------------------
+const getSelectedFriend = (friend) => {
+  setSelectedFriend(friend); // Update the selected friend state
+  console.log("Selected Friend:", friend); // Log the selected friend
+};
+
+
+
+
 
 // -----------------------------------------------------------------------------------------
 
@@ -271,7 +279,7 @@ export default function Chat() {
             >
               <div className="friendsBox  p-2 rounded-tl-xl rounded-bl-xl  border-r-2  border-[#C6C6E1]  flex-col flex-grow overflow-y-auto custom-scrollbar  h-4/5 lg:h-full ">
               
-                <ProfileInfo avatar={loggedInUser.avatar} name={loggedInUser.name} status={loggedInUser.status}/>
+                <ProfileInfo avatar={loggedInUser.avatar} name={loggedInUser.userName} status={loggedInUser.status}/>
 
                 <ConversationsHeader />
 
@@ -281,7 +289,7 @@ export default function Chat() {
 
 
                 {/* <i should fetch and list friends here ></> */}
-                <ListFriends />
+                <ListFriends getSelectedFriend={getSelectedFriend} />
 
 
                   
@@ -289,6 +297,30 @@ export default function Chat() {
               </div>
             </div>
             {/* <i should show the converation with the friend here  */}
+            {/* we need to log the selected friend first to make siure we managed to get  */}
+            {selectedFriend ? (
+              <div className="selectedFriendInfo p-5">
+                <h3>Selected Friend: {selectedFriend.username}</h3>
+                <Image
+                  src={selectedFriend.image_url}
+                  alt="Friend Avatar"
+                  width={45}
+                  height={45}
+                  className="rounded-full"
+                />
+              </div>
+            ) : (
+              <div className="noFriendSelected p-5 text-gray-500">
+                <h3>No friend selected. Please click on a friend to start chatting.</h3>
+              </div>
+            )}
+
+
+
+
+
+
+
              </div>
         </div>
 

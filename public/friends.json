@@ -1,38 +1,38 @@
 [
-    {
-      "type": "user_status",
-      "id": 1,
-      "username": "123456789qwerty",
-      "is_online": true,
-      "image_url": "/images/test.png"
-    },
-    {
-      "type": "user_status",
-      "id": 2,
-      "username": "jane_smith",
-      "is_online": false,
-      "image_url": "/images/profile7.svg"
-    },
-    {
-      "type": "user_status",
-      "id": 3,
-      "username": "sam_rogers",
-      "is_online": true,
-      "image_url": "/images/avatar3.svg"
-    },
-    {
-      "type": "user_status",
-      "id": 4,
-      "username": "emma_brown",
-      "is_online": false,
-      "image_url": "/images/profile8.svg"
-    },
-    {
-      "type": "user_status",
-      "id": 5,
-      "username": "chris_wilson",
-      "is_online": true,
-      "image_url": "/images/avatar5.svg"
-    }
+  {
+    "type": "user_status",
+    "id": 1,
+    "username": "john_doe",
+    "is_online": true,
+    "image_url": "/images/test.png"
+  },
+  {
+    "type": "user_status",
+    "id": 2,
+    "username": "jane_smith",
+    "is_online": false,
+    "image_url": "/images/profile7.svg"
+  },
+  {
+    "type": "user_status",
+    "id": 3,
+    "username": "sam_rogers",
+    "is_online": true,
+    "image_url": "/images/avatar3.svg"
+  },
+  {
+    "type": "user_status",
+    "id": 4,
+    "username": "emma_brown",
+    "is_online": false,
+    "image_url": "/images/profile8.svg"
+  },
+  {
+    "type": "user_status",
+    "id": 5,
+    "username": "chris_wilson",
+    "is_online": true,
+    "image_url": "/images/avatar5.svg"
+  }
   ]
   
