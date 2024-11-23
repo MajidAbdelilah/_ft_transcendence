@@ -24,6 +24,9 @@ import { SendMsgBox } from "./components/SendMsgBox";
 import axios from 'axios';
 
 
+import ListFriends from "./components/ListFriends";
+
+
 // -- font -----------------------------------------------------
 import { Inter, Montserrat } from "next/font/google";
 import path from "path";
@@ -109,42 +112,6 @@ export default function Chat() {
 
 
 //  -----------------------------------------------------------------------------------------
-let [fullFriendConversations, setFullFriendConversations] = useState([]);
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  
-
-  //       // 2 - create and full the conversationsWithFriends
-
-
-  //       // if (usr && usr.conversations) {
-  //       //   const conversationsWithFriends = usr.conversations.map((conversation) => 
-  //       //   {
-  //       //     // Find the friend object based on the friendId
-  //       //     const friend = data.find((users) => users.userId === conversation.friendId);
-  
-  //       //     return {
-  //       //       friendData: friend, // Include full friend details (name, status, etc.)
-  //       //       messages: conversation.messages, // Include the conversation messages
-  //       //     };
-  //       //   });
-  //       //   setFullFriendConversations(conversationsWithFriends);
-  //       // }
-
-  //     }, []);
-
 
 // -----------------------------------------------------------------------------------------
 
@@ -309,41 +276,20 @@ let [fullFriendConversations, setFullFriendConversations] = useState([]);
                 <ConversationsHeader />
 
                 <div className="MessagesList flex flex-col">
-                  {/* <FriendInfo  friend={tournament} conversation={tournament.conversation} 
-                    onClick={() => {
-                      setSelectedFriend(tournament);
-                      setIconState({ chatState: false, dropDownState: false });
-                    }}
-                  /> */}
-
-  
-                  {fullFriendConversations.map((friendConversation, index) => (
-                    <FriendInfo
-                      key={index}
-                      name={friendConversation.friendData.name}
-                      avatar={friendConversation.friendData.avatar}
-                      conversation={friendConversation.messages}
-                      onClick={() => {
-                        setSelectedFriend(friendConversation.friendData);
-                        setSelectedConversation(friendConversation.messages);
-                        setIconState({ chatState: false, dropDownState: false });
-                      }}
-                    />
-                  ))}
 
 
 
 
-
+                {/* <i should fetch and list friends here ></> */}
+                <ListFriends />
 
 
                   
                 </div>
               </div>
             </div>
-
-            <MessagesBox loggedInUser={loggedInUser} friend={selectedFriend} conversation={selectedConversation}/>
-          </div>
+            {/* <i should show the converation with the friend here  */}
+             </div>
         </div>
 
   );
