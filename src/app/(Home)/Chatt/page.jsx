@@ -73,7 +73,7 @@ export default function Chat() {
 
   let [loggedInUser, setLoggedInUser] = useState(
     {
-      userName: "",
+      userName: "Loading...",
       userId: 10,
       name: "",
       avatar: "/images/avatarprofile.svg",
