@@ -25,6 +25,7 @@ import axios from 'axios';
 
 
 import ListFriends from "./components/ListFriends";
+import ConversationSec from "./components/ConversationSec";
 
 
 // -- font -----------------------------------------------------
@@ -112,6 +113,8 @@ export default function Chat() {
 
 
 //  -----------------------------------------------------------------------------------------
+
+const [selectedFriend, setSelectedFriend] = useState(null);
 const getSelectedFriend = (friend) => {
   setSelectedFriend(friend); // Update the selected friend state
   console.log("Selected Friend:", friend); // Log the selected friend
@@ -123,8 +126,7 @@ const getSelectedFriend = (friend) => {
 
 // -----------------------------------------------------------------------------------------
 
-  const [selectedFriend, setSelectedFriend] = useState(null);
-  const [selectedConversation, setSelectedConversation] = useState(null);
+  // const [selectedConversation, setSelectedConversation] = useState(null);
   
   
 
@@ -298,22 +300,7 @@ const getSelectedFriend = (friend) => {
             </div>
             {/* <i should show the converation with the friend here  */}
             {/* we need to log the selected friend first to make siure we managed to get  */}
-            {selectedFriend ? (
-              <div className="selectedFriendInfo p-5">
-                <h3>Selected Friend: {selectedFriend.username}</h3>
-                <Image
-                  src={selectedFriend.image_url}
-                  alt="Friend Avatar"
-                  width={45}
-                  height={45}
-                  className="rounded-full"
-                />
-              </div>
-            ) : (
-              <div className="noFriendSelected p-5 text-gray-500">
-                <h3>No friend selected. Please click on a friend to start chatting.</h3>
-              </div>
-            )}
+            <ConversationSec selectedFriend={selectedFriend} />
 
 
 
