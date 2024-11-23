@@ -35,7 +35,7 @@ export default function ListFriends({ getSelectedFriend }) {
 
 
     if (friendsList.length === 0) {
-        return <p className="text-center text-gray-500">No friends yet ...</p>;
+        return <p className="text-center text-gray-500">loading friends ...</p>;
     }
 
 

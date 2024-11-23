@@ -180,7 +180,7 @@ const getSelectedFriend = (friend) => {
 
 // -----------------------------------------------------------------------------------------
 
-  function MessagesBox({ loggedInUser, friend, conversation }) {
+  function MessagesBox({ friend }) {
 
     // websocket -----------------------------------------------------------------------------------------
       // const [socket, setSokcet] = useState(null);
@@ -218,7 +218,7 @@ const getSelectedFriend = (friend) => {
       return (
         <div className="messagesBox w-full lg:w-3/5 p-2 h-full rounded-tr-xl rounded-br-xl  flex flex-col ">
           <FriendChatInfo
-          loggedInUser={loggedInUser}
+            loggedInUser={loggedInUser}
             friend={noFriendYet}
             switchChatState={switchChatState}
             selectedFriend={selectedFriend}
@@ -246,7 +246,7 @@ const getSelectedFriend = (friend) => {
         />
 
         {/* peerToPeer ---------------------------------------------------------------------------------------*/}
-        <div className="peerToPeer flex flex-col  flex-grow overflow-y-auto custom-scrollbar break-all ">
+        {/* <div className="peerToPeer flex flex-col  flex-grow overflow-y-auto custom-scrollbar break-all ">
           {conversation.map((message, index) =>
             message.sender === friend.userId ? (
               <FriendMsgBox key={index} time={message.time} msg={message.content} />
@@ -254,15 +254,15 @@ const getSelectedFriend = (friend) => {
               <MyMsgBox key={index} time={message.time} msg={message.content} />
             )
           )}
-        </div>
+        </div> */}
 
         {/*  SendMsgBox ---------------------------------------------------------------------------------------*/}
-        <SendMsgBox loggedInUser={loggedInUser} friend={friend} />
+        {/* <SendMsgBox loggedInUser={loggedInUser} friend={friend} /> */}
       </div>
     );
   }
   
-  if (loggedInUser === null) return (<div>loggedInUser is null...</div>);
+  if (loggedInUser === null) return (<div> Loading...</div>);
 
   return (
 
@@ -300,7 +300,8 @@ const getSelectedFriend = (friend) => {
             </div>
             {/* <i should show the converation with the friend here  */}
             {/* we need to log the selected friend first to make siure we managed to get  */}
-            <ConversationSec selectedFriend={selectedFriend} />
+            {/* <ConversationSec selectedFriend={selectedFriend} /> */}
+            <MessagesBox friend={selectedFriend} />
 
 
 
