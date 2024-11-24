@@ -279,14 +279,14 @@ const getSelectedFriend = (friend) => {
           {conversation.length > 0 ? (
             conversation.map((message, index) => (
               <div key={index}>
-                <h2>{message.sender}: {message.message_content}</h2>
-                <h2>{message.receiver}: {message.message_content}</h2>
+                <h2>{message.sender} & {message.receiver}: {message.message_content}</h2>
+                
                 <h2>------</h2>
                 {/* <p>{message.message_date}</p> */}
               </div> 
             ))
           ) : (
-            <h2>No messages found</h2>
+            <h2 className="text-sm text-[#242F5C] m-2">No messages found</h2>
           )}
         </div>
 
@@ -316,7 +316,7 @@ const getSelectedFriend = (friend) => {
             >
               <div className="friendsBox  p-2 rounded-tl-xl rounded-bl-xl  border-r-2  border-[#C6C6E1]  flex-col flex-grow overflow-y-auto custom-scrollbar  h-4/5 lg:h-full ">
               
-                <ProfileInfo avatar={loggedInUser.avatar} name={loggedInUser.userName} status={loggedInUser.status}/>
+                <ProfileInfo avatar={loggedInUser.avatar} name={loggedInUser.username} status={loggedInUser.status}/>
 
                 <ConversationsHeader />
 
