@@ -69,7 +69,7 @@ export function FriendMsgBox({ time, msg }) {
     return (
       <div className="friendMsgBox ml-1 my-1">
         <span className="msgTime text-sm pl-5 text-[#242F5C] block">
-          {time}
+        {`${time.slice(0, 10)} ${time.slice(11, 16)}`}
         </span>
         <p className="msgConetnt text-xl py-3 px-6 inline-block text-[#FFFFFF] bg-[#2C3E86] bg-opacity-80 rounded-3xl ">
           {msg}
@@ -82,7 +82,7 @@ export function MyMsgBox({ time, msg }) {
     return (
       <div className="myMsgBox my-1 mr-1 ml-auto flex flex-col">
         <span className="msgTime text-sm pr-5 text-[#242F5C] ml-auto">
-          {time}
+        {`${time.slice(0, 10)} ${time.slice(11, 16)}`}
         </span>
         <p className="msgConetnt text-xl py-3 px-6 inline-block text-[#242F5C] bg-[#9191D6] bg-opacity-40 rounded-3xl ">
           {msg}
