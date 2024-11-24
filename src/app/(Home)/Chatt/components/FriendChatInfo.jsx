@@ -15,16 +15,16 @@ export function HisProfile ({path, name, status}) {
       <div className="hisProfile w-full flex items-center overflow-hidden ">
         {name === "tournament" ? (
           <RiRobot3Line
-            size={75}
+            size={60}
             className="bg-[#EAEAFF] rounded-full text-[#242F5C] left-0 top-0 "
           />
         ) : (
           <Image
             src={path}
             alt="avatarprofile"
-            width={75}
-            height={75}
-            className=" rounded-full left-0 top-0 w-[75px] h-[75px] "
+            width={60}
+            height={60}
+            className=" rounded-full left-0 top-0 w-[60px] h-[60px] "
           />
         )}
 
