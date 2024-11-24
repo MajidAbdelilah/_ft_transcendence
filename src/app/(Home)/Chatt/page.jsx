@@ -295,7 +295,7 @@ const getSelectedFriend = (friend) => {
 
 
                 {/* <i should fetch and list friends here ></> */}
-                <ListFriends getSelectedFriend={getSelectedFriend} />
+                <ListFriends getSelectedFriend={getSelectedFriend} switchChatState={switchChatState} />
 
 
                   

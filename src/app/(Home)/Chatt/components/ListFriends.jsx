@@ -2,7 +2,7 @@
 import { useState, useEffect} from "react";
 import Image from "next/image";
 
-export default function ListFriends({ getSelectedFriend }) {
+export default function ListFriends({ getSelectedFriend, switchChatState }) {
 
     const [friendsList, setFriendsList] = useState([]);
 
@@ -47,7 +47,7 @@ export default function ListFriends({ getSelectedFriend }) {
             <div 
             key={friend.id} 
             className="friendInfo my-2 px-1 w-full flex flex-row items-center overflow-hidden cursor-pointer" 
-            onClick={() => getSelectedFriend(friend)} >
+            onClick={() =>{ getSelectedFriend(friend); switchChatState()}} >
             
             
                 <Image 
