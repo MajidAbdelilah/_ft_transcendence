@@ -274,7 +274,19 @@ const getSelectedFriend = (friend) => {
         />
 
         {/* Conversataion ---------------------------------------------------------------------------------------*/}
-        
+        <div>
+          {/* <h1>Messages Between {loggedInUser} and {friend.userName}:</h1> */}
+          {conversation.length > 0 ? (
+            conversation.map((message, index) => (
+              <div key={index}>
+                <h2>{message.sender}: {message.message_content}</h2>
+                {/* <p>{message.message_date}</p> */}
+              </div> 
+            ))
+          ) : (
+            <h2>No messages found</h2>
+          )}
+        </div>
 
 
         {/*  SendMsgBox ---------------------------------------------------------------------------------------*/}
