@@ -7,7 +7,9 @@ export const fetchOldConversation = async (loggedInUser, friend) =>
             const response = await axios.get("/Conversation.json");
             const allMessages = response.data.messages;
 
-
+            // console.log("All messages: ", allMessages);
+            // console.log("Logged in user: ", loggedInUser);
+            // console.log("Friend: ", friend);
             const filteredMessages = allMessages.filter((message) => {
                 return (
                     (message.sender === loggedInUser.username && message.receiver === friend.username)

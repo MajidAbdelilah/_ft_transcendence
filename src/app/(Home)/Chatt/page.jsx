@@ -204,6 +204,7 @@ const getSelectedFriend = (friend) => {
     useEffect(() => {
       const loadConversation = async () => 
         {
+          if(friend === null) return;
           const messages = await fetchOldConversation(loggedInUser, friend);
           setConversation(messages);
         };
@@ -284,13 +285,6 @@ const getSelectedFriend = (friend) => {
             )
           )}
         </div>
-
-
-
-
-
-
-
 
 
         {/*  SendMsgBox ---------------------------------------------------------------------------------------*/}
