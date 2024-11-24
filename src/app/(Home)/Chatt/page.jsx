@@ -135,7 +135,7 @@ export default function Chat() {
 const [selectedFriend, setSelectedFriend] = useState(null);
 const getSelectedFriend = (friend) => {
   setSelectedFriend(friend); // Update the selected friend state
-  console.log("Selected Friend:", friend); // Log the selected friend
+  // console.log("Selected Friend:", friend); // Log the selected friend
 };
 
 
@@ -274,31 +274,8 @@ const getSelectedFriend = (friend) => {
         />
 
         {/* Conversataion ---------------------------------------------------------------------------------------*/}
+        
 
-        <div>
-          <h1>Messages Between {loggedInUser} and {friend.userName}:</h1>
-          {conversation.length > 0 ? (
-            conversation.map((message, index) => (
-              <h2 key={index}>
-                {message.sender}: {message.message_content}
-              </h2>
-            ))
-          ) : (
-            <h2>No messages found</h2>
-          )}
-        </div>
-
-
-
-        {/* <div className="peerToPeer flex flex-col  flex-grow overflow-y-auto custom-scrollbar break-all ">
-          {conversation.map((message, index) =>
-            message.sender === friend.userId ? (
-              <FriendMsgBox key={index} time={message.time} msg={message.content} />
-            ) : (
-              <MyMsgBox key={index} time={message.time} msg={message.content} />
-            )
-          )}
-        </div> */}
 
         {/*  SendMsgBox ---------------------------------------------------------------------------------------*/}
         {/* <SendMsgBox loggedInUser={loggedInUser} friend={friend} /> */}
