@@ -22,7 +22,7 @@ import { FriendChatInfo } from "./components/FriendChatInfo";
 import { ConversationsHeader } from "./components/BasicComp";
 import { SendMsgBox } from "./components/SendMsgBox";
 import axios from 'axios';
-
+import { fetchOldConversation } from './components/fetchOldConversation';
 
 import ListFriends from "./components/ListFriends";
 
@@ -62,8 +62,27 @@ export default function Chat() {
 
 
   // LoggedInUser -----------------------------------------------------------------------------------------
-  const LoggedInUser = useUser();
-  console.log("LoggedInUser", LoggedInUser.userData);
+  // const LoggedInUser = useUser();
+
+
+  // re comment those stuff in useeffect search for http://127.0.0.1:8000/api/user/
+
+  // for testing perpse :
+
+  const LoggedInUser = {
+    userData: {
+      username: "userNameLoading",
+      id: 10,
+      name: "nameLoading",
+      avatar: "/images/avatarprofile.svg",
+      status: "Online",
+      level: 1,
+      score: "",
+      result: "",
+      map: "",
+    }
+  };
+  // console.log("LoggedInUser", LoggedInUser.userData);
   // if (LoggedInUser.userData === null) return (<div>LoggedInUser Loading...</div>);
 
 // LoggedInUser -----------------------------------------------------------------------------------------
@@ -73,8 +92,8 @@ export default function Chat() {
 
   let [loggedInUser, setLoggedInUser] = useState(
     {
-      userName: "userNameLoading",
-      userId: 10,
+      username: "userNameLoading",
+      id: 10,
       name: "nameLoading",
       avatar: "/images/avatarprofile.svg",
       status: "Online",
@@ -88,7 +107,7 @@ export default function Chat() {
   
   useEffect(() => {
 
-    if (LoggedInUser.userData !== null) {
+    if (LoggedInUser.userData !== null && loggedInUser.username !== LoggedInUser.userData.username) {
 
       const filledUser = {
         userName: LoggedInUser.userData.username || '',   
@@ -104,11 +123,11 @@ export default function Chat() {
   
       // Update the state with the filled user data
       setLoggedInUser(filledUser);
-      // console.log("filledUser", filledUser);
+      // console.log("loggedInUser", filledUser);
       // console.log("loggedInUser ============= ", loggedInUser);
 
     }
-  }, [LoggedInUser]); 
+  }, [LoggedInUser.userData]); 
 
 
 //  -----------------------------------------------------------------------------------------
@@ -180,6 +199,16 @@ const getSelectedFriend = (friend) => {
 // -----------------------------------------------------------------------------------------
 
   function MessagesBox({ friend }) {
+    const [conversation, setConversation] = useState([]);
+
+    useEffect(() => {
+      const loadConversation = async () => 
+        {
+          const messages = await fetchOldConversation(loggedInUser, friend);
+          setConversation(messages);
+        };
+        loadConversation();
+    }, [loggedInUser, friend]);
 
     // websocket -----------------------------------------------------------------------------------------
       // const [socket, setSokcet] = useState(null);
@@ -245,8 +274,19 @@ const getSelectedFriend = (friend) => {
         />
 
         {/* Conversataion ---------------------------------------------------------------------------------------*/}
-        {/* <ConversationsHeader /> */}
 
+        <div>
+          <h1>Messages Between {loggedInUser} and {friend.userName}:</h1>
+          {conversation.length > 0 ? (
+            conversation.map((message, index) => (
+              <h2 key={index}>
+                {message.sender}: {message.message_content}
+              </h2>
+            ))
+          ) : (
+            <h2>No messages found</h2>
+          )}
+        </div>
 
 
 
