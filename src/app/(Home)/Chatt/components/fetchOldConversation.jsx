@@ -7,6 +7,15 @@ export const fetchOldConversation = async (loggedInUser, friend) =>
             const response = await axios.get("/Conversation.json");
             const allMessages = response.data.messages;
 
+
+                    // Check if 'response.data.messages' is an array
+
+            if (!Array.isArray(allMessages)) {
+                throw new Error("the file fetched in not an array");
+            }
+
+
+
             // console.log("All messages: ", allMessages);
             // console.log("Logged in user: ", loggedInUser);
             // console.log("Friend: ", friend);
