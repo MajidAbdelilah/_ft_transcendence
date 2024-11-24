@@ -13,15 +13,23 @@ export default function UpdateProfile({setIsProfile})
     // Part 1 : handling updating image   ######################################################################
     const [imageSrc, setImageSrc] = useState(null); // State to store the image URL
 
+
     const handleFileChange = (e) => {
       const file = e.target.files[0];
       if (file) {
-        const fileURL = URL.createObjectURL(file); // Create an object URL for the selected file
-        setImageSrc(file); // Set the file URL as the image source
-        console.log(file);
+        const validTypes = ["image/png", "image/svg+xml"];
+        
+        // Check if the file type is valid
+        if (validTypes.includes(file.type)) {
+          // const fileURL = URL.createObjectURL(file); // Create an object URL for the selected file
+          setImageSrc(file); // Set the file URL as the image source
+          toast.success("File uploaded successfully!"); // Show success toast
+        } else {
+          setImageSrc(null); // Clear the image preview if invalid file type
+          toast.error("Only PNG and SVG files are allowed."); // Show error toast
+        }
       }
     };
-
 
 
     
