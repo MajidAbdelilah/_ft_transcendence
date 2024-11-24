@@ -275,16 +275,20 @@ const getSelectedFriend = (friend) => {
         />
 
         {/* Conversataion ---------------------------------------------------------------------------------------*/}
-       
         <div className="Conversation flex flex-col flex-grow overflow-y-auto custom-scrollbar break-words p-2">
-          {conversation.map((message, index) =>
-            message.sender === friend.username ? (
-              <FriendMsgBox key={index} time={message.message_date} msg={message.message_content} />
-            ) : (
-              <MyMsgBox key={index} time={message.message_date} msg={message.message_content} />
+          {Array.isArray(conversation) && conversation.length > 0 ? (
+            conversation.map((message, index) =>
+              message.sender === friend.username ? (
+                <FriendMsgBox key={index} time={message.message_date} msg={message.message_content} />
+              ) : (
+                <MyMsgBox key={index} time={message.message_date} msg={message.message_content} />
+              )
             )
+          ) : (
+            <p className="text-center text-gray-500">No conversation yet.</p>
           )}
         </div>
+
 
 
         {/*  SendMsgBox ---------------------------------------------------------------------------------------*/}
