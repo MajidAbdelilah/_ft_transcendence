@@ -280,6 +280,8 @@ const getSelectedFriend = (friend) => {
             conversation.map((message, index) => (
               <div key={index}>
                 <h2>{message.sender}: {message.message_content}</h2>
+                <h2>{message.receiver}: {message.message_content}</h2>
+                <h2>------</h2>
                 {/* <p>{message.message_date}</p> */}
               </div> 
             ))
