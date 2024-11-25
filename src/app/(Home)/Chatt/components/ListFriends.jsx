@@ -20,8 +20,8 @@ export default function ListFriends({ getSelectedFriend, switchChatState }) {
                     }
 
                 const data = await response.json();
-                setFriendsList(data);
-                
+                setFriendsList(data.friends);
+                // console.log(data.friends);
                 } catch (error)
                 {
                     console.error("Error catched fetching friends data", error);
@@ -45,23 +45,23 @@ export default function ListFriends({ getSelectedFriend, switchChatState }) {
 
         {friendsList.map((friend) => (
             <div 
-            key={friend.id} 
+            key={friend.user.id} 
             className="friendInfo my-2 px-1 w-full flex flex-row items-center overflow-hidden cursor-pointer" 
             onClick={() =>{ getSelectedFriend(friend); switchChatState()}} >
             
             
                 <Image 
-                    src={friend.image_url}
+                    src={friend.user.profile_photo}
                     alt="/images/avatarprofile.svg"
                     width={45}
                     height={45}
                     className="rounded-full left-0 top-0 w-[45px] h-[45px]"
 
                 />
-                <h3 className="text-xl xl:text-2xl top-0 left-0 text-[#242F5C] ml-2 ">{friend.username}</h3>
+                <h3 className="text-xl xl:text-2xl top-0 left-0 text-[#242F5C] ml-2 ">{friend.user.username}</h3>
 
                 <div
-                    className={`text-xs ${friend.is_online ? "bg-green-500" : "bg-gray-300"} ml-auto hidden lg:block rounded-full w-2 h-2`}
+                    className={`text-xs ${friend.user.is_online ? "bg-green-500" : "bg-gray-300"} ml-auto hidden lg:block rounded-full w-2 h-2`}
                 ></div>
 
 

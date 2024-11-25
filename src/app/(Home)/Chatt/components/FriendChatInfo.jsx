@@ -97,7 +97,7 @@ export function PlayWithOption () {
 
         {/* hisProfile -------------------------------------------------------------- */}
         {rest.selectedFriend !== null ? (
-          < HisProfile path={friend.image_url} name={friend.username} status={friend.is_online} />
+          < HisProfile path={friend.profile_photo} name={friend.username} status={friend.is_online} />
 
         ) : (
           < PleaseSelectAConversation/>

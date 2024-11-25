@@ -205,7 +205,7 @@ const getSelectedFriend = (friend) => {
       const loadConversation = async () => 
         {
           if(friend === null) return;
-          const messages = await fetchOldConversation(loggedInUser, friend);
+          const messages = await fetchOldConversation(loggedInUser, friend.user);
           setConversation(messages);
         };
         loadConversation();
@@ -265,7 +265,7 @@ const getSelectedFriend = (friend) => {
         {/* FriendChatInfo ---------------------------------------------------------------------------------------*/}
         <FriendChatInfo
           loggedInUser={loggedInUser}
-          friend={friend}
+          friend={friend.user}
           switchChatState={switchChatState}
           selectedFriend={selectedFriend}
           switchDropDownState={switchDropDownState}
@@ -278,7 +278,7 @@ const getSelectedFriend = (friend) => {
         <div className="Conversation flex flex-col flex-grow overflow-y-auto custom-scrollbar break-words p-2">
           {Array.isArray(conversation) && conversation.length > 0 ? (
             conversation.map((message, index) =>
-              message.sender === friend.username ? (
+              message.sender === friend.user.username ? (
                 <FriendMsgBox key={index} time={message.message_date} msg={message.message_content} />
               ) : (
                 <MyMsgBox key={index} time={message.message_date} msg={message.message_content} />
@@ -292,7 +292,7 @@ const getSelectedFriend = (friend) => {
 
 
         {/*  SendMsgBox ---------------------------------------------------------------------------------------*/}
-        <SendMsgBox loggedInUser={loggedInUser} friend={friend} />
+        <SendMsgBox loggedInUser={loggedInUser} friend={friend.user} />
       </div>
     );
   }
@@ -335,6 +335,7 @@ const getSelectedFriend = (friend) => {
             </div>
             {/* <i should show the converation with the friend here  */}
             {/* we need to log the selected friend first to make siure we managed to get  */}
+            {/* <ConversationSec selectedFriend={selectedFriend} /> */}
             {/* <ConversationSec selectedFriend={selectedFriend} /> */}
             <MessagesBox friend={selectedFriend} />
 
