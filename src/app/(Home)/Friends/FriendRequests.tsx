@@ -3,6 +3,8 @@
 import Image from "next/image"
 import { Montserrat } from "next/font/google"
 import { useState, useEffect } from "react"
+import websocketService from '../../services/websocket'
+import customAxios from '../../customAxios'
 
 const montserrat = Montserrat({
   subsets: ['latin'],
@@ -14,13 +16,35 @@ interface FriendRequestProps {
   name: string
   avatar: string
   status: 'online' | 'offline'
-  onAccept: (id: string) => void
-  onReject: (id: string) => void
 }
 
-export default function FriendRequests({ id, name, avatar, status, onAccept, onReject }: FriendRequestProps) {
+export default function FriendRequests({ id, name, avatar, status }: FriendRequestProps) {
   const [isMobileRq, setIsMobileRq] = useState(false)
   const [isMobile, setIsMobile] = useState(false)
+
+  const handleAccept = async () => {
+    try {
+      await customAxios.post(`/api/friend-requests/${id}/accept`)
+      websocketService.send({
+        type: 'ACCEPT_FRIEND_REQUEST',
+        requestId: id
+      })
+    } catch (error) {
+      console.error('Error accepting friend request:', error)
+    }
+  }
+
+  const handleReject = async () => {
+    try {
+      await customAxios.post(`/api/friend-requests/${id}/reject`)
+      websocketService.send({
+        type: 'REJECT_FRIEND_REQUEST',
+        requestId: id
+      })
+    } catch (error) {
+      console.error('Error rejecting friend request:', error)
+    }
+  }
 
   useEffect(() => {
     const handleResize = () => {
@@ -50,7 +74,7 @@ export default function FriendRequests({ id, name, avatar, status, onAccept, onR
         {!isMobileRq ? (
           <div className="flex flex-row items-center justify-end lg:w-[50%] lg:h-[90%] md:w-[10%] md:h-[90%] w-[20%] h-[90%] absolute md:right-10 right-5 top-1 md:gap-5 gap-2">
             <button
-              onClick={() => onAccept(id)}
+              onClick={handleAccept}
               className="
                 bottom-2 right-[8%] 
                 md:bottom-[7%] 
@@ -69,7 +93,7 @@ export default function FriendRequests({ id, name, avatar, status, onAccept, onR
               Accept
             </button>
             <button
-              onClick={() => onReject(id)}
+              onClick={handleReject}
               className="
                 bottom-2 right-[8%] 
                 md:bottom-[7%] 
@@ -91,10 +115,10 @@ export default function FriendRequests({ id, name, avatar, status, onAccept, onR
           </div>
         ) : (
           <div className="flex flex-row items-center justify-end lg:w-[20%] lg:h-[90%] md:w-[20%] md:h-[90%] w-[20%] h-[90%] absolute md:right-4 right-5 top-1 md:gap-5 gap-5">
-            <button onClick={() => onAccept(id)} aria-label={`Accept friend request from ${name}`}>
+            <button onClick={handleAccept} aria-label={`Accept friend request from ${name}`}>
               <Image src="/images/Accept.svg" alt="Accept" width={50} height={50} className="lg:w-[32%] lg:h-[32%] md:w-[40%] md:h-[40%] w-[30%] h-[30%] cursor-pointer" />
             </button>
-            <button onClick={() => onReject(id)} aria-label={`Reject friend request from ${name}`}>
+            <button onClick={handleReject} aria-label={`Reject friend request from ${name}`}>
               <Image src="/images/Reject.svg" alt="Reject" width={50} height={50} className="lg:w-[32%] lg:h-[32%] md:w-[40%] md:h-[40%] w-[30%] h-[30%] cursor-pointer" />
             </button>
           </div>

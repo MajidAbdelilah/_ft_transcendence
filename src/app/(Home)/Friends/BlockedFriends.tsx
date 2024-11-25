@@ -3,6 +3,8 @@
 import Image from "next/image"
 import { Montserrat } from "next/font/google"
 import { useState, useEffect } from "react"
+import websocketService from '../../services/websocket'
+import customAxios from '../../customAxios'
 
 const montserrat = Montserrat({
   subsets: ['latin'],
@@ -13,17 +15,25 @@ interface BlockedFriendProps {
   id: string
   name: string
   avatar: string
-  status: 'online' | 'offline'
-  onUnblock: (id: string) => void
 }
 
-export default function BlockedFriends({ id, name, avatar, status, onUnblock }: BlockedFriendProps) {
-  const [isMobileBL, setIsMobileBL] = useState(false)
+export default function BlockedFriends({ id, name, avatar }: BlockedFriendProps) {
   const [isMobile, setIsMobile] = useState(false)
+
+  const handleUnblock = async () => {
+    try {
+      await customAxios.post(`/api/friends/${id}/unblock`)
+      websocketService.send({
+        type: 'FRIEND_UNBLOCKED',
+        userId: id
+      })
+    } catch (error) {
+      console.error('Error unblocking friend:', error)
+    }
+  }
 
   useEffect(() => {
     const handleResize = () => {
-      setIsMobileBL(window.innerWidth <= 1700)
       setIsMobile(window.innerWidth <= 768)
     }
 
@@ -35,47 +45,30 @@ export default function BlockedFriends({ id, name, avatar, status, onUnblock }: 
   }, [])
 
   return (
-    <div className={`w-full mx-auto h-20 lg:h-[12%] md:h-[20%] mt-2 rounded-xl bg-[#D8D8F7] shadow-md shadow-[#BCBCC9] relative ${isMobile ? '' : 'min-h-[90px]'} ${montserrat.className}`}>
+    <div className="w-full mx-auto h-20 lg:h-[12%] md:h-[20%] mt-2 rounded-xl bg-[#D8D8F7] shadow-md shadow-[#BCBCC9] relative">
       <div className="flex items-center h-full p-2">
         <div className="flex flex-row items-center justify-center lg:w-[10%] lg:h-[90%] md:w-[10%] md:h-[90%] w-[20%] h-[90%]">
-          <Image priority src={avatar} alt={`${name}'s profile`} width={50} height={50} className="lg:w-[90%] lg:h-[90%] md:w-[80%] md:h-[80%] w-[100%] h-[100%]" />
+          <Image
+            priority
+            src={avatar}
+            alt={`${name}'s profile`}
+            width={50}
+            height={50}
+            className="lg:w-[90%] lg:h-[90%] md:w-[80%] md:h-[80%] w-[100%] h-[100%]"
+          />
         </div>
         <div className="ml-4 flex flex-col justify-center">
           <h2 className="text-[#242F5C] text-sm lg:text-lg md:text-base font-bold">{name}</h2>
-          <p className={`${status === 'online' ? 'text-green-600' : 'text-gray-500'} lg:text-sm text-xs font-medium`}>
-            {status === 'online' ? 'Online' : 'Offline'}
-          </p>
+          <p className="text-red-500 lg:text-sm text-xs font-medium">Blocked</p>
         </div>
-        {!isMobileBL ? (
-          <div className="flex flex-row items-center justify-end lg:w-[50%] lg:h-[90%] md:w-[10%] md:h-[90%] w-[20%] h-[90%] absolute md:right-10 right-5 top-1 md:gap-5 gap-2">
-            <button
-              onClick={() => onUnblock(id)}
-              className="
-                bottom-2 right-[8%] 
-                md:bottom-[7%] 
-                lg:bottom-[5%] lg:right-[4%]
-                text-base tracking-wide
-                w-[100px] h-[40px]
-                md:w-[100px] md:h-[40px]
-                lg:w-[120px] lg:h-[60%]
-                bg-[#242F5C] rounded-full cursor-pointer overflow-hidden 
-                transition-all duration-500 ease-in-out shadow-md 
-                hover:scale-105 hover:shadow-lg 
-                before:absolute before:top-0 before:-left-full before:w-full before:h-full 
-                before:bg-gradient-to-r before:from-[#242F5C] before:to-[#7C829D] 
-                before:transition-all before:duration-500 before:ease-in-out before:z-[-1] 
-                font-extrabold before:rounded-xl hover:before:left-0 text-[#fff]"
-            >
-              Unblock
-            </button>
-          </div>
-        ) : (
-          <div className="flex flex-row items-center justify-end lg:w-[20%] lg:h-[90%] md:w-[20%] md:h-[90%] w-[20%] h-[90%] absolute md:right-4 right-5 top-1 md:gap-5 gap-5 ">
-            <button onClick={() => onUnblock(id)} aria-label={`Unblock ${name}`}>
-              <Image src="/images/BlockedFriends.svg" alt="Unblock" width={50} height={50} className="lg:w-[40%] lg:h-[40%] md:w-[40%] md:h-[40%] w-[30%] h-[30%] cursor-pointer" />
-            </button>
-          </div>
-        )}
+        <div className="flex flex-row items-center justify-end lg:w-[50%] lg:h-[90%] md:w-[10%] md:h-[90%] w-[20%] h-[90%] absolute md:right-10 right-5 top-1 md:gap-5 gap-2">
+          <button
+            onClick={handleUnblock}
+            className="bg-[#242F5C] text-white px-4 py-2 rounded-lg hover:bg-[#1a2340] transition-colors"
+          >
+            Unblock
+          </button>
+        </div>
       </div>
     </div>
   )

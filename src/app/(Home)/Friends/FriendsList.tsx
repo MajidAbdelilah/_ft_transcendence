@@ -3,6 +3,8 @@
 import Image from "next/image";
 import { Montserrat } from "next/font/google";
 import { useState, useEffect } from "react";
+import websocketService from '../../services/websocket';
+import customAxios from '../../customAxios';
 
 const montserrat = Montserrat({
   subsets: ['latin'],
@@ -23,6 +25,43 @@ interface FriendsListProps {
 export default function FriendsList({ friends = [] }: FriendsListProps) {
   const [isMobile, setIsMobile] = useState(false);
   const [imageLoadingStates, setImageLoadingStates] = useState<{ [key: string]: boolean }>({});
+
+  const handleInviteGame = async (friendId: string, friendName: string) => {
+    try {
+      await customAxios.post(`/api/game/invite/${friendId}`);
+      websocketService.send({
+        type: 'GAME_INVITE',
+        friendId,
+        message: `Invited ${friendName} to a game`
+      });
+    } catch (error) {
+      console.error('Error inviting friend to game:', error);
+    }
+  };
+
+  const handleChat = async (friendId: string) => {
+    try {
+      await customAxios.post(`/api/chat/initiate/${friendId}`);
+      websocketService.send({
+        type: 'CHAT_INITIATE',
+        friendId
+      });
+    } catch (error) {
+      console.error('Error initiating chat:', error);
+    }
+  };
+
+  const handleBlock = async (friendId: string) => {
+    try {
+      await customAxios.post(`/api/friends/${friendId}/block`);
+      websocketService.send({
+        type: 'BLOCK_FRIEND',
+        friendId
+      });
+    } catch (error) {
+      console.error('Error blocking friend:', error);
+    }
+  };
 
   useEffect(() => {
     const handleResize = () => {
@@ -68,13 +107,25 @@ export default function FriendsList({ friends = [] }: FriendsListProps) {
               </p>
             </div>
             <div className="flex flex-row items-center justify-end lg:w-[90%] lg:h-[90%] md:w-[90%] md:h-[90%] w-[90%] h-[90%] absolute md:right-10 right-5 top-1 lg:gap-12 md:gap-4 gap-4">
-              <button aria-label={`Invite ${friend.name} to game`} className="cursor-pointer">
+              <button 
+                onClick={() => handleInviteGame(friend.id, friend.name)}
+                aria-label={`Invite ${friend.name} to game`} 
+                className="cursor-pointer hover:scale-110 transition-transform"
+              >
                 <Image src="/images/InviteGame.svg" alt="" width={50} height={50} className="lg:w-[40px] lg:h-[40px] md:w-[30px] md:h-[30px] w-[30px] h-[30px]" />
               </button>
-              <button aria-label={`Chat with ${friend.name}`} className="cursor-pointer">
+              <button 
+                onClick={() => handleChat(friend.id)}
+                aria-label={`Chat with ${friend.name}`} 
+                className="cursor-pointer hover:scale-110 transition-transform"
+              >
                 <Image src="/images/chat.svg" alt="" width={50} height={50} className="lg:w-[40px] lg:h-[40px] md:w-[30px] md:h-[30px] w-[30px] h-[30px]" />
               </button>
-              <button aria-label={`Block ${friend.name}`} className="cursor-pointer">
+              <button 
+                onClick={() => handleBlock(friend.id)}
+                aria-label={`Block ${friend.name}`} 
+                className="cursor-pointer hover:scale-110 transition-transform"
+              >
                 <Image src="/images/BlockedFriends.svg" alt="" width={50} height={50} className="lg:w-[40px] lg:h-[40px] md:w-[30px] md:h-[30px] w-[30px] h-[30px]" />
               </button>
             </div>
