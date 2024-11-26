@@ -3,6 +3,13 @@
 import axios from 'axios';
 import toast from 'react-hot-toast';
 
+
+export async function profileService(friend, router) {
+    
+    router.push(`/Friends`);
+    // router.push(`/Profile/${friend.username}`);
+}
+
 export async function playWithService(friend)
 {
     console.log('playWithService called with:', friend);

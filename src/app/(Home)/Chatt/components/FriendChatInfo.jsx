@@ -7,8 +7,9 @@ import { LuUserX } from "react-icons/lu";
 import { IoIosChatboxes } from "react-icons/io";
 import { FaAngleDown } from "react-icons/fa";
 import Link from 'next/link';
-import { useRouter } from "next/router";
-import { blockService, playWithService } from './services';
+import { useRouter } from "next/navigation";
+import { blockService, playWithService, profileService } from './services';
+
 
 export function HisProfile ({path, name, status}) {
     return (
@@ -81,8 +82,8 @@ export function PlayWithOption ({onClick}) {
 
   export function FriendChatInfo({ loggedInUser, friend, ...rest }) {
     
-
-
+    const router = useRouter();
+    
 
   
     return (
@@ -118,7 +119,7 @@ export function PlayWithOption ({onClick}) {
             ref={rest.dropDownRef}
             className="list absolute right-16 top-20 bg-[#EAEAFF] border-[#C6C6E1] border-2 rounded-xl shadow-lg w-36 "
           >
-            {/* <ProfileOption onClick={() => {profileService(friend); rest.setIconState({ dropDownState: false })} }/> */}
+            <ProfileOption onClick={() => {profileService(friend, router); rest.setIconState({ dropDownState: false })} }/>
 
             <PlayWithOption onClick={() => {playWithService(friend); rest.setIconState({dropDownState: false });}}/>
             <BlockOption onClick={() => {blockService(friend); rest.setIconState({dropDownState: false });}}/>
