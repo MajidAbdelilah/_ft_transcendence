@@ -8,7 +8,7 @@ import { IoIosChatboxes } from "react-icons/io";
 import { FaAngleDown } from "react-icons/fa";
 import Link from 'next/link';
 import { useRouter } from "next/router";
-import { blockService } from './services';
+import { blockService, playWithService } from './services';
 
 export function HisProfile ({path, name, status}) {
     return (
@@ -46,21 +46,21 @@ export function PleaseSelectAConversation() {
 )
 }
 
-export function ProfileOption({ href, onClick }) {
+export function ProfileOption({onClick }) {
   return (
-    <li className="cursor-pointer">
-      <Link href={href} onClick={onClick}>
+    <li onClick={onClick} className="cursor-pointer">
+
         <span className="p-2 text-lg text-[#242F5C] flex items-center border-[#C6C6E1] border-b-2">
           <IoPersonOutline /> <span className="ml-2">Profile</span>
         </span>
-      </Link>
+
     </li>
   );
 }
 
-export function PlayWithOption () {
+export function PlayWithOption ({onClick}) {
     return (
-      <li className="cursor-pointer">
+      <li onClick={onClick} className="cursor-pointer">
       <a className="p-2 text-lg text-[#242F5C] flex items-center">
         <IoGameControllerOutline />
         <span className="ml-2">Play with</span>
@@ -118,9 +118,9 @@ export function PlayWithOption () {
             ref={rest.dropDownRef}
             className="list absolute right-16 top-20 bg-[#EAEAFF] border-[#C6C6E1] border-2 rounded-xl shadow-lg w-36 "
           >
-            <ProfileOption href={`/Profile/${friend.userName}`} onClick={() => rest.setIconState({ dropDownState: false })} />
+            {/* <ProfileOption onClick={() => {profileService(friend); rest.setIconState({ dropDownState: false })} }/> */}
 
-            <PlayWithOption onClick={() => {window.open('https://facebook.com'); rest.setIconState({dropDownState: false });}}/>
+            <PlayWithOption onClick={() => {playWithService(friend); rest.setIconState({dropDownState: false });}}/>
             <BlockOption onClick={() => {blockService(friend); rest.setIconState({dropDownState: false });}}/>
 
 

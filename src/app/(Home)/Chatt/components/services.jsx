@@ -3,6 +3,11 @@
 import axios from 'axios';
 import toast from 'react-hot-toast';
 
+export async function playWithService(friend)
+{
+    console.log('playWithService called with:', friend);
+    toast.success('impliment a play with logic!');
+}
 export async function blockService(friend) {
 
         // console.log(friend);
@@ -16,8 +21,13 @@ export async function blockService(friend) {
         );
 
         // if block successded
-        window.location.reload();
+        
         toast.success('Blocked successfully!');
+        // window.location.reload();
+
+        // else
+        toast.success('Something went wrong!');
+        
 
 
 
