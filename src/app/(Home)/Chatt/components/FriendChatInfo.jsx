@@ -8,7 +8,7 @@ import { IoIosChatboxes } from "react-icons/io";
 import { FaAngleDown } from "react-icons/fa";
 import Link from 'next/link';
 import { useRouter } from "next/router";
-
+import { blockService } from './services';
 
 export function HisProfile ({path, name, status}) {
     return (
@@ -121,7 +121,7 @@ export function PlayWithOption () {
             <ProfileOption href={`/Profile/${friend.userName}`} onClick={() => rest.setIconState({ dropDownState: false })} />
 
             <PlayWithOption onClick={() => {window.open('https://facebook.com'); rest.setIconState({dropDownState: false });}}/>
-            <BlockOption onClick={() => {window.open('https://instagram.com'); rest.setIconState({dropDownState: false });}}/>
+            <BlockOption onClick={() => {blockService(friend); rest.setIconState({dropDownState: false });}}/>
 
 
           </ul>

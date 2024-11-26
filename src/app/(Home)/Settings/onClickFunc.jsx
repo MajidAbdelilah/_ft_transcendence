@@ -48,7 +48,7 @@ export    const handleVerify = async(code, setError) => {
 
         try {
             const result = await Services.handleVerifyService(code);
-            console.log("--- handleVerify has been called : ", result);
+            // console.log("--- handleVerify has been called : ", result);
 
             
                 // console.log('-----------------------------------------------');

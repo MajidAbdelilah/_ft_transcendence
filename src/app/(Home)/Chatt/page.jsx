@@ -23,7 +23,7 @@ import { ConversationsHeader } from "./components/BasicComp";
 import { SendMsgBox } from "./components/SendMsgBox";
 import axios from 'axios';
 import { fetchOldConversation } from './components/fetchOldConversation';
-
+import toast, { Toaster } from 'react-hot-toast';
 import ListFriends from "./components/ListFriends";
 
 
@@ -303,6 +303,7 @@ const getSelectedFriend = (friend) => {
 
 
         <div className="chattSection flex-1 p-5 md:p-10 h-full w-full ">
+          <Toaster /> 
           <div className="boxes relative flex h-full w-full border-2 border-[#C6C6E1] bg-[#F4F4FF] rounded-xl flex-row-revers overflow-auto">
             {/* friendsBox ------------------------------------------------------- */}
 
