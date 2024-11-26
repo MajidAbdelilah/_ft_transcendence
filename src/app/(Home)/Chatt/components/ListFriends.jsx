@@ -13,7 +13,7 @@ export default function ListFriends({ getSelectedFriend, switchChatState }) {
             {
                 try{
                     
-                    const response = await fetch("/friends.json");
+                    const response = await fetch("http://127.0.0.1:8000/friend/friends", { withCredentials: true, headers: {} });
                     if(!response.ok)
                     {
                         throw new Error("Failed to fetch friends data.");
