@@ -27,18 +27,18 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    // const fetchUserData = async () => {
-    //   try {
-    //     const response = await customAxios.get("http://127.0.0.1:8000/api/user/");
-    //     // console.log(response.data.user);
-    //     setUserData(response.data.user);
-    //   } catch (error) {
-    //     console.error('Error fetching user data:', error);
-    //   } finally {
-    //     setIsLoading(false);
-    //   }
-    // };
-    // fetchUserData();
+    const fetchUserData = async () => {
+      try {
+        const response = await customAxios.get("http://127.0.0.1:8000/api/user/", { withCredentials: true, headers: {} });
+        console.log(response.data.user);
+        setUserData(response.data.user);
+      } catch (error) {
+        console.error('Error fetching user data:', error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    fetchUserData();
   }, []);
 
   return (
