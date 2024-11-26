@@ -4,8 +4,8 @@ import customAxios from './customAxios';
 const API_URL = process.env.SIGNUP_API;
 
 const authService = {
-  login: (email, password) => {
-    return customAxios.post('http://127.0.0.1:8000/api/login/', { email, password });
+  login: (email, password) => {http://127.0.0.1:8000/api/
+    return customAxios.post('login/', { email, password });
   },
   signup: (username, email, password) => {
     return customAxios.post('http://127.0.0.1:8000/api/register/', { username, email, password });
