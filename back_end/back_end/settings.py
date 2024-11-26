@@ -25,6 +25,7 @@ EMAIL_PORT = os.getenv('EMAIL_PORT')
 EMAIL_USE_TLS = os.getenv('EMAIL_USE_TLS')
 EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')
 EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
+FRONTEND_URL=os.getenv('FRONTEND_URL')
 #.env settings
 import os
 from dotenv import load_dotenv
@@ -39,6 +40,7 @@ SECRET = os.getenv('SECRET')
 
 INSTALLED_APPS = [
     'django.contrib.admin',
+    'daphne',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
@@ -52,6 +54,10 @@ INSTALLED_APPS = [
     'allauth.socialaccount',
     'allauth.socialaccount.providers.oauth2',
     '_42provider'  ,
+    'chat',
+    'friend',
+    'rest_framework_simplejwt',
+    'channels_redis',
     'double_game',#needed
     'channels',#needed
 ]
@@ -93,6 +99,7 @@ TEMPLATES = [
     },
 ]
 
+ASGI_APPLICATION = 'back_end.asgi.application'
 WSGI_APPLICATION = 'back_end.wsgi.application'
 
 
@@ -169,6 +176,14 @@ CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
 ]
 
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels_redis.core.RedisChannelLayer",
+        "CONFIG": {
+            "hosts": [('localhost', 6379)],   # Change localhost to the ip in which you have redis server running on.
+        },
+    },
+}
 
 
 
