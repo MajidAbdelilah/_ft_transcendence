@@ -1,15 +1,24 @@
 // import { div } from "framer-motion/client";
 // import { DashContext } from "../../Dashboard/Dashcontext";
 // import { useContext } from "react";
-
+"use client";
 import { BsChatLeftText } from "react-icons/bs";
 import { MdOutlinePersonAddAlt } from "react-icons/md";
 import { LuUserX } from "react-icons/lu";
 import axios from "axios";
+import { useRouter } from 'next/navigation';
+
 // import { DashContext } from "../../Dashboard/Dashcontext";
 // import { useContext } from "react";
 // -- colors -----------------------------------------------------co
 //  #F4F4FF   #242F5C   #8988DE   #BCBCC9   #F4F4FF   #EAEAFF   #C0C7E0
+
+
+const handleTextUser = (router) => {
+  
+  router.push(`/Chatt`);
+}
+
 
 
 
@@ -25,10 +34,7 @@ const handleAddFriend = async (loggedInUser, user) => {
  // the other user will reciebe a notification the he can eather acceot the friend request or reject it
 }
 
-const handleTextUser = async (loggedInUser, user) => {
-  
-  // const response = await axios.post('https://jsonplaceholder.typicode.com/posts', {})
-}
+
 
 
 
@@ -41,6 +47,7 @@ const handleBlockUser = async (loggedInUser, user) => {
 }
 
 function Part1({loggedInUser, user, isSelf}) {
+  const router = useRouter();
   return (
     <div className="part1 relative w-1/3 p-2 rounded-l-2xl bg-[#F4F4FF] border-[#BCBCC9] border-r-2 min-w-32 ">
 
@@ -56,7 +63,7 @@ function Part1({loggedInUser, user, isSelf}) {
       </div>
       <span className="text-xs md:text-sm lg:text-md xl:text-lg mt-1 text-[#8988DE]">{user.status}</span>
       <div className={`flex flex-row mt-2 text-[#242F5C] ${isSelf === true ? "invisible" : "visible"}`}>
-        <BsChatLeftText className="textUser mr-1 text-lg lg:text-xl cursor-pointer" onClick={handleTextUser(loggedInUser, user)}/>
+        <BsChatLeftText className="textUser mr-1 text-lg lg:text-xl cursor-pointer" onClick={() => handleTextUser(router)}/>
         <MdOutlinePersonAddAlt className="addFriend ml-1 text-xl lg:text-2xl cursor-pointer" onClick={handleAddFriend(loggedInUser, user)}/>
       </div>
     </div>
