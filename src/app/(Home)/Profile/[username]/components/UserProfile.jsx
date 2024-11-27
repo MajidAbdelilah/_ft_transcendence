@@ -7,7 +7,7 @@ import { MdOutlinePersonAddAlt } from "react-icons/md";
 import { LuUserX } from "react-icons/lu";
 import axios from "axios";
 import { useRouter } from 'next/navigation';
-
+import toast, { Toaster } from 'react-hot-toast';
 // import { DashContext } from "../../Dashboard/Dashcontext";
 // import { useContext } from "react";
 // -- colors -----------------------------------------------------co
@@ -23,7 +23,34 @@ const handleTextUser = (router) => {
 
 
 
-const handleAddFriend = async (loggedInUser, user) => {
+const handleAddFriend = (loggedInUser, user) => {
+  try {
+    // const respond = await axios.post("http://127.0.0.1:8000/api/addFriend", 
+    // {friendUsername: user.userName},
+    // { withCredentials: true, headers: {} }
+    // );
+    // if(respond.data.status === "ok")
+    // {
+    //   toast.success('friend request sent successfully');
+     
+    // }
+    // else
+    // {
+    //   toast.error('friend request failed');
+    // }
+    toast.success('friend request sent successfully');
+    console.log("friend request sent successfully");
+
+
+  } catch (error) {
+    console.error(error);
+  }
+
+
+
+
+
+  // console.log("handleAddFriend called with:", loggedInUser, user);
   // const response = await axios.post('https://jsonplaceholder.typicode.com/posts', 
 //   { userId: loggedInUser.userId, friendId: user.userId, } //depends on the the info back end needs ...
 // );
@@ -64,7 +91,7 @@ function Part1({loggedInUser, user, isSelf}) {
       <span className="text-xs md:text-sm lg:text-md xl:text-lg mt-1 text-[#8988DE]">{user.status}</span>
       <div className={`flex flex-row mt-2 text-[#242F5C] ${isSelf === true ? "invisible" : "visible"}`}>
         <BsChatLeftText className="textUser mr-1 text-lg lg:text-xl cursor-pointer" onClick={() => handleTextUser(router)}/>
-        <MdOutlinePersonAddAlt className="addFriend ml-1 text-xl lg:text-2xl cursor-pointer" onClick={handleAddFriend(loggedInUser, user)}/>
+        <MdOutlinePersonAddAlt className="addFriend ml-1 text-xl lg:text-2xl cursor-pointer" onClick={() => handleAddFriend(loggedInUser, user)}/>
       </div>
     </div>
   </div>
@@ -72,11 +99,12 @@ function Part1({loggedInUser, user, isSelf}) {
 }
 
 function Part2({loggedInUser, user, isSelf}) {
+  
   return (
       <div className="part2 w-2/3 p-4 flex flex-col items-end ml-auto   ">
 
       <LuUserX  
-      onClick={handleBlockUser(loggedInUser, user)}
+      onClick={() => handleBlockUser(loggedInUser, user)}
       className={`blockUser text-[#242F5C] text-3xl ${isSelf === true ? "invisible" : "visible"} cursor-pointer`} />
 
       <div className="level flex flex-col items-start w-full mb-4">
@@ -113,7 +141,7 @@ export default function UserProfile({loggedInUser, user, isSelf}) {
       return (<div></div>);
     return (
     <div className="flex shadow-md shadow-[#BCBCC9] border border-[#BCBCC9] rounded-2xl bg-[#F4F4FF] h-40 w-[80%] mt-10">
-      
+      <Toaster /> 
       <Part1 loggedInUser={loggedInUser} user={user} isSelf={isSelf}/>
       <Part2  loggedInUser={loggedInUser} user={user} isSelf={isSelf}/>
 
