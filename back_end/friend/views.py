@@ -440,7 +440,7 @@ class AddFriendshipView(APIView):
         except User.DoesNotExist:
             return Response({'error': 'User does not exist'}, status=status.HTTP_400_BAD_REQUEST)
         if user_from.id == user_add.id:
-            return Response({'error': 'wach nta wa7id t ajoute rassk?'}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({'error': 'maymkanx t ajouter rasek lah ihdik?'}, status=status.HTTP_400_BAD_REQUEST)
         elif Friendship.objects.filter(Q(user_from=user_from, user_to=user_add) |
                                      Q(user_from=user_add, user_to=user_from)).exists():
             return Response({'error': 'Friendship alrady exist'}, status=status.HTTP_400_BAD_REQUEST)
