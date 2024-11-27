@@ -12,11 +12,15 @@ const montserrat = Montserrat({
 })
 
 interface Friend {
-  id: string
-  username: string
-  profile_photo: string
-  is_online: boolean
-  freindship_id: string
+  freindship_id: number
+  user: {
+    id: number
+    username: string
+    profile_photo: string
+    is_online: boolean
+  }
+  is_accepted: boolean
+  blocked: boolean
 }
 
 interface FriendsListProps {
@@ -27,25 +31,29 @@ export default function FriendsList({ friends = [] }: FriendsListProps) {
   const [isMobile, setIsMobile] = useState(false);
   const [imageLoadingStates, setImageLoadingStates] = useState<{ [key: string]: boolean }>({});
 
-  const handleInviteGame = async (friendId: string, friendName: string) => {
+  const handleInviteGame = async (friend: Friend) => {
     try {
-      await customAxios.post(`/api/game/invite/${friendId}`);
+      await customAxios.post(`/api/game/invite`, {
+        friendship_id: friend.freindship_id
+      });
       websocketService.send({
         type: 'GAME_INVITE',
-        friendId,
-        message: `Invited ${friendName} to a game`
+        freindship_id: friend.freindship_id,
+        message: `Invited ${friend.user.username} to a game`
       });
     } catch (error) {
       console.error('Error inviting friend to game:', error);
     }
   };
 
-  const handleChat = async (friendId: string) => {
+  const handleChat = async (friend: Friend) => {
     try {
-      await customAxios.post(`http://127.0.0.1:8000/chat/messages`);
+      await customAxios.post(`/api/chat/messages`, {
+        friendship_id: friend.freindship_id
+      });
       websocketService.send({
         type: 'messages',
-        friendId
+        freindship_id: friend.freindship_id
       });
     } catch (error) {
       console.error('Error initiating chat:', error);
@@ -85,48 +93,48 @@ export default function FriendsList({ friends = [] }: FriendsListProps) {
   return (
     <div className={`w-full mx-auto space-y-2 ${montserrat.className}`}>
       {friends.map((friend) => (
-        <div key={friend.id} className={`w-full h-20 lg:h-[12%] md:h-[20%] rounded-xl bg-[#D8D8F7] shadow-md shadow-[#BCBCC9] relative ${isMobile ? 'w-full' : 'min-h-[90px]'}`}>
+        <div key={friend.user.id} className={`w-full h-20 lg:h-[12%] md:h-[20%] rounded-xl bg-[#D8D8F7] shadow-md shadow-[#BCBCC9] relative ${isMobile ? 'w-full' : 'min-h-[90px]'}`}>
           <div className="flex items-center h-full p-2">
             <div className="flex flex-row items-center justify-center lg:w-[10%] lg:h-[90%] md:w-[10%] md:h-[90%] w-[20%] h-[90%] relative">
-              {imageLoadingStates[friend.id] !== false && (
+              {imageLoadingStates[friend.user.id] !== false && (
                 <div className="absolute inset-0 flex items-center justify-center">
                   <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-[#242F5C]"></div>
                 </div>
               )}
               <Image 
                 priority 
-                src={friend.profile_photo}
-                alt={`${friend.username}'s avatar`}
+                src={friend.user.profile_photo}
+                alt={`${friend.user.username}'s avatar`}
                 width={50} 
                 height={50} 
-                className={`absolute inset-0 lg:w-[90%] lg:h-[90%] md:w-[80%] md:h-[80%] w-[100%] h-[100%] transition-opacity duration-300 ${imageLoadingStates[friend.id] === false ? 'opacity-100' : 'opacity-0'}`}
-                onLoad={() => handleImageLoad(friend.id)}
+                className={`absolute inset-0 lg:w-[90%] lg:h-[90%] md:w-[80%] md:h-[80%] w-[100%] h-[100%] transition-opacity duration-300 ${imageLoadingStates[friend.user.id] === false ? 'opacity-100' : 'opacity-0'}`}
+                onLoad={() => handleImageLoad(friend.user.id.toString())}
               />
             </div>
             <div className="ml-4 flex flex-col justify-center">
-              <h2 className="text-[#242F5C] text-sm lg:text-lg md:text-base font-bold">{friend.username}</h2>
-              <p className={`${friend.is_online ? 'text-green-600' : 'text-gray-500'} lg:text-sm text-xs font-medium`}>
-                {friend.is_online ? 'Online' : 'Offline'}
+              <h2 className="text-[#242F5C] text-sm lg:text-lg md:text-base font-bold">{friend.user.username}</h2>
+              <p className={`${friend.user.is_online ? 'text-green-600' : 'text-gray-500'} lg:text-sm text-xs font-medium`}>
+                {friend.user.is_online ? 'Online' : 'Offline'}
               </p>
             </div>
             <div className="flex flex-row items-center justify-end lg:w-[90%] lg:h-[90%] md:w-[90%] md:h-[90%] w-[90%] h-[90%] absolute md:right-10 right-5 top-1 lg:gap-12 md:gap-4 gap-4">
               <button 
-                onClick={() => handleInviteGame(friend.id, friend.username)}
-                aria-label={`Invite ${friend.username} to game`} 
+                onClick={() => handleInviteGame(friend)}
+                aria-label={`Invite ${friend.user.username} to game`} 
                 className="cursor-pointer hover:scale-110 transition-transform"
               >
                 <Image src="/images/InviteGame.svg" alt="" width={50} height={50} className="lg:w-[40px] lg:h-[40px] md:w-[30px] md:h-[30px] w-[30px] h-[30px]" />
               </button>
               <button 
-                onClick={() => handleChat(friend.id)}
-                aria-label={`Chat with ${friend.username}`} 
+                onClick={() => handleChat(friend)}
+                aria-label={`Chat with ${friend.user.username}`} 
                 className="cursor-pointer hover:scale-110 transition-transform"
               >
                 <Image src="/images/chat.svg" alt="" width={50} height={50} className="lg:w-[40px] lg:h-[40px] md:w-[30px] md:h-[30px] w-[30px] h-[30px]" />
               </button>
               <button 
                 onClick={() => handleBlock(friend)}
-                aria-label={`Block ${friend.username}`} 
+                aria-label={`Block ${friend.user.username}`} 
                 className="cursor-pointer hover:scale-110 transition-transform"
               >
                 <Image src="/images/BlockedFriends.svg" alt="" width={50} height={50} className="lg:w-[40px] lg:h-[40px] md:w-[30px] md:h-[30px] w-[30px] h-[30px]" />
