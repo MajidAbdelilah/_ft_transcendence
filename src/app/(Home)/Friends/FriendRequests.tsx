@@ -13,20 +13,20 @@ const montserrat = Montserrat({
 
 interface FriendRequestProps {
   id: string
-  name: string
-  avatar: string
-  status: 'online' | 'offline'
+  username: string
+  profile_photo: string
+  is_online: boolean
 }
 
-export default function FriendRequests({ id, name, avatar, status }: FriendRequestProps) {
+export default function FriendRequests({ id, username, profile_photo, is_online }: FriendRequestProps) {
   const [isMobileRq, setIsMobileRq] = useState(false)
   const [isMobile, setIsMobile] = useState(false)
 
   const handleAccept = async () => {
     try {
-      await customAxios.post(`/api/friend-requests/${id}/accept`)
+      await customAxios.post(`/api/friend-requests/accept`, { username: username })
       websocketService.send({
-        type: 'ACCEPT_FRIEND_REQUEST',
+        type: 'friends-accept',
         requestId: id
       })
     } catch (error) {
@@ -38,7 +38,7 @@ export default function FriendRequests({ id, name, avatar, status }: FriendReque
     try {
       await customAxios.post(`/api/friend-requests/${id}/reject`)
       websocketService.send({
-        type: 'REJECT_FRIEND_REQUEST',
+        type: 'friends-remove',
         requestId: id
       })
     } catch (error) {
@@ -63,12 +63,12 @@ export default function FriendRequests({ id, name, avatar, status }: FriendReque
     <div className={`w-full mx-auto h-20 lg:h-[12%] md:h-[20%] mt-2 rounded-xl bg-[#D8D8F7] shadow-md shadow-[#BCBCC9] relative ${isMobile ? '' : ' min-h-[90px]'} ${montserrat.className}`}>
       <div className="flex items-center h-full p-2">
         <div className="flex flex-row items-center justify-center lg:w-[10%] lg:h-[90%] md:w-[10%] md:h-[90%] w-[20%] h-[90%]">
-          <Image priority src={avatar} alt={`${name}'s profile`} width={50} height={50} className="lg:w-[90%] lg:h-[90%] md:w-[80%] md:h-[80%] w-[100%] h-[100%]" />
+          <Image priority src={profile_photo} alt={`${username}'s profile`} width={50} height={50} className="lg:w-[90%] lg:h-[90%] md:w-[80%] md:h-[80%] w-[100%] h-[100%]" />
         </div>
         <div className="ml-4 flex flex-col justify-center">
-          <h2 className="text-[#242F5C] text-sm lg:text-lg md:text-base font-bold">{name}</h2>
-          <p className={`${status === 'online' ? 'text-green-600' : 'text-gray-500'} lg:text-sm text-xs font-medium`}>
-            {status === 'online' ? 'Online' : 'Offline'}
+          <h2 className="text-[#242F5C] text-sm lg:text-lg md:text-base font-bold">{username}</h2>
+          <p className={`${is_online ? 'text-green-600' : 'text-gray-500'} lg:text-sm text-xs font-medium`}>
+            {is_online  ? 'Online' : 'Offline'}
           </p>
         </div>
         {!isMobileRq ? (
@@ -115,10 +115,10 @@ export default function FriendRequests({ id, name, avatar, status }: FriendReque
           </div>
         ) : (
           <div className="flex flex-row items-center justify-end lg:w-[20%] lg:h-[90%] md:w-[20%] md:h-[90%] w-[20%] h-[90%] absolute md:right-4 right-5 top-1 md:gap-5 gap-5">
-            <button onClick={handleAccept} aria-label={`Accept friend request from ${name}`}>
+            <button onClick={handleAccept} aria-label={`Accept friend request from ${username}`}>
               <Image src="/images/Accept.svg" alt="Accept" width={50} height={50} className="lg:w-[32%] lg:h-[32%] md:w-[40%] md:h-[40%] w-[30%] h-[30%] cursor-pointer" />
             </button>
-            <button onClick={handleReject} aria-label={`Reject friend request from ${name}`}>
+            <button onClick={handleReject} aria-label={`Reject friend request from ${username}`}>
               <Image src="/images/Reject.svg" alt="Reject" width={50} height={50} className="lg:w-[32%] lg:h-[32%] md:w-[40%] md:h-[40%] w-[30%] h-[30%] cursor-pointer" />
             </button>
           </div>

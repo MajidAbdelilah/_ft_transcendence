@@ -12,10 +12,10 @@ const montserrat = Montserrat({
 })
 
 interface Friend {
-  id: string;
-  name: string;
-  avatar: string;
-  status: 'online' | 'offline';
+  id: string
+  username: string
+  profile_photo: string
+  is_online: boolean
 }
 
 interface FriendsListProps {
@@ -43,7 +43,7 @@ export default function FriendsList({ friends = [] }: FriendsListProps) {
     try {
       await customAxios.post(`http://127.0.0.1:8000/chat/messages`);
       websocketService.send({
-        type: 'CHAT_INITIATE',
+        type: 'messages',
         friendId
       });
     } catch (error) {
@@ -55,7 +55,7 @@ export default function FriendsList({ friends = [] }: FriendsListProps) {
     try {
       await customAxios.post(`http://127.0.0.1:8000/friend/friends-block`);
       websocketService.send({
-        type: 'BLOCK_FRIEND',
+        type: 'friends-block',
         friendId
       });
     } catch (error) {
@@ -92,8 +92,8 @@ export default function FriendsList({ friends = [] }: FriendsListProps) {
               )}
               <Image 
                 priority 
-                src={friend.avatar}
-                alt={`${friend.name}'s avatar`}
+                src={friend.profile_photo}
+                alt={`${friend.username}'s avatar`}
                 width={50} 
                 height={50} 
                 className={`absolute inset-0 lg:w-[90%] lg:h-[90%] md:w-[80%] md:h-[80%] w-[100%] h-[100%] transition-opacity duration-300 ${imageLoadingStates[friend.id] === false ? 'opacity-100' : 'opacity-0'}`}
@@ -101,29 +101,29 @@ export default function FriendsList({ friends = [] }: FriendsListProps) {
               />
             </div>
             <div className="ml-4 flex flex-col justify-center">
-              <h2 className="text-[#242F5C] text-sm lg:text-lg md:text-base font-bold">{friend.name}</h2>
-              <p className={`${friend.status === 'online' ? 'text-green-600' : 'text-gray-500'} lg:text-sm text-xs font-medium`}>
-                {friend.status === 'online' ? 'Online' : 'Offline'}
+              <h2 className="text-[#242F5C] text-sm lg:text-lg md:text-base font-bold">{friend.username}</h2>
+              <p className={`${friend.is_online ? 'text-green-600' : 'text-gray-500'} lg:text-sm text-xs font-medium`}>
+                {friend.is_online ? 'Online' : 'Offline'}
               </p>
             </div>
             <div className="flex flex-row items-center justify-end lg:w-[90%] lg:h-[90%] md:w-[90%] md:h-[90%] w-[90%] h-[90%] absolute md:right-10 right-5 top-1 lg:gap-12 md:gap-4 gap-4">
               <button 
-                onClick={() => handleInviteGame(friend.id, friend.name)}
-                aria-label={`Invite ${friend.name} to game`} 
+                onClick={() => handleInviteGame(friend.id, friend.username)}
+                aria-label={`Invite ${friend.username} to game`} 
                 className="cursor-pointer hover:scale-110 transition-transform"
               >
                 <Image src="/images/InviteGame.svg" alt="" width={50} height={50} className="lg:w-[40px] lg:h-[40px] md:w-[30px] md:h-[30px] w-[30px] h-[30px]" />
               </button>
               <button 
                 onClick={() => handleChat(friend.id)}
-                aria-label={`Chat with ${friend.name}`} 
+                aria-label={`Chat with ${friend.username}`} 
                 className="cursor-pointer hover:scale-110 transition-transform"
               >
                 <Image src="/images/chat.svg" alt="" width={50} height={50} className="lg:w-[40px] lg:h-[40px] md:w-[30px] md:h-[30px] w-[30px] h-[30px]" />
               </button>
               <button 
                 onClick={() => handleBlock(friend.id)}
-                aria-label={`Block ${friend.name}`} 
+                aria-label={`Block ${friend.username}`} 
                 className="cursor-pointer hover:scale-110 transition-transform"
               >
                 <Image src="/images/BlockedFriends.svg" alt="" width={50} height={50} className="lg:w-[40px] lg:h-[40px] md:w-[30px] md:h-[30px] w-[30px] h-[30px]" />

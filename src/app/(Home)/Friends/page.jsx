@@ -24,9 +24,9 @@ function Friends() {
     "Friend Requests",
     "Blocked Friends",
   ])
-  const [friendsData, setFriendsData] = useState([])
-  const [friendRequestsData, setFriendRequestsData] = useState([])
-  const [blockedFriendsData, setBlockedFriendsData] = useState([])
+  const [friendsData, setFriendsData] = useState({ friends: [] })
+  const [friendRequestsData, setFriendRequestsData] = useState({ friends: [] })
+  const [blockedFriendsData, setBlockedFriendsData] = useState({ friends: [] })
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState(null)
 
@@ -67,14 +67,18 @@ function Friends() {
       setError(null)
       try {
         const [friendsRes, requestsRes, blockedRes] = await Promise.all([
-          customAxios.get('/api/friends'),
-          customAxios.get('/api/friend-requests'),
-          customAxios.get('/api/blocked-friends')
-        ]);
+          customAxios.get('http://127.0.0.1:8000/friend/friends'),
+          customAxios.get('http://127.0.0.1:8000/friend/friends-add'),
+          customAxios.get('http://127.0.0.1:8000/friend/blocked-friends')
 
-        setFriendsData(friendsRes.data)
-        setFriendRequestsData(requestsRes.data)
-        setBlockedFriendsData(blockedRes.data)
+        ]);
+        // console.log(requestsRes.data);
+        // console.log(friendsRes.data);
+        // console.log(blockedRes.data);
+
+        setFriendsData({ friends: friendsRes.data })
+        setFriendRequestsData({ friends: requestsRes.data })
+        setBlockedFriendsData({ friends: blockedRes.data })
       } catch (error) {
         setError(error.message)
       } finally {
@@ -84,38 +88,81 @@ function Friends() {
 
     const handleWebSocketMessage = (data) => {
       switch (data.type) {
-        case 'friends':
-          setFriendsData(prev => 
-            prev.map(friend => 
-              friend.id === data.userId 
-                ? { ...friend, status: data.status }
+        case 'user_status':
+          setFriendsData(prev => ({
+            ...prev,
+            friends: prev.friends.map(friend => 
+              friend.user.id === data.id 
+                ? { 
+                    ...friend, 
+                    user: { 
+                      ...friend.user, 
+                      is_online: data.is_online,
+                      username: data.username,
+                      profile_photo: data.image_url
+                    } 
+                  }
                 : friend
             )
-          )
+          }))
           break;
 
         case 'friends-add':
-          setFriendRequestsData(prev => [...prev, data.request])
+          setFriendRequestsData(prev => ({
+            ...prev,
+            friends: [...prev.friends, {
+              freindship_id: data.freindship_id,
+              user: data.user,
+              is_accepted: false,
+              blocked: false,
+              is_user_from: data.is_user_from
+            }]
+          }))
           break;
 
         case 'friends-accept':
-          setFriendRequestsData(prev => 
-            prev.filter(request => request.id !== data.requestId)
-          )
-          setFriendsData(prev => [...prev, data.newFriend])
+          // Remove from requests
+          setFriendRequestsData(prev => ({
+            ...prev,
+            friends: prev.friends.filter(request => request.freindship_id !== data.freindship_id)
+          }))
+          // Add to friends
+          setFriendsData(prev => ({
+            ...prev,
+            friends: [...prev.friends, {
+              freindship_id: data.freindship_id,
+              user: data.user,
+              is_accepted: true,
+              blocked: false,
+              is_user_from: data.is_user_from
+            }]
+          }))
           break;
 
         case 'friends-block':
-          setFriendsData(prev => 
-            prev.filter(friend => friend.id !== data.userId)
-          )
-          setBlockedFriendsData(prev => [...prev, data.blockedUser])
+          // Remove from friends
+          setFriendsData(prev => ({
+            ...prev,
+            friends: prev.friends.filter(friend => friend.freindship_id !== data.freindship_id)
+          }))
+          // Add to blocked
+          setBlockedFriendsData(prev => ({
+            ...prev,
+            friends: [...prev.friends, {
+              freindship_id: data.freindship_id,
+              user: data.user,
+              is_accepted: data.is_accepted,
+              blocked: true,
+              is_user_from: data.is_user_from
+            }]
+          }))
           break;
 
         case 'friends-unblock':
-          setBlockedFriendsData(prev => 
-            prev.filter(blocked => blocked.id !== data.userId)
-          )
+          setBlockedFriendsData(prev => ({
+            ...prev,
+            friends: prev.friends.filter(blocked => blocked.freindship_id !== data.freindship_id)
+          }))
           break;
       }
     }
@@ -193,15 +240,15 @@ function Friends() {
           <div className="w-full h-full flex flex-col space-y-7 overflow-y-auto scrollbar-hide custom-scrollbar motion-preset-expand  ">
             <ScrollBlur>
               {activeItem === "Friends List" && (
-                <FriendsComponent friends={friendsData} />
+                <FriendsComponent friends={friendsData.friends} />
               )}
               {activeItem === "Friend Requests" && (
-                friendRequestsData.map((request, index) => (
+                friendRequestsData.friends.map((request, index) => (
                   <FriendRequests key={index} request={request} />
                 ))
               )}
               {activeItem === "Blocked Friends" && (
-                blockedFriendsData.map((blockedFriend, index) => (
+                blockedFriendsData.friends.map((blockedFriend, index) => (
                   <BlockedFriends key={index} blockedFriend={blockedFriend} />
                 ))
               )}

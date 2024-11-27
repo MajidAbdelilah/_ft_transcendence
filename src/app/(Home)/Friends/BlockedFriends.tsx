@@ -13,16 +13,16 @@ const montserrat = Montserrat({
 
 interface BlockedFriendProps {
   id: string
-  name: string
-  avatar: string
+  username: string
+  profile_photo: string
 }
 
-export default function BlockedFriends({ id, name, avatar }: BlockedFriendProps) {
+export default function BlockedFriends({ id, username, profile_photo }: BlockedFriendProps) {
   const [isMobile, setIsMobile] = useState(false)
 
   const handleUnblock = async () => {
     try {
-      await customAxios.post(`/api/friends/${id}/unblock`)
+      await customAxios.post(`/api/friends//unblock`)
       websocketService.send({
         type: 'FRIEND_UNBLOCKED',
         userId: id
@@ -50,15 +50,15 @@ export default function BlockedFriends({ id, name, avatar }: BlockedFriendProps)
         <div className="flex flex-row items-center justify-center lg:w-[10%] lg:h-[90%] md:w-[10%] md:h-[90%] w-[20%] h-[90%]">
           <Image
             priority
-            src={avatar}
-            alt={`${name}'s profile`}
+            src={profile_photo}
+            alt={`${username}'s profile`}
             width={50}
             height={50}
             className="lg:w-[90%] lg:h-[90%] md:w-[80%] md:h-[80%] w-[100%] h-[100%]"
           />
         </div>
         <div className="ml-4 flex flex-col justify-center">
-          <h2 className="text-[#242F5C] text-sm lg:text-lg md:text-base font-bold">{name}</h2>
+          <h2 className="text-[#242F5C] text-sm lg:text-lg md:text-base font-bold">{ username}</h2>
           <p className="text-red-500 lg:text-sm text-xs font-medium">Blocked</p>
         </div>
         <div className="flex flex-row items-center justify-end lg:w-[50%] lg:h-[90%] md:w-[10%] md:h-[90%] w-[20%] h-[90%] absolute md:right-10 right-5 top-1 md:gap-5 gap-2">
