@@ -89,12 +89,15 @@ function Friends() {
     const handleWebSocketMessage = (data) => {
       switch (data.type) {
         case 'user_status':
+          // update the friend's status Online/Offline
           setFriendsData(prev => ({
             ...prev,
+            
             friends: prev.friends.map(friend => 
+              // check if the friend's id is the same as the data id (data.id is from the websocket event)
               friend.user.id === data.id 
                 ? { 
-                    ...friend, 
+                    ...friend,
                     user: { 
                       ...friend.user, 
                       is_online: data.is_online,
@@ -108,6 +111,7 @@ function Friends() {
           break;
 
         case 'friends-add':
+          // add the friend request to the friend requests list
           setFriendRequestsData(prev => ({
             ...prev,
             friends: [...prev.friends, {
@@ -121,12 +125,11 @@ function Friends() {
           break;
 
         case 'friends-accept':
-          // Remove from requests
           setFriendRequestsData(prev => ({
             ...prev,
             friends: prev.friends.filter(request => request.freindship_id !== data.freindship_id)
           }))
-          // Add to friends
+          // add the friend to the friends list
           setFriendsData(prev => ({
             ...prev,
             friends: [...prev.friends, {
@@ -140,12 +143,12 @@ function Friends() {
           break;
 
         case 'friends-block':
-          // Remove from friends
+          // remove the friend from the friends list
           setFriendsData(prev => ({
             ...prev,
             friends: prev.friends.filter(friend => friend.freindship_id !== data.freindship_id)
           }))
-          // Add to blocked
+          // add the friend to the blocked friends list
           setBlockedFriendsData(prev => ({
             ...prev,
             friends: [...prev.friends, {
@@ -159,6 +162,7 @@ function Friends() {
           break;
 
         case 'friends-unblock':
+          // remove the friend from the blocked friends list
           setBlockedFriendsData(prev => ({
             ...prev,
             friends: prev.friends.filter(blocked => blocked.freindship_id !== data.freindship_id)
@@ -170,10 +174,8 @@ function Friends() {
     websocketService.connect();
     websocketService.addHandler(handleWebSocketMessage);
 
-    // Fetch initial data
     fetchData();
 
-    // Cleanup: remove message handler when component unmounts
     return () => {
       websocketService.removeHandler(handleWebSocketMessage);
     }
