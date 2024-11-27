@@ -84,7 +84,7 @@ function Friends() {
 
     const handleWebSocketMessage = (data) => {
       switch (data.type) {
-        case 'FRIEND_ONLINE_STATUS':
+        case 'friends':
           setFriendsData(prev => 
             prev.map(friend => 
               friend.id === data.userId 
@@ -94,25 +94,25 @@ function Friends() {
           )
           break;
 
-        case 'FRIEND_REQUEST':
+        case 'friends-add':
           setFriendRequestsData(prev => [...prev, data.request])
           break;
 
-        case 'FRIEND_REQUEST_ACCEPTED':
+        case 'friends-accept':
           setFriendRequestsData(prev => 
             prev.filter(request => request.id !== data.requestId)
           )
           setFriendsData(prev => [...prev, data.newFriend])
           break;
 
-        case 'FRIEND_BLOCKED':
+        case 'friends-block':
           setFriendsData(prev => 
             prev.filter(friend => friend.id !== data.userId)
           )
           setBlockedFriendsData(prev => [...prev, data.blockedUser])
           break;
 
-        case 'FRIEND_UNBLOCKED':
+        case 'friends-unblock':
           setBlockedFriendsData(prev => 
             prev.filter(blocked => blocked.id !== data.userId)
           )
