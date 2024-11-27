@@ -1,39 +1,40 @@
 "use client";
 import { useState, useEffect} from "react";
 import Image from "next/image";
+import axios from "axios";
+
 
 export default function ListFriends({ getSelectedFriend, switchChatState }) {
 
     const [friendsList, setFriendsList] = useState([]);
 
-    // fetching friends ...
-    useEffect (() => 
-    {
-        const fetchFriends = async () => 
-            {
-                try{
-                    
-                    const response = await fetch("http://127.0.0.1:8000/friend/friends", { withCredentials: true, headers: {} });
-                    if(!response.ok)
-                    {
-                        throw new Error("Failed to fetch friends data.");
-                    }
 
-                const data = await response.json();
-                setFriendsList(data.friends);
-                // console.log(data.friends);
-                } catch (error)
-                {
-                    console.error("Error catched fetching friends data", error);
-                }
-            };
+
+    // Fetching friends with Axios
+    useEffect(() => {
+        const fetchFriends = async () => {
+        try {
+            const response = await axios.get("http://127.0.0.1:8000/friend/friends", 
+            { withCredentials: true, headers: {} }
+            );
+
+            setFriendsList(response.data.friends); // Assuming the API returns { friends: [...] }
+        } catch (error) {
+            console.error("Error fetching friends data:", error);
+        }
+        };
+
         fetchFriends();
-
-
-
     }, []);
 
 
+
+
+
+
+
+
+    
     if (friendsList.length === 0) {
         return <p className="text-center text-gray-500">loading friends ...</p>;
     }
