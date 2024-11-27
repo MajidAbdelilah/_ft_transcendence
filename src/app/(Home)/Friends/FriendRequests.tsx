@@ -32,12 +32,12 @@ export default function FriendRequests({ request }: FriendRequestProps) {
 
   const handleAccept = async () => {
     try {
-      await customAxios.post(`/api/friend-requests/accept`, { username: request.user.username })
+      await customAxios.post(`/api/friend-requests/accept`, { 
+        friendship_id: request.freindship_id 
+      })
       websocketService.send({
         type: 'friends-accept',
-        freindship_id: request.freindship_id,
-        user: request.user,
-        is_user_from: request.is_user_from
+        freindship_id: request.freindship_id
       })
     } catch (error) {
       console.error('Error accepting friend request:', error)
@@ -46,7 +46,9 @@ export default function FriendRequests({ request }: FriendRequestProps) {
 
   const handleReject = async () => {
     try {
-      await customAxios.post(`/api/friend-requests/${request.freindship_id}/reject`)
+      await customAxios.post(`/api/friend-requests/reject`, {
+        friendship_id: request.freindship_id
+      })
       websocketService.send({
         type: 'friends-remove',
         freindship_id: request.freindship_id

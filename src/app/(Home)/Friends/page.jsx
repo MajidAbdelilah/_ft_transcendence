@@ -89,20 +89,16 @@ function Friends() {
     const handleWebSocketMessage = (data) => {
       switch (data.type) {
         case 'user_status':
-          // update the friend's status Online/Offline
+          // Only update online status
           setFriendsData(prev => ({
             ...prev,
-            
             friends: prev.friends.map(friend => 
-              // check if the friend's id is the same as the data id (data.id is from the websocket event)
               friend.user.id === data.id 
                 ? { 
                     ...friend,
                     user: { 
                       ...friend.user, 
-                      is_online: data.is_online,
-                      username: data.username,
-                      profile_photo: data.image_url
+                      is_online: data.is_online
                     } 
                   }
                 : friend
@@ -111,61 +107,64 @@ function Friends() {
           break;
 
         case 'friends-add':
-          // add the friend request to the friend requests list
+          // Only need friendship_id and user id for new request
           setFriendRequestsData(prev => ({
             ...prev,
             friends: [...prev.friends, {
               freindship_id: data.freindship_id,
               user: data.user,
               is_accepted: false,
-              blocked: false,
-              is_user_from: data.is_user_from
+              blocked: false
             }]
           }))
           break;
 
         case 'friends-accept':
+          // Remove request using friendship_id
           setFriendRequestsData(prev => ({
             ...prev,
-            friends: prev.friends.filter(request => request.freindship_id !== data.freindship_id)
+            friends: prev.friends.filter(request => 
+              request.freindship_id !== data.freindship_id
+            )
           }))
-          // add the friend to the friends list
+          // Add to friends list
           setFriendsData(prev => ({
             ...prev,
             friends: [...prev.friends, {
               freindship_id: data.freindship_id,
               user: data.user,
               is_accepted: true,
-              blocked: false,
-              is_user_from: data.is_user_from
+              blocked: false
             }]
           }))
           break;
 
         case 'friends-block':
-          // remove the friend from the friends list
+          // Remove from friends using friendship_id
           setFriendsData(prev => ({
             ...prev,
-            friends: prev.friends.filter(friend => friend.freindship_id !== data.freindship_id)
+            friends: prev.friends.filter(friend => 
+              friend.freindship_id !== data.freindship_id
+            )
           }))
-          // add the friend to the blocked friends list
+          // Add to blocked list
           setBlockedFriendsData(prev => ({
             ...prev,
             friends: [...prev.friends, {
               freindship_id: data.freindship_id,
               user: data.user,
-              is_accepted: data.is_accepted,
-              blocked: true,
-              is_user_from: data.is_user_from
+              blocked: true
             }]
           }))
           break;
 
         case 'friends-unblock':
-          // remove the friend from the blocked friends list
+          // Only need friendship_id to remove from blocked list
           setBlockedFriendsData(prev => ({
             ...prev,
-            friends: prev.friends.filter(blocked => blocked.freindship_id !== data.freindship_id)
+            friends: prev.friends.filter(blocked => 
+              blocked.freindship_id !== data.freindship_id
+            )
           }))
           break;
       }

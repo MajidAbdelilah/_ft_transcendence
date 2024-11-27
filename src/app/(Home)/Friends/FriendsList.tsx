@@ -16,6 +16,7 @@ interface Friend {
   username: string
   profile_photo: string
   is_online: boolean
+  freindship_id: string
 }
 
 interface FriendsListProps {
@@ -51,12 +52,14 @@ export default function FriendsList({ friends = [] }: FriendsListProps) {
     }
   };
 
-  const handleBlock = async (friendId: string) => {
+  const handleBlock = async (friend: Friend) => {
     try {
-      await customAxios.post(`http://127.0.0.1:8000/friend/friends-block`);
+      await customAxios.post(`/api/friends/block`, {
+        friendship_id: friend.freindship_id
+      });
       websocketService.send({
         type: 'friends-block',
-        friendId
+        freindship_id: friend.freindship_id
       });
     } catch (error) {
       console.error('Error blocking friend:', error);
@@ -122,7 +125,7 @@ export default function FriendsList({ friends = [] }: FriendsListProps) {
                 <Image src="/images/chat.svg" alt="" width={50} height={50} className="lg:w-[40px] lg:h-[40px] md:w-[30px] md:h-[30px] w-[30px] h-[30px]" />
               </button>
               <button 
-                onClick={() => handleBlock(friend.id)}
+                onClick={() => handleBlock(friend)}
                 aria-label={`Block ${friend.username}`} 
                 className="cursor-pointer hover:scale-110 transition-transform"
               >
