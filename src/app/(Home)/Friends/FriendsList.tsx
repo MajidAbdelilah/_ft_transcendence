@@ -41,7 +41,7 @@ export default function FriendsList({ friends = [] }: FriendsListProps) {
 
   const handleChat = async (friendId: string) => {
     try {
-      await customAxios.post(`/api/chat/initiate/${friendId}`);
+      await customAxios.post(`http://127.0.0.1:8000/chat/messages`);
       websocketService.send({
         type: 'CHAT_INITIATE',
         friendId
