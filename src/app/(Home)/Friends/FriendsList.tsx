@@ -53,7 +53,7 @@ export default function FriendsList({ friends = [] }: FriendsListProps) {
 
   const handleBlock = async (friendId: string) => {
     try {
-      await customAxios.post(`/api/friends/${friendId}/block`);
+      await customAxios.post(`http://127.0.0.1:8000/friend/friends-block`);
       websocketService.send({
         type: 'BLOCK_FRIEND',
         friendId
