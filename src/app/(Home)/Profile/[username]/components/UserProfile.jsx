@@ -23,7 +23,7 @@ const handleTextUser = (router) => {
 
 
 
-const handleAddFriend = (loggedInUser, user) => {
+const handleAddFriend = async (loggedInUser, user) => {
   try {
     // const respond = await axios.post("http://127.0.0.1:8000/api/addFriend", 
     // {friendUsername: user.userName},
@@ -38,8 +38,7 @@ const handleAddFriend = (loggedInUser, user) => {
     // {
     //   toast.error('friend request failed');
     // }
-    toast.success('friend request sent successfully');
-    console.log("friend request sent successfully");
+
 
 
   } catch (error) {
@@ -48,17 +47,6 @@ const handleAddFriend = (loggedInUser, user) => {
 
 
 
-
-
-  // console.log("handleAddFriend called with:", loggedInUser, user);
-  // const response = await axios.post('https://jsonplaceholder.typicode.com/posts', 
-//   { userId: loggedInUser.userId, friendId: user.userId, } //depends on the the info back end needs ...
-// );
-
-  // console.log("response.data : ", response.data);
-  // console.log("loggedInUser.userId : ", loggedInUser.userId);
-  // console.log("user.userId: ", user.userId);
- // the other user will reciebe a notification the he can eather acceot the friend request or reject it
 }
 
 
@@ -66,6 +54,29 @@ const handleAddFriend = (loggedInUser, user) => {
 
 
 const handleBlockUser = async (loggedInUser, user) => {
+  try {
+    // const respond = await axios.post("http://127.0.0.1:8000/api/addFriend",
+    // {toBlock: user.userName},
+    // { withCredentials: true, headers: {} }
+    // );
+
+    // if(respond.data.status === "ok")
+    // {
+    //   toast.success('user blocked successfully');
+    // }
+    // else
+    // {
+    //   toast.error('blocking user failed');
+    // }
+    toast.success('user blocked successfully');
+
+
+  } catch (error) {
+    console.error(error);
+  }
+
+
+
   // const response = await axios.post('https://jsonplaceholder.typicode.com/posts', 
   //   {blockerId: loggedInUser.userId, blockedId: user.userId}//depends on the the info back end needs ...
   // );
