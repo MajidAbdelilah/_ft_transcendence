@@ -14,7 +14,7 @@ from .views import (FriendsView,
 urlpatterns = [
 
    path('friends', FriendsView.as_view(), name='friends'),
-   path('user-search', UserSearchView.as_view(), name='user-search'),
+#    path('user-search', UserSearchView.as_view(), name='user-search'),
    path('friends-remove', RemoveFriendshipView.as_view(), name="friends-remove"),
    path('friends-accept', AcceptFriendshipView.as_view(), name="friends-accept"),
    path('friends-add', AddFriendshipView.as_view(), name="friends-add"),

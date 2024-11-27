@@ -32,15 +32,43 @@ def get_friends(user):
 
 
 class UserStatusConsumer(AsyncWebsocketConsumer):
+    # async def connect(self):
+    #     if self.scope["user"].is_authenticated:
+    #         self.user = await get_user(self.scope["user"].id)
+    #         await self.accept()
+
+    #         self.group_name = f'user_{self.user.id}'
+    #         await self.channel_layer.group_add(self.group_name, self.channel_name)
+
+    #         await self.update_user_online_status(True)
+    #     else:
+    #         await self.close()
     async def connect(self):
-        if self.scope["user"].is_authenticated:
-            self.user = await get_user(self.scope["user"].id)
-            await self.accept()
+        # Extract token from connection headers
+        headers = dict(self.scope['headers'])
+        auth_header = headers.get(b'authorization', b'').decode()
+        
+        if auth_header.startswith('Bearer '):
+            token = auth_header.split(' ')[1]
+            
+            # Validate JWT token
+            try:
+                jwt_auth = JWTAuthentication()
+                validated_token = jwt_auth.get_validated_token(token)
+                user = jwt_auth.get_user(validated_token)
+                
+                if user and user.is_authenticated:
+                    self.user = user
+                    await self.accept()
 
-            self.group_name = f'user_{self.user.id}'
-            await self.channel_layer.group_add(self.group_name, self.channel_name)
+                    self.group_name = f'user_{self.user.id}'
+                    await self.channel_layer.group_add(self.group_name, self.channel_name)
 
-            await self.update_user_online_status(True)
+                    await self.update_user_online_status(True)
+                else:
+                    await self.close()
+            except Exception as e:
+                await self.close()
         else:
             await self.close()
 

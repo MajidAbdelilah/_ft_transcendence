@@ -1,7 +1,8 @@
 import os
 import django
 from channels.routing import ProtocolTypeRouter, URLRouter
-from channels.auth import AuthMiddlewareStack
+# from channels.auth import AuthMiddlewareStack
+from django_channels_jwt_auth_middleware.auth import JWTAuthMiddlewareStack
 from django.core.asgi import get_asgi_application
 import  chat.routing 
 import friend.routing
@@ -13,7 +14,7 @@ django.setup()
 
 application = ProtocolTypeRouter({
     "http": get_asgi_application(),
-    "websocket": AuthMiddlewareStack(
+    "websocket": JWTAuthMiddlewareStack(
         URLRouter(
             websocket_urlpatterns +  # assuming it's a list or iterable
             chat.routing.websocket_urlpatterns +
