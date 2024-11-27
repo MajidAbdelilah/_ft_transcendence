@@ -12,22 +12,32 @@ const montserrat = Montserrat({
 })
 
 interface FriendRequestProps {
-  id: string
-  username: string
-  profile_photo: string
-  is_online: boolean
+  request: {
+    freindship_id: number
+    user: {
+      id: number
+      username: string
+      profile_photo: string
+      is_online: boolean
+    }
+    is_accepted: boolean
+    blocked: boolean
+    is_user_from: boolean
+  }
 }
 
-export default function FriendRequests({ id, username, profile_photo, is_online }: FriendRequestProps) {
+export default function FriendRequests({ request }: FriendRequestProps) {
   const [isMobileRq, setIsMobileRq] = useState(false)
   const [isMobile, setIsMobile] = useState(false)
 
   const handleAccept = async () => {
     try {
-      await customAxios.post(`/api/friend-requests/accept`, { username: username })
+      await customAxios.post(`/api/friend-requests/accept`, { username: request.user.username })
       websocketService.send({
         type: 'friends-accept',
-        requestId: id
+        freindship_id: request.freindship_id,
+        user: request.user,
+        is_user_from: request.is_user_from
       })
     } catch (error) {
       console.error('Error accepting friend request:', error)
@@ -36,10 +46,10 @@ export default function FriendRequests({ id, username, profile_photo, is_online 
 
   const handleReject = async () => {
     try {
-      await customAxios.post(`/api/friend-requests/${id}/reject`)
+      await customAxios.post(`/api/friend-requests/${request.freindship_id}/reject`)
       websocketService.send({
         type: 'friends-remove',
-        requestId: id
+        freindship_id: request.freindship_id
       })
     } catch (error) {
       console.error('Error rejecting friend request:', error)
@@ -63,12 +73,19 @@ export default function FriendRequests({ id, username, profile_photo, is_online 
     <div className={`w-full mx-auto h-20 lg:h-[12%] md:h-[20%] mt-2 rounded-xl bg-[#D8D8F7] shadow-md shadow-[#BCBCC9] relative ${isMobile ? '' : ' min-h-[90px]'} ${montserrat.className}`}>
       <div className="flex items-center h-full p-2">
         <div className="flex flex-row items-center justify-center lg:w-[10%] lg:h-[90%] md:w-[10%] md:h-[90%] w-[20%] h-[90%]">
-          <Image priority src={profile_photo} alt={`${username}'s profile`} width={50} height={50} className="lg:w-[90%] lg:h-[90%] md:w-[80%] md:h-[80%] w-[100%] h-[100%]" />
+          <Image 
+            priority 
+            src={request.user.profile_photo} 
+            alt={`${request.user.username}'s profile`} 
+            width={50} 
+            height={50} 
+            className="lg:w-[90%] lg:h-[90%] md:w-[80%] md:h-[80%] w-[100%] h-[100%]" 
+          />
         </div>
         <div className="ml-4 flex flex-col justify-center">
-          <h2 className="text-[#242F5C] text-sm lg:text-lg md:text-base font-bold">{username}</h2>
-          <p className={`${is_online ? 'text-green-600' : 'text-gray-500'} lg:text-sm text-xs font-medium`}>
-            {is_online  ? 'Online' : 'Offline'}
+          <h2 className="text-[#242F5C] text-sm lg:text-lg md:text-base font-bold">{request.user.username}</h2>
+          <p className={`${request.user.is_online ? 'text-green-600' : 'text-gray-500'} lg:text-sm text-xs font-medium`}>
+            {request.user.is_online ? 'Online' : 'Offline'}
           </p>
         </div>
         {!isMobileRq ? (
@@ -115,10 +132,10 @@ export default function FriendRequests({ id, username, profile_photo, is_online 
           </div>
         ) : (
           <div className="flex flex-row items-center justify-end lg:w-[20%] lg:h-[90%] md:w-[20%] md:h-[90%] w-[20%] h-[90%] absolute md:right-4 right-5 top-1 md:gap-5 gap-5">
-            <button onClick={handleAccept} aria-label={`Accept friend request from ${username}`}>
+            <button onClick={handleAccept} aria-label={`Accept friend request from ${request.user.username}`}>
               <Image src="/images/Accept.svg" alt="Accept" width={50} height={50} className="lg:w-[32%] lg:h-[32%] md:w-[40%] md:h-[40%] w-[30%] h-[30%] cursor-pointer" />
             </button>
-            <button onClick={handleReject} aria-label={`Reject friend request from ${username}`}>
+            <button onClick={handleReject} aria-label={`Reject friend request from ${request.user.username}`}>
               <Image src="/images/Reject.svg" alt="Reject" width={50} height={50} className="lg:w-[32%] lg:h-[32%] md:w-[40%] md:h-[40%] w-[30%] h-[30%] cursor-pointer" />
             </button>
           </div>
