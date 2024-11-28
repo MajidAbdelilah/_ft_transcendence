@@ -58,30 +58,36 @@ let tournament = {
 };
 
 
+
+
+
 export default function Chat() {
 
 
   // LoggedInUser -----------------------------------------------------------------------------------------
-  // const LoggedInUser = useUser();
+  const LoggedInUser = useUser();
+  console.log("LoggedInUser-------------- :", LoggedInUser.userData);
 
 
+
+ 
   // re comment those stuff in useeffect search for http://127.0.0.1:8000/api/user/
 
   // for testing perpse :
 
-  const LoggedInUser = {
-    userData: {
-      username: "userNameLoading",
-      id: 10,
-      name: "nameLoading",
-      avatar: "/images/avatarprofile.svg",
-      status: "Online",
-      level: 1,
-      score: "",
-      result: "",
-      map: "",
-    }
-  };
+  // const LoggedInUser = {
+  //   userData: {
+  //     username: "userNameLoading",
+  //     id: 10,
+  //     name: "nameLoading",
+  //     avatar: "/images/avatarprofile.svg",
+  //     status: "Online",
+  //     level: 1,
+  //     score: "",
+  //     result: "",
+  //     map: "",
+  //   }
+  // };
   // console.log("LoggedInUser", LoggedInUser.userData);
   // if (LoggedInUser.userData === null) return (<div>LoggedInUser Loading...</div>);
 
@@ -169,6 +175,8 @@ const getSelectedFriend = (friend) => {
     }));
   };
 
+
+
 // Hide components when clikcing outside  -----------------------------------------------------------------------------------------
 
   const chatRef = useRef();
@@ -205,8 +213,8 @@ const getSelectedFriend = (friend) => {
       const loadConversation = async () => 
         {
           if(friend === null) return;
-          const messages = await fetchOldConversation(loggedInUser, friend.user);
-          setConversation(messages);
+          const conversation = await fetchOldConversation(loggedInUser, friend.user);
+          setConversation(conversation);
         };
         loadConversation();
     }, [loggedInUser, friend]);
@@ -273,7 +281,7 @@ const getSelectedFriend = (friend) => {
           dropDownRef={dropDownRef}
           setIconState={setIconState}
         />
-
+        
         {/* Conversataion ---------------------------------------------------------------------------------------*/}
         <div className="Conversation flex flex-col flex-grow overflow-y-auto custom-scrollbar break-words p-2">
           {Array.isArray(conversation) && conversation.length > 0 ? (

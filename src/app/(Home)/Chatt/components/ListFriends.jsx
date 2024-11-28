@@ -14,10 +14,12 @@ export default function ListFriends({ getSelectedFriend, switchChatState }) {
     useEffect(() => {
         const fetchFriends = async () => {
         try {
-            const response = await axios.get("http://127.0.0.1:8000/friend/friends", 
+            // console.log()
+            const response = await axios.get("http://127.0.0.1:8000/friend/friends",
+            
             { withCredentials: true, headers: {} }
             );
-
+            console.log("===", response);
             setFriendsList(response.data.friends); // Assuming the API returns { friends: [...] }
         } catch (error) {
             console.error("Error fetching friends data:", error);
@@ -26,12 +28,6 @@ export default function ListFriends({ getSelectedFriend, switchChatState }) {
 
         fetchFriends();
     }, []);
-
-
-
-
-
-
 
 
     
@@ -52,7 +48,9 @@ export default function ListFriends({ getSelectedFriend, switchChatState }) {
             
             
                 <Image 
-                    src={friend.user.profile_photo}
+                    src={friend.user.profile_photo == null || friend.user.profile_photo === "" || friend.user.profile_photo === "/images/%7B%7D" 
+                        ? "/images/avatarprofile.svg" 
+                        : friend.user.profile_photo}
                     alt="/images/avatarprofile.svg"
                     width={45}
                     height={45}
