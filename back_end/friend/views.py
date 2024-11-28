@@ -359,7 +359,7 @@ from django.conf import settings
 #             return Response({'error': 'User does not exist'}, status=status.HTTP_400_BAD_REQUEST)
 
 class FriendsView(APIView):
-    authentication_classes = [JWTAuthentication]
+    # authentication_classes = [JWTAuthentication]
     permission_classes = [IsAuthenticated]
     serializer_class = FriendsSerializer
 

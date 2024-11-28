@@ -36,7 +36,7 @@ class User(AbstractBaseUser):
     date_joined = None
     is_superuser = None
     is_staff = None
-    is_online = models.BooleanField(default=False)
+    is_on = models.IntegerField(default=0)
     last_login=None
     USERNAME_FIELD ='email'
     # EMAIL_FIELD = 'email'

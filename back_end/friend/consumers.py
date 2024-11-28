@@ -21,11 +21,12 @@ def get_user(user_id):
 @database_sync_to_async
 def update_user_status(user_id, online):
     if online:
-        return User.objects.filter(id=user_id).update(is_online=F('is_online') + 1)
+        # print("**************", User.is_on)
+        return User.objects.filter(id=user_id).update(is_on=F('is_on') + 1)
     else:
         user = User.objects.get(id=user_id)
-        if user.is_online > 0:
-            return User.objects.filter(id=user_id).update(is_online=F('is_online') - 1)
+        if user.is_on > 0:
+            return User.objects.filter(id=user_id).update(is_on=F('is_on') - 1)
         return None
 
 @database_sync_to_async
@@ -34,100 +35,33 @@ def get_friends(user):
 
 
 class UserStatusConsumer(AsyncWebsocketConsumer):
-    # async def connect(self):
-    #     if self.scope["user"].is_authenticated:
-    #         self.user = await get_user(self.scope["user"].id)
-    #         await self.accept()
-
-    #         self.group_name = f'user_{self.user.id}'
-    #         await self.channel_layer.group_add(self.group_name, self.channel_name)
-
-    #         await self.update_user_online_status(True)
-    #     else:
-    #         await self.close()
-    # async def connect(self):
-    #     # Extract token from connection headers
-    #     print("all headers", self.scope['headers'])
-    #     headers = dict(self.scope['headers'])
-    #     auth_header = headers.get(b'authorization', b'').decode()
-        
-    #     print("Row Auth Header", auth_header)
-    #     if auth_header.startswith('Bearer '):
-    #         token = auth_header.split(' ')[1]
-            
-    #         # Validate JWT token
-    #         try:
-    #             jwt_auth = JWTAuthentication()
-    #             validated_token = jwt_auth.get_validated_token(token)
-    #             user = jwt_auth.get_user(validated_token)
-                
-    #             if user and user.is_authenticated:
-    #                 self.user = user
-    #                 await self.accept()
-
-    #                 self.group_name = f'user_{self.user.id}'
-    #                 await self.channel_layer.group_add(self.group_name, self.channel_name)
-
-    #                 await self.update_user_online_status(True)
-    #             else:
-    #                 await self.close()
-    #         except Exception as e:
-    #             await self.close()
-       
     async def connect(self):
-    # Print out all headers for debugging
-      print("All Headers:", dict(self.scope['headers']))
-      
-      headers = dict(self.scope['headers'])
-      auth_header = headers.get(b'authorization', b'').decode()
-      
-      print("Raw Auth Header:", auth_header)
-  
-      if not auth_header or not auth_header.startswith('Bearer '):
-          print("No valid Bearer token found")
-          await self.close()
-          return
-  
-      try:
-          token = auth_header.split(' ')[1]
-          print("Extracted Token:", token)
-          
-          jwt_auth = JWTAuthentication()
-          validated_token = jwt_auth.get_validated_token(token)
-          user = jwt_auth.get_user(validated_token)
-          
-          print("Authenticated User:", user)
-          
-          if user and user.is_authenticated:
-              self.user = user
-              await self.accept()
-              
-              self.group_name = f'user_{self.user.id}'
-              await self.channel_layer.group_add(self.group_name, self.channel_name)
-              
-              await self.update_user_online_status(True)
-          else:
-              print("User not authenticated")
-              await self.close()
-      
-      except Exception as e:
-          print(f"Authentication Error: {e}")
-          await self.close()
+        if self.scope["user"].is_authenticated:
+            self.user = await get_user(self.scope["user"].id)
+            await self.accept()
+
+            self.group_name = f'user_{self.user.id}'
+            await self.channel_layer.group_add(self.group_name, self.channel_name)
+
+            await self.update_user_online_status(True)
+        else:
+            await self.close()
+    
     async def disconnect(self, close_code):
         if self.scope["user"].is_authenticated:
             await self.update_user_online_status(False)
 
             await self.channel_layer.group_discard(self.group_name, self.channel_name)
 
-    async def update_user_online_status(self, is_online):
-        if is_online:
+    async def update_user_online_status(self, is_on):
+        if is_on:
             await update_user_status(self.user.id, True)
             await self.notify_friends(True)
         else:
             await update_user_status(self.user.id, False)
             await self.notify_friends(False)
 
-    async def notify_friends(self, is_online):
+    async def notify_friends(self, is_on):
         friends = await get_friends(self.user)
         for friendship in friends:
             friend = friendship.user_to if friendship.user_from == self.user else friendship.user_from
@@ -138,7 +72,7 @@ class UserStatusConsumer(AsyncWebsocketConsumer):
                     'type': 'user_status',
                     'id': self.user.id,
                     'username': self.user.username,
-                    'is_online': is_online,
+                    'is_on': is_on,
                     'image_url': self.user.image_url or ''
                 }
             )
@@ -148,7 +82,7 @@ class UserStatusConsumer(AsyncWebsocketConsumer):
             'type': 'user_status',
             'id': event['id'],
             'username': event['username'],
-            'is_online': event['is_online'],
+            'is_on': event['is_on'],
             'image_url': event['image_url']
         }))
 
