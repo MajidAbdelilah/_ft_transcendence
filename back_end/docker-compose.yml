@@ -21,6 +21,13 @@ services:
        - 8080:8080
       networks:
         - nat
+    redis:
+      ports:
+        - 6379:6379
+      image: redis
+      restart: always
+      networks:
+          - nat
 networks:
    nat:
     driver: bridge
@@ -28,5 +35,5 @@ volumes:
   postgres_v:
     driver_opts:
       type: none
-      device: /Users/$USER/Desktop/db
+      device: /goinfre/$USER/db
       o: bind
