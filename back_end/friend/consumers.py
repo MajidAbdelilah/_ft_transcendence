@@ -46,7 +46,6 @@ class UserStatusConsumer(AsyncWebsocketConsumer):
             await self.update_user_online_status(True)
         else:
             await self.close()
-    
     async def disconnect(self, close_code):
         if self.scope["user"].is_authenticated:
             await self.update_user_online_status(False)
@@ -62,6 +61,7 @@ class UserStatusConsumer(AsyncWebsocketConsumer):
             await self.notify_friends(False)
 
     async def notify_friends(self, is_on):
+        print("************1", is_on)
         friends = await get_friends(self.user)
         for friendship in friends:
             friend = friendship.user_to if friendship.user_from == self.user else friendship.user_from
@@ -73,22 +73,36 @@ class UserStatusConsumer(AsyncWebsocketConsumer):
                     'id': self.user.id,
                     'username': self.user.username,
                     'is_on': is_on,
-                    'image_url': self.user.image_url or ''
+                    'profile_photo': self.user.profile_photo or ''
                 }
             )
+            await self.send(text_data=json.dumps({
+                    'status': 'success',
+                    'message': 'notify_friends successfully.',
+                }))
 
     async def user_status(self, event):
+        print("************2", event)
         await self.send(text_data=json.dumps({
             'type': 'user_status',
             'id': event['id'],
             'username': event['username'],
             'is_on': event['is_on'],
-            'image_url': event['image_url']
+            'profile_photo': event['profile_photo']
+        }))
+        await self.send(text_data=json.dumps({
+                    'status': 'success',
+                    'message': 'user_status successfully.',
         }))
 
     async def send_notification(self, event):
+        print("************3", event)
         await self.send(text_data=json.dumps({
             'type': 'notification',
             'notification_id': event['notification_id'],
             'count': event['count']
+        }))
+        await self.send(text_data=json.dumps({
+                    'status': 'success',
+                    'message': 'Invitation status updated successfully.',
         }))

@@ -450,28 +450,28 @@ class AddFriendshipView(APIView):
                                                    is_accepted = False)
             friendship.save()
 
-            # notification = Notification.objects.create(
-            #     user=user_add,
-            #     title="New friend !",
-            #     message=f"{user_from.username} sent you a friend request.",
-            #     profile_photo=user_from.image_url,
-            #     link=f"{settings.FRONTEND_URL}/profile/{user_from.username}",
-            #     is_friend_notif=True,
-            #     action_by=user_from.username,
-            # )
-            # channel_layer = get_channel_layer()
-            # async_to_sync(channel_layer.group_send)(
-            #     f"user_{user_add.id}",
-            #     {
-            #         "type": "send_notification",
-            #         "notification_id": notification.notification_id,
-            #         "count": Notification.objects.filter(user = user_add).count(),
-            #         "is_chat_notif": notification.is_chat_notif,
-            #         "is_friend_notif": notification.is_friend_notif,
-            #         "is_tourn_notif": notification.is_tourn_notif,
-            #         "is_match_notif": notification.is_match_notif,
-            #     },
-            # )
+            notification = Notification.objects.create(
+                user=user_add,
+                title="New friend !",
+                message=f"{user_from.username} sent you a friend request.",
+                profile_photo=user_from.profile_photo,
+                link=f"{settings.FRONTEND_URL}/profile/{user_from.username}",
+                is_friend_notif=True,
+                action_by=user_from.username,
+            )
+            channel_layer = get_channel_layer()
+            async_to_sync(channel_layer.group_send)(
+                f"user_{user_add.id}",
+                {
+                    "type": "send_notification",
+                    "notification_id": notification.notification_id,
+                    "count": Notification.objects.filter(user = user_add).count(),
+                    "is_chat_notif": notification.is_chat_notif,
+                    "is_friend_notif": notification.is_friend_notif,
+                    "is_tourn_notif": notification.is_tourn_notif,
+                    "is_match_notif": notification.is_match_notif,
+                },
+            )
             return Response({'success': 'Friendship Added'}, status=status.HTTP_200_OK)
         except Friendship.DoesNotExist:
             return Response({'error': 'Friendship does not exist'}, status=status.HTTP_400_BAD_REQUEST)
