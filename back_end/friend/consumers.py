@@ -7,6 +7,8 @@ from django.db.models import F, Q
 
 from authapp.models import User
 from friend.models import Friendship
+#JWTAuthentication
+from rest_framework_simplejwt.authentication import JWTAuthentication
 
 
 @database_sync_to_async
@@ -43,35 +45,74 @@ class UserStatusConsumer(AsyncWebsocketConsumer):
     #         await self.update_user_online_status(True)
     #     else:
     #         await self.close()
-    async def connect(self):
-        # Extract token from connection headers
-        headers = dict(self.scope['headers'])
-        auth_header = headers.get(b'authorization', b'').decode()
+    # async def connect(self):
+    #     # Extract token from connection headers
+    #     print("all headers", self.scope['headers'])
+    #     headers = dict(self.scope['headers'])
+    #     auth_header = headers.get(b'authorization', b'').decode()
         
-        if auth_header.startswith('Bearer '):
-            token = auth_header.split(' ')[1]
+    #     print("Row Auth Header", auth_header)
+    #     if auth_header.startswith('Bearer '):
+    #         token = auth_header.split(' ')[1]
             
-            # Validate JWT token
-            try:
-                jwt_auth = JWTAuthentication()
-                validated_token = jwt_auth.get_validated_token(token)
-                user = jwt_auth.get_user(validated_token)
+    #         # Validate JWT token
+    #         try:
+    #             jwt_auth = JWTAuthentication()
+    #             validated_token = jwt_auth.get_validated_token(token)
+    #             user = jwt_auth.get_user(validated_token)
                 
-                if user and user.is_authenticated:
-                    self.user = user
-                    await self.accept()
+    #             if user and user.is_authenticated:
+    #                 self.user = user
+    #                 await self.accept()
 
-                    self.group_name = f'user_{self.user.id}'
-                    await self.channel_layer.group_add(self.group_name, self.channel_name)
+    #                 self.group_name = f'user_{self.user.id}'
+    #                 await self.channel_layer.group_add(self.group_name, self.channel_name)
 
-                    await self.update_user_online_status(True)
-                else:
-                    await self.close()
-            except Exception as e:
-                await self.close()
-        else:
-            await self.close()
-
+    #                 await self.update_user_online_status(True)
+    #             else:
+    #                 await self.close()
+    #         except Exception as e:
+    #             await self.close()
+       
+    async def connect(self):
+    # Print out all headers for debugging
+      print("All Headers:", dict(self.scope['headers']))
+      
+      headers = dict(self.scope['headers'])
+      auth_header = headers.get(b'authorization', b'').decode()
+      
+      print("Raw Auth Header:", auth_header)
+  
+      if not auth_header or not auth_header.startswith('Bearer '):
+          print("No valid Bearer token found")
+          await self.close()
+          return
+  
+      try:
+          token = auth_header.split(' ')[1]
+          print("Extracted Token:", token)
+          
+          jwt_auth = JWTAuthentication()
+          validated_token = jwt_auth.get_validated_token(token)
+          user = jwt_auth.get_user(validated_token)
+          
+          print("Authenticated User:", user)
+          
+          if user and user.is_authenticated:
+              self.user = user
+              await self.accept()
+              
+              self.group_name = f'user_{self.user.id}'
+              await self.channel_layer.group_add(self.group_name, self.channel_name)
+              
+              await self.update_user_online_status(True)
+          else:
+              print("User not authenticated")
+              await self.close()
+      
+      except Exception as e:
+          print(f"Authentication Error: {e}")
+          await self.close()
     async def disconnect(self, close_code):
         if self.scope["user"].is_authenticated:
             await self.update_user_online_status(False)
