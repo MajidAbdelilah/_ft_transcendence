@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ping Pong Tournament Management</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.21.1/axios.min.js"></script>
+</head>
+<body class="bg-gray-100 min-h-screen">
+    <div class="container mx-auto px-4 py-8">
+        <!-- Tournament Management Section -->
+        <section class="bg-white shadow-md rounded-lg p-6 mb-8">
+            <h2 class="text-2xl font-bold mb-4">Tournament Management</h2>
+            
+            <!-- Player Tournament Search -->
+            <div class="tournament-search mb-4">
+                <div class="flex items-center space-x-2">
+                    <input 
+                        type="text" 
+                        id="player-username" 
+                        placeholder="Enter Username" 
+                        class="flex-grow px-3 py-2 border rounded"
+                    >
+                    <button 
+                        onclick="fetchPlayerTournaments()" 
+                        class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+                    >
+                        Fetch Tournaments
+                    </button>
+                </div>
+            </div>
+            <!-- Tournaments List -->
+            <div class="tournaments-section">
+                <h3 class="text-xl font-semibold mb-2">Tournaments</h3>
+                <div id="tournaments-list" class="space-y-2">
+                    <!-- Tournaments will be dynamically populated here -->
+                </div>
+            </div>
+            <!-- Matches List -->
+            <div class="matches-section mt-6">
+                <h3 class="text-xl font-semibold mb-2">Matches</h3>
+                <div id="matches-list" class="space-y-2">
+                    <!-- Matches will be dynamically populated here -->
+                </div>
+            </div>
+        </section>
+        <!-- Game Setup and Play Section -->
+        <section class="game-container bg-white shadow-md rounded-lg p-6">
+            <h2 class="text-2xl font-bold mb-4">Ping Pong Game</h2>
+            
+            <!-- Room Creation and Joining -->
+            <div id="game-setup" class="mb-4 flex space-x-4">
+                <div class="flex-1">
+                    <h3 class="text-lg font-semibold mb-2">Create Room</h3>
+                    <div class="flex space-x-2">
+                        <input 
+                            type="text" 
+                            id="create-room-id" 
+                            placeholder="Room ID" 
+                            class="flex-grow px-3 py-2 border rounded"
+                        >
+                        <button 
+                            onclick="createRoom()" 
+                            class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
+                        >
+                            Create
+                        </button>
+                    </div>
+                </div>
+                <div class="flex-1">
+                    <h3 class="text-lg font-semibold mb-2">Join Room</h3>
+                    <div class="flex space-x-2">
+                        <input 
+                            type="text" 
+                            id="join-room-id" 
+                            placeholder="Room ID" 
+                            class="flex-grow px-3 py-2 border rounded"
+                        >
+                        <button 
+                            onclick="joinRoom()" 
+                            class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+                        >
+                            Join
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <!-- Player Information -->
+            <div id="player-info" class="mt-4 flex justify-between">
+                <div id="player1-info" class="text-left">
+                    <span>Player 1: </span>
+                    <span id="player1-name">-</span>
+                    <span id="player1-score" class="ml-2">0</span>
+                </div>
+                <div id="player2-info" class="text-right">
+                    <span id="player2-score">0</span>
+                    <span id="player2-name" class="ml-2">-</span>
+                    <span>Player 2: </span>
+                </div>
+            </div>
+            <!-- Game Canvas -->
+            <div id="game-canvas" class="mt-4 w-full h-96 bg-gray-200 relative">
+                <canvas id="pingpong-game" class="w-full h-full"></canvas>
+            </div>
+        </section>
+    </div>
+    <script>
+        // Axios configuration for Django CSRF protection
+        axios.defaults.xsrfCookieName = 'csrftoken';
+        axios.defaults.xsrfHeaderName = 'X-CSRFToken';
+    
+        let socket;
+    
+        // Fetch player tournaments
+        async function fetchPlayerTournaments() {
+            const username = document.getElementById('player-username').value;
+            if (!username) {
+                alert('Please enter a username');
+                return;
+            }
+            try {
+                const response = await axios.get(`http://127.0.0.1:8000/turn/tournaments/player/${username}/`);
+                const { tournaments, matches } = response.data;
+                // Populate tournaments list
+                const tournamentsList = document.getElementById('tournaments-list');
+                tournamentsList.innerHTML = tournaments.map(tournament => `
+                    <div class="bg-gray-100 p-3 rounded">
+                        <p>Tournament ID: ${tournament.id}</p>
+                        <p>Winner: ${tournament.winner}</p>
+                        <p>Date: ${new Date(tournament.date).toLocaleString()}</p>
+                    </div>
+                `).join('') || '<p>No tournaments found</p>';
+                // Populate matches list
+                const matchesList = document.getElementById('matches-list');
+                matchesList.innerHTML = matches.map(match => `
+                    <div class="bg-gray-100 p-3 rounded">
+                        <p>${match.player1} vs ${match.player2}</p>
+                        <p>Score: ${match.score1} - ${match.score2}</p>
+                        <p>Winner: ${match.winner}</p>
+                        <p>Date: ${new Date(match.date).toLocaleString()}</p>
+                    </div>
+                `).join('') || '<p>No matches found</p>';
+            } catch (error) {
+                console.error('Error fetching tournaments:', error);
+                alert('Failed to fetch tournaments');
+            }
+        }
+    
+        // Create a new room
+        function createRoom() {
+            const roomId = document.getElementById('create-room-id').value;
+            if (!roomId) {
+                alert('Please enter a room ID');
+                return;
+            }
+            const requestBody = {
+                roomId: roomId,
+                matches: [
+                    {
+                        player1: 'Player1',
+                        player2: 'Player2',
+                        score1: 0,
+                        score2: 0,
+                        winner: 'Player1'
+                    }
+                ], // Provide at least one match
+                winner: 'Player1' // Provide a valid winner
+            };
+            axios.post('http://127.0.0.1:8000/turn/tournaments_post/', requestBody)
+                .then(response => {
+                    alert('Room created successfully');
+                })
+                .catch(error => {
+                    console.error('Error creating room:', error);
+                    alert('Failed to create room');
+                });
+        }
+    
+        // Join an existing room
+        function joinRoom() {
+            const roomId = document.getElementById('join-room-id').value;
+            if (!roomId) {
+                alert('Please enter a room ID');
+                return;
+            }
+            initWebSocket(roomId);
+        }
+    
+        // Initialize WebSocket connection
+        function initWebSocket(roomId) {
+            socket = new WebSocket(`ws://127.0.0.1:8001/ws/game/${roomId}/`);
+            socket.onopen = () => {
+                alert('WebSocket connection established');
+            };
+            socket.onmessage = event => {
+                const message = JSON.parse(event.data);
+                processGameMessage(message);
+            };
+            socket.onclose = event => {
+                alert('WebSocket connection closed');
+            };
+        }
+    
+        // Process incoming WebSocket messages
+        function processGameMessage(message) {
+            if (message.type === 'game_update') {
+                updateGameCanvas(message.data);
+            } else if (message.type === 'player_info') {
+                updatePlayerInfo(message.data);
+            }
+        }
+    
+        // Update game canvas
+        function updateGameCanvas(data) {
+            const canvas = document.getElementById('pingpong-game');
+            const ctx = canvas.getContext('2d');
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            // Draw ball
+            ctx.beginPath();
+            ctx.arc(data.ball_x, data.ball_y, 10, 0, Math.PI * 2);
+            ctx.fillStyle = '#FF0000';
+            ctx.fill();
+            ctx.closePath();
+            // Draw paddles
+            ctx.fillStyle = '#0000FF';
+            ctx.fillRect(data.paddle1_x, data.paddle1_y, 10, 100);
+            ctx.fillRect(data.paddle2_x, data.paddle2_y, 10, 100);
+        }
+    
+        // Update player information
+        function updatePlayerInfo(data) {
+            document.getElementById('player1-name').textContent = data.player1_name;
+            document.getElementById('player1-score').textContent = data.player1_score;
+            document.getElementById('player2-name').textContent = data.player2_name;
+            document.getElementById('player2-score').textContent = data.player2_score;
+        }
+    
+        // Handle player movements
+        document.addEventListener('keydown', event => {
+            const key = event.key;
+            if (key === 'ArrowUp' || key === 'ArrowDown' || key === 'w' || key === 's') {
+                sendPlayerMovement(key);
+            }
+        });
+    
+        function sendPlayerMovement(key) {
+            if (socket && socket.readyState === WebSocket.OPEN) {
+                socket.send(JSON.stringify({ type: 'player_movement', key: key }));
+            }
+        }
+    </script>
+</body>
+</html>

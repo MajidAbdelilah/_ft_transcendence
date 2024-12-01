@@ -9,7 +9,7 @@ https://docs.djangoproject.com/en/4.2/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.2/ref/settings/
 """
-
+import os
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -56,16 +56,19 @@ MIDDLEWARE = [
     'django.middleware.common.CommonMiddleware',#needed
 ]
 
-ASGI_APPLICATION = 'tournamentasgi.application'
 
 CORS_ALLOWED_ORIGINS = [
-    "http://localhost:8000",
     "http://127.0.0.1:8000",
+    "http://localhost:8000",
+    "http://127.0.0.1:8001",
+    "http://localhost:8001",
 ]
 CSRF_TRUSTED_ORIGINS = [
     'http://127.0.0.1:8000',
     'http://localhost:8000',
     # Add other trusted origins here
+    "http://127.0.0.1:8001",
+    "http://localhost:8001",    
 ]
 
 CORS_ALLOW_ALL_ORIGINS = True
@@ -96,7 +99,7 @@ CHANNEL_LAYERS = {
         'BACKEND': 'channels.layers.InMemoryChannelLayer',
     },
 }
-
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
