@@ -35,5 +35,5 @@ volumes:
   postgres_v:
     driver_opts:
       type: none
-      device: /goinfre/$USER/db
+      device: /Users/$USER/Desktop/db
       o: bind

@@ -159,6 +159,17 @@ class LoginView(APIView):
 #         return Response(serializer.data, status=status.HTTP_200_OK)
 
 
+
+# class upload_profile_image(APIView):
+#     permission_classes = [  IsAuthenticated]
+#     def poste (self, request):
+#         form = request.get('file')
+#         if form.is_valid():
+#             form.save()
+#             return HttpResponse('successfully uploaded')
+#         else:
+#             form = ImageForm()
+#             return HttpResponse('Image not Uploaded')
 class Update_user(APIView):
     permission_classes = [IsAuthenticated]
     def post(self , request):

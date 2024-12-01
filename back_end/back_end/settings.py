@@ -258,4 +258,4 @@ os.environ['OAUTHLIB_INSECURE_TRANSPORT'] = '1'
 
 #Media
 MEDIA_URL = '/images/'
-MEDIA_ROOT = BASE_DIR /'images'
+MEDIA_ROOT = os.path.join(BASE_DIR,"images/")
