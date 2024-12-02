@@ -5,6 +5,8 @@
 </head>
 <body>
     <div>
+        <label for="username">username</label>
+        <input type="text" id="username" placeholder="Enter username">
         <label for="roomName">Room Name:</label>
         <input type="text" id="roomName" placeholder="Enter room name">
         <label for="tournamentRoomName">Tournament Room Name:</label>
@@ -42,14 +44,16 @@
 
         // Initialize WebSocket for PingPong game
         function initializeWebSocket() {
-            const roomName = document.getElementById('roomName').value || 'default_room' + Math.random();
+            username = document.getElementById('username').value;
+            const roomName = document.getElementById('roomName').value;
             const tournamentRoomName = document.getElementById('tournamentRoomName').value;
             const url = tournamentRoomName ? 
                 `ws://127.0.0.1:8001/ws/tournament/${roomName}/${tournamentRoomName}/` : 
                 `ws://127.0.0.1:8001/ws/tournament/${roomName}/`;
 
             socket = new WebSocket(url);
-
+            
+            
             socket.onmessage = function(e) {
                 const data = JSON.parse(e.data);
                 if(player === '') {
@@ -58,6 +62,7 @@
                     } else if (data.players.player2.full === false) {
                         player = 'player2';
                     }
+                   
                 }
                 updateGame(data);
             };
@@ -105,7 +110,8 @@
             if (direction) {
                 socket.send(JSON.stringify({
                     'player': player, // Change as needed to identify the player
-                    'direction': direction
+                    'direction': direction,
+                    'username': username
                 }));
             }
         });
@@ -114,7 +120,8 @@
             if (event.key === 'ArrowUp' || event.key === 'ArrowDown') {
                 socket.send(JSON.stringify({
                     'player': player, // Change as needed to identify the player
-                    'direction': null
+                    'direction': null,
+                    'username': username
                 }));
             }
         });
@@ -126,7 +133,7 @@
                 .then(data => displayTournaments(data))
                 .catch(error => console.error('Error fetching tournaments:', error));
         }
-        username = 'example_username'; // Change 'example_username' as needed
+        username = ''; // Change 'example_username' as needed
         player = ''; // Change as needed to identify the player
         fetchTournaments('example_username'); // Change 'example_username' as needed
     </script>
