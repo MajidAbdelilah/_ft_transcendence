@@ -5,9 +5,9 @@ import { Montserrat } from "next/font/google";
 import { useState, useRef, useEffect } from "react";
 import { motion } from "framer-motion";
 import Link from "next/link";
-// import authService from './authService';
 import { IoIosSearch } from "react-icons/io";
 import authService from "./authService";
+import websocketService from './services/websocket';
 
 //----------------------------------------------
 import axios from "axios";
@@ -16,16 +16,6 @@ import { useRouter } from 'next/navigation';
 import { useUser } from './UserContext.tsx';
 import { Skeleton}  from "../compo/ui/Skeleton";
 import NotificationDropdown from './components/NotificationDropdown';
-
-
-
-
-
-
-
-
-
-
 
 const montserrat = Montserrat({
   subsets: ["latin"],
@@ -107,12 +97,13 @@ const ProfileInfo = ({onClick}) => {
 
 function Navbar() {
   const { userData, isLoading, setUserData } = useUser();
-
+  const router = useRouter();
 
   const [userDropdown, setUserDropdown] = useState(false);
-  const [notificationDropdown, setNotificationDropdown] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
   const [notifications, setNotifications] = useState([]);
+  const [notificationCount, setNotificationCount] = useState(0);
+  const [notificationDropdown, setNotificationDropdown] = useState(false);
 
   const userDropdownRef = useRef(null);
   const notificationDropdownRef = useRef(null);
@@ -131,12 +122,6 @@ function Navbar() {
     setNotificationDropdown(false);
   };
 
-  const toggleNotificationDropdown = (e) => {
-    e.stopPropagation();
-    setNotificationDropdown((prev) => !prev);
-    setUserDropdown(false);
-  };
-
   useEffect(() => {
     const handleResize = () => {
       setIsMobile(window.innerWidth <= 768);
@@ -147,28 +132,82 @@ function Navbar() {
       window.removeEventListener("resize", handleResize);
     };
   }, []);
-    // loggedInUser -----------------------------------------------------------------------------------
 
-    let UserId = 1; // Assume this is the logged-in user's ID
-    let [loggedInUser, setLoggedInUser] = useState(null);
-    // if (!loggedInUser) return null;
+  useEffect(() => {
+    const handleWebSocketMessage = (data) => {
+      if (!data || !data.type) return;
 
-    useEffect(() =>  {
-      async function fetchLoggedInUser() {
-        const response = await axios.get("/profile.json");
-        const users = response.data;
-  
-        // find the loggedInUser
-        const usr = users.find((user) => user.userId === UserId);
-        // console.log("LoggedInUser : ",usr);
-        setLoggedInUser(usr);
+      try {
+        switch (data.type) {
+          case 'friends-add':
+            setNotifications(prev => [{
+              id: data.freindship_id,
+              type: 'friend_request',
+              avatar: data.user.profile_photo,
+              message: `${data.user.username} sent you a friend request`,
+              timestamp: new Date().toISOString(),
+              isNew: true
+            }, ...prev]);
+            setNotificationCount(prev => prev + 1);
+            break;
+
+          case 'friends-accept':
+            setNotifications(prev => [{
+              id: data.freindship_id,
+              type: 'friend_accept',
+              avatar: data.user.profile_photo,
+              message: `${data.user.username} accepted your friend request`,
+              timestamp: new Date().toISOString(),
+              isNew: true
+            }, ...prev]);
+            setNotificationCount(prev => prev + 1);
+            break;
+        }
+      } catch (error) {
+        console.error('Error handling notification:', error);
       }
-      fetchLoggedInUser()
-    }, [])
+    };
 
-  // ---------------------------------------------------------------------------------------------
+    websocketService.addHandler(handleWebSocketMessage);
+
+    return () => {
+      websocketService.removeHandler(handleWebSocketMessage);
+    };
+  }, []);
+
+  const handleNotificationClick = (notification) => {
+    // Just mark as not new and update the count
+    setNotifications(prev => prev.map(n => 
+      n.id === notification.id 
+        ? { ...n, isNew: false }
+        : n
+    ));
+    setNotificationCount(prev => Math.max(0, prev - 1));
+  };
+
+  const toggleNotificationDropdown = () => {
+    setNotificationDropdown(!notificationDropdown);
+  };
+
+  let UserId = 1; // Assume this is the logged-in user's ID
+  let [loggedInUser, setLoggedInUser] = useState(null);
+  // if (!loggedInUser) return null;
+
+  useEffect(() =>  {
+    async function fetchLoggedInUser() {
+      const response = await axios.get("/profile.json");
+      const users = response.data;
+
+      // find the loggedInUser
+      const usr = users.find((user) => user.userId === UserId);
+      // console.log("LoggedInUser : ",usr);
+      setLoggedInUser(usr);
+    }
+    fetchLoggedInUser()
+  }, [])
+
   const inputRef = useRef(null); // Create a ref for the input
-  const router = useRouter();
+
   const handleSearch = async (e) => {
     if (e.type === "click" || e.code === "Enter") {
       const searchTerm = inputRef.current.value;
@@ -194,21 +233,6 @@ function Navbar() {
     }
   };
 
-  useEffect(() => {
-    const fetchNotifications = async () => {
-      try {
-        // Replace this with your actual API call
-        const response = await axios.get("/api/notifications");
-        setNotifications(response.data);
-      } catch (error) {
-        console.error("Failed to fetch notifications:", error);
-        setNotifications([]);
-      }
-    };
-
-    fetchNotifications();
-  }, []);
-
   return (
     <nav
       className={`bg-[#F4F4FF] py-4 h-[90px] flex items-center shadow-md shadow-[#BCBCC9] z-[9] ${montserrat.className}`}
@@ -229,70 +253,81 @@ function Navbar() {
           />
         </div>
 
-        <div ref={notificationDropdownRef}>
-          <Image
-            onClick={toggleNotificationDropdown}
-            className="sm:w-8 sm:h-8 w-7 h-7 flex items-center justify-center sm:ml-5 mt-2 ml-2 cursor-pointer"
-            src="/images/notification.svg"
-            alt="Notification"
-            width="20"
-            height="20"
-          />
-        </div>
-        <div
-          ref={userDropdownRef}
-          className="flex items-center justify-center sm:w-12 sm:h-12 w-10 h-10 rounded-full bg-white text-white relative mr-2"
-          onClick={toggleUserDropdown}
+        <div 
+          className="cursor-pointer relative flex items-center justify-center sm:w-12 sm:h-12 w-10 h-10" 
+          onClick={toggleNotificationDropdown}
         >
-          {isLoading ? (
-            <>
-            <Skeleton className="sm:w-10 sm:h-10 w-8 h-8 rounded-full bg-[#d1daff]" />
-          </>
-          ) : (
           <Image
-            id="avatarButton"
-            className="sm:w-10 sm:h-10 w-8 h-8 rounded-full bg-[#D7D7EA] cursor-pointer rounded-full"
-            src={userData?.avatar || "/images/avatar.svg"}
-            alt="User dropdown"
-            width={100}
-            height={100}
-            />
+            src="/images/notification.svg"
+            alt="notification"
+            width={24}
+            height={24}
+            className="sm:w-8 sm:h-8 w-6 h-6"
+          />
+          {notificationCount > 0 && (
+            <span className="absolute -top-1 -right-1 bg-red-500 text-white rounded-full sm:w-6 sm:h-6 w-5 h-5 flex items-center justify-center sm:text-xs text-[10px]">
+              {notificationCount}
+            </span>
           )}
-          <Image
-            className="w-4 h-8 cursor-pointer absolute bottom-[-10px] right-0"
-            src="/images/Frame21.svg"
-            alt="User dropdown"
-            width="50"
-            height="50"
-            />
+        </div>
+        {notificationDropdown && (
+          <NotificationDropdown 
+            notifications={notifications}
+            onNotificationClick={handleNotificationClick}
+          />
+        )}
+        <div ref={userDropdownRef}>
+          <div
+            className="flex items-center justify-center sm:w-12 sm:h-12 w-10 h-10 rounded-full bg-white text-white relative mr-2"
+            onClick={toggleUserDropdown}
+          >
+            {isLoading ? (
+              <>
+              <Skeleton className="sm:w-10 sm:h-10 w-8 h-8 rounded-full bg-[#d1daff]" />
+            </>
+            ) : (
+            <Image
+              id="avatarButton"
+              className="sm:w-10 sm:h-10 w-8 h-8 rounded-full bg-[#D7D7EA] cursor-pointer rounded-full"
+              src={userData?.avatar || "/images/avatar.svg"}
+              alt="User dropdown"
+              width={100}
+              height={100}
+              />
+            )}
+            <Image
+              className="w-4 h-8 cursor-pointer absolute bottom-[-10px] right-0"
+              src="/images/Frame21.svg"
+              alt="User dropdown"
+              width="50"
+              height="50"
+              />
          
-          {userDropdown && (
-            <motion.div
-            className="w-[220px] h-[210px] bg-[#EAEAFF] border-2 border-solid border-[#C0C7E0] absolute bottom-[-215px] right-[3px] z-[10] rounded-[5px] shadow shadow-[#BCBCC9]"
-            initial={{ scale: 0 }}
-            animate={{ scale: 1 }}
-            transition={{
-              type: "spring",
-              stiffness: 260,
-              damping: 30
-            }}
-            >
-              <h1 className="text-lg font-medium text-[#242F5C] p-4">
-                My Account
-              </h1>
-              <hr className="w-[100%] h-[1px] bg-[#CDCDE5] border-none rounded-full" />
-              
-              <ProfileInfo onClick={() => router.push(`/Profile/${loggedInUser.userName}`)} />
+            {userDropdown && (
+              <motion.div
+              className="w-[220px] h-[210px] bg-[#EAEAFF] border-2 border-solid border-[#C0C7E0] absolute bottom-[-215px] right-[3px] z-[10] rounded-[5px] shadow shadow-[#BCBCC9]"
+              initial={{ scale: 0 }}
+              animate={{ scale: 1 }}
+              transition={{
+                type: "spring",
+                stiffness: 260,
+                damping: 30
+              }}
+              >
+                <h1 className="text-lg font-medium text-[#242F5C] p-4">
+                  My Account
+                </h1>
+                <hr className="w-[100%] h-[1px] bg-[#CDCDE5] border-none rounded-full" />
+                
+                <ProfileInfo onClick={() => router.push(`/Profile/${loggedInUser.userName}`)} />
 
 
-              <ProfileSetting />
-              <hr className="w-[100%] h-[1px] bg-[#CDCDE5] border-none rounded-full" />
-              <LogoutProfile setUserData={setUserData} />
-            </motion.div>
-          )}
-          {notificationDropdown && (
-            <NotificationDropdown notifications={notifications} />
-          )}
+                <ProfileSetting />
+                <hr className="w-[100%] h-[1px] bg-[#CDCDE5] border-none rounded-full" />
+                <LogoutProfile setUserData={setUserData} />
+              </motion.div>
+            )}
+          </div>
         </div>
       </div>
     </nav>

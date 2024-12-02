@@ -10,6 +10,7 @@ import BlockedFriends from "./BlockedFriends.tsx"
 import customAxios from "../../customAxios"
 import { Loader2 } from 'lucide-react'
 import websocketService from '../../services/websocket'
+import {IconForbid2} from '@tabler/icons-react'
 
 const montserrat = Montserrat({
   subsets: ["latin"],
@@ -66,20 +67,22 @@ function Friends() {
       setIsLoading(true)
       setError(null)
       try {
-        const [friendsRes, requestsRes, blockedRes] = await Promise.all([
+        const [friendsRes, blockedRes] = await Promise.all([
           customAxios.get('http://127.0.0.1:8000/friend/friends'),
           // customAxios.get('http://127.0.0.1:8000/friend/friends-add'),
-          // customAxios.get('http://127.0.0.1:8000/friend/blocked-friends')
+          customAxios.get('http://127.0.0.1:8000/friend/blocked-friends')
 
         ]);
         // console.log(requestsRes.data);
         // console.log(friendsRes.data);
-        // console.log(blockedRes.data);
+        console.log("***************", blockedRes.data);
 
         setFriendsData(friendsRes.data)
         // setFriendRequestsData(requestsRes.data)
         setBlockedFriendsData(blockedRes.data)
       } catch (error) {
+        console.log(blockedRes.data);
+
         setError(error.message)
       } finally {
         setIsLoading(false)
@@ -264,12 +267,19 @@ function Friends() {
               )}
               {activeItem === "Blocked Friends" && (
                 <div className="space-y-2">
-                  {blockedFriendsData.friends.map((blockedFriend) => (
-                    <BlockedFriends 
-                      key={blockedFriend.freindship_id} 
-                      blockedFriend={blockedFriend}
-                    />
-                  ))}
+                  {blockedFriendsData.friends.length > 0 ? (
+                    blockedFriendsData.friends.map((blockedFriend) => (
+                      <BlockedFriends 
+                        key={blockedFriend.freindship_id} 
+                        blockedFriend={blockedFriend}
+                      />
+                    ))
+                  ) : (
+                    <div className="flex flex-col items-center justify-center w-full h-[200px] p-4">
+                      <IconForbid2 size={50} color="#242F5C" />
+                      <h3 className="text-[#242F5C] text-lg font-semibold mt-3">No Blocked users</h3>
+                   </div>
+                  )}
                 </div>
               )}
             </ScrollBlur>

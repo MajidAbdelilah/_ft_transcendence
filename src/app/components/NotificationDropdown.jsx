@@ -1,50 +1,123 @@
 import Image from "next/image";
 import { motion } from "framer-motion";
+import { formatDistanceToNow } from 'date-fns';
+import {IconHourglassEmpty} from '@tabler/icons-react'
 
-const NotificationItem = ({ notification }) => (
-  <div className="sm:w-[95%] w-[98%] min-h-[70px] mt-[20px] bg-[#CDCDE5] rounded-xl flex gap-2 items-center pl-4 mb-2">
-    <Image 
-      src={notification.avatar || "/images/avatarInvite.svg"} 
-      alt="profile" 
-      width={50} 
-      height={50} 
-      className="w-[40px] h-[40px]" 
-    />
-    <h4 className="font-semibold text-xs sm:text-base text-[#242F5C]">
-      {notification.message}
-    </h4>
-    <Image 
-      src="/images/Notif.svg" 
-      alt="notification icon" 
-      width={50} 
-      height={50} 
-      className="w-[10px] h-[10px] cursor-pointer mr-2 sm:mr-0" 
-      onClick={() => notification.onAction && notification.onAction()}
-    />
-  </div>
-);
+const NotificationIcon = ({ type }) => {
+  switch (type) {
+    case 'friend_request':
+      return (
+        <Image 
+          src="/images/friend-request.svg" 
+          alt="friend request" 
+          width={20} 
+          height={20} 
+          className="w-5 h-5"
+        />
+      );
+    case 'friend_accept':
+      return (
+        <Image 
+          src="/images/friend-accept.svg" 
+          alt="friend accept" 
+          width={20} 
+          height={20} 
+          className="w-5 h-5"
+        />
+      );
+    case 'game_invite':
+      return (
+        <Image 
+          src="/images/game-invite.svg" 
+          alt="game invite" 
+          width={20} 
+          height={20} 
+          className="w-5 h-5"
+        />
+      );
+    default:
+      return (
+        <Image 
+          src="/images/Notif.svg" 
+          alt="notification" 
+          width={20} 
+          height={20} 
+          className="w-5 h-5"
+        />
+      );
+  }
+};
 
-const NotificationDropdown = ({ notifications = [] }) => {
+const NotificationItem = ({ notification, onClick }) => {
+  const timeAgo = notification.timestamp 
+    ? formatDistanceToNow(new Date(notification.timestamp), { addSuffix: true })
+    : '';
+
+  return (
+    <div 
+      className="sm:w-[95%] w-[98%] min-h-[70px] mt-[20px] bg-[#CDCDE5] hover:bg-[#BDBDD5] transition-colors rounded-xl flex items-start p-4 mb-2 cursor-pointer relative"
+      onClick={() => onClick && onClick(notification)}
+    >
+      {notification.isNew && (
+        <div className="absolute top-2 right-2 w-2 h-2 rounded-full bg-red-500 animate-pulse" />
+      )}
+      <div className="flex-shrink-0">
+        <Image 
+          src={notification.avatar || "/images/avatarInvite.svg"} 
+          alt="profile" 
+          width={40} 
+          height={40} 
+          className="rounded-full" 
+        />
+      </div>
+      
+      <div className="ml-3 flex-grow">
+        <p className="font-semibold text-sm text-[#242F5C] mb-1">
+          {notification.message}
+        </p>
+        <p className="text-xs text-[#6B7280]">
+          {timeAgo}
+        </p>
+      </div>
+
+      <div className="flex-shrink-0 ml-2">
+        <NotificationIcon type={notification.type} />
+      </div>
+    </div>
+  );
+};
+
+const NotificationDropdown = ({ notifications = [], onNotificationClick }) => {
   return (
     <motion.div
-      initial={{ scale: 0 }}
-      animate={{ scale: 1 }}
+      initial={{ scale: 0.95, opacity: 0 }}
+      animate={{ scale: 1, opacity: 1 }}
+      exit={{ scale: 0.95, opacity: 0 }}
       transition={{
         type: "spring",
         stiffness: 260,
         damping: 30,
       }}
-      className="w-[250px] sm:w-[400px] bg-[#EAEAFF] absolute top-[55px] right-[70px] z-[10] rounded-[5px] border-2 border-solid border-[#C0C7E0] shadow shadow-[#BCBCC9] overflow-hidden"
+      className="w-[300px] sm:w-[400px] bg-[#EAEAFF] absolute top-[75px] right-[128px] z-[10] rounded-[10px] border-2 border-solid border-[#C0C7E0] shadow-lg overflow-hidden"
     >
-      <div className="max-h-[30vh] overflow-y-auto custom-scrollbar">
-        <div className="flex flex-col items-center min-h-full">
+      <div className="p-4 border-b border-[#C0C7E0]">
+        <h3 className="text-[#242F5C] font-semibold">Notifications</h3>
+      </div>
+      
+      <div className="max-h-[60vh] overflow-y-auto custom-scrollbar">
+        <div className="flex flex-col items-center min-h-full p-2">
           {notifications.length > 0 ? (
-            notifications.map((notification, index) => (
-              <NotificationItem key={index} notification={notification} />
+            notifications.map((notification) => (
+              <NotificationItem 
+                key={notification.id} 
+                notification={notification}
+                onClick={onNotificationClick}
+              />
             ))
           ) : (
-            <div className="p-4 text-center text-[#242F5C]">
-              No notifications
+            <div className="py-8 text-center text-[#242F5C]">
+              <IconHourglassEmpty className="w-10 h-10 mx-auto mb-2" />
+              <p className="text-sm">No new notifications</p>
             </div>
           )}
         </div>
@@ -53,4 +126,4 @@ const NotificationDropdown = ({ notifications = [] }) => {
   );
 };
 
-export default NotificationDropdown; 
+export default NotificationDropdown;

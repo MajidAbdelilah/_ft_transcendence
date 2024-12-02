@@ -93,7 +93,7 @@ export default function FriendRequests({ request }: FriendRequestProps) {
     <div className={`w-full mx-auto h-20 lg:h-[12%] md:h-[20%] mt-2 rounded-xl bg-[#D8D8F7] shadow-md shadow-[#BCBCC9] relative ${isMobile ? '' : ' min-h-[90px]'} ${montserrat.className}`}>
       {!request ? (
         <div className="flex flex-col items-center justify-center h-full p-4">
-          <IconUserExclamation size={60} className="mb-2 opacity-50" />
+          <IconUserExclamation size={50} className="mb-2 opacity-50" />
           <p className="text-[#7C829D] text-sm text-center">
             No pending friend requests
           </p>
