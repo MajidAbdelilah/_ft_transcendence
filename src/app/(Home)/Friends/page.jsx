@@ -68,8 +68,8 @@ function Friends() {
       try {
         const [friendsRes, requestsRes, blockedRes] = await Promise.all([
           customAxios.get('http://127.0.0.1:8000/friend/friends'),
-          customAxios.get('http://127.0.0.1:8000/friend/friends-add'),
-          customAxios.get('http://127.0.0.1:8000/friend/blocked-friends')
+          // customAxios.get('http://127.0.0.1:8000/friend/friends-add'),
+          // customAxios.get('http://127.0.0.1:8000/friend/blocked-friends')
 
         ]);
         // console.log(requestsRes.data);
@@ -77,7 +77,7 @@ function Friends() {
         // console.log(blockedRes.data);
 
         setFriendsData(friendsRes.data)
-        setFriendRequestsData(requestsRes.data)
+        // setFriendRequestsData(requestsRes.data)
         setBlockedFriendsData(blockedRes.data)
       } catch (error) {
         setError(error.message)
