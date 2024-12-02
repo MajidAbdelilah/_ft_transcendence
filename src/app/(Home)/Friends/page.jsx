@@ -98,6 +98,7 @@ function Friends() {
       try {
         switch (data.type) {
           case 'user_status':
+            
             setFriendsData(prev => ({
               ...prev,
               friends: prev.friends.map(friend => 

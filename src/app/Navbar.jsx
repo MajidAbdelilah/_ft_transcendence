@@ -158,7 +158,7 @@ function Navbar() {
             handleNewNotification({
               id: data.freindship_id,
               type: 'friend_request',
-              avatar: data.user.profile_photo,
+              avatar: data.user.profiles_photo,
               message: `${data.user.username} sent you a friend request`,
               timestamp: new Date().toISOString(),
               isNew: true,
