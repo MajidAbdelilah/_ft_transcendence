@@ -79,14 +79,14 @@ export default function UpdateProfile({setIsProfile})
       // 3 send the data to the backend ------------------------------------------------
 
       try {
-        const result = await Services.updateProfileService(data);
+        // const result = await Services.updateProfileService(data);
         // console.log('--------------------------------------------');
         // console.log(data);
         // console.log('--------------------------------------------');
 
         // console.log(" ------- result : --------");
-        console.log(result);
-
+        // console.log(result);
+        console.log("data : ", data);
 
         if(!result.data.data) {
           const errorMsg = result.data.message;
