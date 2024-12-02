@@ -155,27 +155,27 @@ function Navbar() {
       try {
         switch (data.type) {
           case 'friends-add':
-            setNotifications(prev => [{
+            handleNewNotification({
               id: data.freindship_id,
               type: 'friend_request',
               avatar: data.user.profile_photo,
               message: `${data.user.username} sent you a friend request`,
               timestamp: new Date().toISOString(),
-              isNew: true
-            }, ...prev]);
-            setNotificationCount(prev => prev + 1);
+              isNew: true,
+              senderUsername: data.user.username
+            });
             break;
 
           case 'friends-accept':
-            setNotifications(prev => [{
+            handleNewNotification({
               id: data.freindship_id,
               type: 'friend_accept',
               avatar: data.user.profile_photo,
               message: `${data.user.username} accepted your friend request`,
               timestamp: new Date().toISOString(),
-              isNew: true
-            }, ...prev]);
-            setNotificationCount(prev => prev + 1);
+              isNew: true,
+              senderUsername: data.user.username
+            });
             break;
         }
       } catch (error) {
@@ -189,6 +189,18 @@ function Navbar() {
       websocketService.removeHandler(handleWebSocketMessage);
     };
   }, []);
+
+  const handleNewNotification = (notification) => {
+    setNotifications(prev => [notification, ...prev]);
+    setNotificationCount(prev => prev + 1);
+    
+    // Show toast notification
+    const message = notification.type === 'friend_request' 
+      ? `New friend request from ${notification.senderUsername}`
+      : `${notification.senderUsername} accepted your friend request`;
+      
+    showAlert(message, 'info');
+  };
 
   const handleNotificationClick = (notification) => {
     // Just mark as not new and update the count
