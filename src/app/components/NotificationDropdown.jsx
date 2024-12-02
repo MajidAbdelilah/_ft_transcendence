@@ -1,38 +1,22 @@
 import Image from "next/image";
 import { motion } from "framer-motion";
 import { formatDistanceToNow } from 'date-fns';
-import {IconHourglassEmpty} from '@tabler/icons-react'
+import {IconHourglassEmpty, IconUserPlus, IconUserCheck} from '@tabler/icons-react'
 
 const NotificationIcon = ({ type }) => {
   switch (type) {
     case 'friend_request':
       return (
-        <Image 
-          src="/images/friend-request.svg" 
-          alt="friend request" 
-          width={20} 
-          height={20} 
+        <IconUserPlus
           className="w-5 h-5"
+          strokeWidth={2}
         />
       );
     case 'friend_accept':
       return (
-        <Image 
-          src="/images/friend-accept.svg" 
-          alt="friend accept" 
-          width={20} 
-          height={20} 
+        <IconUserCheck
           className="w-5 h-5"
-        />
-      );
-    case 'game_invite':
-      return (
-        <Image 
-          src="/images/game-invite.svg" 
-          alt="game invite" 
-          width={20} 
-          height={20} 
-          className="w-5 h-5"
+          strokeWidth={2}
         />
       );
     default:
