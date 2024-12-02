@@ -11,12 +11,12 @@ from friend.models import Friendship
 from rest_framework_simplejwt.authentication import JWTAuthentication
 
 
-# @database_sync_to_async
-# def get_user(user_id):
-#     try:
-#         return User.objects.get(id=user_id)
-#     except User.DoesNotExist:
-#         return AnonymousUser()
+@database_sync_to_async
+def get_user(user_id):
+    try:
+        return User.objects.get(id=user_id)
+    except User.DoesNotExist:
+        return AnonymousUser()
 
 # @database_sync_to_async
 # def update_user_status(user_id, online):
@@ -29,9 +29,9 @@ from rest_framework_simplejwt.authentication import JWTAuthentication
 #             return User.objects.filter(id=user_id).update(is_on=F('is_on') - 1)
 #         return None
 
-# @database_sync_to_async
-# def get_friends(user):
-#     return list(Friendship.objects.filter(Q(user_from=user) | Q(user_to=user)).select_related('user_from', 'user_to'))
+@database_sync_to_async
+def get_friends(user):
+    return list(Friendship.objects.filter(Q(user_from=user) | Q(user_to=user)).select_related('user_from', 'user_to'))
 
 
 # class UserStatusConsumer(AsyncWebsocketConsumer):
@@ -147,9 +147,9 @@ class FriendRequestConsumer(AsyncWebsocketConsumer):
             return None
 
     @database_sync_to_async
-    def accept_friend_request(self, friendship_id):
+    def accept_friend_request(self, freindship_id):
         try:
-            friendship = Friendship.objects.get(id=friendship_id, user_to=self.user)
+            friendship = Friendship.objects.get(freindship_id =freindship_id, user_to=self.user)
             friendship.status = 'accepted'
             friendship.save()
             return friendship
@@ -174,10 +174,10 @@ class FriendRequestConsumer(AsyncWebsocketConsumer):
                 f'user_{to_user_id}',
                 {
                     'type': 'friends_add',
-                    'friendship_id': friendship.freindship_id,
+                    'freindship_id': friendship.freindship_id,
                     'user': {
                         'username': self.user.username,
-                        'profile_photo': self.user.image_name or ''
+                        'image_name': self.user.image_name or ''
                     }
                 }
             )
@@ -188,8 +188,8 @@ class FriendRequestConsumer(AsyncWebsocketConsumer):
             }))
 
     async def handle_friend_accept(self, data):
-        friendship_id = data.get('friendship_id')
-        if not friendship_id:
+        freindship_id = data.get('freindship_id')
+        if not freindship_id:
             await self.send(text_data=json.dumps({
                 'status': 'error',
                 'message': 'Invalid friendship ID'
@@ -197,7 +197,7 @@ class FriendRequestConsumer(AsyncWebsocketConsumer):
             return
 
         # Accept friend request
-        friendship = await self.accept_friend_request(friendship_id)
+        friendship = await self.accept_friend_request(freindship_id)
         
         if friendship:
             # Notify both users about the accepted friendship
@@ -205,7 +205,7 @@ class FriendRequestConsumer(AsyncWebsocketConsumer):
                 f'user_{friendship.user_from.id}',
                 {
                     'type': 'friends_accept',
-                    'friendship_id': friendship.id,
+                    'freindship_id': friendship.freindship_id,
                     'user': {
                         'username': self.user.username,
                         'profile_photo': self.user.image_name or ''
@@ -222,7 +222,7 @@ class FriendRequestConsumer(AsyncWebsocketConsumer):
         # Sends friend add notification to the target user
         await self.send(text_data=json.dumps({
             'type': 'friends-add',
-            'friendship_id': event['friendship_id'],
+            'freindship_id': event['freindship_id'],
             'user': event['user']
         }))
 
@@ -230,6 +230,6 @@ class FriendRequestConsumer(AsyncWebsocketConsumer):
         # Sends friend accept notification to the original requester
         await self.send(text_data=json.dumps({
             'type': 'friends-accept',
-            'friendship_id': event['friendship_id'],
+            'freindship_id': event['freindship_id'],
             'user': event['user']
         }))
