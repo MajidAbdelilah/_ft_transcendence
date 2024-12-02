@@ -250,7 +250,7 @@ function Friends() {
               ))}
             </div>
           )}
-          <div className="w-full h-full flex flex-col space-y-7 overflow-y-auto scrollbar-hide custom-scrollbar motion-preset-expand  ">
+          <div className="w-full h-full flex flex-col  space-y-7 overflow-y-auto scrollbar-hide custom-scrollbar motion-preset-expand  ">
             <ScrollBlur>
               {activeItem === "Friends List" && (
                 <FriendsComponent friends={friendsData.friends} />
