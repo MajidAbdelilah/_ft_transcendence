@@ -7,7 +7,7 @@ from drf_spectacular.utils import extend_schema_field
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ('id', 'username', 'profile_photo', 'is_on')
+        fields = ('id', 'username', 'is_on')
 
 class FriendshipSerializer(serializers.ModelSerializer):
     user = serializers.SerializerMethodField()
@@ -43,7 +43,7 @@ class FriendsSerializer(serializers.ModelSerializer):
     friends = serializers.SerializerMethodField()
     class Meta:
         model = User
-        fields = ('id', 'username', 'profile_photo', 'friends')
+        fields = ('id', 'username', 'friends')
 
     @extend_schema_field(serializers.ListField(child=FriendshipSerializer()))
     def get_friends(self, obj) -> list:
@@ -87,7 +87,7 @@ class BlockedFriendsSerializer(serializers.ModelSerializer):
     friends = serializers.SerializerMethodField()
     class Meta:
         model = User
-        fields = ('id', 'username', 'profile_photo', 'friends')
+        fields = ('id', 'username', 'friends')
 
     @extend_schema_field(serializers.ListField(child=BlockedFriendshipSerializer()))
     def get_friends(self, obj) -> list:

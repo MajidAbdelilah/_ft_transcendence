@@ -369,7 +369,7 @@ class FriendsView(APIView):
         return Response(serializer.data)
 
 class UserSearchView(APIView):
-    authentication_classes = [JWTAuthentication]
+    # authentication_classes = [JWTAuthentication]
     permission_classes = [IsAuthenticated]
     serializer_class = UserSerializer
 
@@ -380,7 +380,7 @@ class UserSearchView(APIView):
         return Response(serializer.data)
 
 class RemoveFriendshipView(APIView):
-    authentication_classes = [JWTAuthentication]
+    # authentication_classes = [JWTAuthentication]
     permission_classes = [IsAuthenticated]
     serializer_class = FriendsSerializer
 
@@ -403,7 +403,7 @@ class RemoveFriendshipView(APIView):
             return Response({'error': 'Friendship does not exist'}, status=status.HTTP_400_BAD_REQUEST)
 
 class AcceptFriendshipView(APIView):
-    authentication_classes = [JWTAuthentication]
+    # authentication_classes = [JWTAuthentication]
     permission_classes = [IsAuthenticated]
     serializer_class = FriendsSerializer
 
@@ -428,7 +428,7 @@ class AcceptFriendshipView(APIView):
             return Response({'error': 'Friendship does not exist'}, status=status.HTTP_400_BAD_REQUEST)
 
 class AddFriendshipView(APIView):
-    authentication_classes = [JWTAuthentication]
+    # authentication_classes = [JWTAuthentication]
     permission_classes = [IsAuthenticated]
     serializer_class = FriendsSerializer
 
@@ -486,7 +486,7 @@ def serialize_user(user):
     }
 
 class BlockFriendshipView(APIView):
-    authentication_classes = [JWTAuthentication]
+    # authentication_classes = [JWTAuthentication]
     permission_classes = [IsAuthenticated]
     serializer_class = FriendsSerializer
 
@@ -518,7 +518,7 @@ class BlockFriendshipView(APIView):
             return Response({'error': 'Friendship does not exist'}, status=status.HTTP_400_BAD_REQUEST)
 
 class UnblockFriendshipView(APIView):
-    authentication_classes = [JWTAuthentication]
+    # authentication_classes = [JWTAuthentication]
     permission_classes = [IsAuthenticated]
     serializer_class = FriendsSerializer
 
@@ -550,7 +550,7 @@ class UnblockFriendshipView(APIView):
             return Response({'error': 'Friendship does not exist'}, status=status.HTTP_400_BAD_REQUEST)
 
 class BlockedFriendsView(APIView):
-    authentication_classes = [JWTAuthentication]
+    # authentication_classes = [JWTAuthentication]
     permission_classes = [IsAuthenticated]
     serializer_class = BlockedFriendsSerializer
 
@@ -560,7 +560,7 @@ class BlockedFriendsView(APIView):
         return Response(serializer.data)
 
 # class GameHistoryReportView(APIView):
-#     authentication_classes = [JWTAuthentication]
+    # authentication_classes = [JWTAuthentication]
 #     permission_classes = [IsAuthenticated]
 #     serializer_class = GameHistorySerializer
 
@@ -573,7 +573,7 @@ class BlockedFriendsView(APIView):
 
 
 class NotificationsView(APIView):
-    authentication_classes = [JWTAuthentication]
+    # authentication_classes = [JWTAuthentication]
     permission_classes = [IsAuthenticated]
     serializer_class = NotificationUserSerializer
 
@@ -583,7 +583,7 @@ class NotificationsView(APIView):
         return Response(serializer.data)
 
 class NotificationDetailView(APIView):
-    authentication_classes = [JWTAuthentication]
+    # authentication_classes = [JWTAuthentication]
     permission_classes = [IsAuthenticated]
 
     def delete(self, request, notification_id):

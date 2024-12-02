@@ -10,7 +10,7 @@ from .serializer import UserMessageSerializer
 # Create your views here.
 
 class MessagesView(APIView):
-    authentication_classes = [JWTAuthentication]
+    # authentication_classes = [JWTAuthentication]
     permission_classes = [IsAuthenticated]
     serializer_class = UserMessageSerializer
 
