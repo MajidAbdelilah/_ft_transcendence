@@ -13,24 +13,32 @@ const montserrat = Montserrat({
 
 interface FriendRequestProps {
   request: {
-    freindship_id: number
     user: {
-      id: number
-      username: string
-      profile_photo: string
-      is_online: boolean
-    }
-    is_accepted: boolean
-    blocked: boolean
-    is_user_from: boolean
+      id: number;
+      username: string;
+      profile_photo: string;
+      is_on: boolean;
+    };
+    freindship_id: number;
+    is_accepted: boolean;
+    blocked: boolean;
+    is_user_from: boolean;
   }
 }
 
 export default function FriendRequests({ request }: FriendRequestProps) {
   const [isMobileRq, setIsMobileRq] = useState(false)
   const [isMobile, setIsMobile] = useState(false)
+  const [isLoading, setIsLoading] = useState({
+    accept: false,
+    reject: false
+  })
+  const [error, setError] = useState<string | null>(null)
 
   const handleAccept = async () => {
+    if (isLoading.accept) return;
+    setError(null);
+    setIsLoading(prev => ({ ...prev, accept: true }));
     try {
       await customAxios.post(`/api/friend-requests/accept`, { 
         friendship_id: request.freindship_id 
@@ -41,10 +49,16 @@ export default function FriendRequests({ request }: FriendRequestProps) {
       })
     } catch (error) {
       console.error('Error accepting friend request:', error)
+      setError('Failed to accept friend request. Please try again.')
+    } finally {
+      setIsLoading(prev => ({ ...prev, accept: false }))
     }
   }
 
   const handleReject = async () => {
+    if (isLoading.reject) return;
+    setError(null);
+    setIsLoading(prev => ({ ...prev, reject: true }));
     try {
       await customAxios.post(`/api/friend-requests/reject`, {
         friendship_id: request.freindship_id
@@ -55,6 +69,9 @@ export default function FriendRequests({ request }: FriendRequestProps) {
       })
     } catch (error) {
       console.error('Error rejecting friend request:', error)
+      setError('Failed to reject friend request. Please try again.')
+    } finally {
+      setIsLoading(prev => ({ ...prev, reject: false }))
     }
   }
 
@@ -86,50 +103,40 @@ export default function FriendRequests({ request }: FriendRequestProps) {
         </div>
         <div className="ml-4 flex flex-col justify-center">
           <h2 className="text-[#242F5C] text-sm lg:text-lg md:text-base font-bold">{request.user.username}</h2>
-          <p className={`${request.user.is_online ? 'text-green-600' : 'text-gray-500'} lg:text-sm text-xs font-medium`}>
-            {request.user.is_online ? 'Online' : 'Offline'}
+          <p className={`${request.user.is_on ? 'text-green-600' : 'text-gray-500'} lg:text-sm text-xs font-medium`}>
+            {request.user.is_on ? 'Online' : 'Offline'}
           </p>
         </div>
         {!isMobileRq ? (
           <div className="flex flex-row items-center justify-end lg:w-[50%] lg:h-[90%] md:w-[10%] md:h-[90%] w-[20%] h-[90%] absolute md:right-10 right-5 top-1 md:gap-5 gap-2">
+            {error && (
+              <p className="text-red-500 text-sm">{error}</p>
+            )}
             <button
               onClick={handleAccept}
-              className="
+              disabled={isLoading.accept || isLoading.reject}
+              className={`
                 bottom-2 right-[8%] 
                 md:bottom-[7%] 
                 lg:bottom-[5%] lg:right-[4%]
                 text-base tracking-wide
-                w-[100px] h-[40px]
-                lg:w-[120px] lg:h-[60%]
-                bg-[#242F5C] rounded-full cursor-pointer overflow-hidden 
-                transition-all duration-500 ease-in-out shadow-md 
-                hover:scale-105 hover:shadow-lg 
-                before:absolute before:top-0 before:-left-full before:w-full before:h-full 
-                before:bg-gradient-to-r before:from-[#242F5C] before:to-[#7C829D] 
-                before:transition-all before:duration-500 before:ease-in-out before:z-[-1] 
-                font-extrabold before:rounded-xl hover:before:left-0 text-[#fff]"
+                bg-[#242F5C] text-white px-4 py-2 rounded-lg 
+                ${(isLoading.accept || isLoading.reject) ? 'opacity-50 cursor-not-allowed' : 'hover:bg-[#1a2340]'}
+                transition-colors
+              `}
             >
-              Accept
+              {isLoading.accept ? 'Accepting...' : 'Accept'}
             </button>
             <button
               onClick={handleReject}
-              className="
-                bottom-2 right-[8%] 
-                md:bottom-[7%] 
-                lg:bottom-[5%] lg:right-[4%]
-                text-base tracking-wide
-                w-[100px] h-[40px]
-                md:w-[100px] md:h-[40px]
-                lg:w-[120px] lg:h-[60%]
-                bg-[#242F5C] rounded-full cursor-pointer overflow-hidden 
-                transition-all duration-500 ease-in-out shadow-md 
-                hover:scale-105 hover:shadow-lg 
-                before:absolute before:top-0 before:-left-full before:w-full before:h-full 
-                before:bg-gradient-to-r before:from-[#242F5C] before:to-[#7C829D] 
-                before:transition-all before:duration-500 before:ease-in-out before:z-[-1] 
-                font-extrabold before:rounded-xl hover:before:left-0 text-[#fff]"
+              disabled={isLoading.accept || isLoading.reject}
+              className={`
+                bg-red-500 text-white px-4 py-2 rounded-lg 
+                ${(isLoading.accept || isLoading.reject) ? 'opacity-50 cursor-not-allowed' : 'hover:bg-red-600'}
+                transition-colors
+              `}
             >
-              Reject
+              {isLoading.reject ? 'Rejecting...' : 'Reject'}
             </button>
           </div>
         ) : (

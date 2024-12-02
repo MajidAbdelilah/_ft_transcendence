@@ -24,9 +24,9 @@ function Friends() {
     "Friend Requests",
     "Blocked Friends",
   ])
-  const [friendsData, setFriendsData] = useState({ friends: [] })
-  const [friendRequestsData, setFriendRequestsData] = useState({ friends: [] })
-  const [blockedFriendsData, setBlockedFriendsData] = useState({ friends: [] })
+  const [friendsData, setFriendsData] = useState({ id: '', username: '', profile_photo: '', friends: [] })
+  const [friendRequestsData, setFriendRequestsData] = useState({ id: '', username: '', profile_photo: '', friends: [] })
+  const [blockedFriendsData, setBlockedFriendsData] = useState({ id: '', username: '', profile_photo: '', friends: [] })
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState(null)
 
@@ -76,9 +76,9 @@ function Friends() {
         // console.log(friendsRes.data);
         // console.log(blockedRes.data);
 
-        setFriendsData({ friends: friendsRes.data })
-        setFriendRequestsData({ friends: requestsRes.data })
-        setBlockedFriendsData({ friends: blockedRes.data })
+        setFriendsData(friendsRes.data)
+        setFriendRequestsData(requestsRes.data)
+        setBlockedFriendsData(blockedRes.data)
       } catch (error) {
         setError(error.message)
       } finally {
@@ -87,88 +87,97 @@ function Friends() {
     }
 
     const handleWebSocketMessage = (data) => {
-      switch (data.type) {
-        case 'user_status':
-          // Only update online status
-          setFriendsData(prev => ({
-            ...prev,
-            friends: prev.friends.map(friend => 
-              friend.user.id === data.id 
-                ? { 
-                    ...friend,
-                    user: { 
-                      ...friend.user, 
-                      is_online: data.is_online
-                    } 
-                  }
-                : friend
-            )
-          }))
-          break;
-
-        case 'friends-add':
-          // Only need friendship_id and user id for new request
-          setFriendRequestsData(prev => ({
-            ...prev,
-            friends: [...prev.friends, {
-              freindship_id: data.freindship_id,
-              user: data.user,
-              is_accepted: false,
-              blocked: false
-            }]
-          }))
-          break;
-
-        case 'friends-accept':
-          // Remove request using friendship_id
-          setFriendRequestsData(prev => ({
-            ...prev,
-            friends: prev.friends.filter(request => 
-              request.freindship_id !== data.freindship_id
-            )
-          }))
-          // Add to friends list
-          setFriendsData(prev => ({
-            ...prev,
-            friends: [...prev.friends, {
-              freindship_id: data.freindship_id,
-              user: data.user,
-              is_accepted: true,
-              blocked: false
-            }]
-          }))
-          break;
-
-        case 'friends-block':
-          // Remove from friends using friendship_id
-          setFriendsData(prev => ({
-            ...prev,
-            friends: prev.friends.filter(friend => 
-              friend.freindship_id !== data.freindship_id
-            )
-          }))
-          // Add to blocked list
-          setBlockedFriendsData(prev => ({
-            ...prev,
-            friends: [...prev.friends, {
-              freindship_id: data.freindship_id,
-              user: data.user,
-              blocked: true
-            }]
-          }))
-          break;
-
-        case 'friends-unblock':
-          // Only need friendship_id to remove from blocked list
-          setBlockedFriendsData(prev => ({
-            ...prev,
-            friends: prev.friends.filter(blocked => 
-              blocked.freindship_id !== data.freindship_id
-            )
-          }))
-          break;
+      if (!data || !data.type) {
+        console.warn('Invalid WebSocket message received:', data);
+        return;
       }
-    }
+
+      try {
+        switch (data.type) {
+          case 'user_status':
+            setFriendsData(prev => ({
+              ...prev,
+              friends: prev.friends.map(friend => 
+                friend.user.id === data.id 
+                  ? { 
+                      ...friend,
+                      user: { 
+                        ...friend.user, 
+                        is_on: data.is_on
+                      } 
+                    }
+                  : friend
+              )
+            }));
+            break;
+
+          case 'friends-add':
+            setFriendRequestsData(prev => ({
+              ...prev,
+              friends: [...prev.friends, {
+                freindship_id: data.freindship_id,
+                user: data.user,
+                is_accepted: false,
+                blocked: false,
+                is_user_from: false
+              }]
+            }));
+            break;
+
+          case 'friends-accept':
+            setFriendRequestsData(prev => ({
+              ...prev,
+              friends: prev.friends.filter(request => 
+                request.freindship_id !== data.freindship_id
+              )
+            }));
+            setFriendsData(prev => ({
+              ...prev,
+              friends: [...prev.friends, {
+                freindship_id: data.freindship_id,
+                user: data.user,
+                is_accepted: true,
+                blocked: false,
+                is_user_from: data.is_user_from
+              }]
+            }));
+            break;
+
+          case 'friends-block':
+            setFriendsData(prev => ({
+              ...prev,
+              friends: prev.friends.filter(friend => 
+                friend.freindship_id !== data.freindship_id
+              )
+            }));
+            setBlockedFriendsData(prev => ({
+              ...prev,
+              friends: [...prev.friends, {
+                freindship_id: data.freindship_id,
+                user: data.user,
+                is_accepted: true,
+                blocked: true,
+                is_user_from: data.is_user_from
+              }]
+            }));
+            break;
+
+          case 'friends-unblock':
+            setBlockedFriendsData(prev => ({
+              ...prev,
+              friends: prev.friends.filter(blocked => 
+                blocked.freindship_id !== data.freindship_id
+              )
+            }));
+            break;
+
+          default:
+            console.warn('Unknown WebSocket message type:', data.type);
+        }
+      } catch (error) {
+        console.error('Error handling WebSocket message:', error);
+      }
+    };
 
     websocketService.connect();
     websocketService.addHandler(handleWebSocketMessage);
@@ -244,14 +253,24 @@ function Friends() {
                 <FriendsComponent friends={friendsData.friends} />
               )}
               {activeItem === "Friend Requests" && (
-                friendRequestsData.friends.map((request, index) => (
-                  <FriendRequests key={index} request={request} />
-                ))
+                <div className="space-y-2">
+                  {friendRequestsData.friends.map((request) => (
+                    <FriendRequests 
+                      key={request.freindship_id} 
+                      request={request}
+                    />
+                  ))}
+                </div>
               )}
               {activeItem === "Blocked Friends" && (
-                blockedFriendsData.friends.map((blockedFriend, index) => (
-                  <BlockedFriends key={index} blockedFriend={blockedFriend} />
-                ))
+                <div className="space-y-2">
+                  {blockedFriendsData.friends.map((blockedFriend) => (
+                    <BlockedFriends 
+                      key={blockedFriend.freindship_id} 
+                      blockedFriend={blockedFriend}
+                    />
+                  ))}
+                </div>
               )}
             </ScrollBlur>
           </div>

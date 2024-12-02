@@ -13,15 +13,16 @@ const montserrat = Montserrat({
 
 interface BlockedFriendProps {
   blockedFriend: {
-    friendship_id: number
     user: {
-      id: number
-      username: string
-      profile_photo: string
-    }
-    is_accepted: boolean
-    blocked: boolean
-    is_user_from: boolean
+      id: number;
+      username: string;
+      profile_photo: string;
+      is_on: boolean;
+    };
+    freindship_id: number;
+    is_accepted: boolean;
+    blocked: boolean;
+    is_user_from: boolean;
   }
 }
 
@@ -35,7 +36,7 @@ export default function BlockedFriends({ blockedFriend }: BlockedFriendProps) {
       })
       websocketService.send({
         type: 'friends-unblock',
-        friendship_id: blockedFriend.friendship_id
+        friendship_id: blockedFriend.freindship_id
       })
     } catch (error) {
       console.error('Error unblocking friend:', error)

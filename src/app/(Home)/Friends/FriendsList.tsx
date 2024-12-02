@@ -12,15 +12,16 @@ const montserrat = Montserrat({
 })
 
 interface Friend {
-  freindship_id: number
   user: {
-    id: number
-    username: string
-    profile_photo: string
-    is_online: boolean
-  }
-  is_accepted: boolean
-  blocked: boolean
+    id: number;
+    username: string;
+    profile_photo: string;
+    is_on: boolean;
+  };
+  friendship_id: number;
+  is_accepted: boolean;
+  blocked: boolean;
+  is_user_from: boolean;
 }
 
 interface FriendsListProps {
@@ -34,11 +35,11 @@ export default function FriendsList({ friends = [] }: FriendsListProps) {
   const handleInviteGame = async (friend: Friend) => {
     try {
       await customAxios.post(`/api/game/invite`, {
-        friendship_id: friend.freindship_id
+        friendship_id: friend.friendship_id
       });
       websocketService.send({
         type: 'GAME_INVITE',
-        freindship_id: friend.freindship_id,
+        friendship_id: friend.friendship_id,
         message: `Invited ${friend.user.username} to a game`
       });
     } catch (error) {
@@ -49,11 +50,11 @@ export default function FriendsList({ friends = [] }: FriendsListProps) {
   const handleChat = async (friend: Friend) => {
     try {
       await customAxios.post(`/api/chat/messages`, {
-        friendship_id: friend.freindship_id
+        friendship_id: friend.friendship_id
       });
       websocketService.send({
         type: 'messages',
-        freindship_id: friend.freindship_id
+        friendship_id: friend.friendship_id
       });
     } catch (error) {
       console.error('Error initiating chat:', error);
@@ -63,11 +64,11 @@ export default function FriendsList({ friends = [] }: FriendsListProps) {
   const handleBlock = async (friend: Friend) => {
     try {
       await customAxios.post(`/api/friends/block`, {
-        friendship_id: friend.freindship_id
+        friendship_id: friend.friendship_id
       });
       websocketService.send({
         type: 'friends-block',
-        freindship_id: friend.freindship_id
+        friendship_id: friend.friendship_id
       });
     } catch (error) {
       console.error('Error blocking friend:', error);
@@ -113,8 +114,8 @@ export default function FriendsList({ friends = [] }: FriendsListProps) {
             </div>
             <div className="ml-4 flex flex-col justify-center">
               <h2 className="text-[#242F5C] text-sm lg:text-lg md:text-base font-bold">{friend.user.username}</h2>
-              <p className={`${friend.user.is_online ? 'text-green-600' : 'text-gray-500'} lg:text-sm text-xs font-medium`}>
-                {friend.user.is_online ? 'Online' : 'Offline'}
+              <p className={`${friend.user.is_on ? 'text-green-600' : 'text-gray-500'} lg:text-sm text-xs font-medium`}>
+                {friend.user.is_on ? 'Online' : 'Offline'}
               </p>
             </div>
             <div className="flex flex-row items-center justify-end lg:w-[90%] lg:h-[90%] md:w-[90%] md:h-[90%] w-[90%] h-[90%] absolute md:right-10 right-5 top-1 lg:gap-12 md:gap-4 gap-4">
