@@ -7,13 +7,15 @@ from channels.auth import AuthMiddlewareStack
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'game.settings')
 django.setup()
 
-from turn.routing import websocket_urlpatterns  # Move this import after django.setup()
+from game.routing import websocket_urlpatterns as game_websocket_urlpatterns
+from turn.routing import websocket_urlpatterns as turn_websocket_urlpatterns
 
 application = ProtocolTypeRouter({
     "http": get_asgi_application(),
     "websocket": AuthMiddlewareStack(
         URLRouter(
-            websocket_urlpatterns
+            game_websocket_urlpatterns +
+            turn_websocket_urlpatterns
         )
     ),
 })
