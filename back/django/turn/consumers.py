@@ -22,7 +22,7 @@ class PingPongConsumer(AsyncWebsocketConsumer):
             self.channel_name
         )
 
-        if (self.tournament_group_name):
+        if self.tournament_group_name:
             await self.channel_layer.group_add(
                 self.tournament_group_name,
                 self.channel_name
@@ -54,7 +54,6 @@ class PingPongConsumer(AsyncWebsocketConsumer):
 
     async def receive(self, text_data):
         data = json.loads(text_data)
-        # print(data)
         player = data['player']
         direction = data['direction']
         username = data.get('username', None)
@@ -64,6 +63,11 @@ class PingPongConsumer(AsyncWebsocketConsumer):
             self.room_var[self.room_name]['players'][player]['username'] = username
             self.room_var[self.room_name]['players'][player]['full'] = True
             self.room_var[self.room_name]['players'][player]['direction'] = direction
+
+        # Send back the player role to the client
+        await self.send(text_data=json.dumps({
+            'player_role': player
+        }))
 
     async def game_loop(self):
         while True:
@@ -85,8 +89,7 @@ class PingPongConsumer(AsyncWebsocketConsumer):
             'ball': event['ball'],
             'players': event['players'],
             'width': event['width'],
-            'height': event['height'],
-            'p1_or_p2': 
+            'height': event['height']
         }))
 
     def update_game_state(self):

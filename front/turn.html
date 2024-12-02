@@ -41,10 +41,11 @@
         }
 
         let socket;
+        let player = '';
 
         // Initialize WebSocket for PingPong game
         function initializeWebSocket() {
-            username = document.getElementById('username').value;
+            const username = document.getElementById('username').value;
             const roomName = document.getElementById('roomName').value;
             const tournamentRoomName = document.getElementById('tournamentRoomName').value;
             const url = tournamentRoomName ? 
@@ -53,16 +54,18 @@
 
             socket = new WebSocket(url);
             
-            
+            socket.onopen = function() {
+                socket.send(JSON.stringify({
+                    'player': player,
+                    'direction': null,
+                    'username': username
+                }));
+            };
+
             socket.onmessage = function(e) {
                 const data = JSON.parse(e.data);
-                if(player === '') {
-                    if(data.players.player1.full === false) {
-                        player = 'player1';
-                    } else if (data.players.player2.full === false) {
-                        player = 'player2';
-                    }
-                   
+                if (data.player_role) {
+                    player = data.player_role;
                 }
                 updateGame(data);
             };
@@ -92,7 +95,6 @@
             ctx.fillText(data.players.player1.score, canvas.width / 2 - 150, canvas.height / 2 + 50);
             ctx.fillText(data.players.player2.score, canvas.width / 2 + 50, canvas.height / 2 + 50);
 
-
             // Draw players
             ctx.fillRect(data.players.player1.x, data.players.player1.y, data.players.player1.width, data.players.player1.height);
             ctx.fillRect(data.players.player2.x, data.players.player2.y, data.players.player2.width, data.players.player2.height);
@@ -109,7 +111,7 @@
 
             if (direction) {
                 socket.send(JSON.stringify({
-                    'player': player, // Change as needed to identify the player
+                    'player': player,
                     'direction': direction,
                     'username': username
                 }));
@@ -119,7 +121,7 @@
         document.addEventListener('keyup', function(event) {
             if (event.key === 'ArrowUp' || event.key === 'ArrowDown') {
                 socket.send(JSON.stringify({
-                    'player': player, // Change as needed to identify the player
+                    'player': player,
                     'direction': null,
                     'username': username
                 }));
@@ -133,8 +135,7 @@
                 .then(data => displayTournaments(data))
                 .catch(error => console.error('Error fetching tournaments:', error));
         }
-        username = ''; // Change 'example_username' as needed
-        player = ''; // Change as needed to identify the player
+
         fetchTournaments('example_username'); // Change 'example_username' as needed
     </script>
 </body>
