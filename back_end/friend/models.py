@@ -46,6 +46,7 @@ class Friendship(models.Model):
     is_accepted = models.BooleanField(default=False)
     u_one_is_blocked_u_two = models.BooleanField(default=False)
     u_two_is_blocked_u_one = models.BooleanField(default=False)
+    status = models.CharField(max_length=50, default="pending")
 
     class Meta:
         db_table = "Friendship"
