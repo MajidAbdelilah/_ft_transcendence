@@ -1,43 +1,20 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Game Dashboard</title>
-    <style>
-        #tournaments {
-            margin-bottom: 20px;
-        }
-        .tournament {
-            margin-bottom: 10px;
-        }
-        .match {
-            margin-left: 20px;
-        }
-        #gameCanvas {
-            border: 1px solid black;
-        }
-    </style>
+    <title>Ping Pong Tournament</title>
 </head>
 <body>
-    <h1>Game Dashboard</h1>
-    <div id="tournaments">
-        <h2>Tournaments</h2>
-        <div id="tournamentList"></div>
+    <div>
+        <label for="roomName">Room Name:</label>
+        <input type="text" id="roomName" placeholder="Enter room name">
+        <label for="tournamentRoomName">Tournament Room Name:</label>
+        <input type="text" id="tournamentRoomName" placeholder="Enter tournament room name">
+        <button onclick="initializeWebSocket()">Start Game</button>
     </div>
-    <div id="pingpongGame">
-        <h2>PingPong Game</h2>
-        <canvas id="gameCanvas" width="100" height="100"></canvas>
-    </div>
+    <div id="tournamentList"></div>
+    <canvas id="gameCanvas"></canvas>
 
     <script>
-        // Fetch tournaments data
-        async function fetchTournaments(username) {
-            const response = await fetch(`http://127.0.0.1:8000/turn/tournaments/${username}/`);
-            const data = await response.json();
-            displayTournaments(data);
-        }
-
         // Display tournaments data
         function displayTournaments(tournaments) {
             const tournamentList = document.getElementById('tournamentList');
@@ -61,18 +38,34 @@
             });
         }
 
+        let socket;
+
         // Initialize WebSocket for PingPong game
-        const roomName = 'default_room' + Math.random(); // Change as needed
-        const socket = new WebSocket(`ws://127.0.0.1:8001/ws/pingpong/${roomName}/`);
+        function initializeWebSocket() {
+            const roomName = document.getElementById('roomName').value || 'default_room' + Math.random();
+            const tournamentRoomName = document.getElementById('tournamentRoomName').value;
+            const url = tournamentRoomName ? 
+                `ws://127.0.0.1:8001/ws/tournament/${roomName}/${tournamentRoomName}/` : 
+                `ws://127.0.0.1:8001/ws/tournament/${roomName}/`;
 
-        socket.onmessage = function(e) {
-            const data = JSON.parse(e.data);
-            updateGame(data);
-        };
+            socket = new WebSocket(url);
 
-        socket.onclose = function(e) {
-            console.error('WebSocket closed unexpectedly');
-        };
+            socket.onmessage = function(e) {
+                const data = JSON.parse(e.data);
+                if(player === '') {
+                    if(data.players.player1.full === false) {
+                        player = 'player1';
+                    } else if (data.players.player2.full === false) {
+                        player = 'player2';
+                    }
+                }
+                updateGame(data);
+            };
+
+            socket.onclose = function(e) {
+                console.error('WebSocket closed unexpectedly');
+            };
+        }
 
         // Update game state
         function updateGame(data) {
@@ -83,22 +76,16 @@
             canvas.height = data.height;
             ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-            // render the score
-            ctx.font = '16px Arial';
-            ctx.fillStyle = 'black';
-            ctx.fillText(data.players.player1.score, 10, 20);
-            ctx.fillText(data.players.player2.score, canvas.width - 20, 20);
-
-
             // Draw ball
             ctx.beginPath();
-            ctx.arc(data.ball.x, data.ball.y, 5, 0, Math.PI * 2);
+            ctx.arc(data.ball.x, data.ball.y, data.ball.radius, 0, Math.PI * 2);
             ctx.fill();
 
             // Draw players
             ctx.fillRect(data.players.player1.x, data.players.player1.y, data.players.player1.width, data.players.player1.height);
             ctx.fillRect(data.players.player2.x, data.players.player2.y, data.players.player2.width, data.players.player2.height);
         }
+
         // Handle key events to control paddles
         document.addEventListener('keydown', function(event) {
             let direction = null;
@@ -110,7 +97,7 @@
 
             if (direction) {
                 socket.send(JSON.stringify({
-                    'player': 'player1', // Change as needed to identify the player
+                    'player': player, // Change as needed to identify the player
                     'direction': direction
                 }));
             }
@@ -119,13 +106,21 @@
         document.addEventListener('keyup', function(event) {
             if (event.key === 'ArrowUp' || event.key === 'ArrowDown') {
                 socket.send(JSON.stringify({
-                    'player': 'player1', // Change as needed to identify the player
+                    'player': player, // Change as needed to identify the player
                     'direction': null
                 }));
             }
         });
 
         // Fetch tournaments for a specific user
+        function fetchTournaments(username) {
+            fetch(`/api/tournaments/${username}/`)
+                .then(response => response.json())
+                .then(data => displayTournaments(data))
+                .catch(error => console.error('Error fetching tournaments:', error));
+        }
+        username = 'example_username'; // Change 'example_username' as needed
+        player = ''; // Change as needed to identify the player
         fetchTournaments('example_username'); // Change 'example_username' as needed
     </script>
 </body>

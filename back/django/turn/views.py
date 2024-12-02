@@ -27,3 +27,4 @@ def get_tournaments_by_player(request, username):
         })
     
     return JsonResponse(data, safe=False)
+
