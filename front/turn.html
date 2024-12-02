@@ -27,7 +27,7 @@
     </div>
     <div id="pingpongGame">
         <h2>PingPong Game</h2>
-        <canvas id="gameCanvas" width="500" height="300"></canvas>
+        <canvas id="gameCanvas" width="100" height="100"></canvas>
     </div>
 
     <script>
@@ -76,18 +76,21 @@
 
         // Update game state
         function updateGame(data) {
+            console.log(data);
             const canvas = document.getElementById('gameCanvas');
             const ctx = canvas.getContext('2d');
+            canvas.width = data.width + 50;
+            canvas.height = data.height + 10;
             ctx.clearRect(0, 0, canvas.width, canvas.height);
 
             // Draw ball
             ctx.beginPath();
-            ctx.arc(data.ball.x * 5, data.ball.y * 3, 5, 0, Math.PI * 2);
+            ctx.arc(data.ball.x, data.ball.y, 5, 0, Math.PI * 2);
             ctx.fill();
 
             // Draw players
-            ctx.fillRect(10, data.players.player1.y * 3, 10, 30);
-            ctx.fillRect(canvas.width - 20, data.players.player2.y * 3, 10, 30);
+            ctx.fillRect(10, data.players.player1.y, 10, 30);
+            ctx.fillRect(canvas.width - 20, data.players.player2.y, 10, 30);
         }
 
         // Fetch tournaments for a specific user
