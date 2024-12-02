@@ -47,7 +47,7 @@ const NotificationItem = ({ notification, onClick }) => {
       )}
       <div className="flex-shrink-0">
         <Image 
-          src={notification.avatar || "/images/avatarInvite.svg"} 
+          src={notification.avatar || "/images/avatar.svg"} 
           alt="profile" 
           width={40} 
           height={40} 

@@ -108,13 +108,28 @@ function Navbar() {
   const userDropdownRef = useRef(null);
   const notificationDropdownRef = useRef(null);
 
-  useClickAway([userDropdownRef], () => {
-    setUserDropdown(false);
-  });
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (
+        notificationDropdownRef.current && 
+        !notificationDropdownRef.current.contains(event.target)
+      ) {
+        setNotificationDropdown(false);
+      }
 
-  useClickAway([notificationDropdownRef], () => {
-    setNotificationDropdown(false);
-  });
+      if (
+        userDropdownRef.current && 
+        !userDropdownRef.current.contains(event.target)
+      ) {
+        setUserDropdown(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
 
   const toggleUserDropdown = (e) => {
     e.stopPropagation();
@@ -185,8 +200,20 @@ function Navbar() {
     setNotificationCount(prev => Math.max(0, prev - 1));
   };
 
-  const toggleNotificationDropdown = () => {
+  const toggleNotificationDropdown = (e) => {
+    e.stopPropagation();
     setNotificationDropdown(!notificationDropdown);
+    if (userDropdown) {
+      setUserDropdown(false);
+    }
+  };
+
+  const toggleUserProfileDropdown = (e) => {
+    e.stopPropagation();
+    setUserDropdown(!userDropdown);
+    if (notificationDropdown) {
+      setNotificationDropdown(false);
+    }
   };
 
   let UserId = 1; // Assume this is the logged-in user's ID
@@ -253,33 +280,35 @@ function Navbar() {
           />
         </div>
 
-        <div 
-          className="cursor-pointer relative flex items-center justify-center sm:w-12 sm:h-12 w-10 h-10" 
-          onClick={toggleNotificationDropdown}
-        >
-          <Image
-            src="/images/notification.svg"
-            alt="notification"
-            width={24}
-            height={24}
-            className="sm:w-8 sm:h-8 w-6 h-6"
-          />
-          {notificationCount > 0 && (
-            <span className="absolute -top-1 -right-1 bg-red-500 text-white rounded-full sm:w-6 sm:h-6 w-5 h-5 flex items-center justify-center sm:text-xs text-[10px]">
-              {notificationCount}
-            </span>
+        <div ref={notificationDropdownRef}>
+          <div 
+            className="cursor-pointer relative flex items-center justify-center sm:w-12 sm:h-12 w-10 h-10" 
+            onClick={toggleNotificationDropdown}
+          >
+            <Image
+              src="/images/notification.svg"
+              alt="notification"
+              width={24}
+              height={24}
+              className="sm:w-8 sm:h-8 w-6 h-6"
+            />
+            {notificationCount > 0 && (
+              <span className="absolute -top-1 -right-1 bg-red-500 text-white rounded-full sm:w-6 sm:h-6 w-5 h-5 flex items-center justify-center sm:text-xs text-[10px]">
+                {notificationCount}
+              </span>
+            )}
+          </div>
+          {notificationDropdown && (
+            <NotificationDropdown 
+              notifications={notifications}
+              onNotificationClick={handleNotificationClick}
+            />
           )}
         </div>
-        {notificationDropdown && (
-          <NotificationDropdown 
-            notifications={notifications}
-            onNotificationClick={handleNotificationClick}
-          />
-        )}
         <div ref={userDropdownRef}>
           <div
             className="flex items-center justify-center sm:w-12 sm:h-12 w-10 h-10 rounded-full bg-white text-white relative mr-2"
-            onClick={toggleUserDropdown}
+            onClick={toggleUserProfileDropdown}
           >
             {isLoading ? (
               <>
