@@ -20,3 +20,6 @@ class UserSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError("Passwords is empty.")
         instance.save()
         return(instance)
+    
+    def get_image_url(self, obj):
+        return obj.image_field.url if obj.image_field else None

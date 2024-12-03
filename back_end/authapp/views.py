@@ -174,37 +174,34 @@ class Update_user(APIView):
     permission_classes = [IsAuthenticated]
     def post(self , request):
         response = Response ()
-        print("datttaaaaaa   ", print("Received profile photo: ", request.FILES.get('profile_photo')))
-        user = User.objects.get(email='ghzlnghaya@gmail.com')
-        # new_password = request.data['new_password']
-        # current_password = request.data['current_password']
-        # username = request.data['username']
-        profile_photo = request.FILES.get('profile_photo')
-        # print("pff   ", profile_photo)
-        # if user is not None  and current_password is not None and  user.check_password(current_password) :
-        #     if username is not None : 
-        #         otheruser =  User.objects.filter(username=request.data['username']).first()
-        #     else:
-        #         otheruser = None
-        #     if otheruser is not None and otheruser.id != user.id:
-        #         response.data = {"data" : None , "message" : "username already exist"}
-        #         return response
-        #     if username is not None :
-        #         user.username = username
-        #     if new_password is not None:
-        #         user.set_password(new_password)
-        if profile_photo is not None:
-            user.image_field  = profile_photo
-            user.save()
-        #         instance = User.objects.get(id=1)
-        #         print(instance.image_field)  
-                
-        #     userserialize=UserSerializer(user)
-        #     response.data = {"data" : userserialize.data , "message" : "updated succefully ! "}
-        #     return response
-        # else:
-        #     response.data = {"data" : None , "message" : "credentiels error"}
-        return response
+        user = User.objects.get(email=request.user)
+        new_password = request.data['new_password'] 
+        current_password = request.data['current_password']   
+        username = request.data['username'] 
+        profile_photo = request.FILES.get('profile_photo') 
+        if user is not None  and current_password is not None and  user.check_password(current_password) :
+            if username is not None : 
+                otheruser =  User.objects.filter(username=request.data['username']).first()
+                if otheruser is None :
+                    user.username = username
+            else:
+                response.data = {"message" : "username exist in database"}
+                return response
+            if new_password is not None:
+                user.set_password(new_password)
+            if profile_photo is not None:
+                user.image_field  = profile_photo
+                print("shfhhf jsgjg *********")
+            else:
+                response.data = {"message" : "Error in uploading profile image"}
+                return response
+            user.save()       
+            userserialize=UserSerializer(user)
+            response.data = {"data" : userserialize.data , "message" : "updated succefully ! "}
+            return response
+        else:
+            response.data = {"data" : None , "message" : "credentiels error"}
+            return response
 
 class User_view(APIView):
     permission_classes = [IsAuthenticated]
@@ -218,4 +215,4 @@ class User_view(APIView):
         else:
             response.data = {"user": {"massage": "Error in getting user informations"}}
             return response
-            
+
