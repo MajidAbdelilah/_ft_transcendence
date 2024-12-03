@@ -66,7 +66,7 @@ export default function Chat() {
 
   // LoggedInUser -----------------------------------------------------------------------------------------
   const LoggedInUser = useUser();
-  console.log("LoggedInUser-------------- :", LoggedInUser.userData);
+  // console.log("LoggedInUser-------------- :", LoggedInUser.userData);
 
 
 
@@ -98,12 +98,12 @@ export default function Chat() {
 
   let [loggedInUser, setLoggedInUser] = useState(
     {
-      username: "userNameLoading",
-      id: 10,
-      name: "nameLoading",
-      avatar: "/images/avatarprofile.svg",
-      status: "Online",
-      level: 1,
+      username: "",
+      id: 0,
+      name: "",
+      avatar: "",
+      status: "",
+      level: 0,
       score: "",
       result: "",
       map: "",
@@ -115,12 +115,12 @@ export default function Chat() {
 
     if (LoggedInUser.userData !== null && loggedInUser.username !== LoggedInUser.userData.username) {
 
-      const filledUser = {
-        userName: LoggedInUser.userData.username || '',   
-        userId: LoggedInUser.userData.id || null,        
-        name: LoggedInUser.userData.username || 'Unknown', 
+      let filledUser = {
+        username: LoggedInUser.userData.username || 'Loading',   
+        id: LoggedInUser.userData.id || null,        
+        name: LoggedInUser.userData.username || 'Loading', 
         avatar: "/images/avatarprofile.svg", 
-        status: 'Online', 
+        status: 'Loading', 
         level: 0,
         score: "",
         result: "",
@@ -130,7 +130,7 @@ export default function Chat() {
       // Update the state with the filled user data
       setLoggedInUser(filledUser);
       // console.log("loggedInUser", filledUser);
-      // console.log("loggedInUser ============= ", loggedInUser);
+      console.log("loggedInUser ============= ", loggedInUser);
 
     }
   }, [LoggedInUser.userData]); 

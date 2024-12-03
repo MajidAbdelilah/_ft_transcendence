@@ -3,6 +3,7 @@ import Image from "next/image";
 
 
 export default function ProfileInfo({ avatar, name, status }) {
+  // console.log("name : ", name);
     return (
       <div className="profileInfo  w-full flex items-center overflow-hidden py-2 pl-2 ">
         <Image
