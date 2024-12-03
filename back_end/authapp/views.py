@@ -218,3 +218,14 @@ class User_view(APIView):
             response.data = {"user": {"massage": "Error in getting user informations"}}
             return response
 
+class get_users(APIView):
+    permission_classes = [IsAuthenticated]
+    def get(self, request):
+        users = User.objects.values()
+        listUsers = {}
+        for i in users:
+            listUsers[i['username']] = i
+            print( " i    ---->    ", listUsers[i['username']])
+        for j in listUsers:
+            print("j:   ",listUsers[j])
+        return Response(listUsers)
