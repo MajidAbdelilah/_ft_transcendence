@@ -267,6 +267,7 @@ const getSelectedFriend = (friend) => {
         </div>
       );
     }
+    console.log("friend", friend);
     return (
       // console.log(conversation),
       <div className="messagesBox w-full lg:w-3/5 p-2 h-full rounded-tr-xl rounded-br-xl flex flex-col ">

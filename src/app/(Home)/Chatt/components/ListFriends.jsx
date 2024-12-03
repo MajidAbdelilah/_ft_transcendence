@@ -48,7 +48,7 @@ export default function ListFriends({ getSelectedFriend, switchChatState }) {
             
             
                 <Image 
-                    src={friend.user.profile_photo == null || friend.user.profile_photo === "" || friend.user.profile_photo === "/images/%7B%7D" 
+                    src={friend.user.profile_photo === undefined || friend.user.profile_photo === null || friend.user.profile_photo === "" || friend.user.profile_photo === "/images/%7B%7D" 
                         ? "/images/avatarprofile.svg" 
                         : friend.user.profile_photo}
                     alt="/images/avatarprofile.svg"

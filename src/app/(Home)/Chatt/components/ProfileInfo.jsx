@@ -7,7 +7,9 @@ export default function ProfileInfo({ avatar, name, status }) {
     return (
       <div className="profileInfo  w-full flex items-center overflow-hidden py-2 pl-2 ">
         <Image
-          src={avatar}
+          src={avatar === undefined || avatar === null || avatar === "" 
+            ? "/images/avatarprofile.svg" 
+            : avatar}
           alt="avatarprofile"
           width={60}
           height={60}

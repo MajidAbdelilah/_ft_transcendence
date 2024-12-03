@@ -21,9 +21,9 @@ export function HisProfile ({path, name, status}) {
           />
         ) : (
           <Image
-            src={path === null || path === "" || path === "/images/%7B%7D" 
+            src={path === undefined || path === null || path === "" || path === "/images/%7B%7D" 
               ? "/images/avatarprofile.svg" 
-              : {path}}
+              : path}
             alt="avatarprofile"
             width={60}
             height={60}
