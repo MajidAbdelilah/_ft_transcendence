@@ -130,7 +130,7 @@ export default function Chat() {
       // Update the state with the filled user data
       setLoggedInUser(filledUser);
       // console.log("loggedInUser", filledUser);
-      console.log("loggedInUser ============= ", filledUser);
+      // console.log("loggedInUser ============= ", filledUser);
 
     }
   }, [LoggedInUser.userData]); 
