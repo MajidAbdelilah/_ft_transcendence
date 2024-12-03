@@ -226,7 +226,7 @@ function Navbar() {
       setNotificationDropdown(false);
     }
   };
-
+  //--------------------------------------------------------------------------------
   let UserId = 1; // Assume this is the logged-in user's ID
   let [loggedInUser, setLoggedInUser] = useState(null);
   // if (!loggedInUser) return null;
