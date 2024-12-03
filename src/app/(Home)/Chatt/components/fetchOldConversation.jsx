@@ -17,18 +17,18 @@ export const fetchOldConversation = async (loggedInUser, friend) =>
             // }
 
 
-            console.log("allMessages : ----------------", allMessages)
+            // console.log("allMessages : ----------------", allMessages)
             // console.log("All messages: ", allMessages);
             // console.log("Logged in user: ", loggedInUser);
             // console.log("Friend: ", friend);
-            // const filteredMessages = allMessages.filter((message) => {
-            //     return (
-            //         (message.sender === loggedInUser.username && message.receiver === friend.username)
-            //         || (message.sender === friend.username && message.receiver === loggedInUser.username)
-            //     );
-            // });
+            const filteredMessages = allMessages.filter((message) => {
+                return (
+                    (message.sender === loggedInUser.username && message.receiver === friend.username)
+                    || (message.sender === friend.username && message.receiver === loggedInUser.username)
+                );
+            });
 
-            return allMessages;
+            return filteredMessages;
             // console.log(response.data.messages);
             
         } catch (error) {
