@@ -67,11 +67,12 @@ export default function Friends() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const [friendsRes, blockedRes] = await Promise.all([
+        const [friendsList, FriendRes , blockedRes] = await Promise.all([
           customAxios.get('http://127.0.0.1:8000/friend/friends'),
-          customAxios.get('http://127.0.0.1:8000/friend/blocked-friends')
+          customAxios.get('http://127.0.0.1:8000/friend/friends-add'),
+          customAxios.get('http://127.0.0.1:8000/friend/blocked-friends'),
         ]);
-        setFriendsData(friendsRes.data)
+        setFriendsData(friendsList.data)
         setBlockedFriendsData(blockedRes.data)
       } catch (error) {
         console.error('Error fetching data:', error);

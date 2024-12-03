@@ -200,6 +200,178 @@ Status Colors:
    - Map type selected
    - Tournament started via backend
 
+## Tournament Data Structure
+
+### GET /tournament/{tournamentId}
+
+This endpoint returns the current state of a tournament. Here's the expected response structure:
+
+```javascript
+{
+  "success": true,  // Indicates if the request was successful
+  "data": {
+    "matches": {
+      // Semi-final matches (First Round)
+      "semifinals": {
+        "match1": {  // First semi-final match
+          "player1": {
+            "id": "string",        // Unique identifier for the player
+            "username": "string",  // Display name of the player
+            "profiles_photo": "string"  // URL to player's profile photo
+          },
+          "player2": {  // Second player in the match
+            "id": "string",
+            "username": "string",
+            "profiles_photo": "string"
+          },
+          "winner": {  // Winner of this semi-final match
+            "id": "string",        // Must match either player1 or player2's id
+            "username": "string",  // Winner's username
+            "profiles_photo": "string"  // Winner's profile photo
+          } // Set to null if match not completed
+        },
+        "match2": {  // Second semi-final match
+          // Same structure as match1
+          // Contains the other two players
+        }
+      },
+      // Championship match (Final Round)
+      "final": {
+        "player1": {  // Winner from first semi-final
+          "id": "string",        // Should match winner's id from match1
+          "username": "string",  // Winner's username from match1
+          "profiles_photo": "string"  // Winner's profile photo from match1
+        },
+        "player2": {  // Winner from second semi-final
+          "id": "string",        // Should match winner's id from match2
+          "username": "string",  // Winner's username from match2
+          "profiles_photo": "string"  // Winner's profile photo from match2
+        },
+        "winner": {  // Tournament champion
+          "id": "string",        // Must match either final player1 or player2's id
+          "username": "string",  // Champion's username
+          "profiles_photo": "string"  // Champion's profile photo
+        } // null until final match is complete
+      },
+      "isComplete": boolean  // true when final match has a winner, false otherwise
+    }
+  }
+}
+```
+
+#### Detailed Field Explanations
+
+1. **Root Level Fields**
+   - `success`: Boolean indicating if the API request was successful
+   - `data`: Contains all tournament data
+
+2. **Matches Object**
+   - `semifinals`: Contains both semi-final matches
+   - `final`: Contains the championship match
+   - `isComplete`: Tournament completion status
+
+3. **Semi-finals Structure**
+   - `match1`: First semi-final match
+   - `match2`: Second semi-final match
+   Each match contains:
+   - `player1`: First player in the match
+   - `player2`: Second player in the match
+   - `winner`: Winner of the match (null if not decided)
+
+4. **Final Match Structure**
+   - `player1`: Winner from first semi-final (match1)
+   - `player2`: Winner from second semi-final (match2)
+   - `winner`: Tournament champion
+
+5. **Player Object Structure**
+   Each player object must contain:
+   - `id`: Unique identifier (string)
+   - `username`: Player's display name (string)
+   - `profiles_photo`: URL to profile picture (string)
+
+#### Data Flow Examples
+
+1. **Initial State**
+   ```javascript
+   {
+     "semifinals": {
+       "match1": {
+         "player1": { /* player data */ },
+         "player2": { /* player data */ },
+         "winner": null
+       },
+       "match2": {
+         "player1": { /* player data */ },
+         "player2": { /* player data */ },
+         "winner": null
+       }
+     },
+     "final": {
+       "player1": null,
+       "player2": null,
+       "winner": null
+     },
+     "isComplete": false
+   }
+   ```
+
+2. **After First Semi-final**
+   ```javascript
+   {
+     "semifinals": {
+       "match1": {
+         "player1": { /* player data */ },
+         "player2": { /* player data */ },
+         "winner": { /* winning player data */ }  // Set after match1 completes
+       },
+       "match2": {
+         "player1": { /* player data */ },
+         "player2": { /* player data */ },
+         "winner": null
+       }
+     },
+     "final": {
+       "player1": { /* match1 winner data */ },  // Populated from match1 winner
+       "player2": null,
+       "winner": null
+     },
+     "isComplete": false
+   }
+   ```
+
+3. **Tournament Complete**
+   ```javascript
+   {
+     "semifinals": {
+       "match1": { /* completed match data */ },
+       "match2": { /* completed match data */ }
+     },
+     "final": {
+       "player1": { /* match1 winner */ },
+       "player2": { /* match2 winner */ },
+       "winner": { /* tournament champion */ }
+     },
+     "isComplete": true
+   }
+   ```
+
+#### Notes for Backend Implementation
+
+1. Player Objects should always include:
+   - `id`: Unique identifier
+   - `username`: Display name
+   - `profiles_photo`: URL to profile picture
+
+2. Match Progress:
+   - Semifinal matches should be populated immediately
+   - Final match players should be updated as semifinals complete
+   - Winner should be null until match is decided
+
+3. Data Consistency:
+   - All player objects should follow the same structure
+   - Missing photos should default to "/images/avatarInvite.svg"
+   - IDs should be consistent across matches
+
 2. Tournament Progress:
    - Automatic updates every 3 seconds
    - Players participate in matches

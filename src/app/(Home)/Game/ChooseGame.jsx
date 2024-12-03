@@ -267,13 +267,13 @@ function MainComponent() {
           setTournamentId(response.tournamentId);
           setShowTournament(true);
           setShowFriendsPopup(false);
-          // toast.success('Tournament started!');
+          toast.success('Tournament started!');
         } else {
-          // toast.error(response.error || 'Failed to start tournament');
-        }
+          toast.error(response.error || 'Failed to start tournament');
+        } 
       } catch (error) {
         console.error('Error starting tournament:', error);
-        // toast.error('Failed to start tournament');
+        toast.error('Failed to start tournament');
       }
     }
   };

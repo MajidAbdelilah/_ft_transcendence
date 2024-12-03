@@ -7,9 +7,7 @@ import { motion } from "framer-motion";
 import Link from "next/link";
 import { IoIosSearch } from "react-icons/io";
 import authService from "./authService";
-import websocketService from './services/websocket';
-
-//----------------------------------------------
+import { useWebSocket } from './contexts/WebSocketProvider';
 import axios from "axios";
 import { showAlert } from "./components/utils";
 import { useRouter } from 'next/navigation';
@@ -104,6 +102,7 @@ function Navbar() {
   const [notifications, setNotifications] = useState([]);
   const [notificationCount, setNotificationCount] = useState(0);
   const [notificationDropdown, setNotificationDropdown] = useState(false);
+  const { addHandler, removeHandler } = useWebSocket();
 
   const userDropdownRef = useRef(null);
   const notificationDropdownRef = useRef(null);
@@ -183,12 +182,12 @@ function Navbar() {
       }
     };
 
-    websocketService.addHandler(handleWebSocketMessage);
+    addHandler(handleWebSocketMessage);
 
     return () => {
-      websocketService.removeHandler(handleWebSocketMessage);
+      removeHandler(handleWebSocketMessage);
     };
-  }, []);
+  }, [addHandler, removeHandler]);
 
   const handleNewNotification = (notification) => {
     setNotifications(prev => [notification, ...prev]);
