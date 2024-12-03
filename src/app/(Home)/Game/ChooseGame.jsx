@@ -8,95 +8,15 @@ import { Check } from 'lucide-react';
 import customAxios from '../../customAxios';
 import TournamentBracket from "../../components/TournamentBracket";
 import { gameService } from '../../services/gameService';
+import { useUser } from '../../contexts/UserContext'; // Update import path
 
 const montserrat = Montserrat({
   subsets: ['latin'],
   variable: '--font-montserrat',
 })
 
-// function TournamentPage({ onClose, invitedFriends }) {
-//   const [IsClose, setIsClose] = useState(true);
-//   const [isMobile, setIsMobile] = useState(false);
-
-//   useEffect(() => {
-//     const handleResize = () => {
-//       setIsMobile(window.innerWidth <= 768);
-//     };
-
-//     handleResize();
-//     window.addEventListener("resize", handleResize);
-//     return () => {
-//       window.removeEventListener("resize", handleResize);
-//     };
-//   }, []);
-
-//   function InviteFriends({ friend, onInvite, isInvited }) {
-//     return(
-//       <div className={`w-[90%] mx-auto h-auto sm:mt-4 mt-4 rounded-xl bg-[#D8D8F7] shadow-md shadow-[#BCBCC9] relative ${isMobile ? 'w-[95%]' : ' min-h-[90px] '} ${montserrat.className}`}>
-//         <div className="flex items-center h-auto p-2">
-//           <div className="flex flex-row items-center justify-center lg:w-[10%] lg:h-auto md:w-[10%] md:h-[90%] w-[20%] h-[90%] ">
-//             <Image 
-//               priority 
-//               src={friend.profiles_photo || "./images/avatarInvite.svg"} 
-//               alt="profile" 
-//               width={50} 
-//               height={50} 
-//               className="lg:w-[90%] lg:h-[90%] md:w-[80%] md:h-[80%] w-[100%] h-[100%] rounded-full object-cover" 
-//             />
-//           </div>
-//           <div className="flex flex-col justify-center lg:w-[80%] lg:h-auto md:w-[80%] md:h-[90%] w-[60%] h-[90%] pl-4">
-//             <h1 className="lg:text-2xl md:text-xl text-lg font-bold text-[#242F5C]">{friend.username}</h1>
-//             <p className="text-green-600 lg:text-sm text-xs font-medium">Online</p>
-//           </div>
-//           <div className="flex flex-row items-center justify-center lg:w-[10%] lg:h-[90%] md:w-[10%] md:h-[90%] w-[20%] h-[90%] absolute md:right-10 right-5 top-1 md:gap-3 gap-2">
-//             <button
-//               onClick={() => !isInvited && onInvite(friend)}
-//               className={`cursor-pointer transition-transform hover:scale-110 ${isInvited ? 'opacity-50 cursor-not-allowed' : ''}`}
-//               disabled={isInvited}
-//             >
-//               <Image 
-//                 src={isInvited ? "/images/check.svg" : "/images/InviteGame.svg"}
-//                 alt={isInvited ? "Invited" : "Invite"} 
-//                 width={50} 
-//                 height={50} 
-//                 className="lg:w-[40%] lg:h-[40%] md:w-[40%] md:h-[40%] w-[30%] h-[30%]" 
-//               />
-//             </button>
-//           </div>
-//         </div>
-//       </div>
-//     );
-//   };
-
-//   return (
-//     <>
-//       {IsClose && (
-//         <div className="fixed inset-0 backdrop-blur-sm flex justify-center items-center motion-preset-pop  ">
-//           <div className="bg-[#F4F4FF] bg-re flex flex-col items-center shadow-lg rounded-xl w-[95%] overflow-y-auto scrollbar-hide custom-scrollbarh-[90%] mt-[80px] sm:h-[90%] border-solid border-[#BCBCC9] border-2 max-w-[900px] max-h-[500px] sm:max-h-[900px] min-h-[580px] pt-8 animate-scaleIn">
-//             <div className="relative flex flex-col items-center w-full h-full overflow-y-auto scrollbar-hide custom-scrollbar ">
-//               {invitedFriends.map((friend, index) => (
-//                 <InviteFriends key={index} friend={friend} onInvite={() => {}} isInvited={true} />
-//               ))}
-//               <Image
-//                 src="/images/close.svg"
-//                 alt="Close"
-//                 width={32}
-//                 height={32}
-//                 className="absolute top-[-px] sm:top-2 right-2 sm:right-11 cursor-pointer w-[20px] h-[20px] sm:w-10 sm:h-10"
-//                 onClick={() => {
-//                   setIsClose(false);
-//                   onClose();
-//                 }}
-//               />
-//             </div>
-//           </div>
-//         </div>
-//       )}
-//     </>
-//   );
-// }
-
 function MainComponent() {
+  const { userData } = useUser();
   const [showTournament, setShowTournament] = useState(false);
   const [selectedMap, setSelectedMap] = useState(null);
   const [isMode, setIsMode] = useState(null);
@@ -104,7 +24,7 @@ function MainComponent() {
   const [friends, setFriends] = useState({ friends: [] });
   const [error, setError] = useState(null);
   const [showFriendsPopup, setShowFriendsPopup] = useState(false);
-  const [tournamentCreator, setTournamentCreator] = useState(null);
+  const [tournamentCreator, setTournamentCreator] = useState(null); // Keep tournamentCreator state
   const [tournamentId, setTournamentId] = useState(null);
   const [tournamentData, setTournamentData] = useState(null);
 
@@ -180,16 +100,15 @@ function MainComponent() {
   }, []);
 
   useEffect(() => {
-    const fetchCreatorInfo = async () => {
-      try {
-        const response = await customAxios.get('/user/me');
-        setTournamentCreator(response.data);
-      } catch (error) {
-        console.error('Error fetching creator info:', error);
-      }
-    };
-    fetchCreatorInfo();
-  }, []);
+  
+    if (userData) {
+      setTournamentCreator({
+        id: userData.id,
+        username: userData.username,
+        profile_photo: userData.profile_photo
+      });
+    }
+  }, [userData]);
 
   useEffect(() => {
     if (!tournamentId) return;
@@ -247,7 +166,8 @@ function MainComponent() {
   const canStartTournament = invitedPlayers.length > 0 && invitedPlayers.length <= maxAdditionalPlayers;
 
   const handleStartTournament = async () => {
-    if (!tournamentCreator) {
+    console.log("*******************", tournamentCreator);
+    if (!tournamentCreator) { // Update condition to check for tournamentCreator
       console.error('Tournament creator info not loaded');
       return;
     }
@@ -255,10 +175,7 @@ function MainComponent() {
     if (canStartTournament) {
       try {
         // Prepare players data including tournament creator
-        const players = [...invitedPlayers, tournamentCreator].map(player => ({
-          id: player.id,
-          username: player.username
-        }));
+        const players = [...invitedPlayers, tournamentCreator];
 
         // Start tournament
         const response = await gameService.startTournament(players, selectedMap);
@@ -405,7 +322,7 @@ function MainComponent() {
               <motion.div
                 initial={{ scale: 0.9, opacity: 0 }}
                 animate={{ scale: 1, opacity: 1 }}
-                className="bg-white rounded-2xl w-[90%] max-w-[500px] overflow-hidden"
+                className="bg-[#F4F4FF] rounded-2xl w-[90%] max-w-[500px] overflow-hidden"
               >
                 {/* Header */}
                 <div className="flex justify-between items-center p-6 border-b border-gray-200">
