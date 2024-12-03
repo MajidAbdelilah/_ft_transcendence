@@ -13,7 +13,8 @@ urlpatterns = [
     path('sendcode/', views.Send2FAcode.as_view(), name='SendEmail'),
     path('CodeVerification/', views.CodeVerification.as_view(), name='GetCode'),
     path('update_user/', views.Update_user.as_view(), name='Update_user'),
-    path('user/', views.User_view.as_view(), name='user')
+    path('user/', views.User_view.as_view(), name='user'),
+    path('users/', views.get_users.as_view(), name='users')
 ]
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL,

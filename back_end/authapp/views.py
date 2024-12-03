@@ -11,6 +11,7 @@ from rest_framework.permissions import AllowAny
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import api_view, permission_classes
 import jwt
+import json
 from authapp.models import User
 import random
 import string
@@ -160,16 +161,17 @@ class LoginView(APIView):
 
 
 
-class upload_profile_image(APIView):
-    permission_classes = [  IsAuthenticated]
-    def poste (self, request):
-        form = request.get('file')
-        if form.is_valid():
-            form.save()
-            return HttpResponse('successfully uploaded')
-        else:
-            form = ImageForm()
-            return HttpResponse('Image not Uploaded')
+class get_users(APIView):
+    permission_classes = [IsAuthenticated]
+    def get(self, request):
+        users = User.objects.values()
+        listUsers = {}
+        for i in users:
+            listUsers[i['username']] = i
+            print( " i    ---->    ", listUsers[i['username']])
+        for j in listUsers:
+            print("j:   ",listUsers[j])
+        return Response(listUsers)
 class Update_user(APIView):
     permission_classes = [IsAuthenticated]
     def post(self , request):
