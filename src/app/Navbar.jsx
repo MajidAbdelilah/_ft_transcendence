@@ -11,7 +11,7 @@ import { useWebSocket } from './contexts/WebSocketProvider';
 import axios from "axios";
 import { showAlert } from "./components/utils";
 import { useRouter } from 'next/navigation';
-import { useUser } from './UserContext.tsx';
+import { useUser } from './contexts/UserContext';
 import { Skeleton}  from "../compo/ui/Skeleton";
 import NotificationDropdown from './components/NotificationDropdown';
 

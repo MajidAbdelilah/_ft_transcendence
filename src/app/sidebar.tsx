@@ -8,7 +8,7 @@ import { FaBarsStaggered } from "react-icons/fa6";
 import { useClickAway } from "@uidotdev/usehooks";
 import { motion } from "framer-motion";
 import { useRouter } from 'next/navigation';
-import { useUser } from './UserContext';
+import { useUser } from './contexts/UserContext';
 import { Skeleton}  from "../compo/ui/Skeleton";
 import authService from "./authService";
 

@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import Navbar from "./../Navbar";
 import Sidebar from "./../sidebar.tsx";
 import { Montserrat } from "next/font/google";
-import { UserProvider } from '../UserContext';
+import { UserProvider } from '../contexts/UserContext';
 import { WebSocketProvider } from '../contexts/WebSocketProvider';
 import { useRouter } from 'next/navigation';
 

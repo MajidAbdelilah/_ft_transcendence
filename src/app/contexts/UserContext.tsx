@@ -1,8 +1,8 @@
 "use client";
 
 import React, { createContext, useState, useContext, useEffect } from "react";
-import customAxios from "./customAxios";
-import Loading from "./components/Loading";
+import customAxios from "../customAxios";
+import Loading from "../components/Loading";
 
 interface UserData {
   username: string;
