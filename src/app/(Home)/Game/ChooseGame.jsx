@@ -1,5 +1,5 @@
 'use client';
-import React, { useState, useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
 import Link from "next/link";
 import { motion } from 'framer-motion';
@@ -14,128 +14,99 @@ const montserrat = Montserrat({
   variable: '--font-montserrat',
 })
 
-function TournamentPage({ onClose, invitedFriends }) {
-  const [IsClose, setIsClose] = useState(true);
-  const [isMobile, setIsMobile] = useState(false);
+// function TournamentPage({ onClose, invitedFriends }) {
+//   const [IsClose, setIsClose] = useState(true);
+//   const [isMobile, setIsMobile] = useState(false);
 
-  useEffect(() => {
-    const handleResize = () => {
-      setIsMobile(window.innerWidth <= 768);
-    };
+//   useEffect(() => {
+//     const handleResize = () => {
+//       setIsMobile(window.innerWidth <= 768);
+//     };
 
-    handleResize();
-    window.addEventListener("resize", handleResize);
-    return () => {
-      window.removeEventListener("resize", handleResize);
-    };
-  }, []);
+//     handleResize();
+//     window.addEventListener("resize", handleResize);
+//     return () => {
+//       window.removeEventListener("resize", handleResize);
+//     };
+//   }, []);
 
-  function InviteFriends({ friend, onInvite, isInvited }) {
-    return(
-      <div className={`w-[90%] mx-auto h-auto sm:mt-4 mt-4 rounded-xl bg-[#D8D8F7] shadow-md shadow-[#BCBCC9] relative ${isMobile ? 'w-[95%]' : ' min-h-[90px] '} ${montserrat.className}`}>
-        <div className="flex items-center h-auto p-2">
-          <div className="flex flex-row items-center justify-center lg:w-[10%] lg:h-auto md:w-[10%] md:h-[90%] w-[20%] h-[90%] ">
-            <Image 
-              priority 
-              src={friend.profiles_photo || "./images/avatarInvite.svg"} 
-              alt="profile" 
-              width={50} 
-              height={50} 
-              className="lg:w-[90%] lg:h-[90%] md:w-[80%] md:h-[80%] w-[100%] h-[100%] rounded-full object-cover" 
-            />
-          </div>
-          <div className="flex flex-col justify-center lg:w-[80%] lg:h-auto md:w-[80%] md:h-[90%] w-[60%] h-[90%] pl-4">
-            <h1 className="lg:text-2xl md:text-xl text-lg font-bold text-[#242F5C]">{friend.username}</h1>
-            <p className="text-green-600 lg:text-sm text-xs font-medium">Online</p>
-          </div>
-          <div className="flex flex-row items-center justify-center lg:w-[10%] lg:h-[90%] md:w-[10%] md:h-[90%] w-[20%] h-[90%] absolute md:right-10 right-5 top-1 md:gap-3 gap-2">
-            <button
-              onClick={() => !isInvited && onInvite(friend)}
-              className={`cursor-pointer transition-transform hover:scale-110 ${isInvited ? 'opacity-50 cursor-not-allowed' : ''}`}
-              disabled={isInvited}
-            >
-              <Image 
-                src={isInvited ? "/images/check.svg" : "/images/InviteGame.svg"}
-                alt={isInvited ? "Invited" : "Invite"} 
-                width={50} 
-                height={50} 
-                className="lg:w-[40%] lg:h-[40%] md:w-[40%] md:h-[40%] w-[30%] h-[30%]" 
-              />
-            </button>
-          </div>
-        </div>
-      </div>
-    );
-  };
+//   function InviteFriends({ friend, onInvite, isInvited }) {
+//     return(
+//       <div className={`w-[90%] mx-auto h-auto sm:mt-4 mt-4 rounded-xl bg-[#D8D8F7] shadow-md shadow-[#BCBCC9] relative ${isMobile ? 'w-[95%]' : ' min-h-[90px] '} ${montserrat.className}`}>
+//         <div className="flex items-center h-auto p-2">
+//           <div className="flex flex-row items-center justify-center lg:w-[10%] lg:h-auto md:w-[10%] md:h-[90%] w-[20%] h-[90%] ">
+//             <Image 
+//               priority 
+//               src={friend.profiles_photo || "./images/avatarInvite.svg"} 
+//               alt="profile" 
+//               width={50} 
+//               height={50} 
+//               className="lg:w-[90%] lg:h-[90%] md:w-[80%] md:h-[80%] w-[100%] h-[100%] rounded-full object-cover" 
+//             />
+//           </div>
+//           <div className="flex flex-col justify-center lg:w-[80%] lg:h-auto md:w-[80%] md:h-[90%] w-[60%] h-[90%] pl-4">
+//             <h1 className="lg:text-2xl md:text-xl text-lg font-bold text-[#242F5C]">{friend.username}</h1>
+//             <p className="text-green-600 lg:text-sm text-xs font-medium">Online</p>
+//           </div>
+//           <div className="flex flex-row items-center justify-center lg:w-[10%] lg:h-[90%] md:w-[10%] md:h-[90%] w-[20%] h-[90%] absolute md:right-10 right-5 top-1 md:gap-3 gap-2">
+//             <button
+//               onClick={() => !isInvited && onInvite(friend)}
+//               className={`cursor-pointer transition-transform hover:scale-110 ${isInvited ? 'opacity-50 cursor-not-allowed' : ''}`}
+//               disabled={isInvited}
+//             >
+//               <Image 
+//                 src={isInvited ? "/images/check.svg" : "/images/InviteGame.svg"}
+//                 alt={isInvited ? "Invited" : "Invite"} 
+//                 width={50} 
+//                 height={50} 
+//                 className="lg:w-[40%] lg:h-[40%] md:w-[40%] md:h-[40%] w-[30%] h-[30%]" 
+//               />
+//             </button>
+//           </div>
+//         </div>
+//       </div>
+//     );
+//   };
 
-  return (
-    <>
-      {IsClose && (
-        <div className="fixed inset-0 backdrop-blur-sm flex justify-center items-center motion-preset-pop  ">
-          <div className="bg-[#F4F4FF] bg-re flex flex-col items-center shadow-lg rounded-xl w-[95%] overflow-y-auto scrollbar-hide custom-scrollbarh-[90%] mt-[80px] sm:h-[90%] border-solid border-[#BCBCC9] border-2 max-w-[900px] max-h-[500px] sm:max-h-[900px] min-h-[580px] pt-8 animate-scaleIn">
-            <div className="relative flex flex-col items-center w-full h-full overflow-y-auto scrollbar-hide custom-scrollbar ">
-              {invitedFriends.map((friend, index) => (
-                <InviteFriends key={index} friend={friend} onInvite={() => {}} isInvited={true} />
-              ))}
-              <Image
-                src="/images/close.svg"
-                alt="Close"
-                width={32}
-                height={32}
-                className="absolute top-[-px] sm:top-2 right-2 sm:right-11 cursor-pointer w-[20px] h-[20px] sm:w-10 sm:h-10"
-                onClick={() => {
-                  setIsClose(false);
-                  onClose();
-                }}
-              />
-            </div>
-          </div>
-        </div>
-      )}
-    </>
-  );
-}
+//   return (
+//     <>
+//       {IsClose && (
+//         <div className="fixed inset-0 backdrop-blur-sm flex justify-center items-center motion-preset-pop  ">
+//           <div className="bg-[#F4F4FF] bg-re flex flex-col items-center shadow-lg rounded-xl w-[95%] overflow-y-auto scrollbar-hide custom-scrollbarh-[90%] mt-[80px] sm:h-[90%] border-solid border-[#BCBCC9] border-2 max-w-[900px] max-h-[500px] sm:max-h-[900px] min-h-[580px] pt-8 animate-scaleIn">
+//             <div className="relative flex flex-col items-center w-full h-full overflow-y-auto scrollbar-hide custom-scrollbar ">
+//               {invitedFriends.map((friend, index) => (
+//                 <InviteFriends key={index} friend={friend} onInvite={() => {}} isInvited={true} />
+//               ))}
+//               <Image
+//                 src="/images/close.svg"
+//                 alt="Close"
+//                 width={32}
+//                 height={32}
+//                 className="absolute top-[-px] sm:top-2 right-2 sm:right-11 cursor-pointer w-[20px] h-[20px] sm:w-10 sm:h-10"
+//                 onClick={() => {
+//                   setIsClose(false);
+//                   onClose();
+//                 }}
+//               />
+//             </div>
+//           </div>
+//         </div>
+//       )}
+//     </>
+//   );
+// }
 
 function MainComponent() {
   const [showTournament, setShowTournament] = useState(false);
-  const [isMobile, setIsMobile] = useState(false); 
-  const [selectedMap, setSelectedMap] = useState(null); // State to track selected map
-  const [isMode, setIsMode] = useState(null); // State to track selected mode
+  const [selectedMap, setSelectedMap] = useState(null);
+  const [isMode, setIsMode] = useState(null);
   const [invitedPlayers, setInvitedPlayers] = useState([]);
-  const [friends, setFriends] = useState({ friends: [] });  // Update initial state to match API format
+  const [friends, setFriends] = useState({ friends: [] });
   const [error, setError] = useState(null);
   const [showFriendsPopup, setShowFriendsPopup] = useState(false);
-  const [currentUser, setCurrentUser] = useState({
-    id: 1, // This should be the actual user's ID
-    username: "Current User",
-    profiles_photo: "/images/avatarInvite.svg",
-    status: "online"
-  });
-  const [matchResults, setMatchResults] = useState({
-    semifinals: {
-      left: null,
-      right: null,
-    },
-    final: null
-  });
-
-  // Game developer can call this to update match results
-  const updateMatchResults = (round, matchId, winner) => {
-    if (round === 'semifinals') {
-      setMatchResults(prev => ({
-        ...prev,
-        semifinals: {
-          ...prev.semifinals,
-          [matchId]: winner // matchId should be 'left' or 'right'
-        }
-      }));
-    } else if (round === 'finals') {
-      setMatchResults(prev => ({
-        ...prev,
-        final: winner
-      }));
-    }
-  };
+  const [tournamentCreator, setTournamentCreator] = useState(null);
+  const [tournamentId, setTournamentId] = useState(null);
+  const [tournamentData, setTournamentData] = useState(null);
 
   useEffect(() => {
     const fetchFriends = async () => {
@@ -208,6 +179,51 @@ function MainComponent() {
     fetchFriends();
   }, []);
 
+  useEffect(() => {
+    const fetchCreatorInfo = async () => {
+      try {
+        const response = await customAxios.get('/user/me');
+        setTournamentCreator(response.data);
+      } catch (error) {
+        console.error('Error fetching creator info:', error);
+      }
+    };
+    fetchCreatorInfo();
+  }, []);
+
+  useEffect(() => {
+    if (!tournamentId) return;
+
+    const fetchTournamentData = async () => {
+      const result = await gameService.getTournamentData(tournamentId);
+      if (result.success) {
+        setTournamentData(result.data);
+        
+        // TODO: Game Developer Integration Point
+        // Here you should:
+        // 1. Check if there's a current match ready to play
+        // 2. Check if current user is part of that match
+        // 3. Redirect players to the game component/page
+        // 4. Pass necessary data: matchId, tournamentId, players
+        // Example:
+        // if (result.data.currentMatch && userShouldPlay) {
+        //   startGame({
+        //     matchId: result.data.currentMatch.id,
+        //     tournamentId: tournamentId,
+        //     players: result.data.currentMatch.players
+        //   });
+        // }
+      }
+    };
+
+    // Initial fetch
+    fetchTournamentData();
+
+    // Poll for updates every 3 seconds
+    const interval = setInterval(fetchTournamentData, 3000);
+    return () => clearInterval(interval);
+  }, [tournamentId]);
+
   const handleInviteToTournament = (friend) => {
     if (invitedPlayers.length < 3) {
       if (!invitedPlayers.some(player => player.id === friend.id)) {
@@ -227,130 +243,47 @@ function MainComponent() {
     setInvitedPlayers(invitedPlayers.filter(player => player.id !== friendId));
   };
 
-  const handleInvitePlayer = (friend) => {
-    if (invitedPlayers.length < 3) {
-      if (!invitedPlayers.some(player => player.id === friend.id)) {
-        const newPlayer = {
-          id: friend.id,
-          username: friend.username,
-          profile_photo: friend.profiles_photo || '/images/avatarInvite.svg'
-        };
-        setInvitedPlayers([...invitedPlayers, newPlayer]);
-      }
-    } else {
-      // Maximum players reached
-      alert("Tournament is full! Maximum 4 players allowed.");
+  const maxAdditionalPlayers = 3;
+  const canStartTournament = invitedPlayers.length > 0 && invitedPlayers.length <= maxAdditionalPlayers;
+
+  const handleStartTournament = async () => {
+    if (!tournamentCreator) {
+      console.error('Tournament creator info not loaded');
+      return;
     }
-  };
 
-  useEffect(() => {
-    const handleResize = () => {
-      setIsMobile(window.innerWidth <= 768);
-    };
-
-    handleResize();
-    window.addEventListener("resize", handleResize);
-    return () => {
-      window.removeEventListener("resize", handleResize);
-    };
-  }, []);
-
-  // Get all players including current user
-  const allPlayers = [currentUser, ...invitedPlayers];
-  const maxAdditionalPlayers = 3; // Since current user counts as 1
-
-  const handleStartGame = (winner) => {
-    // TODO: Implement game start logic with the winner
-    console.log("Starting game with winner:", winner);
-    setShowTournament(false);
-    // Add navigation or game start logic here
-  };
-
-  const handleTournamentComplete = (tournamentData) => {
-    // The game developer can use this data to start their game
-    console.log('Tournament completed with data:', tournamentData);
-    
-    // Example of data structure received:
-    // {
-    //   players: [player1, player2, player3, player4],
-    //   semifinals: {
-    //     left: { winner: player, players: [player1, player2] },
-    //     right: { winner: player, players: [player3, player4] }
-    //   },
-    //   finals: {
-    //     players: [semifinalWinner1, semifinalWinner2],
-    //     winner: finalWinner
-    //   }
-    // }
-
-    // Game developer can implement their game start logic here
-    setShowTournament(false);
-  };
-
-  const startTournament = async () => {
-    try {
-      const tournamentData = {
-        players: allPlayers.map(player => ({
+    if (canStartTournament) {
+      try {
+        // Prepare players data including tournament creator
+        const players = [...invitedPlayers, tournamentCreator].map(player => ({
           id: player.id,
           username: player.username
-        })),
-        gameType: selectedMap,
-        tournamentId: Date.now()
-      };
+        }));
 
-      const response = await gameService.startTournament(tournamentData);
-      
-      if (response.success) {
-        console.log('Tournament started:', response);
+        // Start tournament
+        const response = await gameService.startTournament(players, selectedMap);
         
-        // Initialize match results
-        setMatchResults({
-          semifinals: {
-            left: null,
-            right: null,
-          },
-          final: null
-        });
-
-        // Show the tournament bracket
-        setShowTournament(true);
-
-        // Start polling for match updates if needed
-        // pollMatchUpdates(response.tournamentId);
-      }
-    } catch (error) {
-      console.error('Failed to start tournament:', error);
-      // Handle error appropriately
-    }
-  };
-
-  // Optional: Poll for match updates
-  const pollMatchUpdates = async (tournamentId) => {
-    const interval = setInterval(async () => {
-      try {
-        const status = await gameService.getTournamentStatus(tournamentId);
-        if (status.matchResults) {
-          setMatchResults(status.matchResults);
-        }
-        if (status.isComplete) {
-          clearInterval(interval);
+        if (response.success) {
+          setTournamentId(response.tournamentId);
+          setShowTournament(true);
+          setShowFriendsPopup(false);
+          // toast.success('Tournament started!');
+        } else {
+          // toast.error(response.error || 'Failed to start tournament');
         }
       } catch (error) {
-        console.error('Failed to get tournament status:', error);
-        clearInterval(interval);
+        console.error('Error starting tournament:', error);
+        // toast.error('Failed to start tournament');
       }
-    }, 5000); // Poll every 5 seconds
-
-    // Cleanup on component unmount
-    return () => clearInterval(interval);
+    }
   };
 
   return (
     <>
       <div className="relative w-full h-full">
-        <div className={`flex-1 w-full h-full overflow-y-auto flex flex-wrap items-center justify-center ${isMobile ? '' : 'p-4'} ${showTournament ? 'blur-sm' : ''}`}>
+        <div className={`flex-1 w-full h-full overflow-y-auto flex flex-wrap items-center justify-center p-4`}>
           <motion.div
-            className={`${isMobile ? 'w-full mt-4' : 'motion-preset-expand rounded-3xl border-solid border-[#BCBCC9] bg-[#F4F4FF]'} flex flex-col shadow-lg shadow-[#BCBCC9] items-center 
+            className={`motion-preset-expand rounded-3xl border-solid border-[#BCBCC9] bg-[#F4F4FF]'} flex flex-col shadow-lg shadow-[#BCBCC9] items-center 
               w-[90%] min-h-[1300px] bg-[#F4F4FF] justify-center p-8`}
           >
             <div className="w-full flex flex-col items-center justify-start space-y-8">
@@ -526,9 +459,7 @@ function MainComponent() {
                             </div>
                             {invitedPlayers.some((player) => player.id === friend.id) ? (
                               <button
-                                onClick={() => {
-                                  setInvitedPlayers(invitedPlayers.filter(player => player.id !== friend.id));
-                                }}
+                                onClick={() => handleRemoveFromTournament(friend.id)}
                                 className="flex items-center gap-2 px-4 py-2 text-red-500 hover:bg-red-50 rounded-lg transition-colors"
                               >
                                 <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
@@ -538,11 +469,7 @@ function MainComponent() {
                               </button>
                             ) : (
                               <button
-                                onClick={() => {
-                                  if (invitedPlayers.length < maxAdditionalPlayers) {
-                                    setInvitedPlayers([...invitedPlayers, friend]);
-                                  }
-                                }}
+                                onClick={() => handleInviteToTournament(friend)}
                                 disabled={invitedPlayers.length >= maxAdditionalPlayers}
                                 className={`flex items-center gap-2 px-4 py-2 rounded-lg transition-colors ${
                                   invitedPlayers.length >= maxAdditionalPlayers
@@ -573,78 +500,39 @@ function MainComponent() {
                   </div>
                   
                   <button
-                    onClick={async () => {
-                      if (invitedPlayers.length > 0) {
-                        try {
-                          const tournamentData = {
-                            players: [...invitedPlayers, currentUser].map(player => ({
-                              id: player.id,
-                              username: player.username
-                            })),
-                            gameType: selectedMap,
-                            tournamentId: Date.now()
-                          };
-
-                          const response = await gameService.startTournament(tournamentData);
-                          
-                          if (response.success) {
-                            console.log('Tournament started:', response);
-                            
-                            // Initialize match results
-                            setMatchResults({
-                              semifinals: {
-                                left: null,
-                                right: null,
-                              },
-                              final: null
-                            });
-
-                            setShowFriendsPopup(false);
-                            setShowTournament(true);
-                          }
-                        } catch (error) {
-                          console.error('Failed to start tournament:', error);
-                          // Handle error appropriately
-                        }
-                      }
-                    }}
-                    disabled={invitedPlayers.length === 0}
+                    onClick={handleStartTournament}
+                    disabled={!canStartTournament}
                     className={`w-full py-3 rounded-xl font-medium transition-colors ${
-                      invitedPlayers.length > 0
+                      canStartTournament
                         ? 'bg-[#242F5C] text-white hover:bg-opacity-90'
                         : 'bg-gray-200 text-gray-500 cursor-not-allowed'
                     }`}
                   >
-                    {invitedPlayers.length > 0 ? 'Start Tournament' : 'Select Players to Start'}
+                    {canStartTournament ? 'Start Tournament' : 'Select Players to Start'}
                   </button>
                 </div>
               </motion.div>
             </div>
           </div>
         )}
-        {/* Tournament Bracket Modal */}
+        {/* Tournament Modal */}
         {showTournament && (
           <div className="fixed inset-0 z-50">
             <div className="absolute inset-0 bg-black bg-opacity-50 backdrop-blur-sm"></div>
             <div className="relative h-full flex items-center justify-center">
-              <div className="bg-[#F4F4FF] rounded-xl w-[95%] h-[90%] overflow-auto p-6">
-                <div className="flex justify-between items-center mb-6">
-                  <h2 className="text-2xl font-bold text-[#242F5C]">Tournament Bracket</h2>
-                  <button 
+              <div className="bg-white rounded-xl p-6 w-full max-w-4xl mx-4">
+                <div className="flex justify-between items-center mb-4">
+                  <h2 className="text-xl font-semibold text-[#242F5C]">Tournament</h2>
+                  <button
                     onClick={() => setShowTournament(false)}
-                    className="text-gray-500 hover:text-gray-700"
+                    className="text-[#242F5C] hover:text-opacity-80"
                   >
-                    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                    </svg>
+                    ✕
                   </button>
                 </div>
-                <TournamentBracket 
-                  players={allPlayers}
-                  onClose={() => setShowTournament(false)}
-                  matchResults={matchResults}
-                  updateMatchResults={updateMatchResults}
-                />
+                {tournamentData && (
+                  <TournamentBracket tournamentData={tournamentData} />
+                )}
               </div>
             </div>
           </div>

@@ -4,11 +4,9 @@ import Image from 'next/image';
 import { IconLaurelWreath } from '@tabler/icons-react';
 
 const PlayerCard = ({ player, isWinner }) => (
-  <div 
-    className={`flex items-center gap-3 p-4 rounded-lg ${
-      isWinner ? 'bg-green-50 border-2 border-green-500' : 'bg-white border-2 border-[#242F5C]'
-    }`}
-  >
+  <div className={`flex items-center gap-3 p-4 rounded-lg ${
+    isWinner ? 'bg-green-50 border-2 border-green-500' : 'bg-white border-2 border-[#242F5C]'
+  }`}>
     <div className="relative w-10 h-10 rounded-full overflow-hidden">
       <Image
         src={player?.profiles_photo || "/images/avatarInvite.svg"}
@@ -22,83 +20,57 @@ const PlayerCard = ({ player, isWinner }) => (
   </div>
 );
 
-const TournamentBracket = ({ 
-  players, 
-  onClose,
-  matchResults = {
-    semifinals: {
-      left: null,  // winner of left semifinal
-      right: null, // winner of right semifinal
-    },
-    final: null    // tournament winner
-  }
-}) => {
-  const { semifinals, final } = matchResults;
-  const currentRound = !semifinals.left && !semifinals.right ? 'semifinals' 
-                      : !final ? 'finals'
-                      : 'complete';
-
+const TournamentBracket = ({ tournamentData }) => {
+  const { matches } = tournamentData;
+  
   return (
     <div className="flex flex-col items-center p-8">
       <h2 className="text-2xl font-bold text-[#242F5C] mb-8">
-        {currentRound === 'complete' 
-          ? 'Tournament Complete!'
-          : currentRound === 'finals' 
-            ? 'Finals'
-            : 'Semi-finals'}
+        {matches.isComplete ? 'Tournament Complete!' : 'Tournament Bracket'}
       </h2>
 
       <div className="w-full max-w-4xl">
         {/* Semi-finals */}
         <div className="flex justify-between mb-16">
+          {/* Left semifinal */}
           <div className="w-[45%] space-y-4">
             <PlayerCard 
-              player={players[0]}
-              isWinner={semifinals.left === players[0]}
+              player={matches.semifinals.match1?.player1}
+              isWinner={matches.semifinals.match1?.winner?.id === matches.semifinals.match1?.player1?.id}
             />
             <PlayerCard 
-              player={players[1]}
-              isWinner={semifinals.left === players[1]}
+              player={matches.semifinals.match1?.player2}
+              isWinner={matches.semifinals.match1?.winner?.id === matches.semifinals.match1?.player2?.id}
             />
           </div>
 
+          {/* Right semifinal */}
           <div className="w-[45%] space-y-4">
             <PlayerCard 
-              player={players[2]}
-              isWinner={semifinals.right === players[2]}
+              player={matches.semifinals.match2?.player1}
+              isWinner={matches.semifinals.match2?.winner?.id === matches.semifinals.match2?.player1?.id}
             />
             <PlayerCard 
-              player={players[3]}
-              isWinner={semifinals.right === players[3]}
+              player={matches.semifinals.match2?.player2}
+              isWinner={matches.semifinals.match2?.winner?.id === matches.semifinals.match2?.player2?.id}
             />
           </div>
         </div>
 
         {/* Finals */}
-        {(semifinals.left || semifinals.right) && (
+        {(matches.semifinals.match1?.winner || matches.semifinals.match2?.winner) && (
           <div className="w-1/2 mx-auto space-y-4">
             <PlayerCard 
-              player={semifinals.left}
-              isWinner={final === semifinals.left}
+              player={matches.final?.player1}
+              isWinner={matches.final?.winner?.id === matches.final?.player1?.id}
             />
             <PlayerCard 
-              player={semifinals.right}
-              isWinner={final === semifinals.right}
+              player={matches.final?.player2}
+              isWinner={matches.final?.winner?.id === matches.final?.player2?.id}
             />
           </div>
         )}
       </div>
-
-      {currentRound === 'complete' && (
-        <div className="flex gap-4 mt-8">
-          <button
-            onClick={onClose}
-            className="px-6 py-3 bg-[#242F5C] text-white rounded-lg hover:bg-opacity-90 transition-colors"
-          >
-            Close Tournament
-          </button>
-        </div>
-      )}
     </div>
   );
 };

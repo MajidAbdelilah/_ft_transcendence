@@ -2,27 +2,40 @@ import customAxios from '../customAxios';
 
 export const gameService = {
   // Start a new tournament
-  startTournament: async (tournamentData) => {
-    const response = await customAxios.post('/tournament/start', tournamentData);
-    return response.data;
+  startTournament: async (players, mapType) => {
+    try {
+      const response = await customAxios.post('/tournament/start', {
+        players,
+        mapType
+      });
+      return {
+        success: true,
+        tournamentId: response.data.tournamentId
+      };
+    } catch (error) {
+      console.error('Error starting tournament:', error);
+      return {
+        success: false,
+        error: error.message
+      };
+    }
   },
 
-  // Update match result
-  updateMatchResult: async (matchData) => {
-    const response = await customAxios.post('/tournament/match/update', matchData);
-    return response.data;
-  },
-
-  // Get tournament status
-  getTournamentStatus: async (tournamentId) => {
-    const response = await customAxios.get(`/tournament/${tournamentId}/status`);
-    return response.data;
-  },
-
-  // End tournament
-  endTournament: async (tournamentId) => {
-    const response = await customAxios.post(`/tournament/${tournamentId}/end`);
-    return response.data;
+  // Get tournament data including matches and results
+  getTournamentData: async (tournamentId) => {
+    try {
+      const response = await customAxios.get(`/tournament/${tournamentId}`);
+      return {
+        success: true,
+        data: response.data
+      };
+    } catch (error) {
+      console.error('Error fetching tournament data:', error);
+      return {
+        success: false,
+        error: error.message
+      };
+    }
   }
 };
 
