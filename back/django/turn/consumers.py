@@ -1,4 +1,5 @@
 import json
+from time import sleep
 from channels.generic.websocket import AsyncWebsocketConsumer
 import asyncio
 from .models import Match  # Import the Match model
@@ -33,10 +34,11 @@ class PingPongConsumer(AsyncWebsocketConsumer):
         if self.room_name not in self.room_var:
             self.room_var[self.room_name] = {
                 'players': {
-                    'player1': {'y': self.height/2 - 25, 'height': 100, 'x': 0, 'width': 10, 'direction': None, 'score': 0, 'full': False, 'username': ''},
-                    'player2': {'y': self.height/2 - 25, 'height': 100, 'x': self.width - 10, 'width': 10, 'direction': None, 'score': 0, 'full': False, 'username': ''}
+                    'player1': {'y': self.height/2 - 25, 'height': 100, 'x': 0, 'width': 10, 'direction': None, 'score': 0, 'full': False, 'username': '', 'game_start': False},
+                    'player2': {'y': self.height/2 - 25, 'height': 100, 'x': self.width - 10, 'width': 10, 'direction': None, 'score': 0, 'full': False, 'username': '', 'game_start': False}
                 },
-                'ball': {'x': self.width / 2, 'y': self.height / 2, 'radius': 5, 'vx': 5, 'vy': 5}
+                'ball': {'x': self.width / 2, 'y': self.height / 2, 'radius': 5, 'vx': 5, 'vy': 5},
+                'game_start': True
             }            
             asyncio.create_task(self.game_loop())
 
@@ -52,26 +54,35 @@ class PingPongConsumer(AsyncWebsocketConsumer):
                 self.channel_name
             )
 
+    def assign_player(self, username):
+        players = self.room_var[self.room_name]['players']
+        for player_key, player_data in players.items():
+            if(player_data['username'] == username):
+                return player_key
+            if not player_data['full']:
+                player_data['username'] = username
+                player_data['full'] = True
+                return player_key
+        return None
+
     async def receive(self, text_data):
         data = json.loads(text_data)
-        player = data['player']
         direction = data['direction']
         username = data.get('username', None)
-        if username is None:
-            return
-        if player in self.room_var[self.room_name]['players']:
-            self.room_var[self.room_name]['players'][player]['username'] = username
-            self.room_var[self.room_name]['players'][player]['full'] = True
+        player = data['player']
+        if(not player):
+            player = self.assign_player(username)
+        if player:
             self.room_var[self.room_name]['players'][player]['direction'] = direction
-
-        # Send back the player role to the client
-        await self.send(text_data=json.dumps({
-            'player_role': player
-        }))
+            self.room_var[self.room_name]['players'][player]['game_start'] = data.get('gameStarted')
+            # print(data.get('gameStarted'))
+            # print(self.room_var[self.room_name]['players'][player]['game_start'])
+            
 
     async def game_loop(self):
         while True:
-            self.update_game_state()
+            if self.room_name not in self.room_var:
+                break
             await self.channel_layer.group_send(
                 self.room_group_name,
                 {
@@ -79,20 +90,34 @@ class PingPongConsumer(AsyncWebsocketConsumer):
                     'ball': self.room_var[self.room_name]['ball'],
                     'players': self.room_var[self.room_name]['players'],
                     'width': self.width,
-                    'height': self.height
+                    'height': self.height,
+                    'start_game': self.room_var[self.room_name]['game_start']
                 }
             )
+            if(not self.room_var[self.room_name]['players']['player1']['game_start'] or not self.room_var[self.room_name]['players']['player2']['game_start']):
+                await asyncio.sleep(1/60)
+                continue
+            self.update_game_state()
+            if not self.room_var[self.room_name]['game_start']:
+                self.disconnect(1000)
+                del self.room_var[self.room_name]
+                break
             await asyncio.sleep(1/60)
 
     async def game_update(self, event):
+        if self.room_name not in self.room_var:
+            return
         await self.send(text_data=json.dumps({
             'ball': event['ball'],
             'players': event['players'],
             'width': event['width'],
-            'height': event['height']
+            'height': event['height'],
+            'start_game': self.room_var[self.room_name]['game_start']
         }))
 
     def update_game_state(self):
+        if self.room_name not in self.room_var:
+            return
         ball = self.room_var[self.room_name]['ball']
         players = self.room_var[self.room_name]['players']
         ball['x'] += ball['vx']
@@ -125,6 +150,8 @@ class PingPongConsumer(AsyncWebsocketConsumer):
             asyncio.create_task(self.save_game_data('player1'))
         elif players['player2']['score'] >= 5:
             asyncio.create_task(self.save_game_data('player2'))
+            
+
 
     def reset_ball(self):
         ball = self.room_var[self.room_name]['ball']
@@ -153,3 +180,6 @@ class PingPongConsumer(AsyncWebsocketConsumer):
         players['player1']['score'] = 0
         players['player2']['score'] = 0
         self.reset_ball()
+        self.room_var[self.room_name]['game_start'] = False
+        # disconnect the players
+        

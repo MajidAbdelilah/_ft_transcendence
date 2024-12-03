@@ -17,6 +17,10 @@
     <canvas id="gameCanvas"></canvas>
 
     <script>
+        let socket;
+        let player = '';
+        let gameStarted = false;
+
         // Display tournaments data
         function displayTournaments(tournaments) {
             const tournamentList = document.getElementById('tournamentList');
@@ -40,9 +44,6 @@
             });
         }
 
-        let socket;
-        let player = '';
-
         // Initialize WebSocket for PingPong game
         function initializeWebSocket() {
             const username = document.getElementById('username').value;
@@ -58,50 +59,73 @@
                 socket.send(JSON.stringify({
                     'player': player,
                     'direction': null,
-                    'username': username
+                    'username': username,
+                    'gameStarted': gameStarted
                 }));
             };
 
             socket.onmessage = function(e) {
                 const data = JSON.parse(e.data);
-                if (data.player_role) {
-                    player = data.player_role;
+                console.log("data:", data.start_game);
+                if(data.start_game === false){
+                    console.log('Game not started');
+                    socket.close();
+                    alert('Game Over');
+                    return;
                 }
+                if (data.players.player1.username === username) {
+                    player = 'player1';
+                } else if (data.players.player2.username === username) {
+                    player = 'player2';
+                }
+                console.log('player:', player);
                 updateGame(data);
             };
 
             socket.onclose = function(e) {
-                console.error('WebSocket closed unexpectedly');
+                console.log('WebSocket closed');
             };
         }
 
         // Update game state
         function updateGame(data) {
-            console.log(data);
             const canvas = document.getElementById('gameCanvas');
             const ctx = canvas.getContext('2d');
+            console.log('gameStarted:', gameStarted);
             canvas.width = data.width;
             canvas.height = data.height;
             ctx.clearRect(0, 0, canvas.width, canvas.height);
-
+            
+            if(gameStarted === false){
+                // print press space to start
+                ctx.font = '30px Arial';
+                ctx.fillStyle = 'rgba(0, 0, 0, 0.5)';
+                ctx.fillText('Press Space to Start', canvas.width / 2 - 150, canvas.height / 2 + 50);
+                return;
+            }
             // Draw ball
             ctx.beginPath();
             ctx.arc(data.ball.x, data.ball.y, data.ball.radius, 0, Math.PI * 2);
             ctx.fill();
-
-            // draw scores big in the middle of the canvas in a transparent black in a good font
+            
+            // Draw scores
             ctx.font = '100px Arial';
             ctx.fillStyle = 'rgba(0, 0, 0, 0.5)';
             ctx.fillText(data.players.player1.score, canvas.width / 2 - 150, canvas.height / 2 + 50);
             ctx.fillText(data.players.player2.score, canvas.width / 2 + 50, canvas.height / 2 + 50);
-
+            
             // Draw players
             ctx.fillRect(data.players.player1.x, data.players.player1.y, data.players.player1.width, data.players.player1.height);
             ctx.fillRect(data.players.player2.x, data.players.player2.y, data.players.player2.width, data.players.player2.height);
+            
         }
-
+        
         // Handle key events to control paddles
         document.addEventListener('keydown', function(event) {
+            if (!gameStarted && event.key === ' ') {
+                gameStarted = true;
+            }
+
             let direction = null;
             if (event.key === 'ArrowUp') {
                 direction = 'up';
@@ -109,21 +133,23 @@
                 direction = 'down';
             }
 
-            if (direction) {
+            if (direction && gameStarted) {
                 socket.send(JSON.stringify({
                     'player': player,
                     'direction': direction,
-                    'username': username
+                    'username': username,
+                    'gameStarted': gameStarted
                 }));
             }
         });
 
         document.addEventListener('keyup', function(event) {
-            if (event.key === 'ArrowUp' || event.key === 'ArrowDown') {
+            if ((event.key === 'ArrowUp' || event.key === 'ArrowDown') && gameStarted) {
                 socket.send(JSON.stringify({
                     'player': player,
                     'direction': null,
-                    'username': username
+                    'username': username,
+                    'gameStarted': gameStarted
                 }));
             }
         });
