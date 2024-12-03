@@ -1,4 +1,4 @@
-#!/goinfre/gghaya/back/myenv/bin/python3
+#!/goinfre/gghaya/ft_transcendence/myenv/bin/python3
 
 import sys
 import json

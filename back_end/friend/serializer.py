@@ -119,49 +119,17 @@ class NotificationUserSerializer(serializers.ModelSerializer):
         serializer = NotificationSerializer(notifications_data, many = True, context={'user': obj})
         return serializer.data
 
+class FriendsRequestSerializer(serializers.ModelSerializer):
+    user = serializers.SerializerMethodField()
+    class Meta:
+        model = Friendship
+        fields = ('user', 'freindship_id', 'is_accepted')
 
-# class GameHistorySerializer(serializers.ModelSerializer):
-#     matches_as_user_one = serializers.SerializerMethodField()
-#     matches_as_user_two = serializers.SerializerMethodField()
-#     minutes_per_day = serializers.SerializerMethodField()
-#     class Meta:
-#         model = User
-#         fields = ('username', 'email', 'first_name', 'last_name', 'image_url',
-#                   'matches_as_user_one', 'matches_as_user_two',
-#                   'minutes_per_day')
-
-#     @extend_schema_field(serializers.ListField(child=MatchSerializer()))
-#     def get_matches_as_user_one(self, obj) -> list:
-#         period = self.context['period']
-#         matches = []
-#         if period == 'day':
-#             matches = Match.objects.filter(Q(user_one=obj) &
-#                                            Q(match_start__day=timezone.now().day))
-#         elif period == 'month':
-#             matches = Match.objects.filter(Q(user_one=obj) &
-#                                            Q(match_start__month=timezone.now().month))
-#         elif period == "year":
-#             matches = Match.objects.filter(Q(user_one=obj) &
-#                                            Q(match_start__year=timezone.now().year))
-#         serializer = MatchSerializer(matches, many=True)
-#         return serializer.data
-
-#     @extend_schema_field(serializers.ListField(child=MatchSerializer()))
-#     def get_matches_as_user_two(self, obj) -> list:
-#         period = self.context['period']
-#         matches = []
-#         if period == 'day':
-#             matches = Match.objects.filter(Q(user_two=obj) &
-#                                            Q(match_start__day=timezone.now().day))
-#         elif period == 'month':
-#             matches = Match.objects.filter(Q(user_two=obj) &
-#                                            Q(match_start__month=timezone.now().month))
-#         elif period == "year":
-#             matches = Match.objects.filter(Q(user_two=obj) &
-#                                            Q(match_start__year=timezone.now().year))
-#         serializer = MatchSerializer(matches, many=True)
-#         return serializer.data
-
-#     @extend_schema_field(serializers.IntegerField())
-#     def get_minutes_per_day(self, obj) -> int:
-#         return get_minutes_per_day(obj, period=self.context['period'])
+    @extend_schema_field(UserSerializer())
+    def get_user(self, obj) -> dict:
+        if obj.user_from.id == self.context['id']:
+            user_data = User.objects.get(id=obj.user_to.id)
+        else:
+            user_data = User.objects.get(id=obj.user_from.id)
+        serializer = UserSerializer(user_data)
+        return serializer.data
