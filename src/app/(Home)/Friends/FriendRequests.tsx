@@ -3,8 +3,8 @@
 import Image from "next/image"
 import { Montserrat } from "next/font/google"
 import { useState, useEffect } from "react"
-import websocketService from '../../services/websocket'
 import customAxios from '../../customAxios'
+import { useWebSocket } from '../../contexts/WebSocketProvider';
 import {IconUserExclamation} from '@tabler/icons-react'
 
 const montserrat = Montserrat({
@@ -20,7 +20,7 @@ interface FriendRequestProps {
       profile_photo: string;
       is_on: boolean;
     };
-    freindship_id: number;
+    friendship_id: number;
     is_accepted: boolean;
     blocked: boolean;
     is_user_from: boolean;
@@ -35,18 +35,19 @@ export default function FriendRequests({ request }: FriendRequestProps) {
     reject: false
   })
   const [error, setError] = useState<string | null>(null)
+  const { send } = useWebSocket();
 
   const handleAccept = async () => {
     if (isLoading.accept) return;
     setError(null);
     setIsLoading(prev => ({ ...prev, accept: true }));
     try {
-      await customAxios.post(`/api/friend-requests/accept`, { 
-        friendship_id: request.freindship_id 
+      await customAxios.post(`/api/friends/accept`, { 
+        friendship_id: request.friendship_id 
       })
-      websocketService.send({
+      send({
         type: 'friends-accept',
-        freindship_id: request.freindship_id
+        friendship_id: request.friendship_id
       })
     } catch (error) {
       console.error('Error accepting friend request:', error)
@@ -61,12 +62,12 @@ export default function FriendRequests({ request }: FriendRequestProps) {
     setError(null);
     setIsLoading(prev => ({ ...prev, reject: true }));
     try {
-      await customAxios.post(`/api/friend-requests/reject`, {
-        friendship_id: request.freindship_id
+      await customAxios.post(`/api/friends/reject`, {
+        friendship_id: request.friendship_id
       })
-      websocketService.send({
-        type: 'friends-remove',
-        freindship_id: request.freindship_id
+      send({
+        type: 'friends-reject',
+        friendship_id: request.friendship_id
       })
     } catch (error) {
       console.error('Error rejecting friend request:', error)

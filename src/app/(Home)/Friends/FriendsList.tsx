@@ -3,7 +3,7 @@
 import Image from "next/image";
 import { Montserrat } from "next/font/google";
 import { useState, useEffect } from "react";
-import websocketService from '../../services/websocket';
+import { useWebSocket } from '../../contexts/WebSocketProvider';
 import customAxios from '../../customAxios';
 import {IconUserExclamation} from '@tabler/icons-react'
 
@@ -32,13 +32,14 @@ interface FriendsListProps {
 export default function FriendsList({ friends = [] }: FriendsListProps) {
   const [isMobile, setIsMobile] = useState(false);
   const [imageLoadingStates, setImageLoadingStates] = useState<{ [key: string]: boolean }>({});
+  const { send } = useWebSocket();
 
   const handleInviteGame = async (friend: Friend) => {
     try {
       await customAxios.post(`/api/game/invite`, {
         friendship_id: friend.friendship_id
       });
-      websocketService.send({
+      send({
         type: 'GAME_INVITE',
         friendship_id: friend.friendship_id,
         message: `Invited ${friend.user.username} to a game`
@@ -53,7 +54,7 @@ export default function FriendsList({ friends = [] }: FriendsListProps) {
       await customAxios.post(`/api/chat/messages`, {
         friendship_id: friend.friendship_id
       });
-      websocketService.send({
+      send({
         type: 'messages',
         friendship_id: friend.friendship_id
       });
@@ -67,7 +68,7 @@ export default function FriendsList({ friends = [] }: FriendsListProps) {
       await customAxios.post(`/api/friends/block`, {
         friendship_id: friend.friendship_id
       });
-      websocketService.send({
+      send({
         type: 'friends-block',
         friendship_id: friend.friendship_id
       });

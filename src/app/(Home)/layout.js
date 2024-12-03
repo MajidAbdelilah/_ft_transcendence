@@ -5,24 +5,17 @@ import Navbar from "./../Navbar";
 import Sidebar from "./../sidebar.tsx";
 import { Montserrat } from "next/font/google";
 import { UserProvider } from '../UserContext';
+import { WebSocketProvider } from '../contexts/WebSocketProvider';
 import { useRouter } from 'next/navigation';
-
-
-
-
-
 
 const montserrat = Montserrat({
     subsets: ["latin"],
     variable: "--font-montserrat",
-  });
-  
+});
 
 function RootLayout({ children }) {
-  const [isMobile, setIsMobile] = useState(false); // You might want to implement actual mobile detection
+  const [isMobile, setIsMobile] = useState(false); 
   const router = useRouter();
-
-  
 
   useEffect(() => {
     const handleResize = () => {
@@ -36,19 +29,21 @@ function RootLayout({ children }) {
     };
   }, []);
 
-    return (
-      <UserProvider>
+  return (
+    <UserProvider>
+      <WebSocketProvider>
         <div className={`flex flex-col h-screen ${montserrat.className}`}>
-        <Navbar />
-        <div className="flex flex-1 overflow-y-auto flex-wrap">
-          <Sidebar />
-          <div className={`flex-1 flex flex-wrap items-center justify-center ${isMobile ? '' : 'ml-64'}`}>
-            {children}
+          <Navbar />
+          <div className="flex flex-1 overflow-y-auto flex-wrap">
+            <Sidebar />
+            <div className={`flex-1 flex flex-wrap items-center justify-center ${isMobile ? '' : 'ml-64'}`}>
+              {children}
+            </div>
           </div>
         </div>
-      </div>
-      </UserProvider>
-    );
+      </WebSocketProvider>
+    </UserProvider>
+  );
 }
 
 export default RootLayout;

@@ -3,8 +3,8 @@
 import Image from "next/image"
 import { Montserrat } from "next/font/google"
 import { useState, useEffect } from "react"
-import websocketService from '../../services/websocket'
 import customAxios from '../../customAxios'
+import { useWebSocket } from '../../contexts/WebSocketProvider';
 import {IconUserCancel} from '@tabler/icons-react'
 
 const montserrat = Montserrat({
@@ -20,7 +20,7 @@ interface BlockedFriendProps {
       profile_photo: string;
       is_on: boolean;
     };
-    freindship_id: number;
+    friendship_id: number;
     is_accepted: boolean;
     blocked: boolean;
     is_user_from: boolean;
@@ -29,15 +29,16 @@ interface BlockedFriendProps {
 
 export default function BlockedFriends({ blockedFriend }: BlockedFriendProps) {
   const [isMobile, setIsMobile] = useState(false)
+  const { send } = useWebSocket();
 
   const handleUnblock = async () => {
     try {
       await customAxios.post(`/api/friends/unblock`, { 
-        username: blockedFriend.user.username 
+        friendship_id: blockedFriend.friendship_id 
       })
-      websocketService.send({
+      send({
         type: 'friends-unblock',
-        friendship_id: blockedFriend.freindship_id
+        friendship_id: blockedFriend.friendship_id
       })
     } catch (error) {
       console.error('Error unblocking friend:', error)

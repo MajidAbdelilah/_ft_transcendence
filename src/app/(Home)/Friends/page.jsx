@@ -1,7 +1,7 @@
 'use client'
 
 import { Montserrat } from "next/font/google"
-import { useState, useEffect } from "react"
+import { useState, useEffect, useContext } from "react"
 import Image from "next/image"
 import FriendsComponent from "./FriendsList"
 import ScrollBlur from "./ScrollBlur"
@@ -9,7 +9,7 @@ import FriendRequests from "./FriendRequests.tsx"
 import BlockedFriends from "./BlockedFriends.tsx"
 import customAxios from "../../customAxios"
 import { Loader2 } from 'lucide-react'
-import websocketService from '../../services/websocket'
+import { useWebSocket } from '../../contexts/WebSocketProvider';
 import {IconForbid2} from '@tabler/icons-react'
 
 const montserrat = Montserrat({
@@ -17,7 +17,7 @@ const montserrat = Montserrat({
   variable: "--font-montserrat",
 })
 
-function Friends() {
+export default function Friends() {
   const [isMobile, setIsMobile] = useState(false)
   const [activeItem, setActiveItem] = useState("Friends List")
   const [navItems] = useState([
@@ -50,6 +50,8 @@ function Friends() {
   ]
   const [activeIcon, setActiveIcon] = useState(navItemsIcons[0].activeImg)
 
+  const {addHandler, removeHandler } = useWebSocket();
+
   useEffect(() => {
     const handleResize = () => {
       setIsMobile(window.innerWidth <= 1698)
@@ -64,30 +66,20 @@ function Friends() {
 
   useEffect(() => {
     const fetchData = async () => {
-      setIsLoading(true)
-      setError(null)
       try {
         const [friendsRes, blockedRes] = await Promise.all([
           customAxios.get('http://127.0.0.1:8000/friend/friends'),
-          // customAxios.get('http://127.0.0.1:8000/friend/friends-add'),
           customAxios.get('http://127.0.0.1:8000/friend/blocked-friends')
-
         ]);
-        // console.log(requestsRes.data);
-        // console.log(friendsRes.data);
-        console.log("***************", blockedRes.data);
-
         setFriendsData(friendsRes.data)
-        // setFriendRequestsData(requestsRes.data)
         setBlockedFriendsData(blockedRes.data)
       } catch (error) {
-        console.log(blockedRes.data);
-
-        setError(error.message)
+        console.error('Error fetching data:', error);
+        setError(error.message);
       } finally {
-        setIsLoading(false)
+        setIsLoading(false);
       }
-    }
+    };
 
     const handleWebSocketMessage = (data) => {
       if (!data || !data.type) {
@@ -183,15 +175,13 @@ function Friends() {
       }
     };
 
-    websocketService.connect();
-    websocketService.addHandler(handleWebSocketMessage);
-
+    addHandler(handleWebSocketMessage);
     fetchData();
 
     return () => {
-      websocketService.removeHandler(handleWebSocketMessage);
-    }
-  }, [])
+      removeHandler(handleWebSocketMessage);
+    };
+  }, [addHandler, removeHandler])
 
   if (isLoading) {
     return <LoadingSpinner/>
@@ -296,5 +286,3 @@ export function LoadingSpinner() {
       <Loader2 className="w-8 h-8 text-[#242F5C]" />
   )
 }
-
-export default Friends
