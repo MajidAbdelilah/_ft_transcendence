@@ -8,7 +8,7 @@ import { FaBarsStaggered } from "react-icons/fa6";
 import { useClickAway } from "@uidotdev/usehooks";
 import { motion } from "framer-motion";
 import { useRouter } from 'next/navigation';
-import { useUser } from './UserContext';
+import { useUser } from './contexts/UserContext';
 import { Skeleton}  from "../compo/ui/Skeleton";
 import authService from "./authService";
 
@@ -30,8 +30,8 @@ export default function Sidebar() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
   const [avatarLoading, setAvatarLoading] = useState(true);
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
 
-  // console.log(userData.name);
 
   const sideRef = useClickAway<HTMLDivElement>(() => {
     setIsMobileMenuOpen(false);
@@ -39,16 +39,20 @@ export default function Sidebar() {
 
   const logout = async () => {
     try {
+      setIsLoggingOut(true);
       const response = await authService.logout();
       if (response.status !== 200) {
         throw new Error('Logout failed');
       }
       
       document.cookie = 'accessToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+      
       setUserData(null);
       window.location.href = '/login';
     } catch (error) {
       console.error('Logout failed:', error);
+    }finally {
+      setIsLoggingOut(false);
     }
   };
 
@@ -93,7 +97,7 @@ export default function Sidebar() {
         {!isMobile && (
           <div className="flex items-center justify-center motion-scale-in-[0.5] motion-translate-x-in-[-120%] motion-translate-y-in-[-60%] motion-opacity-in-[33%] motion-rotate-in-[-380deg] motion-blur-in-[10px] motion-delay-[0.38s]/scale 
           motion-duration-[0.38s]/opacity motion-duration-[1.20s]/rotate motion-duration-[0.15s]/blur motion-delay-[0.60s]/blur motion-ease-spring-bouncier">
-            <Image src="/images/logo.png" alt="Logo" width={120} height={100} className="w-[120px] h-[100px]" />
+            <Image src="/images/logo.png" alt="Logo" width={120} height={100} className="w-[120px] h-[100px]" priority/>
           </div>
         )}
         <ul className="flex flex-col gap-8 pt-20 h-[80%]">
@@ -176,7 +180,7 @@ export default function Sidebar() {
         <div className="w-full max-w-[100%] sm:mb-10">
           <hr className="border-[#242F5C] border-t-1 m-auto w-[80%]" />
           <div className="flex items-center justify-center mt-8 gap-4">
-            {isLoading ? (
+            {isLoading || isLoggingOut ?  (
               <>
                 <Skeleton className="w-14 h-14 rounded-full bg-[#d1daff]" />
                 <div className="flex flex-col gap-2 ">
@@ -200,12 +204,13 @@ export default function Sidebar() {
                     className={`rounded-full object-cover w-14 h-14 border-[1px] border-transparent 
                       outline outline-2 outline-offset-2 outline-[#242F5C] transition-opacity duration-300 ${avatarLoading ? 'opacity-0' : 'opacity-100'}`}
                     onLoad={() => setAvatarLoading(false)}
+                    priority
                   />
                 </div>
                 <div className="">
                   <p className="text-center text-lg font-normal text-[#242F5C]">
                     
-                    {userData?.username || "Guest"}
+                    {userData?.username}
                   </p>
                   <p className="text-center text-[12px] mt-[-5px] font-light text-[#8988DE]">
                     My Account

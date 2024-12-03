@@ -8,7 +8,7 @@ import Image from "next/image";
 import { useState } from "react";
 import { useEffect } from "react";
 import { useRef } from "react";
-import { useUser } from "../../UserContext";
+import { useUser } from "../../contexts/UserContext";
 
 // -- components -----------------------------------------------------
 

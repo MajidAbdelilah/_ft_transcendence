@@ -35,3 +35,24 @@ The easiest way to deploy your Next.js app is to use the [Vercel Platform](https
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
 # ft_transcendence
+
+
+#location endpoint :
+
+http://127.0.0.1:8000/chat/messages --> get data
+
+ws://127.0.0.1:8000/ws/chat/<room_id>/--> websocket chat
+
+http://127.0.0.1:8000/friend/friends --> get data
+
+http://127.0.0.1:8000/friend/friends-accept ---> accept friend
+
+http://127.0.0.1:8000/friend/friends-add --> add friend 
+
+http://127.0.0.1:8000/friend/friends-block --> block friend 
+
+http://127.0.0.1:8000/friend/blocked-friends --> get data 
+
+http://127.0.0.1:8000/friend/friends-remove ->remove friend 
+
+http://127.0.0.1:8000/friend/notifications --->get notification 

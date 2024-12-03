@@ -7,11 +7,16 @@ import Achievements from "./Achievements";
 import MatchHistory from "./MatchHistory";
 import PlayNow from "./PlayNow";
 import Link from "next/link";
+import { useRouter } from 'next/navigation';
+import axios from 'axios';
+
 
 
 
 function Dashboard() {
   const DashData = useContext(DashContext);
+  const router = useRouter();
+
 
   useEffect(() => {
     const handleResize = () => {
@@ -35,6 +40,8 @@ function Dashboard() {
       window.removeEventListener("scroll", handleScroll);
     };
   });
+
+
 
   return (
 

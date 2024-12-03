@@ -8,6 +8,8 @@ import axios from 'axios';
 import authService from '../authService';
 import toast, { Toaster } from 'react-hot-toast';
 import { useRouter } from 'next/navigation';
+import customAxios from '../customAxios';
+import Spinner from '../components/Loading';
 
 
 
@@ -17,9 +19,6 @@ const montserrat = Montserrat({
   subsets: ["latin"],
   variable: "--font-montserrat",
 });
-
-// Configure axios to send credentials (cookies) with every request
-// axios.defaults.withCredentials = true;
 
 const validate = values => {
   const errors = {};
@@ -60,17 +59,7 @@ function Signup_page() {
   const router = useRouter();
 
   const [isMobile, setIsMobile] = useState(false);
-
-  useEffect(() => {
-    const handleResize = () => {
-      setIsMobile(window.innerWidth <= 768);
-    };
-    handleResize();
-    window.addEventListener("resize", handleResize);
-    return () => {
-      window.removeEventListener("resize", handleResize);
-    };
-  }, []);
+  const [isLoading, setIsLoading] = useState(true);
 
   const formik = useFormik({
     initialValues: {
@@ -117,6 +106,50 @@ function Signup_page() {
         console.log(error);
     }
   }
+
+  useEffect(() => {
+    function handleResize() {
+      setIsMobile(window.innerWidth <= 768);
+    }
+    handleResize();
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  useEffect(() => {
+    async function checkAuth() {
+      try {
+        setIsLoading(true);
+        const response = await customAxios.get(
+          "http://127.0.0.1:8000/api/user/",
+          {
+            withCredentials: true,
+          }
+        );
+
+        if (response.status === 200) {
+          console.log("User is authenticated");
+          router.replace("/Dashboard");
+        } else {
+          setIsLoading(false);
+        }
+      } catch (error) {
+        console.log("User is not authenticated");
+        setIsLoading(false);
+      }
+    }
+
+    checkAuth();
+  }, []);
+
+  if (isLoading) {
+    return (
+      <div className="flex flex-col items-center justify-center h-screen">
+        <Spinner />
+      </div>
+    );
+  }
+
 
 
   return (

@@ -5,26 +5,15 @@ import { Montserrat } from "next/font/google";
 import { useState, useRef, useEffect } from "react";
 import { motion } from "framer-motion";
 import Link from "next/link";
-// import authService from './authService';
 import { IoIosSearch } from "react-icons/io";
 import authService from "./authService";
-
-//----------------------------------------------
+import { useWebSocket } from './contexts/WebSocketProvider';
 import axios from "axios";
 import { showAlert } from "./components/utils";
 import { useRouter } from 'next/navigation';
-import { useUser } from './UserContext.tsx';
+import { useUser } from './contexts/UserContext';
 import { Skeleton}  from "../compo/ui/Skeleton";
-
-
-
-
-
-
-
-
-
-
+import NotificationDropdown from './components/NotificationDropdown';
 
 const montserrat = Montserrat({
   subsets: ["latin"],
@@ -106,33 +95,45 @@ const ProfileInfo = ({onClick}) => {
 
 function Navbar() {
   const { userData, isLoading, setUserData } = useUser();
-
+  const router = useRouter();
 
   const [userDropdown, setUserDropdown] = useState(false);
-  const [notificationDropdown, setNotificationDropdown] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
+  const [notifications, setNotifications] = useState([]);
+  const [notificationCount, setNotificationCount] = useState(0);
+  const [notificationDropdown, setNotificationDropdown] = useState(false);
+  const { addHandler, removeHandler } = useWebSocket();
 
   const userDropdownRef = useRef(null);
   const notificationDropdownRef = useRef(null);
 
-  useClickAway([userDropdownRef], () => {
-    setUserDropdown(false);
-  });
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (
+        notificationDropdownRef.current && 
+        !notificationDropdownRef.current.contains(event.target)
+      ) {
+        setNotificationDropdown(false);
+      }
 
-  useClickAway([notificationDropdownRef], () => {
-    setNotificationDropdown(false);
-  });
+      if (
+        userDropdownRef.current && 
+        !userDropdownRef.current.contains(event.target)
+      ) {
+        setUserDropdown(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
 
   const toggleUserDropdown = (e) => {
     e.stopPropagation();
     setUserDropdown((prev) => !prev);
     setNotificationDropdown(false);
-  };
-
-  const toggleNotificationDropdown = (e) => {
-    e.stopPropagation();
-    setNotificationDropdown((prev) => !prev);
-    setUserDropdown(false);
   };
 
   useEffect(() => {
@@ -145,28 +146,106 @@ function Navbar() {
       window.removeEventListener("resize", handleResize);
     };
   }, []);
-    // loggedInUser -----------------------------------------------------------------------------------
 
-    let UserId = 1; // Assume this is the logged-in user's ID
-    let [loggedInUser, setLoggedInUser] = useState(null);
-    // if (!loggedInUser) return null;
+  useEffect(() => {
+    const handleWebSocketMessage = (data) => {
+      if (!data || !data.type) return;
 
-    useEffect(() =>  {
-      async function fetchLoggedInUser() {
-        const response = await axios.get("/profile.json");
-        const users = response.data;
-  
-        // find the loggedInUser
-        const usr = users.find((user) => user.userId === UserId);
-        // console.log("LoggedInUser : ",usr);
-        setLoggedInUser(usr);
+      try {
+        switch (data.type) {
+          case 'friends-add':
+            handleNewNotification({
+              id: data.freindship_id,
+              type: 'friend_request',
+              avatar: data.user.profiles_photo,
+              message: `${data.user.username} sent you a friend request`,
+              timestamp: new Date().toISOString(),
+              isNew: true,
+              senderUsername: data.user.username
+            });
+            break;
+
+          case 'friends-accept':
+            handleNewNotification({
+              id: data.freindship_id,
+              type: 'friend_accept',
+              avatar: data.user.profile_photo,
+              message: `${data.user.username} accepted your friend request`,
+              timestamp: new Date().toISOString(),
+              isNew: true,
+              senderUsername: data.user.username
+            });
+            break;
+        }
+      } catch (error) {
+        console.error('Error handling notification:', error);
       }
-      fetchLoggedInUser()
-    }, [])
+    };
 
-  // ---------------------------------------------------------------------------------------------
+    addHandler(handleWebSocketMessage);
+
+    return () => {
+      removeHandler(handleWebSocketMessage);
+    };
+  }, [addHandler, removeHandler]);
+
+  const handleNewNotification = (notification) => {
+    setNotifications(prev => [notification, ...prev]);
+    setNotificationCount(prev => prev + 1);
+    
+    // Show toast notification
+    const message = notification.type === 'friend_request' 
+      ? `New friend request from ${notification.senderUsername}`
+      : `${notification.senderUsername} accepted your friend request`;
+      
+    showAlert(message, 'info');
+  };
+
+  const handleNotificationClick = (notification) => {
+    // Just mark as not new and update the count
+    setNotifications(prev => prev.map(n => 
+      n.id === notification.id 
+        ? { ...n, isNew: false }
+        : n
+    ));
+    setNotificationCount(prev => Math.max(0, prev - 1));
+  };
+
+  const toggleNotificationDropdown = (e) => {
+    e.stopPropagation();
+    setNotificationDropdown(!notificationDropdown);
+    if (userDropdown) {
+      setUserDropdown(false);
+    }
+  };
+
+  const toggleUserProfileDropdown = (e) => {
+    e.stopPropagation();
+    setUserDropdown(!userDropdown);
+    if (notificationDropdown) {
+      setNotificationDropdown(false);
+    }
+  };
+
+  let UserId = 1; // Assume this is the logged-in user's ID
+  let [loggedInUser, setLoggedInUser] = useState(null);
+  // if (!loggedInUser) return null;
+
+  useEffect(() =>  {
+    async function fetchLoggedInUser() {
+      const response = await axios.get("/profile.json");
+      const users = response.data;
+
+      // find the loggedInUser
+      const usr = users.find((user) => user.userId === UserId);
+      // console.log("LoggedInUser : ",usr);
+      setLoggedInUser(usr);
+    }
+    fetchLoggedInUser()
+  }, [])
+
   const inputRef = useRef(null); // Create a ref for the input
-  const router = useRouter();
+
   const handleSearch = async (e) => {
     if (e.type === "click" || e.code === "Enter") {
       const searchTerm = inputRef.current.value;
@@ -213,78 +292,82 @@ function Navbar() {
         </div>
 
         <div ref={notificationDropdownRef}>
-          <Image
+          <div 
+            className="cursor-pointer relative flex items-center justify-center sm:w-12 sm:h-12 w-10 h-10" 
             onClick={toggleNotificationDropdown}
-            className="sm:w-8 sm:h-8 w-7 h-7 flex items-center justify-center sm:ml-5 mt-2 ml-2 cursor-pointer"
-            src="/images/notification.svg"
-            alt="Notification"
-            width="20"
-            height="20"
-          />
-        </div>
-        <div
-          ref={userDropdownRef}
-          className="flex items-center justify-center sm:w-12 sm:h-12 w-10 h-10 rounded-full bg-white text-white relative mr-2"
-          onClick={toggleUserDropdown}
-        >
-          {isLoading ? (
-            <>
-            <Skeleton className="sm:w-10 sm:h-10 w-8 h-8 rounded-full bg-[#d1daff]" />
-          </>
-          ) : (
-          <Image
-            id="avatarButton"
-            className="sm:w-10 sm:h-10 w-8 h-8 rounded-full bg-[#D7D7EA] cursor-pointer rounded-full"
-            src={userData?.avatar || "/images/avatar.svg"}
-            alt="User dropdown"
-            width={100}
-            height={100}
+          >
+            <Image
+              src="/images/notification.svg"
+              alt="notification"
+              width={24}
+              height={24}
+              className="sm:w-8 sm:h-8 w-6 h-6"
             />
-          )}
-          <Image
-            className="w-4 h-8 cursor-pointer absolute bottom-[-10px] right-0"
-            src="/images/Frame21.svg"
-            alt="User dropdown"
-            width="50"
-            height="50"
-            />
-         
-          {userDropdown && (
-            <motion.div
-            className="w-[220px] h-[210px] bg-[#EAEAFF] border-2 border-solid border-[#C0C7E0] absolute bottom-[-215px] right-[3px] z-[10] rounded-[5px] shadow shadow-[#BCBCC9]"
-            initial={{ scale: 0 }}
-            animate={{ scale: 1 }}
-            transition={{
-              type: "spring",
-              stiffness: 260,
-              damping: 30
-            }}
-            >
-              <h1 className="text-lg font-medium text-[#242F5C] p-4">
-                My Account
-              </h1>
-              <hr className="w-[100%] h-[1px] bg-[#CDCDE5] border-none rounded-full" />
-              
-              <ProfileInfo onClick={() => router.push(`/Profile/${loggedInUser.userName}`)} />
-
-
-              <ProfileSetting />
-              <hr className="w-[100%] h-[1px] bg-[#CDCDE5] border-none rounded-full" />
-              <LogoutProfile setUserData={setUserData} />
-            </motion.div>
-          )}
+            {notificationCount > 0 && (
+              <span className="absolute -top-1 -right-1 bg-red-500 text-white rounded-full sm:w-6 sm:h-6 w-5 h-5 flex items-center justify-center sm:text-xs text-[10px]">
+                {notificationCount}
+              </span>
+            )}
+          </div>
           {notificationDropdown && (
-            <motion.div
+            <NotificationDropdown 
+              notifications={notifications}
+              onNotificationClick={handleNotificationClick}
+            />
+          )}
+        </div>
+        <div ref={userDropdownRef}>
+          <div
+            className="flex items-center justify-center sm:w-12 sm:h-12 w-10 h-10 rounded-full bg-white text-white relative mr-2"
+            onClick={toggleUserProfileDropdown}
+          >
+            {isLoading ? (
+              <>
+              <Skeleton className="sm:w-10 sm:h-10 w-8 h-8 rounded-full bg-[#d1daff]" />
+            </>
+            ) : (
+            <Image
+              id="avatarButton"
+              className="sm:w-10 sm:h-10 w-8 h-8 rounded-full bg-[#D7D7EA] cursor-pointer rounded-full"
+              src={userData?.avatar || "/images/avatar.svg"}
+              alt="User dropdown"
+              width={100}
+              height={100}
+              />
+            )}
+            <Image
+              className="w-4 h-8 cursor-pointer absolute bottom-[-10px] right-0"
+              src="/images/Frame21.svg"
+              alt="User dropdown"
+              width="50"
+              height="50"
+              />
+         
+            {userDropdown && (
+              <motion.div
+              className="w-[220px] h-[210px] bg-[#EAEAFF] border-2 border-solid border-[#C0C7E0] absolute bottom-[-215px] right-[3px] z-[10] rounded-[5px] shadow shadow-[#BCBCC9]"
               initial={{ scale: 0 }}
               animate={{ scale: 1 }}
               transition={{
                 type: "spring",
                 stiffness: 260,
-                damping: 30,
+                damping: 30
               }}
-              className="w-[250px] h-[200px] sm:w-[400px] sm:h-[200px] bg-[#EAEAFF] absolute bottom-[-210px] right-[70px] z-[10] rounded-[5px] border-2 border-solid border-[#C0C7E0] shadow shadow-[#BCBCC9]"
-            ></motion.div>
-          )}
+              >
+                <h1 className="text-lg font-medium text-[#242F5C] p-4">
+                  My Account
+                </h1>
+                <hr className="w-[100%] h-[1px] bg-[#CDCDE5] border-none rounded-full" />
+                
+                <ProfileInfo onClick={() => router.push(`/Profile/${loggedInUser.userName}`)} />
+
+
+                <ProfileSetting />
+                <hr className="w-[100%] h-[1px] bg-[#CDCDE5] border-none rounded-full" />
+                <LogoutProfile setUserData={setUserData} />
+              </motion.div>
+            )}
+          </div>
         </div>
       </div>
     </nav>

@@ -2,10 +2,34 @@ import Image from "next/image";
 import { DashContext } from "./Dashcontext";
 import { useContext } from "react";
 import { motion } from "framer-motion"
+import { useEffect, useState } from "react";
+import axios from "axios";
+import Loading from "../../components/Loading";
+import { IconHistory } from "@tabler/icons-react"
+
 
 
 function MatchHistory() {
   const DashData = useContext(DashContext);
+  const [matches, setMatches] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchMatches = async () => {
+      try {
+        setIsLoading(true);
+        const response = await axios.get('YOUR_API_ENDPOINT_HERE');
+        setMatches(response.data);
+      } catch (error) {
+        console.error('Error fetching match history:', error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchMatches();
+  }, []);
+
   return (
     <div
       className={`${!DashData.isMobile
@@ -55,29 +79,53 @@ function MatchHistory() {
                 )}
               </thead>
               <tbody className="py-4 sm:py-6 md:py-8">
-                {DashData.matchHistory.map((match, index) => (
-                  <tr
-                    key={index}
-                    className="text-center font-semibold text-xs sm:text-sm md:text-base lg:text-lg text-[#4E5981]"
-                  >
-                    <td className="flex items-center justify-center py-2 sm:py-3 md:py-4">
-                      <div className="w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 lg:w-[70px] lg:h-[70px] overflow-hidden rounded-full outline outline-2 outline-offset-2 outline-[#242F5C]">
-                        <Image
-                          src="/images/avatar1.webp"
-                          alt="avatar"
-                          width={64}
-                          height={64}
-                          className="w-full h-full object-cover"
-                          priority
-                        />
+                {isLoading ? (
+                  <tr>
+                    <td colSpan="5" className="text-center">
+                      <div className="flex justify-center items-center py-10">
+                        <Loading />
                       </div>
                     </td>
-                    <td className="font-normal py-2 sm:py-3 md:py-4">Ali</td>
-                    <td className="font-normal py-2 sm:py-3 md:py-4">5-4</td>
-                    <td className="font-normal py-2 sm:py-3 md:py-4">Win</td>
-                    <td className="font-normal py-2 sm:py-3 md:py-4">Blue</td>
                   </tr>
-                ))}
+                ) : matches.length === 0 ? (
+                  <tr>
+                    <td colSpan="5" className="text-center">
+                      <div className="flex flex-col gap-3 justify-center items-center py-10 text-center">
+                        <IconHistory className="w-8 h-8 text-[#4E5981] animate-pulse" />
+                        <div className="flex flex-col gap-1">
+                          <p className="text-[#4E5981] font-semibold text-lg">No Matches Yet!</p>
+                          <p className="text-[#6B7280] text-sm">
+                            Start playing to build your match history !
+                          </p>
+                        </div>
+                      </div>
+                    </td>
+                  </tr>
+                ) : (
+                  matches.map((match, index) => (
+                    <tr
+                      key={index}
+                      className="text-center font-semibold text-xs sm:text-sm md:text-base lg:text-lg text-[#4E5981]"
+                    >
+                      <td className="flex items-center justify-center py-2 sm:py-3 md:py-4">
+                        <div className="w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 lg:w-[70px] lg:h-[70px] overflow-hidden rounded-full outline outline-2 outline-offset-2 outline-[#242F5C]">
+                          <Image
+                            src={match.avatarUrl || "/images/avatar1.webp"}
+                            alt="avatar"
+                            width={64}
+                            height={64}
+                            className="w-full h-full object-cover"
+                            priority
+                          />
+                        </div>
+                      </td>
+                      <td className="font-normal py-2 sm:py-3 md:py-4">{match.playerName}</td>
+                      <td className="font-normal py-2 sm:py-3 md:py-4">{match.score}</td>
+                      <td className="font-normal py-2 sm:py-3 md:py-4">{match.result}</td>
+                      <td className="font-normal py-2 sm:py-3 md:py-4">{match.map}</td>
+                    </tr>
+                  ))
+                )}
               </tbody>
             </table>
           </div>

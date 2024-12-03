@@ -1,31 +1,23 @@
 'use client'
 
 import { Montserrat } from "next/font/google"
-import { useState, useEffect } from "react"
+import { useState, useEffect, useContext } from "react"
 import Image from "next/image"
 import FriendsComponent from "./FriendsList"
 import ScrollBlur from "./ScrollBlur"
 import FriendRequests from "./FriendRequests.tsx"
 import BlockedFriends from "./BlockedFriends.tsx"
-import axios from "axios"
+import customAxios from "../../customAxios"
 import { Loader2 } from 'lucide-react'
-
-
-
-
-
-export function LoadingSpinner() {
-  return (
-      <Loader2 className="w-8 h-8 text-[#242F5C]" />
-  )
-}
+import { useWebSocket } from '../../contexts/WebSocketProvider';
+import {IconForbid2} from '@tabler/icons-react'
 
 const montserrat = Montserrat({
   subsets: ["latin"],
   variable: "--font-montserrat",
 })
 
-function Friends() {
+export default function Friends() {
   const [isMobile, setIsMobile] = useState(false)
   const [activeItem, setActiveItem] = useState("Friends List")
   const [navItems] = useState([
@@ -33,17 +25,10 @@ function Friends() {
     "Friend Requests",
     "Blocked Friends",
   ])
-  const friendsData = [
-    { id: '1', name: 'John Doe', avatar: '/images/avatar2.svg', status: 'online' },
-    { id: '2', name: 'Jane Smith', avatar: '/images/avatar2.svg', status: 'offline' },
-    { id: '2', name: 'Jane Smith', avatar: '/images/avatar2.svg', status: 'offline' },
-
-    // ... more friends
-  ];
-  // const [friendsData, setFriendsData] = useState([])
-  // const [friendRequestsData, setFriendRequestsData] = useState([])
-  // const [blockedFriendsData, setBlockedFriendsData] = useState([])
-  // const [isLoading, setIsLoading] = useState(true)
+  const [friendsData, setFriendsData] = useState({ id: '', username: '', profile_photo: '', friends: [] })
+  const [friendRequestsData, setFriendRequestsData] = useState({ id: '', username: '', profile_photo: '', friends: [] })
+  const [blockedFriendsData, setBlockedFriendsData] = useState({ id: '', username: '', profile_photo: '', friends: [] })
+  const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState(null)
 
   const navItemsIcons = [
@@ -65,6 +50,8 @@ function Friends() {
   ]
   const [activeIcon, setActiveIcon] = useState(navItemsIcons[0].activeImg)
 
+  const {addHandler, removeHandler } = useWebSocket();
+
   useEffect(() => {
     const handleResize = () => {
       setIsMobile(window.innerWidth <= 1698)
@@ -77,41 +64,129 @@ function Friends() {
     }
   }, [])
 
-  
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const [friendsList, FriendRes , blockedRes] = await Promise.all([
+          customAxios.get('http://127.0.0.1:8000/friend/friends'),
+          customAxios.get('http://127.0.0.1:8000/friend/friends-add'),
+          customAxios.get('http://127.0.0.1:8000/friend/blocked-friends'),
+        ]);
+        setFriendsData(friendsList.data)
+        setBlockedFriendsData(blockedRes.data)
+      } catch (error) {
+        console.error('Error fetching data:', error);
+        setError(error.message);
+      } finally {
+        setIsLoading(false);
+      }
+    };
 
-  // useEffect(() => {
-  //   const fetchData = async () => {
-      // setIsLoading(true)
-  //     setError(null)
-  //     try {
-  //       const friendsResponse = await axios('/api/friends')
-  //       const friendRequestsResponse = await axios('/api/friend-requests')
-  //       const blockedFriendsResponse = await axios('/api/blocked-friends')
+    const handleWebSocketMessage = (data) => {
+      if (!data || !data.type) {
+        console.warn('Invalid WebSocket message received:', data);
+        return;
+      }
 
-  //       if (!friendsResponse.ok || !friendRequestsResponse.ok || !blockedFriendsResponse.ok) {
-  //         throw new Error('Failed to fetch data')
-  //       }
+      try {
+        switch (data.type) {
+          case 'user_status':
+            
+            setFriendsData(prev => ({
+              ...prev,
+              friends: prev.friends.map(friend => 
+                friend.user.id === data.id 
+                  ? { 
+                      ...friend,
+                      user: { 
+                        ...friend.user, 
+                        is_on: data.is_on
+                      } 
+                    }
+                  : friend
+              )
+            }));
+            break;
 
-  //       const friendsData = await friendsResponse.json()
-  //       const friendRequestsData = await friendRequestsResponse.json()
-  //       const blockedFriendsData = await blockedFriendsResponse.json()
+          case 'friends-add':
+            setFriendRequestsData(prev => ({
+              ...prev,
+              friends: [...prev.friends, {
+                freindship_id: data.freindship_id,
+                user: data.user,
+                is_accepted: false,
+                blocked: false,
+                is_user_from: false
+              }]
+            }));
+            break;
 
-  //       setFriendsData(friendsData)
-  //       setFriendRequestsData(friendRequestsData)
-  //       setBlockedFriendsData(blockedFriendsData)
-  //     } catch (error) {
-  //       setError(error.message)
-  //     } finally {
-  //       setIsLoading(false)
-  //     }
-  //   }
+          case 'friends-accept':
+            setFriendRequestsData(prev => ({
+              ...prev,
+              friends: prev.friends.filter(request => 
+                request.freindship_id !== data.freindship_id
+              )
+            }));
+            setFriendsData(prev => ({
+              ...prev,
+              friends: [...prev.friends, {
+                freindship_id: data.freindship_id,
+                user: data.user,
+                is_accepted: true,
+                blocked: false,
+                is_user_from: data.is_user_from
+              }]
+            }));
+            break;
 
-  //   fetchData()
-  // }, [])
+          case 'friends-block':
+            setFriendsData(prev => ({
+              ...prev,
+              friends: prev.friends.filter(friend => 
+                friend.freindship_id !== data.freindship_id
+              )
+            }));
+            setBlockedFriendsData(prev => ({
+              ...prev,
+              friends: [...prev.friends, {
+                freindship_id: data.freindship_id,
+                user: data.user,
+                is_accepted: true,
+                blocked: true,
+                is_user_from: data.is_user_from
+              }]
+            }));
+            break;
 
-  // if (isLoading) {
-  //   return <LoadingSpinner/>
-  // }
+          case 'friends-unblock':
+            setBlockedFriendsData(prev => ({
+              ...prev,
+              friends: prev.friends.filter(blocked => 
+                blocked.freindship_id !== data.freindship_id
+              )
+            }));
+            break;
+
+          default:
+            console.warn('Unknown WebSocket message type:', data.type);
+        }
+      } catch (error) {
+        console.error('Error handling WebSocket message:', error);
+      }
+    };
+
+    addHandler(handleWebSocketMessage);
+    fetchData();
+
+    return () => {
+      removeHandler(handleWebSocketMessage);
+    };
+  }, [addHandler, removeHandler])
+
+  if (isLoading) {
+    return <LoadingSpinner/>
+  }
 
   if (error) {
     return <div className="flex items-center justify-center h-full text-red-500">Error: {error}</div>
@@ -167,20 +242,37 @@ function Friends() {
               ))}
             </div>
           )}
-          <div className="w-full h-full flex flex-col space-y-7 overflow-y-auto scrollbar-hide custom-scrollbar motion-preset-expand  ">
+          <div className="w-full h-full flex flex-col  space-y-7 overflow-y-auto scrollbar-hide custom-scrollbar motion-preset-expand  ">
             <ScrollBlur>
               {activeItem === "Friends List" && (
-                <FriendsComponent friends={friendsData} />
+                <FriendsComponent friends={friendsData.friends} />
               )}
               {activeItem === "Friend Requests" && (
-                friendRequestsData.map((request, index) => (
-                  <FriendRequests key={index} request={request} />
-                ))
+                <div className="space-y-2">
+                  {friendRequestsData.friends.map((request) => (
+                    <FriendRequests 
+                      key={request.freindship_id} 
+                      request={request}
+                    />
+                  ))}
+                </div>
               )}
               {activeItem === "Blocked Friends" && (
-                blockedFriendsData.map((blockedFriend, index) => (
-                  <BlockedFriends key={index} blockedFriend={blockedFriend} />
-                ))
+                <div className="space-y-2">
+                  {blockedFriendsData.friends.length > 0 ? (
+                    blockedFriendsData.friends.map((blockedFriend) => (
+                      <BlockedFriends 
+                        key={blockedFriend.freindship_id} 
+                        blockedFriend={blockedFriend}
+                      />
+                    ))
+                  ) : (
+                    <div className="flex flex-col items-center justify-center w-full h-[200px] p-4">
+                      <IconForbid2 size={50} color="#242F5C" />
+                      <h3 className="text-[#242F5C] text-lg font-semibold mt-3">No Blocked users</h3>
+                   </div>
+                  )}
+                </div>
               )}
             </ScrollBlur>
           </div>
@@ -190,4 +282,8 @@ function Friends() {
   )
 }
 
-export default Friends
+export function LoadingSpinner() {
+  return (
+      <Loader2 className="w-8 h-8 text-[#242F5C]" />
+  )
+}
