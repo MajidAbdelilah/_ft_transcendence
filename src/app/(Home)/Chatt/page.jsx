@@ -130,7 +130,7 @@ export default function Chat() {
       // Update the state with the filled user data
       setLoggedInUser(filledUser);
       // console.log("loggedInUser", filledUser);
-      console.log("loggedInUser ============= ", loggedInUser);
+      console.log("loggedInUser ============= ", filledUser);
 
     }
   }, [LoggedInUser.userData]); 
@@ -267,7 +267,7 @@ const getSelectedFriend = (friend) => {
         </div>
       );
     }
-    console.log("friend", friend);
+    // console.log("friend", friend);
     return (
       // console.log(conversation),
       <div className="messagesBox w-full lg:w-3/5 p-2 h-full rounded-tr-xl rounded-br-xl flex flex-col ">
