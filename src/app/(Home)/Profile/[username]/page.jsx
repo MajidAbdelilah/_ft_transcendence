@@ -58,6 +58,13 @@ let user3 = {
 
 
 export default function Profile() {
+  const [isMatchHistoryLoaded, setIsMatchHistoryLoaded] = useState(false);
+
+  // Use a callback to update the loading state when matches are available
+  const handleMatchHistoryLoaded = (isLoaded) => {
+    setIsMatchHistoryLoaded(isLoaded);
+  };
+
   // loggedInUser -----------------------------------------------------------------------------------
 
   // let UserId = 1; // Assume this is the logged-in user's ID
@@ -165,7 +172,7 @@ export default function Profile() {
   
    
   return (
-    <DashProvider>
+    // <DashProvider>
       <div
         className={`flex-1 overflow-y-auto p-4 flex flex-wrap items-center justify-center h-full ${montserrat.variable}`}
       >
@@ -175,8 +182,10 @@ export default function Profile() {
           <LeaderBoard first={user3} second={user2} third={user3} />
         </div>
 
-        <MatchHistory />
+        {/* <MatchHistory /> */}
+
+
       </div>
-    </DashProvider>
+    // </DashProvider>
   );
 }

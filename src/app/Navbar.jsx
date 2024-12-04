@@ -12,6 +12,9 @@ import axios from "axios";
 import { showAlert } from "./components/utils";
 import { useRouter } from 'next/navigation';
 import { useUser } from './contexts/UserContext';
+import { useSearch } from './contexts/SearchContext';
+
+
 import { Skeleton}  from "../compo/ui/Skeleton";
 import NotificationDropdown from './components/NotificationDropdown';
 
@@ -95,6 +98,8 @@ const ProfileInfo = ({onClick}) => {
 
 function Navbar() {
   const { userData, isLoading, setUserData } = useUser();
+  // console.log("userData---------------", userData);
+  const { inputRef, handleSearch } = useSearch();
   const router = useRouter();
 
   const [userDropdown, setUserDropdown] = useState(false);
@@ -227,49 +232,38 @@ function Navbar() {
     }
   };
   //--------------------------------------------------------------------------------
-  let UserId = 1; // Assume this is the logged-in user's ID
-  let [loggedInUser, setLoggedInUser] = useState(null);
-  // if (!loggedInUser) return null;
 
-  useEffect(() =>  {
-    async function fetchLoggedInUser() {
-      const response = await axios.get("/profile.json");
-      const users = response.data;
 
-      // find the loggedInUser
-      const usr = users.find((user) => user.userId === UserId);
-      // console.log("LoggedInUser : ",usr);
-      setLoggedInUser(usr);
-    }
-    fetchLoggedInUser()
-  }, [])
+  // const inputRef = useRef(null); // Create a ref for the input
 
-  const inputRef = useRef(null); // Create a ref for the input
+  // const handleSearch = async (e) => {
+  //   const searchTerm = inputRef.current.value;
+  //   console.log("searchTerm --------------", searchTerm);
 
-  const handleSearch = async (e) => {
-    if (e.type === "click" || e.code === "Enter") {
-      const searchTerm = inputRef.current.value;
 
-      if (searchTerm.trim() !== "") {
+    // if (e.type === "click" || e.code === "Enter") {
+    //   const searchTerm = inputRef.current.value;
+      
+      // if (searchTerm.trim() !== "") {
         
-        const response = await axios.get("/users.json");
-        // console.log(response.data);
+      //   const response = await axios.get("/users.json");
+      //   // console.log(response.data);
 
-        const users = response.data;
-        // Check if the username exists
-        const userExists = users.some((user) => user.username === searchTerm);
+      //   const users = response.data;
+      //   // Check if the username exists
+      //   const userExists = users.some((user) => user.username === searchTerm);
 
-        if (userExists) {
-          // console.log("User exist"); // Display message if user exists
-          router.push(`/Profile/${searchTerm}`)
-        } else {
-          showAlert("User does not exist");
-        }
+      //   if (userExists) {
+      //     // console.log("User exist"); // Display message if user exists
+      //     router.push(`/Profile/${searchTerm}`)
+      //   } else {
+      //     showAlert("User does not exist");
+      //   }
 
-        inputRef.current.value = ""; // Clear the input after logging
-      }
-    }
-  };
+      //   inputRef.current.value = ""; // Clear the input after logging
+      // }
+    // }
+  // };
 
   return (
     <nav
@@ -284,6 +278,7 @@ function Navbar() {
             className="sm:py-3 shadow-sm shadow-[#BCBCC9] sm:w-[280px] py-[8px] w-[200px]  pl-[2.5rem] rounded-full bg-[#D7D7EA] text-[#242F5C] focus:outline-none focus:ring-2 focus:ring-[#3CDCDE5]"
             onKeyUp={handleSearch}
             ref={inputRef}
+            // desabled={isSearching}
           />
           <IoIosSearch
             className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400 "
@@ -359,7 +354,7 @@ function Navbar() {
                 </h1>
                 <hr className="w-[100%] h-[1px] bg-[#CDCDE5] border-none rounded-full" />
                 
-                <ProfileInfo onClick={() => router.push(`/Profile/${loggedInUser.userName}`)} />
+                <ProfileInfo onClick={() => router.push(`/Profile/${userData.username}`)} />
 
 
                 <ProfileSetting />
