@@ -316,7 +316,7 @@ function Navbar() {
                   onClick={() => {
                     // console.log(`Navigating to /Profile/${user.username}`);
                     // router.push(`/Profile/${user.username}`);
-                    router.push(`/Chatt`);
+                    router.push(`/Profile/John_wick`);
                   }}
                 >
                   {user.username}
