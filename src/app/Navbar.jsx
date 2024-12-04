@@ -106,13 +106,18 @@ function Navbar() {
   //--------------------------------------------------------------------------------
   const { inputRef, handleSearch, filteredUsers } = useSearch();
   const [isTyping, setIsTyping] = useState(false);
+  const [userClick, setUserClick] = useState(false);
+
+
   const handleChange = () => {
     setIsTyping(true);  // Set typing state to true when user starts typing
     handleSearch();  // Call the handleSearch function to filter users
   };
 
   const handleBlur = () => {
-    setIsTyping(false);  // Reset typing state when the input loses focus
+    if (!userClick) {
+      setIsTyping(false); // Reset typing state when the input loses focus
+    }
   };
 
 
@@ -285,18 +290,6 @@ function Navbar() {
                     console.log(`Navigating to /Profile/${user.username}`);
                     // router.push(`/Profile/${user.username}`);
                   }}
-
-
-                  // onClick={(e) => {
-                  //   console.log('Event triggered:', e); // This logs the actual event object
-                  //   // console.log(`Navigating to https://${user.username}.com`);
-                  //   // window.location.href = `https://${user.username}.com`;
-                  // }}
-
-
-                  
-                  
-
                 >
                   {user.username}
                 </div>
