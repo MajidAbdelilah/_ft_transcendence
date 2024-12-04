@@ -12,7 +12,7 @@ import axios from "axios";
 import { showAlert } from "./components/utils";
 import { useRouter } from 'next/navigation';
 import { useUser } from './contexts/UserContext';
-import { useSearch } from './contexts/SearchContext';
+import  useSearch from './contexts/SearchContext';
 
 
 import { Skeleton}  from "../compo/ui/Skeleton";
@@ -97,11 +97,17 @@ const ProfileInfo = ({onClick}) => {
 
 
 function Navbar() {
-  const { userData, isLoading, setUserData } = useUser();
-  // console.log("userData---------------", userData);
-  const { inputRef, handleSearch } = useSearch();
-  const router = useRouter();
+  
 
+
+
+
+  const { inputRef, handleSearch, filteredUsers } = useSearch();
+
+
+
+  const { userData, isLoading, setUserData } = useUser();
+  const router = useRouter();
   const [userDropdown, setUserDropdown] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
   const [notifications, setNotifications] = useState([]);
@@ -284,7 +290,30 @@ function Navbar() {
             className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400 "
             onClick={handleSearch}
           />
+          {/* {filteredUsers.length > 0 ? (
+              filteredUsers.map(user => (
+                <div key={user.id} className="px-4 py-2 hover:bg-gray-200 cursor-pointer">
+                  {user.username}
+                </div>
+              ))
+            ) : (
+              <div className="px-4 py-2 text-gray-500">No users found</div>
+            )} */}
         </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
         <div ref={notificationDropdownRef}>
           <div 
