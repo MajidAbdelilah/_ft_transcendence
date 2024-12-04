@@ -106,7 +106,7 @@ function Navbar() {
   //--------------------------------------------------------------------------------
   const { inputRef, handleSearch, filteredUsers } = useSearch();
   const [isTyping, setIsTyping] = useState(false);
-  const [userClick, setUserClick] = useState(false);
+  const [clickWhere, setClickWhere] = useState(true);
 
 
   const handleChange = () => {
@@ -115,10 +115,37 @@ function Navbar() {
   };
 
   const handleBlur = () => {
-    if (!userClick) {
+
       setIsTyping(false); // Reset typing state when the input loses focus
+
+  };
+
+
+
+  const divRef = useRef(null);
+
+
+  const handleClickOutside = (event) => {
+    if (divRef.current && !divRef.current.contains(event.target)) {
+      setClickWhere(false); // Set clickWhere to false when clicking outside
     }
   };
+  
+
+  useEffect(() => {
+    document.addEventListener('mousedown', handleClickOutside); 
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside); 
+    };
+  }, []);
+
+
+
+
+
+
+
+
 
 
   const { userData, isLoading, setUserData } = useUser();
@@ -280,15 +307,16 @@ function Navbar() {
 
 
           {/* Render the filtered users list only when user starts typing -----------------------*/}
-          {isTyping && filteredUsers.length > 0 && (
-            <div className="absolute mt-2 w-full bg-[#F4F4FF] shadow-lg rounded-xl max-h-60 overflow-y-auto">
+          {(isTyping || clickWhere) && filteredUsers.length > 0 && (
+            <div ref={divRef}  className="absolute mt-2 w-full bg-[#F4F4FF] shadow-lg rounded-xl max-h-60 overflow-y-auto">
               {filteredUsers.map((user, index) => (
                 <div 
                   key={index} 
                   className="px-4 py-2 hover:bg-gray-100 text-[#242F5C] cursor-pointer"
                   onClick={() => {
-                    console.log(`Navigating to /Profile/${user.username}`);
+                    // console.log(`Navigating to /Profile/${user.username}`);
                     // router.push(`/Profile/${user.username}`);
+                    router.push(`/Chatt`);
                   }}
                 >
                   {user.username}
