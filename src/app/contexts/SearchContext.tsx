@@ -53,8 +53,8 @@ const useSearch = () => {
 
 
 
-    console.log("fetchedUsers : --------------", fetchedUsers);
-    console.log("filteredUsers : --------------", filteredUsers);
+    // console.log("fetchedUsers : --------------", fetchedUsers);
+    // console.log("filteredUsers : --------------", filteredUsers);
 
 
   };

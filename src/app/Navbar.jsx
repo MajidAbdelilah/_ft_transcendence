@@ -11,6 +11,8 @@ import { useWebSocket } from './contexts/WebSocketProvider';
 import axios from "axios";
 import { showAlert } from "./components/utils";
 import { useRouter } from 'next/navigation';
+
+
 import { useUser } from './contexts/UserContext';
 import  useSearch from './contexts/SearchContext';
 
@@ -272,18 +274,37 @@ function Navbar() {
 
 
 
-          {/* Render the filtered users list only when user starts typing */}
+          {/* Render the filtered users list only when user starts typing -----------------------*/}
           {isTyping && filteredUsers.length > 0 && (
             <div className="absolute mt-2 w-full bg-[#F4F4FF] shadow-lg rounded-xl max-h-60 overflow-y-auto">
               {filteredUsers.map((user, index) => (
-                <div key={index} className="px-4 py-2 hover:bg-gray-100 text-[#242F5C]">
+                <div 
+                  key={index} 
+                  className="px-4 py-2 hover:bg-gray-100 text-[#242F5C] cursor-pointer"
+                  onClick={() => {
+                    console.log(`Navigating to /Profile/${user.username}`);
+                    // router.push(`/Profile/${user.username}`);
+                  }}
+
+
+                  // onClick={(e) => {
+                  //   console.log('Event triggered:', e); // This logs the actual event object
+                  //   // console.log(`Navigating to https://${user.username}.com`);
+                  //   // window.location.href = `https://${user.username}.com`;
+                  // }}
+
+
+                  
+                  
+
+                >
                   {user.username}
                 </div>
               ))}
             </div>
           )}
 
-          {/* Show message when no users match */}
+          {/* Show message when no users match -------------------------------- */}
           {isTyping && filteredUsers.length === 0 && (
             <div className="absolute mt-2 w-full bg-[#F4F4FF] shadow-lg rounded-xl max-h-60 overflow-y-auto">
               <div className="px-4 py-2 text-[#242F5C]">No user found</div>
