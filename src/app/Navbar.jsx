@@ -101,9 +101,17 @@ function Navbar() {
 
 
 
-
+  //--------------------------------------------------------------------------------
   const { inputRef, handleSearch, filteredUsers } = useSearch();
+  const [isTyping, setIsTyping] = useState(false);
+  const handleChange = () => {
+    setIsTyping(true);  // Set typing state to true when user starts typing
+    handleSearch();  // Call the handleSearch function to filter users
+  };
 
+  const handleBlur = () => {
+    setIsTyping(false);  // Reset typing state when the input loses focus
+  };
 
 
   const { userData, isLoading, setUserData } = useUser();
@@ -237,39 +245,7 @@ function Navbar() {
       setNotificationDropdown(false);
     }
   };
-  //--------------------------------------------------------------------------------
 
-
-  // const inputRef = useRef(null); // Create a ref for the input
-
-  // const handleSearch = async (e) => {
-  //   const searchTerm = inputRef.current.value;
-  //   console.log("searchTerm --------------", searchTerm);
-
-
-    // if (e.type === "click" || e.code === "Enter") {
-    //   const searchTerm = inputRef.current.value;
-      
-      // if (searchTerm.trim() !== "") {
-        
-      //   const response = await axios.get("/users.json");
-      //   // console.log(response.data);
-
-      //   const users = response.data;
-      //   // Check if the username exists
-      //   const userExists = users.some((user) => user.username === searchTerm);
-
-      //   if (userExists) {
-      //     // console.log("User exist"); // Display message if user exists
-      //     router.push(`/Profile/${searchTerm}`)
-      //   } else {
-      //     showAlert("User does not exist");
-      //   }
-
-      //   inputRef.current.value = ""; // Clear the input after logging
-      // }
-    // }
-  // };
 
   return (
     <nav
@@ -282,24 +258,44 @@ function Navbar() {
             type="text"
             placeholder="Search..."
             className="sm:py-3 shadow-sm shadow-[#BCBCC9] sm:w-[280px] py-[8px] w-[200px]  pl-[2.5rem] rounded-full bg-[#D7D7EA] text-[#242F5C] focus:outline-none focus:ring-2 focus:ring-[#3CDCDE5]"
-            onKeyUp={handleSearch}
+            onChange={handleChange}
+            onBlur={handleBlur}
             ref={inputRef}
-            // desabled={isSearching}
+            
+            
           />
           <IoIosSearch
             className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400 "
-            onClick={handleSearch}
+            // onClick={handleSearch}
           />
-          {/* {filteredUsers.length > 0 ? (
-              filteredUsers.map(user => (
-                <div key={user.id} className="px-4 py-2 hover:bg-gray-200 cursor-pointer">
+
+
+
+
+          {/* Render the filtered users list only when user starts typing */}
+          {isTyping && filteredUsers.length > 0 && (
+            <div className="absolute mt-2 w-full bg-[#F4F4FF] shadow-lg rounded-xl max-h-60 overflow-y-auto">
+              {filteredUsers.map((user, index) => (
+                <div key={index} className="px-4 py-2 hover:bg-gray-100 text-[#242F5C]">
                   {user.username}
                 </div>
-              ))
-            ) : (
-              <div className="px-4 py-2 text-gray-500">No users found</div>
-            )} */}
+              ))}
+            </div>
+          )}
+
+          {/* Show message when no users match */}
+          {isTyping && filteredUsers.length === 0 && (
+            <div className="absolute mt-2 w-full bg-[#F4F4FF] shadow-lg rounded-xl max-h-60 overflow-y-auto">
+              <div className="px-4 py-2 text-[#242F5C]">No user found</div>
+            </div>
+          )}
+
+
+
+
         </div>
+
+        
 
 
 
