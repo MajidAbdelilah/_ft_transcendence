@@ -66,10 +66,10 @@
 
             socket.onmessage = function(e) {
                 const data = JSON.parse(e.data);
-                console.log("data:", data.start_game);
+                console.log("data:", data);
                 if(data.start_game === false){
                     console.log('Game not started');
-                    socket.close();
+                    // socket.close();
                     alert('Game Over');
                     return;
                 }
