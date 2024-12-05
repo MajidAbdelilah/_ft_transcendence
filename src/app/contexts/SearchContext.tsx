@@ -17,8 +17,7 @@ const useSearch = () => {
           {
             const response = await axios.get('http://127.0.0.1:8000/api/users/', {   withCredentials: true, headers: {} });
             
-            const usersArray = Object.values(response.data); // Convert object to array
-            // console.log('Users array:', usersArray); // Log the array to verify
+            const usersArray = Object.values(response.data); 
             setFetchedUsers(usersArray);
 
 
@@ -49,12 +48,6 @@ const useSearch = () => {
       setFilteredUsers(matchingUsers);
     }
 
-
-
-
-
-    // console.log("fetchedUsers : --------------", fetchedUsers);
-    // console.log("filteredUsers : --------------", filteredUsers);
 
 
   };

@@ -122,7 +122,7 @@ export default function Profile() {
   const searchedText = params.username;
 
   const [userSearchedFor, setUserSearchedFor] = useState(null);
-
+  const [tracker, setTracker] = useState(false);
   useEffect(() => {
     const fetchuserSearchedFor = async () => 
     {
@@ -145,6 +145,7 @@ export default function Profile() {
         else 
         {
           setUserSearchedFor(null);
+          setTracker(true)
         }
 
       } catch (error)
@@ -168,7 +169,7 @@ export default function Profile() {
     return null;
   }
 
-  if (userSearchedFor === null) {
+  if (userSearchedFor === null && tracker === true) {
     return (
 
         <div className="text-center p-8 rounded-xl shadow-xl bg-[#EAEAFF] border border-[#C0C7E0] max-w-md mx-4">
@@ -192,7 +193,7 @@ export default function Profile() {
         <div className="flex flex-col lg:flex-row w-full  items-center justify-center lg:gap-10 xl:gap-32 2xl:gap-60      lg:mx-10 xl:mx-28 2xl:mx-40">
           {userSearchedFor && (<UserProfile loggedInUser={loggedInUser} user={userSearchedFor} isSelf={isSelf}/>)}
           
-          {/* <LeaderBoard first={user3} second={user2} third={user3} /> */}
+          <LeaderBoard first={user3} second={user2} third={user3} />
         </div>
 
         {/* <MatchHistory /> */}
