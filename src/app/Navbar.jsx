@@ -149,6 +149,7 @@ function Navbar() {
 
 
   const { userData, isLoading, setUserData } = useUser();
+
   const router = useRouter();
   const [userDropdown, setUserDropdown] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
@@ -314,8 +315,11 @@ function Navbar() {
                   key={index} 
                   className="px-4 py-2 hover:bg-gray-100 text-[#242F5C] cursor-pointer"
                   onClick={() => {
-                    // console.log(`Navigating to /Profile/${user.username}`);
-                    router.push(`/Profile/${user.username}`);
+                    setClickWhere(false);
+                    setIsTyping(false);
+                    inputRef.current.value = "";
+                    router.replace(`/Profile/${user.username}`);
+
                   }}
                 >
                   {user.username}

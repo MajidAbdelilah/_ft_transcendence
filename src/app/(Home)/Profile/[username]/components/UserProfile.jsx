@@ -52,12 +52,9 @@ const handleTextUser = (router) => {
 }
 
 
-
-
-
 const handleAddFriend = async (loggedInUser, user) => {
   try {
-    // const respond = await axios.post("http://127.0.0.1:8000/api/addFriend", 
+    // const respond = await axios.post("http://127.0.0.1:8000/friend/friends-add", 
     // {friendUsername: user.userName},
     // { withCredentials: true, headers: {} }
     // );
@@ -82,12 +79,9 @@ const handleAddFriend = async (loggedInUser, user) => {
 }
 
 
-
-
-
 const handleBlockUser = async (loggedInUser, user) => {
   try {
-    // const respond = await axios.post("http://127.0.0.1:8000/api/addFriend",
+    // const respond = await axios.post("http://127.0.0.1:8000/friend/friends-remove",
     // {toBlock: user.userName},
     // { withCredentials: true, headers: {} }
     // );
@@ -139,7 +133,7 @@ function Part1({loggedInUser, user, isSelf}) {
       <div className="mt-12 text-sm md:text-md lg:text-lg xl:text-xl font-bold text-[#242F5C]">
         {user.username}
       </div>
-      <span className="text-xs md:text-sm lg:text-md xl:text-lg mt-1 text-[#8988DE]">{user.state}</span>
+      <span className="text-xs   mt-1 text-[#8988DE]">{user.state}</span>
       <div className={`flex flex-row mt-2 text-[#242F5C] ${isSelf === true ? "invisible" : "visible"}`}>
         <BsChatLeftText className="textUser mr-1 text-lg lg:text-xl cursor-pointer" onClick={() => handleTextUser(router)}/>
         <MdOutlinePersonAddAlt className="addFriend ml-1 text-xl lg:text-2xl cursor-pointer" onClick={() => handleAddFriend(loggedInUser, user)}/>
@@ -187,9 +181,9 @@ function Part2({loggedInUser, user, isSelf}) {
 
 
 export default function UserProfile({loggedInUser, user, isSelf}) {
-      console.log("LoggedInUser: -------------", loggedInUser);
-      console.log("User: -------------", user);
-      console.log("IsSelf: -------------", isSelf);
+      // console.log("LoggedInUser: -------------", loggedInUser);
+      // console.log("User: -------------", user);
+      // console.log("IsSelf: -------------", isSelf);
 
 
 
