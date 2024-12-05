@@ -315,8 +315,7 @@ function Navbar() {
                   className="px-4 py-2 hover:bg-gray-100 text-[#242F5C] cursor-pointer"
                   onClick={() => {
                     // console.log(`Navigating to /Profile/${user.username}`);
-                    // router.push(`/Profile/${user.username}`);
-                    router.push(`/Profile/John_wick`);
+                    router.push(`/Profile/${user.username}`);
                   }}
                 >
                   {user.username}
