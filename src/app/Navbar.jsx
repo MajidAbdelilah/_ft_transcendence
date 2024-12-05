@@ -315,10 +315,12 @@ function Navbar() {
                   key={index} 
                   className="px-4 py-2 hover:bg-gray-100 text-[#242F5C] cursor-pointer"
                   onClick={() => {
-                    setClickWhere(false);
-                    setIsTyping(false);
+                    
+                    setClickWhere(true);
+
                     inputRef.current.value = "";
                     router.replace(`/Profile/${user.username}`);
+
 
                   }}
                 >

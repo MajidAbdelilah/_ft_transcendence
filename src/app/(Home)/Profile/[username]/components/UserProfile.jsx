@@ -54,10 +54,15 @@ const handleTextUser = (router) => {
 
 const handleAddFriend = async (loggedInUser, user) => {
   try {
-    // const respond = await axios.post("http://127.0.0.1:8000/friend/friends-add", 
-    // {friendUsername: user.userName},
-    // { withCredentials: true, headers: {} }
-    // );
+    const respond = await axios.post("http://127.0.0.1:8000/friend/friends-add", 
+      
+      { withCredentials : true, headers: {} },
+      {username: user.username},
+      );
+
+
+      // consdole.log("user.username : ---------------", user.username);
+      console.log("respond : ---------------", respond);
     // if(respond.data.status === "ok")
     // {
     //   toast.success('friend request sent successfully');
@@ -81,10 +86,12 @@ const handleAddFriend = async (loggedInUser, user) => {
 
 const handleBlockUser = async (loggedInUser, user) => {
   try {
-    // const respond = await axios.post("http://127.0.0.1:8000/friend/friends-remove",
-    // {toBlock: user.userName},
-    // { withCredentials: true, headers: {} }
-    // );
+    const respond = await axios.post("http://127.0.0.1:8000/friend/friends-remove",
+    { withCredentials: true, headers: {} },
+    {username : user.username}
+    );
+    console.log("respond : ---------------", respond);
+
 
     // if(respond.data.status === "ok")
     // {
@@ -94,7 +101,7 @@ const handleBlockUser = async (loggedInUser, user) => {
     // {
     //   toast.error('blocking user failed');
     // }
-    toast.success('user blocked successfully');
+    // toast.success('user blocked successfully');
 
 
   } catch (error) {
@@ -189,6 +196,7 @@ export default function UserProfile({loggedInUser, user, isSelf}) {
 
     if(!user || !loggedInUser)
       return  null;
+
     return (
     <div className="flex shadow-md shadow-[#BCBCC9] border border-[#BCBCC9] rounded-2xl bg-[#F4F4FF] h-40 w-[80%] mt-10">
       <Toaster /> 
