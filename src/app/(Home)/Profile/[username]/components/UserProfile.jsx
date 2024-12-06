@@ -54,69 +54,55 @@ const handleTextUser = (router) => {
 
 const handleAddFriend = async (loggedInUser, user) => {
   try {
-    const respond = await axios.post("http://127.0.0.1:8000/friend/friends-add/", 
-    {username: user.username},
-      { withCredentials : true, headers: {} }
-      
-      );
+    const respond = await axios.post(
+      "http://127.0.0.1:8000/friend/friends-add/", 
+      { username: user.username },
+      { withCredentials: true, headers: {} }
+    );
 
+    console.log("Response:", respond);
 
-      // consdole.log("user.username : ---------------", user.username);
-      console.log("respond : ---------------", respond);
-    // if(respond.data.status === "ok")
-    // {
-    //   toast.success('friend request sent successfully');
-     
-    // }
-    // else
-    // {
-    //   toast.error('friend request failed');
-    // }
-
-
-
+    // Check if the response contains a success message
+    if (respond.status === 200 && respond.data?.success) {
+      toast.success(respond.data.success); // Display the success message in the toast
+    } else {
+      toast.error('Friend request failed'); // Handle unexpected cases
+    }
   } catch (error) {
     console.error(error);
+    toast.error('An error occurred while sending the friend request');
   }
+};
 
 
 
-}
+
 
 
 const handleBlockUser = async (loggedInUser, user) => {
   try {
-    const respond = await axios.post("http://127.0.0.1:8000/friend/friends-remove/",
-    {username : user.username},
-    { withCredentials: true, headers: {} }
-    
+    const respond = await axios.post(
+      "http://127.0.0.1:8000/friend/friends-remove/",
+      { username: user.username },
+      { withCredentials: true, headers: {} }
     );
+
     console.log("respond : ---------------", respond);
 
-
-    // if(respond.data.status === "ok")
-    // {
-    //   toast.success('user blocked successfully');
-    // }
-    // else
-    // {
-    //   toast.error('blocking user failed');
-    // }
-    // toast.success('user blocked successfully');
-
-
+    // Check if the response contains a success message
+    if (respond.status === 200 && respond.data?.success) {
+      toast.success(respond.data.success); // Display the success message from the backend
+    } else {
+      toast.error('Blocking user failed'); // Handle unexpected cases
+    }
   } catch (error) {
     console.error(error);
+    toast.error('An error occurred while blocking the user');
   }
+};
 
 
 
-  // const response = await axios.post('https://jsonplaceholder.typicode.com/posts', 
-  //   {blockerId: loggedInUser.userId, blockedId: user.userId}//depends on the the info back end needs ...
-  // );
-
-  // console.log("response.data : ", response.data);
-}
 
 
 
