@@ -47,6 +47,7 @@ class PingPongConsumer(AsyncWebsocketConsumer):
                 'game_start': True,
                 'is_tournament': False
             }
+            asyncio.create_task(self.game_loop())
         
         if self.tournament_room_name:
             if self.room_name not in self.room_var:
@@ -66,9 +67,10 @@ class PingPongConsumer(AsyncWebsocketConsumer):
                         'ball_final': {'x': self.width / 2, 'y': self.height / 2, 'radius': 5, 'vx': 5, 'vy': 5},
                     },
                     'game_start': True,
-                    'is_tournament': True
+                    'is_tournament': True,
+                    'end_tournement': False
                 }
-            asyncio.create_task(self.game_loop())
+                asyncio.create_task(self.game_loop())
 
     async def disconnect(self, close_code):
         await self.channel_layer.group_discard(
@@ -127,51 +129,61 @@ class PingPongConsumer(AsyncWebsocketConsumer):
 
     async def game_loop(self):
         while True:
-            if self.room_name not in self.room_var:
-                break
-            if(not self.room_var[self.room_name]['is_tournament']):
-                await self.channel_layer.group_send(
-                    self.room_group_name,
-                    {
-                        'type': 'game_update',
-                        'ball': self.room_var[self.room_name]['ball'],
-                        'players': self.room_var[self.room_name]['players'],
-                        'width': self.width,
-                        'height': self.height,
-                        'start_game': self.room_var[self.room_name]['game_start'],
-                        'is_tournament': self.room_var[self.room_name]['is_tournament']
-                    }
-                )
-            else:
-                await self.channel_layer.group_send(
-                    self.tournament_group_name,
-                    {
-                        'type': 'game_update',
-                        'matches': self.room_var[self.room_name]['matches'],
-                        'players': self.room_var[self.room_name]['players'],
-                        'width': self.width,
-                        'height': self.height,
-                        'start_game': self.room_var[self.room_name]['game_start'],
-                        'is_tournament': self.room_var[self.room_name]['is_tournament']
-                    }
-                )
+            # break if room name doesnt exist in the room
+            try:
+                if self.room_name not in self.room_var:
+                    print(f"Room {self.room_name} no longer exists")
+                    break
+                if(not self.room_var[self.room_name]['is_tournament']):
+                    await self.channel_layer.group_send(
+                        self.room_group_name,
+                        {
+                            'type': 'game_update',
+                            'ball': self.room_var[self.room_name]['ball'],
+                            'players': self.room_var[self.room_name]['players'],
+                            'width': self.width,
+                            'height': self.height,
+                            'start_game': self.room_var[self.room_name]['game_start'],
+                            'is_tournament': self.room_var[self.room_name]['is_tournament']
+                        }
+                    )
+                else:
+                    await self.channel_layer.group_send(
+                        self.tournament_group_name,
+                        {
+                            'type': 'game_update',
+                            'matches': self.room_var[self.room_name]['matches'],
+                            'players': self.room_var[self.room_name]['players'],
+                            'width': self.width,
+                            'height': self.height,
+                            'start_game': self.room_var[self.room_name]['game_start'],
+                            'is_tournament': self.room_var[self.room_name]['is_tournament']
+                        }
+                    )
 
-            if not self.room_var[self.room_name]['game_start'] and not self.room_var[self.room_name]['is_tournament']:
-                self.disconnect(1000)
-                del self.room_var[self.room_name]
-                break
-            if(not self.room_var[self.room_name]['players']['player1']['game_start'] or not self.room_var[self.room_name]['players']['player2']['game_start']):
-                await asyncio.sleep(1/60)
-                continue
-            if(self.room_var[self.room_name]['is_tournament']):
-                if(not self.room_var[self.room_name]['players']['player3']['game_start'] or not self.room_var[self.room_name]['players']['player4']['game_start']):
+                if not self.room_var[self.room_name]['game_start'] and not self.room_var[self.room_name]['is_tournament']:
+                    self.disconnect(1000)
+                    del self.room_var[self.room_name]
+                    break
+                if(self.room_var[self.room_name]['is_tournament'] and self.room_var[self.room_name]['end_tournement']):
+                    self.disconnect(1000)
+                    del self.room_var[self.room_name]
+                    break
+                if(not self.room_var[self.room_name]['players']['player1']['game_start'] or not self.room_var[self.room_name]['players']['player2']['game_start']):
                     await asyncio.sleep(1/60)
                     continue
-            if(self.room_var[self.room_name]['is_tournament']):
-                await self.update_game_state_tournement()
-            else:
-                await self.update_game_state()
-            await asyncio.sleep(1/60)
+                if(self.room_var[self.room_name]['is_tournament']):
+                    if(not self.room_var[self.room_name]['players']['player3']['game_start'] or not self.room_var[self.room_name]['players']['player4']['game_start']):
+                        await asyncio.sleep(1/60)
+                        continue
+                if(self.room_var[self.room_name]['is_tournament']):
+                    await self.update_game_state_tournement()
+                else:
+                    await self.update_game_state()
+                await asyncio.sleep(1/60)
+            except Exception as e:
+                print(f"Error in game loop: {e}")
+                break
 
     async def game_update(self, event):
         if self.room_name not in self.room_var:
@@ -294,7 +306,7 @@ class PingPongConsumer(AsyncWebsocketConsumer):
         if self.room_var[self.room_name]['players'][player]['score'] >= 10:  # Assuming 10 points to win
             await self.end_match(player)
 
-    async def end_tournament(self, winner):
+    def end_tournament(self, winner):
         self.room_var[self.room_name]['players']['player1']['score'] = 0
         self.room_var[self.room_name]['players']['player2']['score'] = 0
         self.room_var[self.room_name]['players']['player3']['score'] = 0
@@ -304,7 +316,7 @@ class PingPongConsumer(AsyncWebsocketConsumer):
         self.room_var[self.room_name]['players']['player3']['full'] = False
         self.room_var[self.room_name]['players']['player4']['full'] = False
         self.room_var[self.room_name]['game_start'] = False
-        asyncio.create_task(self.game_loop())
+        self.room_var[self.room_name]['end_tournement'] = True
         
 
 
@@ -321,7 +333,6 @@ class PingPongConsumer(AsyncWebsocketConsumer):
             self.room_var[self.room_name]['matches']['ball2'] = {'x': self.width / 2, 'y': self.height / 2, 'radius': 5, 'vx': 5, 'vy': 5}
         elif current_match == 'final':
             self.room_var[self.room_name]['matches']['final']['winner'] = winner
-            await self.end_tournament(winner)
         
         match = self.room_var[self.room_name]['matches'][current_match];
         print(match, current_match, winner)
@@ -342,13 +353,14 @@ class PingPongConsumer(AsyncWebsocketConsumer):
         # Save the tournament data if final match is completed
         if self.room_var[self.room_name]['matches']['final']['winner']:
             tournament = Tournament(
-                player1_username=self.room_var[self.room_name]['matches']['final']['player1'],
-                player2_username=self.room_var[self.room_name]['matches']['final']['player2'],
                 winner=self.room_var[self.room_name]['matches']['final']['winner'],
                 date=timezone.now(),
                 matches=self.room_var[self.room_name]['matches']  # Include matches data
             )
             await database_sync_to_async(tournament.save)()
+            self.end_tournament(winner)
+
+
   
     async def save_match_data(self, player1, score1, player2, score2, winner):
         match = Match(
