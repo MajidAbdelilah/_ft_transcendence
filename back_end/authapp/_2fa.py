@@ -61,7 +61,7 @@ class _42_generated_password(APIView):
     permission_classes = [IsAuthenticated]
     def get (self , request):
         code = "".join(map(str, random.sample(range(0, 10), 10)))
-        send_mail("This is your pong website password  :  "+code, settings.EMAIL_HOST_USER, [request.user], fail_silently=False,)
+        send_mail("PONGS APPLICATION PASSWORD","This is your pong website password  :  "+code, settings.EMAIL_HOST_USER, [request.user,], fail_silently=False,)
         useremail = request.user
         user = User.objects.get(email=useremail)
         user.password = code
