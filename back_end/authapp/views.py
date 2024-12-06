@@ -18,7 +18,7 @@ import string
 from django.shortcuts import redirect, render
 from django.http import JsonResponse
 from django.core.mail import send_mail
-from  ._2fa import Send2FAcode,CodeVerification
+from  ._2fa import Send2FAcode,CodeVerification, _2fa_verification, _42_generated_password
 import requests
 
 

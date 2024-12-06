@@ -42,3 +42,30 @@ class CodeVerification(APIView):
             return Response({"message":"2fa is done"})
         else:
             return Response({"message":"2fa code not correct"})
+
+
+class _2fa_verification(APIView):
+    permission_classes = [AllowAny]
+    def post (self , request):
+        user = request.user
+        if user._2fa_code == request.data.get('code') and len(request.data.get('code')) == 6:
+            user._2fa_code = ""
+            user.save()
+            userserializer = UserSerializer(user)
+            return Response({"message":"2fa is done", "data": userserializer.data})
+        else:
+            return Response({"message":"2fa code not correct", "data":None})
+        
+        
+class _42_generated_password(APIView):
+    permission_classes = [IsAuthenticated]
+    def get (self , request):
+        code = "".join(map(str, random.sample(range(0, 10), 10)))
+        send_mail("This is your pong website password  :  "+code, settings.EMAIL_HOST_USER, [request.user], fail_silently=False,)
+        useremail = request.user
+        user = User.objects.get(email=useremail)
+        user.password = code
+        user.save()
+        if user is None:
+            return Response({"message":"no user with this email"})
+        return  Response({"message": "password generated succefully"})

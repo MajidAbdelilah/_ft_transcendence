@@ -118,7 +118,7 @@ class AddFriendshipView(APIView):
                 user=user_add,
                 title="New friend !",
                 message=f"{user_from.username} sent you a friend request.",
-                profile_photo=user_from.profile_photo,
+                # profile_photo=user_from.profile_photo,
                 link=f"{settings.FRONTEND_URL}/profile/{user_from.username}",
                 is_friend_notif=True,
                 action_by=user_from.username,
