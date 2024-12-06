@@ -54,10 +54,10 @@ const handleTextUser = (router) => {
 
 const handleAddFriend = async (loggedInUser, user) => {
   try {
-    const respond = await axios.post("http://127.0.0.1:8000/friend/friends-add", 
+    const respond = await axios.post("http://127.0.0.1:8000/friend/friends-add/", 
+    {username: user.username},
+      { withCredentials : true, headers: {} }
       
-      { withCredentials : true, headers: {} },
-      {username: user.username},
       );
 
 
@@ -86,9 +86,10 @@ const handleAddFriend = async (loggedInUser, user) => {
 
 const handleBlockUser = async (loggedInUser, user) => {
   try {
-    const respond = await axios.post("http://127.0.0.1:8000/friend/friends-remove",
-    { withCredentials: true, headers: {} },
-    {username : user.username}
+    const respond = await axios.post("http://127.0.0.1:8000/friend/friends-remove/",
+    {username : user.username},
+    { withCredentials: true, headers: {} }
+    
     );
     console.log("respond : ---------------", respond);
 

@@ -219,7 +219,9 @@ const getSelectedFriend = (friend) => {
         loadConversation();
     }, [loggedInUser, friend]);
 
-    // websocket -----------------------------------------------------------------------------------------
+    //  -----  impliment the logic of sending  messages using websocket  -------------------------------------------------------
+
+    
       // const [socket, setSokcet] = useState(null);
       // const [messages, setMessages] = useState(conversation);
 

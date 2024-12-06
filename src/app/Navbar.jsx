@@ -116,7 +116,7 @@ function Navbar() {
 
   const handleBlur = () => {
 
-      setIsTyping(false); // Reset typing state when the input loses focus
+    setTimeout(() => { setIsTyping(false); }, 1000);
 
   };
 
@@ -127,7 +127,7 @@ function Navbar() {
 
   const handleClickOutside = (event) => {
     if (divRef.current && !divRef.current.contains(event.target)) {
-      setClickWhere(false); // Set clickWhere to false when clicking outside
+      setTimeout(() => { setClickWhere(false); }, 1000);
     }
   };
   
@@ -316,7 +316,7 @@ function Navbar() {
                   className="px-4 py-2 hover:bg-gray-100 text-[#242F5C] cursor-pointer"
                   onClick={() => {
                     
-                    setClickWhere(true);
+                    // setClickWhere(true);
 
                     inputRef.current.value = "";
                     router.replace(`/Profile/${user.username}`);

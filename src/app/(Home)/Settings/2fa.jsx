@@ -3,7 +3,7 @@ import Image from "next/image";
 import { useState } from "react";
 import Services from './services';
 import toast, { Toaster } from 'react-hot-toast';
-import { sendCode, handleVerify } from './onClickFunc';
+import { , handleVerify } from './onClickFunc';
 import { useUser } from "../../contexts/UserContext";
 
 
