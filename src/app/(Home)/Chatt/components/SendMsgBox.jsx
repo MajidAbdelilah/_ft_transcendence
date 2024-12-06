@@ -20,27 +20,10 @@ import { getCurrentTime, createFriendMsgBox, createMyMsgBox } from './peerToPeer
 
 
 
-      //  -----  using websocket  -------------------------------------------------------
-      const message = {
-        message_content: messageContent,
-        message_date: getCurrentTime(),
-        sender: loggedInUser.userId,
-        receiver: friend.userId
-      };
+      //  -----  using websocket i should send the message  -------------------------------------------------------
 
-      // Send the message to WebSocket server
-      socket.send(JSON.stringify(message));
-
-
-
-
-      
-
-          conv.scrollTop = conv.scrollHeight;
-          inputText.value = ""; // Clear the input
+      // i should use the wesocket to send a message from out suer to the friend...
     }
-
-
 
     return (
       <div className="sendMsgBox mx-8 my-5 relative ">

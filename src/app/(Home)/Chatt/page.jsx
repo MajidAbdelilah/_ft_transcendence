@@ -219,35 +219,10 @@ const getSelectedFriend = (friend) => {
         loadConversation();
     }, [loggedInUser, friend]);
 
-    //  -----  impliment the logic of sending  messages using websocket  -------------------------------------------------------
+    //  -----  impliment the logic of reciving a message using websocket  -------------------------------------------------------
 
-    
-      // const [socket, setSokcet] = useState(null);
-      // const [messages, setMessages] = useState(conversation);
+    // i supose to get the message weeither i am a sender or reciver , and insert it inside conversation , and map function should simply desplay it to the user 
 
-
-      // useEffect(() =>{
-
-      //   // step 1 : Initialize the WebSocket connection
-      //   const socketInstance = new WebSocket('ws://localhost:8000');
-      //   setSokcet(socketInstance);
-
-      //   // step 2 :  check that the loogedInUser and the friend are part of the message - and add the message to the conversation
-      //   socketInstance.onmessage = (event) => {
-      //     const message = JSON.parse(event.data);
-      //     if(
-      //       (message.sender === friend.userId       && message.reciever === loggedInUser.userId) || // case loggedInUser recieves a message
-      //       (message.sender === loggedInUser.userId && message.reciever === friend.userId))         // case loggedInUser sends a message
-      //       {
-      //         setMessages((prevMessages) => [...prevMessages, message]);
-      //       }
-      //   };
-
-      //   // step 3 :  cleanup the WebSocket on component unmount
-      //   return () => { socketInstance.close();};
-
-
-      // }, [friend, loggedInUser]);
 
 
 
