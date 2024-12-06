@@ -25,7 +25,7 @@ import axios from 'axios';
 import { fetchOldConversation } from './components/fetchOldConversation';
 import toast, { Toaster } from 'react-hot-toast';
 import ListFriends from "./components/ListFriends";
-
+import { useWebSocket } from '../../contexts/WebSocketProvider';
 
 // -- font -----------------------------------------------------
 import { Inter, Montserrat } from "next/font/google";
@@ -222,6 +222,32 @@ const getSelectedFriend = (friend) => {
     //  -----  impliment the logic of reciving a message using websocket  -------------------------------------------------------
 
     // i supose to get the message weeither i am a sender or reciver , and insert it inside conversation , and map function should simply desplay it to the user 
+
+    const { addHandler, removeHandler } = useWebSocket();
+    useEffect(() => {
+      const loadConversation = async () => {
+        if (!friend) return;
+        const oldConversation = await fetchOldConversation(loggedInUser, friend.user);
+        setConversation(oldConversation);
+      };
+      loadConversation();
+    }, [loggedInUser, friend]);
+  
+    useEffect(() => {
+      if (!friend) return;
+  
+      const messageHandler = (data) => {
+        if (data.chat_id === `${loggedInUser.id}_${friend.user.id}`) {
+          setConversation((prev) => [...prev, data]);
+        }
+      };
+  
+      addHandler(messageHandler);
+      return () => {
+        removeHandler(messageHandler);
+      };
+    }, [friend, loggedInUser, addHandler, removeHandler]);
+
 
 
 
