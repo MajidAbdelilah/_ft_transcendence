@@ -6,4 +6,4 @@ RUN mkdir backend
 COPY . backend/
 RUN chmod +x /app/backend/run.sh
 ENTRYPOINT ["/app/backend/run.sh"]
-CMD [python /app/backend/manage.py runserver]
+# CMD ["python", "/app/backend/manage.py", "runserver"]
