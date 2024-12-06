@@ -14,7 +14,7 @@ class Match(models.Model):
 class Tournament(models.Model):
     winner = models.CharField(max_length=150)
     date = models.DateTimeField()
-    matches = models.ManyToManyField(Match)
+    matches = models.JSONField()
 
     def __str__(self):
         return f"Tournament on {self.date} won by {self.winner}"

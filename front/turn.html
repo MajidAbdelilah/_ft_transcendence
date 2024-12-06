@@ -17,9 +17,19 @@
     <canvas id="gameCanvas"></canvas>
 
     <script>
+        function init()
+        {
+            socket;
+            player = '';
+            player2 = '';
+            gameStarted = false;
+            match = '';
+        }
         let socket;
         let player = '';
+        let player2 = '';
         let gameStarted = false;
+        let match = '';
 
         // Display tournaments data
         function displayTournaments(tournaments) {
@@ -70,13 +80,50 @@
                 if(data.start_game === false){
                     console.log('Game not started');
                     // socket.close();
+                    init();
                     alert('Game Over');
                     return;
                 }
                 if (data.players.player1.username === username) {
                     player = 'player1';
+                    match = data.players.player1.match;
                 } else if (data.players.player2.username === username) {
                     player = 'player2';
+                    match = data.players.player2.match;
+                }
+                if(data.is_tournament)
+                {
+                    if(player === '')
+                    {
+                        if(data.players.player3.username === username)
+                        {
+                            player = 'player3';
+                            match = data.players.player3.match;
+                        }
+                        else if(data.players.player4.username === username)
+                        {
+                            player = 'player4';
+                            match = data.players.player4.match;
+                        }
+                    }
+                    // check if a player has the same match as the user
+                    if(match === data.players.player1.match && player !== 'player1')
+                    {
+                        player2 = 'player1';
+                    }
+                    else if(match === data.players.player2.match && player !== 'player2')
+                    {
+                        player2 = 'player2';
+                    }
+                    else if(match === data.players.player3.match && player !== 'player3')
+                    {
+                        player2 = 'player3';
+                    }
+                    else if(match === data.players.player4.match && player !== 'player4')
+                    {
+                        player2 = 'player4';
+                    }   
+
                 }
                 console.log('player:', player);
                 updateGame(data);
@@ -103,20 +150,96 @@
                 ctx.fillText('Press Space to Start', canvas.width / 2 - 150, canvas.height / 2 + 50);
                 return;
             }
-            // Draw ball
-            ctx.beginPath();
-            ctx.arc(data.ball.x, data.ball.y, data.ball.radius, 0, Math.PI * 2);
-            ctx.fill();
-            
-            // Draw scores
-            ctx.font = '100px Arial';
-            ctx.fillStyle = 'rgba(0, 0, 0, 0.5)';
-            ctx.fillText(data.players.player1.score, canvas.width / 2 - 150, canvas.height / 2 + 50);
-            ctx.fillText(data.players.player2.score, canvas.width / 2 + 50, canvas.height / 2 + 50);
-            
-            // Draw players
-            ctx.fillRect(data.players.player1.x, data.players.player1.y, data.players.player1.width, data.players.player1.height);
-            ctx.fillRect(data.players.player2.x, data.players.player2.y, data.players.player2.width, data.players.player2.height);
+            console.log('data:', data);
+            if(data.is_tournament)
+            {
+                ctx.font = '100px Arial';
+                ctx.fillStyle = 'rgba(0, 0, 0, 0.5)';
+                if(player === "player1")
+                {
+                    ctx.fillText(data.players.player1.score, canvas.width / 2 - 150, canvas.height / 2 + 50);
+                    ctx.fillRect(data.players.player1.x, data.players.player1.y, data.players.player1.width, data.players.player1.height);
+                }
+                else if(player === "player2")
+                {
+                    ctx.fillText(data.players.player2.score, canvas.width / 2 - 150, canvas.height / 2 + 50);
+                    ctx.fillRect(data.players.player2.x, data.players.player2.y, data.players.player2.width, data.players.player2.height);
+                }
+                else if(player === "player3")
+                {
+                    ctx.fillText(data.players.player3.score, canvas.width / 2 - 150, canvas.height / 2 + 50);
+                    ctx.fillRect(data.players.player3.x, data.players.player3.y, data.players.player3.width, data.players.player3.height);
+                }
+                else if(player === "player4")
+                {
+                    ctx.fillText(data.players.player4.score, canvas.width / 2 - 150, canvas.height / 2 + 50);
+                    ctx.fillRect(data.players.player4.x, data.players.player4.y, data.players.player4.width, data.players.player4.height);
+                }
+                
+                if(player2 === 'player1')
+                {
+                    ctx.fillText(data.players.player1.score, canvas.width / 2 + 50, canvas.height / 2 + 50);
+                    ctx.fillRect(data.players.player1.x, data.players.player1.y, data.players.player1.width, data.players.player1.height);
+                    
+                }
+                else if(player2 === 'player2')
+                {
+                    ctx.fillText(data.players.player2.score, canvas.width / 2 + 50, canvas.height / 2 + 50);
+                    ctx.fillRect(data.players.player2.x, data.players.player2.y, data.players.player2.width, data.players.player2.height);
+                }
+                else if(player2 === 'player3')
+                {
+                    ctx.fillText(data.players.player3.score, canvas.width / 2 + 50, canvas.height / 2 + 50);
+                    ctx.fillRect(data.players.player3.x, data.players.player3.y, data.players.player3.width, data.players.player3.height);
+                    
+                }
+                else if(player2 === 'player4')
+                {
+                    ctx.fillText(data.players.player4.score, canvas.width / 2 + 50, canvas.height / 2 + 50);
+                    ctx.fillRect(data.players.player4.x, data.players.player4.y, data.players.player4.width, data.players.player4.height);
+                }
+                if(match === 'match1')
+                {
+                    ctx.beginPath();
+                    ctx.arc(data.match1.ball.x, data.match1.ball.y, data.match1.ball.radius, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+                else if(match === 'match2')
+                {
+                    ctx.beginPath();
+                    ctx.arc(data.match2.ball.x, data.match2.ball.y, data.match2.ball.radius, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+                else if(match === 'match3')
+                {
+                    ctx.beginPath();
+                    ctx.arc(data.match3.ball.x, data.match3.ball.y, data.match3.ball.radius, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+                else if(match === 'match4')
+                {
+                    ctx.beginPath();
+                    ctx.arc(data.match4.ball.x, data.match4.ball.y, data.match4.ball.radius, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+            }
+            else
+            {
+                // Draw scores
+                ctx.font = '100px Arial';
+                ctx.fillStyle = 'rgba(0, 0, 0, 0.5)';
+                ctx.fillText(data.players.player1.score, canvas.width / 2 - 150, canvas.height / 2 + 50);
+                ctx.fillText(data.players.player2.score, canvas.width / 2 + 50, canvas.height / 2 + 50);
+                
+                // Draw players
+                ctx.fillRect(data.players.player1.x, data.players.player1.y, data.players.player1.width, data.players.player1.height);
+                ctx.fillRect(data.players.player2.x, data.players.player2.y, data.players.player2.width, data.players.player2.height);
+               
+                // Draw ball
+                ctx.beginPath();
+                ctx.arc(data.ball.x, data.ball.y, data.ball.radius, 0, Math.PI * 2);
+                ctx.fill();
+            }
             
         }
         
