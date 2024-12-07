@@ -28,7 +28,7 @@ class User(AbstractBaseUser):
     fullname = models.CharField(max_length=40, blank=True)
     email = models.EmailField(unique=True)
     image_name = models.CharField(max_length=50, default= "profilepng.png")
-    image_field = models.ImageField(upload_to='images/', default=None, null=True, blank=True)
+    image_field = models.ImageField(upload_to='images/', default='images/profilepng.png', null=True, blank=True)
     is_2fa = models.BooleanField(default=False)
     _2fa_code =  models.CharField(max_length=6, default="")
     state = models.CharField(max_length=255, default="no state assigned")
