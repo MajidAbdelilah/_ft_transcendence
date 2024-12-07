@@ -35,7 +35,7 @@ export default function FriendRequests({ request }: FriendRequestProps) {
     reject: false
   })
   const [error, setError] = useState<string | null>(null)
-  const { send } = useWebSocket();
+  const { send} = useWebSocket();
 
   const handleAccept = async () => {
     if (isLoading.accept) return;

@@ -32,6 +32,8 @@ export default function Sidebar() {
   const [avatarLoading, setAvatarLoading] = useState(true);
   const [isLoggingOut, setIsLoggingOut] = useState(false);
 
+  console.log(userData.image_field);
+
 
   const sideRef = useClickAway<HTMLDivElement>(() => {
     setIsMobileMenuOpen(false);
@@ -65,11 +67,14 @@ export default function Sidebar() {
     return () => {
       window.removeEventListener("resize", handleResize);
     };
+    
   }, []);
 
   const toggleMobileMenu = () => {
     setIsMobileMenuOpen(!isMobileMenuOpen);
   };
+
+  
 
   return (
     <div ref={sideRef}>
@@ -197,7 +202,8 @@ export default function Sidebar() {
                     </div>
                   )}
                   <Image
-                    src={"/images/avatarprofile.svg"}
+                    // src={`http://127.0.0.1:8000${userData?.image_field}`}
+                    src={"/images/avatarInvite.svg"}
                     alt="User avatar"
                     width={50}
                     height={50}

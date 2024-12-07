@@ -6,20 +6,23 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import Loading from "../../components/Loading";
 import { IconHistory } from "@tabler/icons-react"
-
+import {useUser} from '../../contexts/UserContext';
 
 
 function MatchHistory() {
   const DashData = useContext(DashContext);
   const [matches, setMatches] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const { userData} = useUser();
+  
 
   useEffect(() => {
     const fetchMatches = async () => {
       try {
         setIsLoading(true);
-        const response = await axios.get('YOUR_API_ENDPOINT_HERE');
+        const response = await axios.get(`http://127.0.0.1:8000/api/fetch_history/${userData.username}/`);
         setMatches(response.data);
+        console.log(response.data);
       } catch (error) {
         console.error('Error fetching match history:', error);
       } finally {
@@ -87,7 +90,7 @@ function MatchHistory() {
                       </div>
                     </td>
                   </tr>
-                ) : matches.length === 0 ? (
+                ) : matches.length === 0  || matches === undefined? (
                   <tr>
                     <td colSpan="5" className="text-center">
                       <div className="flex flex-col gap-3 justify-center items-center py-10 text-center">

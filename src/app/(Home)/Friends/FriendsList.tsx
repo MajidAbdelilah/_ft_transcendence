@@ -6,6 +6,7 @@ import { useState, useEffect } from "react";
 import { useWebSocket } from '../../contexts/WebSocketProvider';
 import customAxios from '../../customAxios';
 import {IconUserExclamation} from '@tabler/icons-react'
+import { useRouter } from "next/navigation";
 
 const montserrat = Montserrat({
   subsets: ['latin'],
@@ -33,6 +34,8 @@ export default function FriendsList({ friends = [] }: FriendsListProps) {
   const [isMobile, setIsMobile] = useState(false);
   const [imageLoadingStates, setImageLoadingStates] = useState<{ [key: string]: boolean }>({});
   const { send } = useWebSocket();
+
+  const router = useRouter();
 
   const handleInviteGame = async (friend: Friend) => {
     try {
@@ -77,6 +80,10 @@ export default function FriendsList({ friends = [] }: FriendsListProps) {
     }
   };
 
+  const getProfile = (username: string) => {
+    router.push(`/Profile/${username}`);
+  };
+
   useEffect(() => {
     const handleResize = () => {
       setIsMobile(window.innerWidth <= 768);
@@ -106,9 +113,9 @@ export default function FriendsList({ friends = [] }: FriendsListProps) {
         </div>
       ) : (
         friends.map((friend) => (
-          <div key={friend.user.id} className={`w-full h-20 lg:h-[12%] md:h-[20%] rounded-xl bg-[#D8D8F7] shadow-md shadow-[#BCBCC9] relative ${isMobile ? 'w-full' : 'min-h-[90px]'}`}>
+          <div onClick={() => getProfile(friend.user.username)} key={friend.user.id} className={`w-full h-20 lg:h-[12%] cursor-pointer md:h-[15%] md:h-[20%] rounded-xl bg-[#D8D8F7] shadow-md shadow-[#BCBCC9] relative ${isMobile ? 'w-full' : 'min-h-[90px]'}`}>
             <div className="flex items-center h-full p-2">
-              <div className="flex flex-row items-center justify-center lg:w-[10%] lg:h-[90%] md:w-[10%] md:h-[90%] w-[20%] h-[90%] relative">
+              <div  className="flex flex-row items-center justify-center lg:w-[10%] lg:h-[90%] md:w-[10%] md:h-[90%] w-[20%] h-[90%] relative">
                 {imageLoadingStates[friend.user.id] !== false && (
                   <div className="absolute inset-0 flex items-center justify-center">
                     <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-[#242F5C]"></div>

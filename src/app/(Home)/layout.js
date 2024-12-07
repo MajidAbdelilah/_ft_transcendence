@@ -7,6 +7,7 @@ import { Montserrat } from "next/font/google";
 import { UserProvider } from '../contexts/UserContext';
 import { WebSocketProvider } from '../contexts/WebSocketProvider';
 import { useRouter } from 'next/navigation';
+import DashProvider from './Dashboard/Dashcontext';
 
 const montserrat = Montserrat({
     subsets: ["latin"],
@@ -32,15 +33,17 @@ function RootLayout({ children }) {
   return (
     <UserProvider>
       <WebSocketProvider>
-        <div className={`flex flex-col h-screen ${montserrat.className}`}>
-          <Navbar />
-          <div className="flex flex-1 overflow-y-auto flex-wrap">
-            <Sidebar />
-            <div className={`flex-1 flex flex-wrap items-center justify-center ${isMobile ? '' : 'ml-64'}`}>
-              {children}
+        <DashProvider>
+          <div className={`flex flex-col h-screen ${montserrat.className}`}>
+            <Navbar />
+            <div className="flex flex-1 overflow-y-auto flex-wrap">
+              <Sidebar />
+              <div className={`flex-1 flex flex-wrap items-center justify-center ${isMobile ? '' : 'ml-64'}`}>
+                {children}
+              </div>
             </div>
           </div>
-        </div>
+        </DashProvider>
       </WebSocketProvider>
     </UserProvider>
   );
