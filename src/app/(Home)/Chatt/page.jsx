@@ -28,6 +28,7 @@ import ListFriends from "./components/ListFriends";
 import {WebSocketProvider} from "./WebSocketProvider";
 import {useWebSocket} from "./WebSocketProvider";
 import { useContext } from 'react';
+import { useLayoutEffect } from 'react';
 // -- font -----------------------------------------------------
 import { Inter, Montserrat } from "next/font/google";
 import path from "path";
@@ -204,9 +205,16 @@ const getSelectedFriend = (friend) => {
 
 
 
-// -----------------------------------------------------------------------------------------
+// #########################################################################
 
   function MessagesBox({ friend }) {
+    const conversationContainer = useRef(null);
+
+
+
+
+
+    //----------------------------------
     const [conversation, setConversation] = useState([]);
 
     useEffect(() => {
@@ -259,7 +267,12 @@ const getSelectedFriend = (friend) => {
         
             // Update the conversation state
             setConversation((prev) => [...prev, newMessage]);
+
           }
+
+
+
+   
 
         }
 
@@ -303,7 +316,7 @@ const getSelectedFriend = (friend) => {
 
 
     // no friend selected yet just return FriendChatInfo compomet with empty friend object
-    if (friend == null) {
+    if (friend === null) {
       let noFriendYet = { avatar: "", name: "", status: "" };
       return (
         <div className="messagesBox w-full h-full lg:w-3/5 p-2 h-full rounded-tr-xl rounded-br-xl  flex flex-col ">
@@ -338,7 +351,7 @@ const getSelectedFriend = (friend) => {
         
         {/* Conversataion ---------------------------------------------------------------------------------------*/}
         
-        <div className="Conversation  flex flex-col flex-grow overflow-y-auto custom-scrollbar break-words p-2 ">
+        <div className="Conversation  flex flex-col flex-grow overflow-y-auto custom-scrollbar break-words p-2 scroll-smooth" ref={conversationContainer}>
         
           {Array.isArray(conversation) && conversation.length > 0 ? (
             conversation.map((message, index) =>
@@ -351,6 +364,16 @@ const getSelectedFriend = (friend) => {
           ) : (
             <p className="text-center text-gray-500">Loading...</p>
           )}
+
+          {conversation.length > 0 && (
+              <div style={{ display: 'none' }}>
+                {setTimeout(() => {
+                  if (conversationContainer.current) {
+                    conversationContainer.current.scrollTop = conversationContainer.current.scrollHeight;
+                  }
+                }, 500)}
+              </div>
+            )}
         </div>
 
 
