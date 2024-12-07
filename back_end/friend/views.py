@@ -28,16 +28,9 @@ class FriendsView(APIView):
     serializer_class = FriendsSerializer
 
     def get(self, request):
-       if Friendship.objects.filter(Q(user_to=request.user) & Q(is_accepted=True)).exists():
-            friends_data = Friendship.objects.filter(Q(user_to=request.user) & Q(is_accepted=False))
-            serializer = FriendsRequestSerializer(friends_data, many=True)
-            print(serializer.data)
-            return Response(serializer.data)
-       else: 
-            return Response({'error': 'Friendship already accepted'})
-        # user = request.user
-        # serializer = self.serializer_class(instance=user)
-        # return Response(serializer.data)
+        user = request.user
+        serializer = self.serializer_class(instance=user)
+        return Response(serializer.data)
 
 class UserSearchView(APIView):
     # authentication_classes = [JWTAuthentication]
@@ -226,9 +219,12 @@ class BlockedFriendsView(APIView):
     serializer_class = BlockedFriendsSerializer
 
     def get(self, request):
-        user = request.user
-        serializer = self.serializer_class(instance=user)
-        return Response(serializer.data)
+        if Friendship.objects.filter(user_to=request.user, u_one_is_blocked_u_two=False,u_two_is_blocked_u_one=False).exists():
+            friends_requests = Friendship.objects.filter(user_to=request.user, is_accepted=False)
+            serializer = FriendsRequestSerializer(friends_requests, many=True)
+            return Response(serializer.data)
+        else:
+            return Response([])
 
 class NotificationsView(APIView):
     # authentication_classes = [JWTAuthentication]
@@ -276,38 +272,12 @@ class FriendsRequestsView(APIView):
     serializer_class = FriendsSerializer
     
     def get(self, request):
-        # if Friendship.is_accepted == False:
-        #     print ('Friendship not accepted', Friendship.is_accepted)
-        #    return Response({'error': 'Friendship already accepted'})
-        # elif Friendship.u_one_is_blocked_u_two == True or Friendship.u_two_is_blocked_u_one == True:
-        #    return Response({'error': 'Friendship blocked'})
-        # if Friendship.objects.filter(Q(user_from=Friendship.user_from, user_to=Friendship.user_to) |
-        #                              Q(user_from=Friendship.user_to, user_to=Friendship.user_from)).exists():
-        #     return Response({'error': 'Friendship alrady exist'})
-        if Friendship.objects.filter(Q(user_to=request.user) & Q(is_accepted=False)).exists():
-            friends_data = Friendship.objects.filter(Q(user_to=request.user) & Q(is_accepted=False))
-            serializer = FriendsRequestSerializer(friends_data, many=True)
-            print(serializer.data)
+        if Friendship.objects.filter(user_to=request.user, is_accepted=False).exists():
+            friends_requests = Friendship.objects.filter(user_to=request.user, is_accepted=False)
+            serializer = FriendsRequestSerializer(friends_requests, many=True)
             return Response(serializer.data)
-        #  if not Friendship:
-        #         return Response({'friends': []}, status=status.HTTP_200_OK)
-            
-        #     # Check if Friendship is not accepted
-        #     if not Friendship.is_accepted:
-        #         return Response({'error': 'Friendship not yet accepted'}, status=status.HTTP_400_BAD_REQUEST)
-            
-        #     # Check if Friendship is blocked
-        #     if Friendship.u_one_is_blocked_u_two or Friendship.u_two_is_blocked_u_one:
-        #         return Response({'error': 'Friendship is blocked'}, status=status.HTTP_400_BAD_REQUEST)
-            
-        #     # If all checks pass, serialize and return user data
-        #     serializer = self.serializer_class(instance=user)
-        #     return Response(serializer.data)
-        
-        # except Exception as e:
-        #     # Catch any unexpected errors
-        #     return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-        
+        else:
+            return Response([])
         # user = request.user
         # serializer = self.serializer_class(instance=user)
         # print(serializer.data)
