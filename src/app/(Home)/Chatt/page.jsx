@@ -243,6 +243,7 @@ const getSelectedFriend = (friend) => {
       // Update conversation when new messages arrive
       useEffect(() => {
         if (friend && messages.length > 0) {
+          console.log("messages -----------------", messages);
           const filteredMessages = messages.filter(
             msg => (msg.send === friend.user.username || msg.receive === friend.user.username)
           );
@@ -251,14 +252,14 @@ const getSelectedFriend = (friend) => {
       }, [messages, friend]);
 
       // Existing conversation loading logic remains the same
-      useEffect(() => {
-        const loadConversation = async () => {
-          if (friend === null) return;
-          const conversation = await fetchOldConversation(loggedInUser, friend.user);
-          setConversation(conversation);
-        };
-        loadConversation();
-      }, [loggedInUser, friend]);
+      // useEffect(() => {
+      //   const loadConversation = async () => {
+      //     if (friend === null) return;
+      //     const conversation = await fetchOldConversation(loggedInUser, friend.user);
+      //     setConversation(conversation);
+      //   };
+      //   loadConversation();
+      // }, [loggedInUser, friend]);
 
 
 

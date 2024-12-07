@@ -11,9 +11,9 @@ export function WebSocketProvider({ children }) {
     if (socket) socket.close();
 
     // Create new WebSocket connection
-    // const newSocket = new WebSocket(`ws://127.0.0.1:8000/ws/chat/${userId}`);
+
     const newSocket = new WebSocket(`ws://127.0.0.1:8000/ws/chat/${userId}/`);
-    // 'ws://127.0.0.1:8000/ws/user_data/'
+    
     newSocket.onopen = () => {
       console.log('WebSocket connected');
     };
