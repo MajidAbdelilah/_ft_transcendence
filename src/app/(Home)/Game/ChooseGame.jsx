@@ -280,7 +280,7 @@ function MainComponent() {
                       )}
                       
                       <div className="space-y-3 max-h-[40vh] overflow-y-auto pr-2 custom-scrollbar">
-                        {friends.friends.length === 0 ? (
+                        {!friends?.friends || friends.friends.length === 0 ? (
                           <div className="text-center py-8">
                             <img 
                               src="/images/PlayWithFriends.svg" 
