@@ -236,48 +236,61 @@ const getSelectedFriend = (friend) => {
 
 
 
-      // Update conversation when new messages arrive
-      // useEffect(() => {
-      //   if (friend && messages.length > 0 && messages.length < 2) {
-      //     console.log("messages -----------------", messages);
-      //     console.log("conversation -----------------", conversation);
 
-
-      //     // console.log("messages -----------------", messages);
-      //     // const filteredMessages = messages.filter(
-      //     //   msg => (msg.send === friend.user.username || msg.receive === friend.user.username)
-      //     // );
-      //     // setConversation(prev => [...prev, ...filteredMessages]);
-      //   }
-      // }, [friend, messages]);
 
 
       useEffect(() => {
-        if (friend && messages.length > 0 && messages.length < 2) {
-          console.log("Incoming messages -----------------", messages);
-      
-          // Check and transform messages
-          const newMessages = messages
-            .filter(
-              (msg) =>
-                (msg.send === loggedInUser.username && msg.receive === friend.user.username) ||
-                (msg.send === friend.user.username && msg.receive === loggedInUser.username)
-            )
-            .map((msg) => ({
-              messages_id: Date.now(), // Replace with a real ID if available
-              chat_id: msg.chat_id,
-              sender: msg.send,
-              receiver: msg.receive,
-              message_content: msg.message,
-              message_date: msg.timestamp,
-              user_one: loggedInUser.id, // Assuming user_one and user_two are loggedInUser.id and friend.user.id
-              user_two: friend.user.id,
-            }));
-      
-          if (newMessages.length > 0) {
-            setConversation((prev) => [...prev, ...newMessages]);
+        if (friend && loggedInUser && messages.length === 1) {
+          // Directly access the single message
+          if (
+            (messages[0].send === loggedInUser.username && messages[0].receive === friend.user.username) ||
+            (messages[0].send === friend.user.username && messages[0].receive === loggedInUser.username) ) 
+            {
+              const newMessage = {
+                // messages_id: ??, 
+                chat_id: messages[0].chat_id,
+                sender: messages[0].send,
+                receiver: messages[0].receive,
+                message_content: messages[0].message,
+                message_date: messages[0].timestamp,
+                // user_one: ??,
+                // user_two: ??,
+            };
+        
+            // Update the conversation state
+            setConversation((prev) => [...prev, newMessage]);
           }
+
         }
+
+
+
+
+
+
+        // if (friend && messages.length > 0 && messages.length < 2) {
+        //   console.log("Incoming messages -----------------", messages);
+      
+        //   // Check and transform messages
+        //   const newMessages = messages.filter( (msg) =>
+        //         (msg.send === loggedInUser.username && msg.receive === friend.user.username) ||
+        //         (msg.send === friend.user.username && msg.receive === loggedInUser.username)
+        //     )
+        //     .map((msg) => ({
+        //       // messages_id: "", // Replace with a real ID if available
+        //       chat_id: msg.chat_id,
+        //       sender: msg.send,
+        //       receiver: msg.receive,
+        //       message_content: msg.message,
+        //       message_date: msg.timestamp,
+        //       // user_one: 0, // Assuming user_one and user_two are loggedInUser.id and friend.user.id
+        //       // user_two: 0,
+        //     }));
+      
+        //   if (newMessages.length > 0) {
+        //     setConversation((prev) => [...prev, ...newMessages]);
+        //   }
+        // }
       }, [friend, messages, loggedInUser]);
 
 
@@ -293,7 +306,7 @@ const getSelectedFriend = (friend) => {
     if (friend == null) {
       let noFriendYet = { avatar: "", name: "", status: "" };
       return (
-        <div className="messagesBox w-full lg:w-3/5 p-2 h-full rounded-tr-xl rounded-br-xl  flex flex-col ">
+        <div className="messagesBox w-full h-full lg:w-3/5 p-2 h-full rounded-tr-xl rounded-br-xl  flex flex-col ">
           <FriendChatInfo
             loggedInUser={loggedInUser}
             friend={noFriendYet}
@@ -324,7 +337,9 @@ const getSelectedFriend = (friend) => {
         />
         
         {/* Conversataion ---------------------------------------------------------------------------------------*/}
-        <div className="Conversation flex flex-col flex-grow overflow-y-auto custom-scrollbar break-words p-2">
+        
+        <div className="Conversation  flex flex-col flex-grow overflow-y-auto custom-scrollbar break-words p-2 ">
+        
           {Array.isArray(conversation) && conversation.length > 0 ? (
             conversation.map((message, index) =>
               message.sender === friend.user.username ? (
@@ -351,7 +366,8 @@ const getSelectedFriend = (friend) => {
   return (
 
         <WebSocketProvider>
-        <div className="chattSection flex-1 p-5 md:p-10 h-full w-full ">
+
+          <div className="chattSection flex-1 p-5 md:p-10 w-full h-[calc(100vh-50px)] ">
           <Toaster /> 
           <div className="boxes relative flex h-full w-full border-2 border-[#C6C6E1] bg-[#F4F4FF] rounded-xl flex-row-revers overflow-auto">
             {/* friendsBox ------------------------------------------------------- */}
