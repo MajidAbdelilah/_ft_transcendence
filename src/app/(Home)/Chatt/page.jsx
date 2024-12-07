@@ -25,7 +25,7 @@ import axios from 'axios';
 import { fetchOldConversation } from './components/fetchOldConversation';
 import toast, { Toaster } from 'react-hot-toast';
 import ListFriends from "./components/ListFriends";
-import { useWebSocket } from '../../contexts/WebSocketProvider';
+
 
 // -- font -----------------------------------------------------
 import { Inter, Montserrat } from "next/font/google";
@@ -140,8 +140,7 @@ export default function Chat() {
 
 const [selectedFriend, setSelectedFriend] = useState(null);
 const getSelectedFriend = (friend) => {
-  setSelectedFriend(friend); // Update the selected friend state
-  // console.log("Selected Friend:", friend); // Log the selected friend
+  setSelectedFriend(friend); 
 };
 
 
@@ -223,21 +222,6 @@ const getSelectedFriend = (friend) => {
 
     // i supose to get the message weeither i am a sender or reciver , and insert it inside conversation , and map function should simply desplay it to the user 
 
-    const {  addHandler, removeHandler } = useWebSocket();
-
-    useEffect(() => {
-      const messageHandler = (data) => 
-      {
-        console.log("Received message:-------------", data);
-        if(data.type === 'CHAT_MESSAGE') {
-          // setConversation((prev) => [...prev, data]);
-          setConversation((prev) => [...prev, data]);
-        }
-      }
-      addHandler(messageHandler);
-      return () => { removeHandler(messageHandler);};
-
-    }, [addHandler, removeHandler]);
 
 
 
@@ -247,29 +231,6 @@ const getSelectedFriend = (friend) => {
 
 
 
-    // useEffect(() => {
-    //   const loadConversation = async () => {
-    //     if (!friend) return;
-    //     const oldConversation = await fetchOldConversation(loggedInUser, friend.user);
-    //     setConversation(oldConversation);
-    //   };
-    //   loadConversation();
-    // }, [loggedInUser, friend]);
-  
-    // useEffect(() => {
-    //   if (!friend) return;
-  
-    //   const messageHandler = (data) => {
-    //     if (data.chat_id === `${loggedInUser.id}_${friend.user.id}`) {
-    //       setConversation((prev) => [...prev, data]);
-    //     }
-    //   };
-  
-    //   addHandler(messageHandler);
-    //   return () => {
-    //     removeHandler(messageHandler);
-    //   };
-    // }, [friend, loggedInUser, addHandler, removeHandler]);
 
 
 
@@ -320,7 +281,7 @@ const getSelectedFriend = (friend) => {
               )
             )
           ) : (
-            <p className="text-center text-gray-500">No conversation yet.</p>
+            <p className="text-center text-gray-500">Loading...</p>
           )}
         </div>
 

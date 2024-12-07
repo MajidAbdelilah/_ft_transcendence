@@ -25,28 +25,18 @@ import { useWebSocket } from '../../../contexts/WebSocketProvider';
       // console.log("----------", messageContent);
 
 
+      // i should send here an object to the bachend trough the socket and ...
       // Compose the message object
-      const messageObject = {
-        type: 'CHAT_MESSAGE',
-        message: messageContent,
-        send: loggedInUser.username,
-        receive: friend.username,
-        timestamp : new Date().toISOString(),
-        chat_id: loggedInUser.username,
-      };
+      // const messageObject = {
+      //   type: 'CHAT_MESSAGE',
+      //   message: messageContent,
+      //   send: loggedInUser.username,
+      //   receive: friend.username,
+      //   timestamp : new Date().toISOString(),
+      //   chat_id: loggedInUser.username,
+      // };
   
-      // Send the message via WebSocket
-      try {
-        console.log("Attempting to send message...");
-        send(messageObject);
-        console.log("Message sent successfully.");
-      } catch (error) {
-        console.error("Error while sending message:", error);
-      }
-      
-  
-      // Clear the input field
-      inputText.value = '';
+
 
 
 
@@ -55,22 +45,12 @@ import { useWebSocket } from '../../../contexts/WebSocketProvider';
 
 
 
-    // const sendMessage = async (e) => {
-
-    //   if (e.code !== "Enter" && e.type !== "click") return;
-    //   let inputText = document.getElementsByClassName("msgToSend")[0];
-    //   if (inputText.value.trim() === "") return ;
-        
-    //   const messageContent = inputText.value;
 
 
 
 
 
-    //   //  -----  using websocket i should send the message  -------------------------------------------------------
 
-    //   // i should use the wesocket to send a message from out suer to the friend...
-    // }
 
     return (
       <div className="sendMsgBox mx-8 my-5 relative ">
