@@ -76,7 +76,7 @@
 
             socket.onmessage = function(e) {
                 const data = JSON.parse(e.data);
-                console.log("data:", data);
+                // console.log("data:", data);
                 if(data.start_game === false){
                     console.log('Game not started');
                     // socket.close();
@@ -86,46 +86,46 @@
                 }
                 if (data.players.player1.username === username) {
                     player = 'player1';
-                    match = data.players.player1.match;
+                    match = data.players.player1.current_match;
                 } else if (data.players.player2.username === username) {
                     player = 'player2';
-                    match = data.players.player2.match;
+                    match = data.players.player2.current_match;
                 }
                 if(data.is_tournament)
                 {
-                    if(player === '')
-                    {
+                    
                         if(data.players.player3.username === username)
                         {
                             player = 'player3';
-                            match = data.players.player3.match;
+                            match = data.players.player3.current_match;
                         }
                         else if(data.players.player4.username === username)
                         {
                             player = 'player4';
-                            match = data.players.player4.match;
+                            match = data.players.player4.current_match;
                         }
-                    }
                     // check if a player has the same match as the user
-                    if(match === data.players.player1.match && player !== 'player1')
+                    if(match && match === data.players.player1.current_match && player !== 'player1')
                     {
                         player2 = 'player1';
                     }
-                    else if(match === data.players.player2.match && player !== 'player2')
+                    else if(match && match === data.players.player2.current_match && player !== 'player2')
                     {
                         player2 = 'player2';
                     }
-                    else if(match === data.players.player3.match && player !== 'player3')
+                    else if(match && match === data.players.player3.current_match && player !== 'player3')
                     {
                         player2 = 'player3';
                     }
-                    else if(match === data.players.player4.match && player !== 'player4')
+                    else if(match &&match === data.players.player4.current_match && player !== 'player4')
                     {
                         player2 = 'player4';
                     }   
 
                 }
-                console.log('player:', player);
+                // console.log('player:', player);
+                // console.log('player2:', player2);
+                // console.log('match:', match);
                 updateGame(data);
             };
 
@@ -150,7 +150,7 @@
                 ctx.fillText('Press Space to Start', canvas.width / 2 - 150, canvas.height / 2 + 50);
                 return;
             }
-            console.log('data:', data);
+            // console.log('data:', data);
             if(data.is_tournament)
             {
                 ctx.font = '100px Arial';
@@ -201,27 +201,22 @@
                 if(match === 'match1')
                 {
                     ctx.beginPath();
-                    ctx.arc(data.match1.ball.x, data.match1.ball.y, data.match1.ball.radius, 0, Math.PI * 2);
+                    ctx.arc(data.matches.ball1.x, data.matches.ball1.y, data.matches.ball1.radius, 0, Math.PI * 2);
                     ctx.fill();
                 }
                 else if(match === 'match2')
                 {
                     ctx.beginPath();
-                    ctx.arc(data.match2.ball.x, data.match2.ball.y, data.match2.ball.radius, 0, Math.PI * 2);
+                    ctx.arc(data.matches.ball2.x, data.matches.ball2.y, data.matches.ball2.radius, 0, Math.PI * 2);
                     ctx.fill();
                 }
-                else if(match === 'match3')
+                else if(match === 'final')
                 {
                     ctx.beginPath();
-                    ctx.arc(data.match3.ball.x, data.match3.ball.y, data.match3.ball.radius, 0, Math.PI * 2);
+                    ctx.arc(data.matches.ball_final.x, data.matches.ball_final.y, data.matches.ball_final.radius, 0, Math.PI * 2);
                     ctx.fill();
                 }
-                else if(match === 'match4')
-                {
-                    ctx.beginPath();
-                    ctx.arc(data.match4.ball.x, data.match4.ball.y, data.match4.ball.radius, 0, Math.PI * 2);
-                    ctx.fill();
-                }
+                
             }
             else
             {

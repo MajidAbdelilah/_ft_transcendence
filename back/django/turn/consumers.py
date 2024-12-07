@@ -134,6 +134,8 @@ class PingPongConsumer(AsyncWebsocketConsumer):
                 if self.room_name not in self.room_var:
                     print(f"Room {self.room_name} no longer exists")
                     break
+                # print('players: ', self.room_var[self.room_name]['players'])
+                # print("matches: ", self.room_var[self.room_name]['matches'])
                 if(not self.room_var[self.room_name]['is_tournament']):
                     await self.channel_layer.group_send(
                         self.room_group_name,
@@ -417,6 +419,12 @@ class PingPongConsumer(AsyncWebsocketConsumer):
         self.room_var[self.room_name]['players']['player2']['score'] = 0
         self.room_var[self.room_name]['players']['player3']['score'] = 0
         self.room_var[self.room_name]['players']['player4']['score'] = 0
+        # reset players positions
+        self.room_var[self.room_name]['players'][self.room_var[self.room_name]['matches']['final']['player1']]['x'] = 0
+        self.room_var[self.room_name]['players'][self.room_var[self.room_name]['matches']['final']['player1']]['y'] = self.height/2 - 25
+        self.room_var[self.room_name]['players'][self.room_var[self.room_name]['matches']['final']['player2']]['x'] = self.width - 10
+        self.room_var[self.room_name]['players'][self.room_var[self.room_name]['matches']['final']['player2']]['y'] = self.height/2 - 25
+        
 
         if(self.room_var[self.room_name]['matches']['match1']['winner'] == 'player1'):
             self.room_var[self.room_name]['players']['player2']['match'] = None
