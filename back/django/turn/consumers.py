@@ -116,7 +116,7 @@ class PingPongConsumer(AsyncWebsocketConsumer):
     async def receive(self, text_data):
         data = json.loads(text_data)
         direction = data['direction']
-        username = data.get('username', None)
+        username = data.get('username')
         player = data['player']
         if(not player):
             player = self.assign_player(username)
@@ -390,8 +390,8 @@ class PingPongConsumer(AsyncWebsocketConsumer):
             self.room_var[self.room_name]['matches']['final']['player1'] = self.room_var[self.room_name]['matches']['match1']['winner']
             self.room_var[self.room_name]['matches']['final']['player2'] = self.room_var[self.room_name]['matches']['match2']['winner']
             await self.start_final_match()
-        else:
-            self.room_var[self.room_name]['game_start'] = False
+        # else:
+        #     self.room_var[self.room_name]['game_start'] = False
 
 
 

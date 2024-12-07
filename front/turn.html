@@ -80,21 +80,35 @@
                 if(data.start_game === false){
                     console.log('Game not started');
                     // socket.close();
+                    // check the match winner
+                    if(data.matches.match1.winner === username)
+                    {
+                    }
+                    else if(data.matches.match2.winner === username)
+                    {
+                    }
+                    else if(data.matches.final.winner === username)
+                    {
+                    }else
+                    {
+                        socket.close();
+                    }
                     init();
                     // alert('Game Over');
                     return;
                 }
-                if (data.players.player1.username === username) {
-                    player = 'player1';
-                    match = data.players.player1.current_match;
-                } else if (data.players.player2.username === username) {
-                    player = 'player2';
-                    match = data.players.player2.current_match;
-                }
+                
                 if(data.is_tournament)
                 {
                     
-                        if(data.players.player3.username === username)
+                        if (data.players.player1.username === username) {
+                            player = 'player1';
+                            match = data.players.player1.current_match;
+                        } else if (data.players.player2.username === username) {
+                            player = 'player2';
+                            match = data.players.player2.current_match;
+                        }
+                        else if(data.players.player3.username === username)
                         {
                             player = 'player3';
                             match = data.players.player3.current_match;
@@ -121,6 +135,9 @@
                     {
                         player2 = 'player4';
                     }   
+
+                }else 
+                {
 
                 }
                 // console.log('player:', player);
