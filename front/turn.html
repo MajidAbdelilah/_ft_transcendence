@@ -12,51 +12,21 @@
         <label for="tournamentRoomName">Tournament Room Name:</label>
         <input type="text" id="tournamentRoomName" placeholder="Enter tournament room name">
         <button onclick="initializeWebSocket()">Start Game</button>
-    </div>
+        </div>
     <div id="tournamentList"></div>
     <canvas id="gameCanvas"></canvas>
 
     <script>
-        function init()
-        {
-            socket;
-            player = '';
-            player2 = '';
-            gameStarted = false;
-            match = '';
-        }
         let socket;
         let player = '';
         let player2 = '';
         let gameStarted = false;
         let match = '';
-
-        // Display tournaments data
-        function displayTournaments(tournaments) {
-            const tournamentList = document.getElementById('tournamentList');
-            tournamentList.innerHTML = '';
-            tournaments.forEach(tournament => {
-                const tournamentDiv = document.createElement('div');
-                tournamentDiv.className = 'tournament';
-                tournamentDiv.innerHTML = `<strong>Tournament Date:</strong> ${tournament.date} <strong>Winner:</strong> ${tournament.winner}`;
-                tournament.matches.forEach(match => {
-                    const matchDiv = document.createElement('div');
-                    matchDiv.className = 'match';
-                    matchDiv.innerHTML = `
-                        <strong>Match:</strong> ${match.player1_username} vs ${match.player2_username} 
-                        <strong>Score:</strong> ${match.player1_score} - ${match.player2_score} 
-                        <strong>Winner:</strong> ${match.winner} 
-                        <strong>Date:</strong> ${match.date}
-                    `;
-                    tournamentDiv.appendChild(matchDiv);
-                });
-                tournamentList.appendChild(tournamentDiv);
-            });
-        }
+        let username = '';
 
         // Initialize WebSocket for PingPong game
         function initializeWebSocket() {
-            const username = document.getElementById('username').value;
+            username = document.getElementById('username').value;
             const roomName = document.getElementById('roomName').value;
             const tournamentRoomName = document.getElementById('tournamentRoomName').value;
             const url = tournamentRoomName ? 
@@ -65,6 +35,10 @@
 
             socket = new WebSocket(url);
             
+            console.log('Username:', username);
+            console.log('Room Name:', roomName);
+            console.log('Tournament Room Name:', tournamentRoomName);
+            console.log("player", player);
             socket.onopen = function() {
                 socket.send(JSON.stringify({
                     'player': player,
@@ -76,73 +50,54 @@
 
             socket.onmessage = function(e) {
                 const data = JSON.parse(e.data);
-                // console.log("data:", data);
-                if(data.start_game === false){
-                    console.log('Game not started');
-                    // socket.close();
-                    // check the match winner
-                    if(data.matches.match1.winner === username)
-                    {
+
+                if (data.is_tournament) {
+                    // Determine player's assigned role and match
+                    if (data.players.player1.username === username) {
+                        player = 'player1';
+                        match = data.players.player1.current_match;
+                    } else if (data.players.player2.username === username) {
+                        player = 'player2';
+                        match = data.players.player2.current_match;
+                    } else if (data.players.player3.username === username) {
+                        player = 'player3';
+                        match = data.players.player3.current_match;
+                    } else if (data.players.player4.username === username) {
+                        player = 'player4';
+                        match = data.players.player4.current_match;
                     }
-                    else if(data.matches.match2.winner === username)
-                    {
+
+                    // Find the opponent in the same match
+                    player2 = null;
+                    for (let p in data.players) {
+                        if (data.players[p].current_match === match && p !== player) {
+                            player2 = p;
+                            break;
+                        }
                     }
-                    else if(data.matches.final.winner === username)
-                    {
-                    }else
-                    {
+
+                    // Check if the current match has ended
+                    if (!data.matches[match]['game_start']) {
+                        console.log('Match ended');
+                        if (data.matches[match]['winner'] === username) {
+                            alert('You won the match!');
+                        } else {
+                            alert('You lost the match.');
+                        }
                         socket.close();
+                        init();
+                        return;
                     }
-                    init();
-                    // alert('Game Over');
-                    return;
+                } else {
+                    // Non-tournament mode
+                    if (data.start_game === false) {
+                        console.log('Game not started');
+                        socket.close();
+                        init();
+                        return;
+                    }
                 }
-                
-                if(data.is_tournament)
-                {
-                    
-                        if (data.players.player1.username === username) {
-                            player = 'player1';
-                            match = data.players.player1.current_match;
-                        } else if (data.players.player2.username === username) {
-                            player = 'player2';
-                            match = data.players.player2.current_match;
-                        }
-                        else if(data.players.player3.username === username)
-                        {
-                            player = 'player3';
-                            match = data.players.player3.current_match;
-                        }
-                        else if(data.players.player4.username === username)
-                        {
-                            player = 'player4';
-                            match = data.players.player4.current_match;
-                        }
-                    // check if a player has the same match as the user
-                    if(match && match === data.players.player1.current_match && player !== 'player1')
-                    {
-                        player2 = 'player1';
-                    }
-                    else if(match && match === data.players.player2.current_match && player !== 'player2')
-                    {
-                        player2 = 'player2';
-                    }
-                    else if(match && match === data.players.player3.current_match && player !== 'player3')
-                    {
-                        player2 = 'player3';
-                    }
-                    else if(match &&match === data.players.player4.current_match && player !== 'player4')
-                    {
-                        player2 = 'player4';
-                    }   
 
-                }else 
-                {
-
-                }
-                // console.log('player:', player);
-                // console.log('player2:', player2);
-                // console.log('match:', match);
                 updateGame(data);
             };
 
@@ -155,110 +110,72 @@
         function updateGame(data) {
             const canvas = document.getElementById('gameCanvas');
             const ctx = canvas.getContext('2d');
-            console.log('gameStarted:', gameStarted);
             canvas.width = data.width;
             canvas.height = data.height;
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             
-            if(gameStarted === false){
-                // print press space to start
+            if (!gameStarted) {
+                // Display message to start the game
                 ctx.font = '30px Arial';
                 ctx.fillStyle = 'rgba(0, 0, 0, 0.5)';
                 ctx.fillText('Press Space to Start', canvas.width / 2 - 150, canvas.height / 2 + 50);
                 return;
             }
-            // console.log('data:', data);
-            if(data.is_tournament)
-            {
+
+            if (data.is_tournament) {
+                // Draw players and ball for the tournament match
                 ctx.font = '100px Arial';
                 ctx.fillStyle = 'rgba(0, 0, 0, 0.5)';
-                if(player === "player1")
-                {
-                    ctx.fillText(data.players.player1.score, canvas.width / 2 - 150, canvas.height / 2 + 50);
-                    ctx.fillRect(data.players.player1.x, data.players.player1.y, data.players.player1.width, data.players.player1.height);
+
+                if (player) {
+                    ctx.fillText(data.players[player].score, canvas.width / 2 - 150, canvas.height / 2 + 50);
+                    ctx.fillRect(data.players[player].x, data.players[player].y, data.players[player].width, data.players[player].height);
                 }
-                else if(player === "player2")
-                {
-                    ctx.fillText(data.players.player2.score, canvas.width / 2 - 150, canvas.height / 2 + 50);
-                    ctx.fillRect(data.players.player2.x, data.players.player2.y, data.players.player2.width, data.players.player2.height);
+                if (player2) {
+                    ctx.fillText(data.players[player2].score, canvas.width / 2 + 50, canvas.height / 2 + 50);
+                    ctx.fillRect(data.players[player2].x, data.players[player2].y, data.players[player2].width, data.players[player2].height);
                 }
-                else if(player === "player3")
-                {
-                    ctx.fillText(data.players.player3.score, canvas.width / 2 - 150, canvas.height / 2 + 50);
-                    ctx.fillRect(data.players.player3.x, data.players.player3.y, data.players.player3.width, data.players.player3.height);
+
+                // Draw the ball for the current match
+                let ball = null;
+                if (match === 'match1') {
+                    ball = data.matches['ball1'];
+                } else if (match === 'match2') {
+                    ball = data.matches['ball2'];
+                } else if (match === 'final') {
+                    ball = data.matches['ball_final'];
                 }
-                else if(player === "player4")
-                {
-                    ctx.fillText(data.players.player4.score, canvas.width / 2 - 150, canvas.height / 2 + 50);
-                    ctx.fillRect(data.players.player4.x, data.players.player4.y, data.players.player4.width, data.players.player4.height);
-                }
-                
-                if(player2 === 'player1')
-                {
-                    ctx.fillText(data.players.player1.score, canvas.width / 2 + 50, canvas.height / 2 + 50);
-                    ctx.fillRect(data.players.player1.x, data.players.player1.y, data.players.player1.width, data.players.player1.height);
-                    
-                }
-                else if(player2 === 'player2')
-                {
-                    ctx.fillText(data.players.player2.score, canvas.width / 2 + 50, canvas.height / 2 + 50);
-                    ctx.fillRect(data.players.player2.x, data.players.player2.y, data.players.player2.width, data.players.player2.height);
-                }
-                else if(player2 === 'player3')
-                {
-                    ctx.fillText(data.players.player3.score, canvas.width / 2 + 50, canvas.height / 2 + 50);
-                    ctx.fillRect(data.players.player3.x, data.players.player3.y, data.players.player3.width, data.players.player3.height);
-                    
-                }
-                else if(player2 === 'player4')
-                {
-                    ctx.fillText(data.players.player4.score, canvas.width / 2 + 50, canvas.height / 2 + 50);
-                    ctx.fillRect(data.players.player4.x, data.players.player4.y, data.players.player4.width, data.players.player4.height);
-                }
-                if(match === 'match1')
-                {
+
+                if (ball) {
                     ctx.beginPath();
-                    ctx.arc(data.matches.ball1.x, data.matches.ball1.y, data.matches.ball1.radius, 0, Math.PI * 2);
+                    ctx.arc(ball.x, ball.y, ball.radius, 0, Math.PI * 2);
                     ctx.fill();
                 }
-                else if(match === 'match2')
-                {
-                    ctx.beginPath();
-                    ctx.arc(data.matches.ball2.x, data.matches.ball2.y, data.matches.ball2.radius, 0, Math.PI * 2);
-                    ctx.fill();
-                }
-                else if(match === 'final')
-                {
-                    ctx.beginPath();
-                    ctx.arc(data.matches.ball_final.x, data.matches.ball_final.y, data.matches.ball_final.radius, 0, Math.PI * 2);
-                    ctx.fill();
-                }
-                
-            }
-            else
-            {
-                // Draw scores
+            } else {
+                // Draw players and ball for standard match
                 ctx.font = '100px Arial';
                 ctx.fillStyle = 'rgba(0, 0, 0, 0.5)';
                 ctx.fillText(data.players.player1.score, canvas.width / 2 - 150, canvas.height / 2 + 50);
                 ctx.fillText(data.players.player2.score, canvas.width / 2 + 50, canvas.height / 2 + 50);
-                
-                // Draw players
                 ctx.fillRect(data.players.player1.x, data.players.player1.y, data.players.player1.width, data.players.player1.height);
                 ctx.fillRect(data.players.player2.x, data.players.player2.y, data.players.player2.width, data.players.player2.height);
-               
-                // Draw ball
                 ctx.beginPath();
                 ctx.arc(data.ball.x, data.ball.y, data.ball.radius, 0, Math.PI * 2);
                 ctx.fill();
             }
-            
         }
         
         // Handle key events to control paddles
         document.addEventListener('keydown', function(event) {
             if (!gameStarted && event.key === ' ') {
                 gameStarted = true;
+                // Notify the server that the player has started the game
+                socket.send(JSON.stringify({
+                    'player': player,
+                    'direction': null,
+                    'username': username,
+                    'gameStarted': gameStarted
+                }));
             }
 
             let direction = null;
@@ -289,15 +206,14 @@
             }
         });
 
-        // Fetch tournaments for a specific user
-        function fetchTournaments(username) {
-            fetch(`/api/tournaments/${username}/`)
-                .then(response => response.json())
-                .then(data => displayTournaments(data))
-                .catch(error => console.error('Error fetching tournaments:', error));
+        // Reset variables on game end
+        function init() {
+            socket = null;
+            player = '';
+            player2 = '';
+            gameStarted = false;
+            match = '';
         }
-
-        fetchTournaments('example_username'); // Change 'example_username' as needed
     </script>
 </body>
 </html>

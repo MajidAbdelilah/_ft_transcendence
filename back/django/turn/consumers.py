@@ -59,17 +59,16 @@ class PingPongConsumer(AsyncWebsocketConsumer):
                         'player4': {'y': self.height/2 - 25, 'height': 100, 'x': self.width - 10, 'width': 10, 'direction': None, 'score': 0, 'full': False, 'username': '', 'game_start': False, 'current_match': 'match2'},
                     },
                     'matches': {
-                        'match1': {'player1': None, 'p1_username': None, 'player2': None, 'p2_username': None, 'winner': None},
-                        'ball1': {'x': self.width / 2, 'y': self.height / 2, 'radius': 5, 'vx': 5, 'vy': 5},
-                        'match2': {'player1': None, 'p1_username': None, 'player2': None, 'p2_username': None, 'winner': None},
-                        'ball2': {'x': self.width / 2, 'y': self.height / 2, 'radius': 5, 'vx': 5, 'vy': 5},
-                        'final': {'player1': None,  'p1_username': None, 'player2': None, 'p2_username': None, 'winner': None},
-                        'ball_final': {'x': self.width / 2, 'y': self.height / 2, 'radius': 5, 'vx': 5, 'vy': 5},
-                    },
-                    'game_start': True,
-                    'is_tournament': True,
-                    'end_tournement': False
-                }
+                    'match1': {'player1': None, 'p1_username': None, 'player2': None, 'p2_username': None, 'winner': None, 'game_start': True},
+                    'ball1': {'x': self.width / 2, 'y': self.height / 2, 'radius': 5, 'vx': 5, 'vy': 5},
+                    'match2': {'player1': None, 'p1_username': None, 'player2': None, 'p2_username': None, 'winner': None, 'game_start': True},
+                    'ball2': {'x': self.width / 2, 'y': self.height / 2, 'radius': 5, 'vx': 5, 'vy': 5},
+                    'final': {'player1': None, 'p1_username': None, 'player2': None, 'p2_username': None, 'winner': None, 'game_start': True},
+                    'ball_final': {'x': self.width / 2, 'y': self.height / 2, 'radius': 5, 'vx': 5, 'vy': 5},
+                },
+                'is_tournament': True,
+                'end_tournament': False
+            }
                 asyncio.create_task(self.game_loop())
 
     async def disconnect(self, close_code):
@@ -117,14 +116,20 @@ class PingPongConsumer(AsyncWebsocketConsumer):
         data = json.loads(text_data)
         direction = data['direction']
         username = data.get('username')
-        player = data['player']
-        if(not player):
+        player = data.get('player')
+        
+        if not player:
             player = self.assign_player(username)
+        
         if player:
-            self.room_var[self.room_name]['players'][player]['direction'] = direction
-            self.room_var[self.room_name]['players'][player]['game_start'] = data.get('gameStarted')
-            # print(data.get('gameStarted'))
-            # print(self.room_var[self.room_name]['players'][player]['game_start'])
+            players = self.room_var[self.room_name]['players']
+            players[player]['direction'] = direction
+            
+            if self.room_var[self.room_name]['is_tournament']:
+                current_match = players[player]['current_match']
+                self.room_var[self.room_name]['matches'][current_match]['game_start'] = data.get('gameStarted')
+            else:
+                players[player]['game_start'] = data.get('gameStarted')
             
 
     async def game_loop(self):
@@ -166,6 +171,18 @@ class PingPongConsumer(AsyncWebsocketConsumer):
                 # print(self.room_var[self.room_name]['is_tournament'])
                 # print(self.room_var[self.room_name]['end_tournement'])
                 # print(self.room_var[self.room_name]['matches']['final']['winner'])
+                if self.room_var[self.room_name]['is_tournament']:
+                    matches = self.room_var[self.room_name]['matches']
+                    # Check if all matches have ended
+                    if all(not matches[match]['game_start'] for match in ['match1', 'match2', 'final']):
+                        await self.disconnect(1000)
+                        del self.room_var[self.room_name]
+                        break
+                else:
+                    players = self.room_var[self.room_name]['players']
+                    if not players['player1']['game_start'] or not players['player2']['game_start']:
+                        await asyncio.sleep(1/60)
+                        continue
                 if not self.room_var[self.room_name]['game_start'] and not self.room_var[self.room_name]['is_tournament']:
                     self.disconnect(1000)
                     del self.room_var[self.room_name]
@@ -174,13 +191,7 @@ class PingPongConsumer(AsyncWebsocketConsumer):
                     self.disconnect(1000)
                     del self.room_var[self.room_name]
                     break
-                if(not self.room_var[self.room_name]['players']['player1']['game_start'] or not self.room_var[self.room_name]['players']['player2']['game_start']):
-                    await asyncio.sleep(1/60)
-                    continue
-                if(self.room_var[self.room_name]['is_tournament']):
-                    if(not self.room_var[self.room_name]['players']['player3']['game_start'] or not self.room_var[self.room_name]['players']['player4']['game_start']):
-                        await asyncio.sleep(1/60)
-                        continue
+                
                 if(self.room_var[self.room_name]['is_tournament']):
                     await self.update_game_state_tournement()
                 else:
@@ -222,13 +233,13 @@ class PingPongConsumer(AsyncWebsocketConsumer):
 
         players = self.room_var[self.room_name]['players']
         # Update ball positions if match hase no winner
-        if(not self.room_var[self.room_name]['matches']['match1']['winner']):
+        if matches['match1']['game_start'] and not matches['match1']['winner']:
             ball1['x'] += ball1['vx']
             ball1['y'] += ball1['vy']
-        if(not self.room_var[self.room_name]['matches']['match2']['winner']):
+        if matches['match2']['game_start'] and not matches['match2']['winner']:
             ball2['x'] += ball2['vx']
             ball2['y'] += ball2['vy']
-        if(not self.room_var[self.room_name]['matches']['final']['winner']):
+        if matches['final']['game_start'] and matches['match1']['winner'] and matches['match2']['winner'] and not matches['final']['winner']:
             ball_final['x'] += ball_final['vx']
             ball_final['y'] += ball_final['vy']
         # Update player positions
