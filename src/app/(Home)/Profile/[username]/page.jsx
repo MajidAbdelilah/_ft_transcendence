@@ -18,7 +18,7 @@ const montserrat = Montserrat({
   variable: "--font-montserrat",
 });
 
-import { useUser } from "../../../UserContext";
+import { useUser } from "../../../contexts/UserContext";
 // //data ------------------------------------------
 let user1 = {
   "userName": "john",
