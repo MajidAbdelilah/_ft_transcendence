@@ -133,7 +133,6 @@ Status Colors:
 </TournamentBracket>
 ```
 
-
 ## Tournament Bracket Logic
 
 ### 1. Bracket Structure
@@ -382,6 +381,88 @@ This endpoint returns the current state of a tournament. Here's the expected res
    - Winner highlighted
    - Tournament modal can be closed
    - Ready for new tournament
+
+## WebSocket Communication
+
+### Expected Data Structure for WebSocket Messages
+Each message sent from the backend will include a `type` field to indicate the kind of update being sent, along with relevant data:
+
+#### 1. Bracket Update
+When there’s an update to the tournament bracket, the backend will send:
+```json
+{
+    "type": "BRACKET_UPDATE",
+    "tournamentId": "123",
+    "matches": {
+        "semifinals": {
+            "match1": {
+                "player1": "Player1",
+                "player2": "Player2",
+                "winner": "Player1"
+            },
+            "match2": {
+                "player1": "Player3",
+                "player2": "Player4",
+                "winner": null
+            }
+        },
+        "final": {
+            "player1": "Player1",
+            "player2": "Player3",
+            "winner": null
+        }
+    }
+}
+```
+
+#### 2. Match Start
+When a match starts, the backend will send:
+```json
+{
+    "type": "MATCH_START",
+    "tournamentId": "123",
+    "match": {
+        "matchId": "semifinals.match1",
+        "player1": "Player1",
+        "player2": "Player2"
+    }
+}
+```
+
+#### 3. Match End
+When a match ends, the backend will send:
+```json
+{
+    "type": "MATCH_END",
+    "tournamentId": "123",
+    "match": {
+        "matchId": "semifinals.match1",
+        "winner": "Player1"
+    }
+}
+```
+
+#### 4. Tournament End
+When the tournament ends, the backend will send:
+```json
+{
+    "type": "TOURNAMENT_END",
+    "tournamentId": "123",
+    "winner": "Player1"
+}
+```
+
+#### 5. Error Message
+If there’s an error, the backend will send:
+```json
+{
+    "type": "ERROR",
+    "message": "Player disconnected"
+}
+```
+
+### Frontend Handling
+On the frontend, the WebSocket listener will parse the incoming messages and update the UI accordingly. The data received will be used to update the tournament state in the application, ensuring real-time updates for users.
 
 ## Usage Example for Game Developer
 
