@@ -14,40 +14,66 @@ import toast, { Toaster } from 'react-hot-toast';
 //  #F4F4FF   #242F5C   #8988DE   #BCBCC9   #F4F4FF   #EAEAFF   #C0C7E0
 
 
+
+// loggedInUser --------------------------
+// {
+//   "userName": "UserId1",
+//   "userId": 1,
+//   "name": "UserId1",
+//   "avatar": "/images/avatarprofile.svg",
+//   "status": "Online",
+//   "level": 0,
+//   "score": "",
+//   "result": "",
+//   "map": ""
+// }
+// user --------------------------
+// {
+//   "id": 1,
+//   "password": "pbkdf2_sha256$600000$WPB5zIWRwuWqBhBgaiHPOk$m1chTvfAFUhSED42D333HWsE61ONKArensEWqUIATD4=",
+//   "username": "UserId1",
+//   "fullname": "",
+//   "email": "user1user1@gmail.com",
+//   "image_name": "profilepng.png",
+//   "image_field": "",
+//   "is_2fa": false,
+//   "_2fa_code": "",
+//   "state": "no state assigned",
+//   "is_on": 0
+// }
+
+
+
+
+
 const handleTextUser = (router) => {
   
   router.push(`/Chatt`);
 }
 
 
-
-
-
 const handleAddFriend = async (loggedInUser, user) => {
   try {
-    // const respond = await axios.post("http://127.0.0.1:8000/api/addFriend", 
-    // {friendUsername: user.userName},
-    // { withCredentials: true, headers: {} }
-    // );
-    // if(respond.data.status === "ok")
-    // {
-    //   toast.success('friend request sent successfully');
-     
-    // }
-    // else
-    // {
-    //   toast.error('friend request failed');
-    // }
+    const respond = await axios.post(
+      "http://127.0.0.1:8000/friend/friends-add/", 
+      { username: user.username },
+      { withCredentials: true, headers: {} }
+    );
 
+    console.log("Response:", respond);
 
-
+    // Check if the response contains a success message
+    if (respond.status === 200 && respond.data?.success) {
+      toast.success(respond.data.success); // Display the success message in the toast
+    } else {
+      toast.error('Friend request failed'); // Handle unexpected cases
+    }
   } catch (error) {
     console.error(error);
+    toast.error('An error occurred while sending the friend request');
   }
+};
 
-
-
-}
 
 
 
@@ -55,34 +81,32 @@ const handleAddFriend = async (loggedInUser, user) => {
 
 const handleBlockUser = async (loggedInUser, user) => {
   try {
-    // const respond = await axios.post("http://127.0.0.1:8000/api/addFriend",
-    // {toBlock: user.userName},
-    // { withCredentials: true, headers: {} }
-    // );
+    const respond = await axios.post(
+      "http://127.0.0.1:8000/friend/friends-remove/",
+      { username: user.username },
+      { withCredentials: true, headers: {} }
+    );
 
-    // if(respond.data.status === "ok")
-    // {
-    //   toast.success('user blocked successfully');
-    // }
-    // else
-    // {
-    //   toast.error('blocking user failed');
-    // }
-    toast.success('user blocked successfully');
+    console.log("respond : ---------------", respond);
 
-
+    // Check if the response contains a success message
+    if (respond.status === 200 && respond.data?.success) {
+      toast.success(respond.data.success); // Display the success message from the backend
+    } else {
+      toast.error('Blocking user failed'); // Handle unexpected cases
+    }
   } catch (error) {
     console.error(error);
+    toast.error('An error occurred while blocking the user');
   }
+};
 
 
 
-  // const response = await axios.post('https://jsonplaceholder.typicode.com/posts', 
-  //   {blockerId: loggedInUser.userId, blockedId: user.userId}//depends on the the info back end needs ...
-  // );
 
-  // console.log("response.data : ", response.data);
-}
+
+
+
 
 function Part1({loggedInUser, user, isSelf}) {
   const router = useRouter();
@@ -92,14 +116,18 @@ function Part1({loggedInUser, user, isSelf}) {
 
     <div className="flex flex-col items-center">
         <img
-        src={user.avatar}
+        src={user.image_feild === undefined || user.image_feiled === null || user.image_feiled === "" 
+          ? "/images/avatarprofile.svg"
+          : user.image_feild}
+
+        
         alt="Profile"
         className="absolute w-20 h-20 rounded-full border-2 border-[#BCBCC9] -top-10  shadow-md shadow-[#BCBCC9]"
         />
       <div className="mt-12 text-sm md:text-md lg:text-lg xl:text-xl font-bold text-[#242F5C]">
-        {user.userName}
+        {user.username}
       </div>
-      <span className="text-xs md:text-sm lg:text-md xl:text-lg mt-1 text-[#8988DE]">{user.status}</span>
+      <span className="text-xs   mt-1 text-[#8988DE]">{user.state}</span>
       <div className={`flex flex-row mt-2 text-[#242F5C] ${isSelf === true ? "invisible" : "visible"}`}>
         <BsChatLeftText className="textUser mr-1 text-lg lg:text-xl cursor-pointer" onClick={() => handleTextUser(router)}/>
         <MdOutlinePersonAddAlt className="addFriend ml-1 text-xl lg:text-2xl cursor-pointer" onClick={() => handleAddFriend(loggedInUser, user)}/>
@@ -147,9 +175,15 @@ function Part2({loggedInUser, user, isSelf}) {
 
 
 export default function UserProfile({loggedInUser, user, isSelf}) {
-  
-    if(!user)
-      return (<div></div>);
+      // console.log("LoggedInUser: -------------", loggedInUser);
+      // console.log("User: -------------", user);
+      // console.log("IsSelf: -------------", isSelf);
+
+
+
+    if(!user || !loggedInUser)
+      return  null;
+
     return (
     <div className="flex shadow-md shadow-[#BCBCC9] border border-[#BCBCC9] rounded-2xl bg-[#F4F4FF] h-40 w-[80%] mt-10">
       <Toaster /> 

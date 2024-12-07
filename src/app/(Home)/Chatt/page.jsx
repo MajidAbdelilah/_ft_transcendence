@@ -25,7 +25,7 @@ import axios from 'axios';
 import { fetchOldConversation } from './components/fetchOldConversation';
 import toast, { Toaster } from 'react-hot-toast';
 import ListFriends from "./components/ListFriends";
-
+import { useWebSocket } from '../../contexts/WebSocketProvider';
 
 // -- font -----------------------------------------------------
 import { Inter, Montserrat } from "next/font/google";
@@ -130,7 +130,7 @@ export default function Chat() {
       // Update the state with the filled user data
       setLoggedInUser(filledUser);
       // console.log("loggedInUser", filledUser);
-      console.log("loggedInUser ============= ", loggedInUser);
+      // console.log("loggedInUser ============= ", filledUser);
 
     }
   }, [LoggedInUser.userData]); 
@@ -219,33 +219,36 @@ const getSelectedFriend = (friend) => {
         loadConversation();
     }, [loggedInUser, friend]);
 
-    // websocket -----------------------------------------------------------------------------------------
-      // const [socket, setSokcet] = useState(null);
-      // const [messages, setMessages] = useState(conversation);
+    //  -----  impliment the logic of reciving a message using websocket  -------------------------------------------------------
+
+    // i supose to get the message weeither i am a sender or reciver , and insert it inside conversation , and map function should simply desplay it to the user 
+
+    const { addHandler, removeHandler } = useWebSocket();
+    useEffect(() => {
+      const loadConversation = async () => {
+        if (!friend) return;
+        const oldConversation = await fetchOldConversation(loggedInUser, friend.user);
+        setConversation(oldConversation);
+      };
+      loadConversation();
+    }, [loggedInUser, friend]);
+  
+    useEffect(() => {
+      if (!friend) return;
+  
+      const messageHandler = (data) => {
+        if (data.chat_id === `${loggedInUser.id}_${friend.user.id}`) {
+          setConversation((prev) => [...prev, data]);
+        }
+      };
+  
+      addHandler(messageHandler);
+      return () => {
+        removeHandler(messageHandler);
+      };
+    }, [friend, loggedInUser, addHandler, removeHandler]);
 
 
-      // useEffect(() =>{
-
-      //   // step 1 : Initialize the WebSocket connection
-      //   const socketInstance = new WebSocket('ws://localhost:8000');
-      //   setSokcet(socketInstance);
-
-      //   // step 2 :  check that the loogedInUser and the friend are part of the message - and add the message to the conversation
-      //   socketInstance.onmessage = (event) => {
-      //     const message = JSON.parse(event.data);
-      //     if(
-      //       (message.sender === friend.userId       && message.reciever === loggedInUser.userId) || // case loggedInUser recieves a message
-      //       (message.sender === loggedInUser.userId && message.reciever === friend.userId))         // case loggedInUser sends a message
-      //       {
-      //         setMessages((prevMessages) => [...prevMessages, message]);
-      //       }
-      //   };
-
-      //   // step 3 :  cleanup the WebSocket on component unmount
-      //   return () => { socketInstance.close();};
-
-
-      // }, [friend, loggedInUser]);
 
 
 
@@ -267,7 +270,7 @@ const getSelectedFriend = (friend) => {
         </div>
       );
     }
-    console.log("friend", friend);
+    // console.log("friend", friend);
     return (
       // console.log(conversation),
       <div className="messagesBox w-full lg:w-3/5 p-2 h-full rounded-tr-xl rounded-br-xl flex flex-col ">

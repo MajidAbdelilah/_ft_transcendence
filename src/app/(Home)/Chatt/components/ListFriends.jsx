@@ -19,7 +19,7 @@ export default function ListFriends({ getSelectedFriend, switchChatState }) {
             
             { withCredentials: true, headers: {} }
             );
-            console.log("===", response);
+            // console.log("===", response);
             setFriendsList(response.data.friends); // Assuming the API returns { friends: [...] }
         } catch (error) {
             console.error("Error fetching friends data:", error);
