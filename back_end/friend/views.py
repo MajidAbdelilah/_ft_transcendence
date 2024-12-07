@@ -28,9 +28,16 @@ class FriendsView(APIView):
     serializer_class = FriendsSerializer
 
     def get(self, request):
-        user = request.user
-        serializer = self.serializer_class(instance=user)
-        return Response(serializer.data)
+       if Friendship.objects.filter(Q(user_to=request.user) & Q(is_accepted=True)).exists():
+            friends_data = Friendship.objects.filter(Q(user_to=request.user) & Q(is_accepted=False))
+            serializer = FriendsRequestSerializer(friends_data, many=True)
+            print(serializer.data)
+            return Response(serializer.data)
+       else: 
+            return Response({'error': 'Friendship already accepted'})
+        # user = request.user
+        # serializer = self.serializer_class(instance=user)
+        # return Response(serializer.data)
 
 class UserSearchView(APIView):
     # authentication_classes = [JWTAuthentication]
@@ -55,16 +62,16 @@ class RemoveFriendshipView(APIView):
         try:
             user_remove = User.objects.get(username=username)
         except User.DoesNotExist:
-            return Response({'error': 'User does not exist'}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({'error': 'User does not exist'})
         try:
             friendship = Friendship.objects.get(Q(user_from=user_from, user_to=user_remove)|
                                                 Q(user_from=user_remove, user_to=user_from))
             if friendship.u_one_is_blocked_u_two == True or friendship.u_two_is_blocked_u_one == True:
-                return Response({'error': 'Friendship blocked'}, status=status.HTTP_400_BAD_REQUEST)
+                return Response({'error': 'Friendship blocked'})
             friendship.delete()
             return Response({'success': 'Friendship removed'}, status=status.HTTP_200_OK)
         except Friendship.DoesNotExist:
-            return Response({'error': 'Friendship does not exist'}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({'error': 'Friendship does not exist'})
 
 class AcceptFriendshipView(APIView):
     # authentication_classes = [JWTAuthentication]
@@ -77,19 +84,19 @@ class AcceptFriendshipView(APIView):
         try:
             user_accept = User.objects.get(username=username)
         except User.DoesNotExist:
-            return Response({'error': 'User does not exist'}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({'error': 'User does not exist'})
         try:
             friendship = Friendship.objects.get(Q(user_from=user_from, user_to=user_accept)|
                                                 Q(user_from=user_accept, user_to=user_from))
             if friendship.is_accepted == True:
-                return Response({'error': 'Friendship already accepted'}, status=status.HTTP_400_BAD_REQUEST)
+                return Response({'error': 'Friendship already accepted'})
             elif friendship.u_one_is_blocked_u_two == True or friendship.u_two_is_blocked_u_one == True:
-                return Response({'error': 'Friendship blocked'}, status=status.HTTP_400_BAD_REQUEST)
-            friendship.is_accepted = True;
+                return Response({'error': 'Friendship blocked'})
+            friendship.is_accepted = True
             friendship.save()
             return Response({'success': 'Friendship accepted'}, status=status.HTTP_200_OK)
         except Friendship.DoesNotExist:
-            return Response({'error': 'Friendship does not exist'}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({'error': 'Friendship does not exist'})
 
 class AddFriendshipView(APIView):
     # authentication_classes = [JWTAuthentication]
@@ -102,43 +109,43 @@ class AddFriendshipView(APIView):
         try:
             user_add = User.objects.get(username=username)
         except User.DoesNotExist:
-            return Response({'error': 'User does not exist'}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({'error': 'User does not exist'})
         if user_from.id == user_add.id:
-            return Response({'error': 'maymkanx t ajouter rasek lah ihdik?'}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({'error': 'maymkanx t ajouter rasek lah ihdik?'})
         elif Friendship.objects.filter(Q(user_from=user_from, user_to=user_add) |
                                      Q(user_from=user_add, user_to=user_from)).exists():
-            return Response({'error': 'Friendship alrady exist'}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({'error': 'Friendship alrady exist'})
         try:
 
             friendship = Friendship.objects.create(user_from=user_from, user_to=user_add,
                                                    is_accepted = False)
             friendship.save()
 
-            notification = Notification.objects.create(
-                user=user_add,
-                title="New friend !",
-                message=f"{user_from.username} sent you a friend request.",
-                # profile_photo=user_from.profile_photo,
-                link=f"{settings.FRONTEND_URL}/profile/{user_from.username}",
-                is_friend_notif=True,
-                action_by=user_from.username,
-            )
-            channel_layer = get_channel_layer()
-            async_to_sync(channel_layer.group_send)(
-                f"user_{user_add.id}",
-                {
-                    "type": "send_notification",
-                    "notification_id": notification.notification_id,
-                    "count": Notification.objects.filter(user = user_add).count(),
-                    "is_chat_notif": notification.is_chat_notif,
-                    "is_friend_notif": notification.is_friend_notif,
-                    "is_tourn_notif": notification.is_tourn_notif,
-                    "is_match_notif": notification.is_match_notif,
-                },
-            )
+            # notification = Notification.objects.create(
+            #     user=user_add,
+            #     title="New friend !",
+            #     message=f"{user_from.username} sent you a friend request.",
+            #     # profile_photo=user_from.profile_photo,
+            #     link=f"{settings.FRONTEND_URL}/profile/{user_from.username}",
+            #     is_friend_notif=True,
+            #     action_by=user_from.username,
+            # )
+            # channel_layer = get_channel_layer()
+            # async_to_sync(channel_layer.group_send)(
+            #     f"user_{user_add.id}",
+            #     {
+            #         "type": "send_notification",
+            #         "notification_id": notification.notification_id,
+            #         "count": Notification.objects.filter(user = user_add).count(),
+            #         "is_chat_notif": notification.is_chat_notif,
+            #         "is_friend_notif": notification.is_friend_notif,
+            #         "is_tourn_notif": notification.is_tourn_notif,
+            #         "is_match_notif": notification.is_match_notif,
+            #     },
+            # )
             return Response({'success': 'Friendship Added'}, status=status.HTTP_200_OK)
         except Friendship.DoesNotExist:
-            return Response({'error': 'Friendship does not exist'}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({'error': 'Friendship does not exist'})
 
 def serialize_user(user):
     if isinstance(user, AnonymousUser):
@@ -161,7 +168,7 @@ class BlockFriendshipView(APIView):
             block_flag = 'u_two_is_blocked_u_one'
 
         if getattr(friendship, block_flag):
-            return Response({'error': 'Friend already blocked'}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({'error': 'Friend already blocked'})
         else:
             setattr(friendship, block_flag, True)
             friendship.save()
@@ -173,13 +180,13 @@ class BlockFriendshipView(APIView):
         try:
             user_accept = User.objects.get(username=username)
         except User.DoesNotExist:
-            return Response({'error': 'User does not exist'}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({'error': 'User does not exist'})
         try:
             friendship = Friendship.objects.get(Q(user_from=user_from, user_to=user_accept)|
                                                 Q(user_from=user_accept, user_to=user_from))
             return self.block_friend(friendship, user_from)
         except Friendship.DoesNotExist:
-            return Response({'error': 'Friendship does not exist'}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({'error': 'Friendship does not exist'})
 
 class UnblockFriendshipView(APIView):
     # authentication_classes = [JWTAuthentication]
@@ -193,7 +200,7 @@ class UnblockFriendshipView(APIView):
             block_flag = 'u_two_is_blocked_u_one'
 
         if not getattr(friendship, block_flag):
-            return Response({'error': 'Friend is not blocked'}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({'error': 'Friend is not blocked'})
         else:
             setattr(friendship, block_flag, False)
             friendship.save()
@@ -205,13 +212,13 @@ class UnblockFriendshipView(APIView):
         try:
             user_accept = User.objects.get(username=username)
         except User.DoesNotExist:
-            return Response({'error': 'User does not exist'}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({'error': 'User does not exist'})
         try:
             friendship = Friendship.objects.get(Q(user_from=user_from, user_to=user_accept)|
                                                 Q(user_from=user_accept, user_to=user_from))
             return self.unblock_friend(friendship, user_from)
         except Friendship.DoesNotExist:
-            return Response({'error': 'Friendship does not exist'}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({'error': 'Friendship does not exist'})
 
 class BlockedFriendsView(APIView):
     # authentication_classes = [JWTAuthentication]
@@ -222,19 +229,6 @@ class BlockedFriendsView(APIView):
         user = request.user
         serializer = self.serializer_class(instance=user)
         return Response(serializer.data)
-
-# class GameHistoryReportView(APIView):
-    # authentication_classes = [JWTAuthentication]
-#     permission_classes = [IsAuthenticated]
-#     serializer_class = GameHistorySerializer
-
-#     def post(self, request):
-#         user = request.user
-#         period = request.data.get("period")
-#         context = {"period": period}
-#         serializer = self.serializer_class(instance=user, context=context)
-#         return Response(serializer.data)
-
 
 class NotificationsView(APIView):
     # authentication_classes = [JWTAuthentication]
@@ -280,8 +274,41 @@ class NotificationDetailView(APIView):
 class FriendsRequestsView(APIView):
     permission_classes = [IsAuthenticated]
     serializer_class = FriendsSerializer
-
+    
     def get(self, request):
-        user = request.user
-        serializer = self.serializer_class(instance=user)
-        return Response(serializer.data)
+        # if Friendship.is_accepted == False:
+        #     print ('Friendship not accepted', Friendship.is_accepted)
+        #    return Response({'error': 'Friendship already accepted'})
+        # elif Friendship.u_one_is_blocked_u_two == True or Friendship.u_two_is_blocked_u_one == True:
+        #    return Response({'error': 'Friendship blocked'})
+        # if Friendship.objects.filter(Q(user_from=Friendship.user_from, user_to=Friendship.user_to) |
+        #                              Q(user_from=Friendship.user_to, user_to=Friendship.user_from)).exists():
+        #     return Response({'error': 'Friendship alrady exist'})
+        if Friendship.objects.filter(Q(user_to=request.user) & Q(is_accepted=False)).exists():
+            friends_data = Friendship.objects.filter(Q(user_to=request.user) & Q(is_accepted=False))
+            serializer = FriendsRequestSerializer(friends_data, many=True)
+            print(serializer.data)
+            return Response(serializer.data)
+        #  if not Friendship:
+        #         return Response({'friends': []}, status=status.HTTP_200_OK)
+            
+        #     # Check if Friendship is not accepted
+        #     if not Friendship.is_accepted:
+        #         return Response({'error': 'Friendship not yet accepted'}, status=status.HTTP_400_BAD_REQUEST)
+            
+        #     # Check if Friendship is blocked
+        #     if Friendship.u_one_is_blocked_u_two or Friendship.u_two_is_blocked_u_one:
+        #         return Response({'error': 'Friendship is blocked'}, status=status.HTTP_400_BAD_REQUEST)
+            
+        #     # If all checks pass, serialize and return user data
+        #     serializer = self.serializer_class(instance=user)
+        #     return Response(serializer.data)
+        
+        # except Exception as e:
+        #     # Catch any unexpected errors
+        #     return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        
+        # user = request.user
+        # serializer = self.serializer_class(instance=user)
+        # print(serializer.data)
+        # return Response(serializer.data)

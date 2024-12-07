@@ -123,13 +123,10 @@ class FriendsRequestSerializer(serializers.ModelSerializer):
     user = serializers.SerializerMethodField()
     class Meta:
         model = Friendship
-        fields = ('user', 'freindship_id', 'is_accepted')
+        fields = ('user', 'freindship_id', 'is_accepted', 'user_from', 'user_to')
 
     @extend_schema_field(UserSerializer())
     def get_user(self, obj) -> dict:
-        if obj.user_from.id == self.context['id']:
-            user_data = User.objects.get(id=obj.user_to.id)
-        else:
-            user_data = User.objects.get(id=obj.user_from.id)
+        user_data = User.objects.get(id=obj.user_from.id)
         serializer = UserSerializer(user_data)
         return serializer.data
