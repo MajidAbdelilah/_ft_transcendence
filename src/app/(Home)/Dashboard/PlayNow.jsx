@@ -2,14 +2,20 @@ import Image from "next/image";
 import { DashContext } from "./Dashcontext";
 import { useContext, useState} from "react";
 import { motion } from "framer-motion"
+import { useRouter } from 'next/navigation';
+
 
 
 
 function PlayNow() {
   const DashData = useContext(DashContext);
   const [imageLoading, setImageLoading] = useState(true);
-
-
+  const router = useRouter();
+  
+  const handlePlay = () => {
+    router.push('/Game');
+  }
+  
   return (
     <motion.div
  
@@ -34,7 +40,9 @@ function PlayNow() {
           priority
         />
       </div>
-      <button className="absolute 
+      <button 
+      onClick={handlePlay}
+      className="absolute 
                 bottom-2 right-[8%] 
                 md:bottom-[7%] 
                 lg:bottom-[5%] lg:right-[4%]
@@ -48,6 +56,7 @@ function PlayNow() {
                 before:bg-gradient-to-r before:from-[#242F5C] before:to-[#7C829D] 
                 before:transition-all before:duration-500 before:ease-in-out before:z-[-1] 
                 font-extrabold before:rounded-xl hover:before:left-0 text-[#fff]" >
+                  
         PLAY NOW
       </button>
     </motion.div>

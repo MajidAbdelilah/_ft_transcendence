@@ -11,6 +11,7 @@ import customAxios from "../../customAxios"
 import { Loader2 } from 'lucide-react'
 import { useWebSocket } from '../../contexts/WebSocketProvider';
 import {IconForbid2} from '@tabler/icons-react'
+import {IconUserExclamation} from '@tabler/icons-react'
 
 const montserrat = Montserrat({
   subsets: ["latin"],
@@ -69,10 +70,14 @@ export default function Friends() {
       try {
         const [friendsList, FriendRes , blockedRes] = await Promise.all([
           customAxios.get('http://127.0.0.1:8000/friend/friends'),
-          customAxios.get('http://127.0.0.1:8000/friend/friends-add'),
+          customAxios.get('http://127.0.0.1:8000/friend/friend-request'),
           customAxios.get('http://127.0.0.1:8000/friend/blocked-friends'),
         ]);
+        console.log("friendsList:",friendsList.data);
+        console.log("FriendRes:",FriendRes.data);
+        console.log("blockedRes:",blockedRes.data);
         setFriendsData(friendsList.data)
+        setFriendRequestsData(FriendRes.data)
         setBlockedFriendsData(blockedRes.data)
       } catch (error) {
         console.error('Error fetching data:', error);
@@ -249,12 +254,19 @@ export default function Friends() {
               )}
               {activeItem === "Friend Requests" && (
                 <div className="space-y-2">
-                  {friendRequestsData.friends.map((request) => (
-                    <FriendRequests 
-                      key={request.freindship_id} 
-                      request={request}
-                    />
-                  ))}
+                  {friendRequestsData.friends.length > 0 ? (
+                    friendRequestsData.friends.map((request) => (
+                      <FriendRequests 
+                        key={request.freindship_id} 
+                        request={request}
+                      />
+                    ))
+                  ) : (
+                    <div className="flex flex-col items-center justify-center w-full h-[200px] p-4">
+                      <IconUserExclamation size={50} color="#242F5C" />
+                      <h3 className="text-[#242F5C] text-lg font-semibold mt-3">No Friend Requests</h3>
+                    </div>
+                  )}
                 </div>
               )}
               {activeItem === "Blocked Friends" && (
