@@ -227,11 +227,7 @@ const getSelectedFriend = (friend) => {
     const { connect, messages } = useWebSocket();
 
     // Connect to WebSocket when component mounts or user changes
-    // useEffect(() => {
-    //   if (LoggedInUser.userData) {
-    //     connect(LoggedInUser.userData.id);
-    //   }
-    //   }, [LoggedInUser.userData]);
+
       useEffect(() => {
         if (loggedInUser.id !== 0) {
           connect(loggedInUser.id);
@@ -241,26 +237,48 @@ const getSelectedFriend = (friend) => {
 
 
       // Update conversation when new messages arrive
-      useEffect(() => {
-        if (friend && messages.length > 0) {
-          console.log("messages -----------------", messages);
-          const filteredMessages = messages.filter(
-            msg => (msg.send === friend.user.username || msg.receive === friend.user.username)
-          );
-          setConversation(prev => [...prev, ...filteredMessages]);
-        }
-      }, [messages, friend]);
-
-      // Existing conversation loading logic remains the same
       // useEffect(() => {
-      //   const loadConversation = async () => {
-      //     if (friend === null) return;
-      //     const conversation = await fetchOldConversation(loggedInUser, friend.user);
-      //     setConversation(conversation);
-      //   };
-      //   loadConversation();
-      // }, [loggedInUser, friend]);
+      //   if (friend && messages.length > 0 && messages.length < 2) {
+      //     console.log("messages -----------------", messages);
+      //     console.log("conversation -----------------", conversation);
 
+
+      //     // console.log("messages -----------------", messages);
+      //     // const filteredMessages = messages.filter(
+      //     //   msg => (msg.send === friend.user.username || msg.receive === friend.user.username)
+      //     // );
+      //     // setConversation(prev => [...prev, ...filteredMessages]);
+      //   }
+      // }, [friend, messages]);
+
+
+      useEffect(() => {
+        if (friend && messages.length > 0 && messages.length < 2) {
+          console.log("Incoming messages -----------------", messages);
+      
+          // Check and transform messages
+          const newMessages = messages
+            .filter(
+              (msg) =>
+                (msg.send === loggedInUser.username && msg.receive === friend.user.username) ||
+                (msg.send === friend.user.username && msg.receive === loggedInUser.username)
+            )
+            .map((msg) => ({
+              messages_id: Date.now(), // Replace with a real ID if available
+              chat_id: msg.chat_id,
+              sender: msg.send,
+              receiver: msg.receive,
+              message_content: msg.message,
+              message_date: msg.timestamp,
+              user_one: loggedInUser.id, // Assuming user_one and user_two are loggedInUser.id and friend.user.id
+              user_two: friend.user.id,
+            }));
+      
+          if (newMessages.length > 0) {
+            setConversation((prev) => [...prev, ...newMessages]);
+          }
+        }
+      }, [friend, messages, loggedInUser]);
 
 
 
