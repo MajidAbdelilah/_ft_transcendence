@@ -18,23 +18,38 @@ import { useWebSocket } from '../../../contexts/WebSocketProvider';
       if (!inputText || inputText.value.trim() === '') return;
   
       const messageContent = inputText.value.trim();
-      const timestamp = new Date().toISOString();
-      const chatId = `${loggedInUser.id}_${friend.id}`;
+      // const timestamp = new Date().toISOString();
+      // const chatId = `${loggedInUser.id}_${friend.id}`;
   
+
+      // console.log("----------", messageContent);
+
+
       // Compose the message object
       const messageObject = {
+        type: 'CHAT_MESSAGE',
         message: messageContent,
         send: loggedInUser.username,
         receive: friend.username,
-        timestamp,
-        chat_id: chatId,
+        timestamp : new Date().toISOString(),
+        chat_id: loggedInUser.username,
       };
   
       // Send the message via WebSocket
-      send(messageObject);
+      try {
+        console.log("Attempting to send message...");
+        send(messageObject);
+        console.log("Message sent successfully.");
+      } catch (error) {
+        console.error("Error while sending message:", error);
+      }
+      
   
       // Clear the input field
       inputText.value = '';
+
+
+
     };
 
 

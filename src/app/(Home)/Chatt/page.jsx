@@ -223,30 +223,53 @@ const getSelectedFriend = (friend) => {
 
     // i supose to get the message weeither i am a sender or reciver , and insert it inside conversation , and map function should simply desplay it to the user 
 
-    const { addHandler, removeHandler } = useWebSocket();
+    const {  addHandler, removeHandler } = useWebSocket();
+
     useEffect(() => {
-      const loadConversation = async () => {
-        if (!friend) return;
-        const oldConversation = await fetchOldConversation(loggedInUser, friend.user);
-        setConversation(oldConversation);
-      };
-      loadConversation();
-    }, [loggedInUser, friend]);
-  
-    useEffect(() => {
-      if (!friend) return;
-  
-      const messageHandler = (data) => {
-        if (data.chat_id === `${loggedInUser.id}_${friend.user.id}`) {
+      const messageHandler = (data) => 
+      {
+        console.log("Received message:-------------", data);
+        if(data.type === 'CHAT_MESSAGE') {
+          // setConversation((prev) => [...prev, data]);
           setConversation((prev) => [...prev, data]);
         }
-      };
-  
+      }
       addHandler(messageHandler);
-      return () => {
-        removeHandler(messageHandler);
-      };
-    }, [friend, loggedInUser, addHandler, removeHandler]);
+      return () => { removeHandler(messageHandler);};
+
+    }, [addHandler, removeHandler]);
+
+
+
+
+
+
+
+
+
+    // useEffect(() => {
+    //   const loadConversation = async () => {
+    //     if (!friend) return;
+    //     const oldConversation = await fetchOldConversation(loggedInUser, friend.user);
+    //     setConversation(oldConversation);
+    //   };
+    //   loadConversation();
+    // }, [loggedInUser, friend]);
+  
+    // useEffect(() => {
+    //   if (!friend) return;
+  
+    //   const messageHandler = (data) => {
+    //     if (data.chat_id === `${loggedInUser.id}_${friend.user.id}`) {
+    //       setConversation((prev) => [...prev, data]);
+    //     }
+    //   };
+  
+    //   addHandler(messageHandler);
+    //   return () => {
+    //     removeHandler(messageHandler);
+    //   };
+    // }, [friend, loggedInUser, addHandler, removeHandler]);
 
 
 
