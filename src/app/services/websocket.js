@@ -14,7 +14,7 @@ const connectWebSocket = () => {
         ws = new WebSocket('ws://127.0.0.1:8000/ws/user_data/');
 
         ws.onopen = () => {
-            console.log('WebSocket connected');
+            // console.log('WebSocket connected');
             reconnectAttempts = 0; // Reset reconnection attempts on successful connection
             
             // Send a ping every 30 seconds to keep the connection alive
@@ -48,12 +48,12 @@ const connectWebSocket = () => {
         };
 
         ws.onclose = (event) => {
-            console.log('WebSocket disconnected:', event.code, event.reason);
+            // console.log('WebSocket disconnected:', event.code, event.reason);
             
             // Attempt to reconnect if not closed intentionally
             if (!event.wasClean && reconnectAttempts < MAX_RECONNECT_ATTEMPTS) {
                 reconnectAttempts++;
-                console.log(`Reconnecting... Attempt ${reconnectAttempts} of ${MAX_RECONNECT_ATTEMPTS}`);
+                // console.log(`Reconnecting... Attempt ${reconnectAttempts} of ${MAX_RECONNECT_ATTEMPTS}`);
                 setTimeout(connectWebSocket, RECONNECT_INTERVAL);
             } else if (reconnectAttempts >= MAX_RECONNECT_ATTEMPTS) {
                 console.error('Max reconnection attempts reached');
