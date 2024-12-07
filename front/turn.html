@@ -41,16 +41,12 @@
             console.log("player", player);
             socket.onopen = function() {
                 socket.send(JSON.stringify({
-                    'player': player,
-                    'direction': null,
-                    'username': username,
-                    'gameStarted': gameStarted
+                    'username': username
                 }));
             };
-
             socket.onmessage = function(e) {
                 const data = JSON.parse(e.data);
-
+                console.log('Received:', data);
                 if (data.is_tournament) {
                     // Determine player's assigned role and match
                     if (data.players.player1.username === username) {
@@ -66,6 +62,13 @@
                         player = 'player4';
                         match = data.players.player4.current_match;
                     }
+                    
+                    if (!data.matches[match]['game_start']) {
+                        console.log('Waiting for other player to be ready...');
+                        // Optionally, display a message on the canvas
+                        updateWaitingScreen();
+                        return;
+                    }
 
                     // Find the opponent in the same match
                     player2 = null;
@@ -77,14 +80,14 @@
                     }
 
                     // Check if the current match has ended
-                    if (!data.matches[match]['game_start']) {
+                    if (data.matches[match]['winner'] && gameStarted) {
                         console.log('Match ended');
                         if (data.matches[match]['winner'] === username) {
-                            alert('You won the match!');
+                            // alert('You won the match!');
                         } else {
-                            alert('You lost the match.');
+                            // alert('You lost the match.');
+                            socket.close();
                         }
-                        socket.close();
                         init();
                         return;
                     }
@@ -105,7 +108,17 @@
                 console.log('WebSocket closed');
             };
         }
-
+        function updateWaitingScreen() {
+            const canvas = document.getElementById('gameCanvas');
+            const ctx = canvas.getContext('2d');
+            canvas.width = 800; // Replace with your canvas width
+            canvas.height = 600; // Replace with your canvas height
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.font = '30px Arial';
+            ctx.fillStyle = 'black';
+            ctx.textAlign = 'center';
+            ctx.fillText('Waiting for other player to be ready...', canvas.width / 2, canvas.height / 2);
+        }
         // Update game state
         function updateGame(data) {
             const canvas = document.getElementById('gameCanvas');
@@ -113,7 +126,7 @@
             canvas.width = data.width;
             canvas.height = data.height;
             ctx.clearRect(0, 0, canvas.width, canvas.height);
-            
+
             if (!gameStarted) {
                 // Display message to start the game
                 ctx.font = '30px Arial';
@@ -169,10 +182,8 @@
         document.addEventListener('keydown', function(event) {
             if (!gameStarted && event.key === ' ') {
                 gameStarted = true;
-                // Notify the server that the player has started the game
+                // Notify the server that the player is ready
                 socket.send(JSON.stringify({
-                    'player': player,
-                    'direction': null,
                     'username': username,
                     'gameStarted': gameStarted
                 }));
