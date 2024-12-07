@@ -32,8 +32,6 @@ export default function Sidebar() {
   const [avatarLoading, setAvatarLoading] = useState(true);
   const [isLoggingOut, setIsLoggingOut] = useState(false);
 
-  console.log(userData.image_field);
-
 
   const sideRef = useClickAway<HTMLDivElement>(() => {
     setIsMobileMenuOpen(false);
@@ -201,16 +199,14 @@ export default function Sidebar() {
                       <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#242F5C]"></div>
                     </div>
                   )}
-                  <Image
-                    // src={`http://127.0.0.1:8000${userData?.image_field}`}
-                    src={"/images/avatarInvite.svg"}
+                  <img
+                    src={userData?.image_field ? `http://127.0.0.1:8000/api${userData.image_field}` : "/images/avatar.svg"}
                     alt="User avatar"
                     width={50}
                     height={50}
                     className={`rounded-full object-cover w-14 h-14 border-[1px] border-transparent 
                       outline outline-2 outline-offset-2 outline-[#242F5C] transition-opacity duration-300 ${avatarLoading ? 'opacity-0' : 'opacity-100'}`}
                     onLoad={() => setAvatarLoading(false)}
-                    priority
                   />
                 </div>
                 <div className="">
