@@ -70,6 +70,7 @@ function MatchHistory() {
                       Win/Loss
                     </th>
                     <th className="font-extrabold py-2 sm:py-3 md:py-4">Map</th>
+                    <th className="font-extrabold py-2 sm:py-3 md:py-4">Date</th>
                   </tr>
                 ) : (
                   <tr className="text-center font-semibold text-xs sm:text-sm md:text-base lg:text-lg text-[#4E5981]">
@@ -78,13 +79,14 @@ function MatchHistory() {
                     <th className="font-extrabold py-2 sm:py-3 md:py-4">S</th>
                     <th className="font-extrabold py-2 sm:py-3 md:py-4">W/L</th>
                     <th className="font-extrabold py-2 sm:py-3 md:py-4">Map</th>
+                    <th className="font-extrabold py-2 sm:py-3 md:py-4">D</th>
                   </tr>
                 )}
               </thead>
               <tbody className="py-4 sm:py-6 md:py-8">
                 {isLoading ? (
                   <tr>
-                    <td colSpan="5" className="text-center">
+                    <td colSpan="6" className="text-center">
                       <div className="flex justify-center items-center py-10">
                         <Loading />
                       </div>
@@ -92,7 +94,7 @@ function MatchHistory() {
                   </tr>
                 ) : matches.length === 0  || matches === undefined? (
                   <tr>
-                    <td colSpan="5" className="text-center">
+                    <td colSpan="6" className="text-center">
                       <div className="flex flex-col gap-3 justify-center items-center py-10 text-center">
                         <IconHistory className="w-8 h-8 text-[#4E5981] animate-pulse" />
                         <div className="flex flex-col gap-1">
@@ -126,6 +128,7 @@ function MatchHistory() {
                       <td className="font-normal py-2 sm:py-3 md:py-4">{match.score}</td>
                       <td className="font-normal py-2 sm:py-3 md:py-4">{match.result}</td>
                       <td className="font-normal py-2 sm:py-3 md:py-4">{match.map}</td>
+                      <td className="font-normal py-2 sm:py-3 md:py-4">{match.date}</td>
                     </tr>
                   ))
                 )}

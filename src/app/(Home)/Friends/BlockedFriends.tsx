@@ -77,7 +77,7 @@ export default function BlockedFriends({ blockedFriend }: BlockedFriendProps) {
         <div className="flex flex-row items-center justify-end lg:w-[50%] lg:h-[90%] md:w-[10%] md:h-[90%] w-[20%] h-[90%] absolute md:right-10 right-5 top-1 md:gap-5 gap-2">
           <button
             onClick={handleUnblock}
-            className="bg-[#242F5C] text-white px-4 py-2 rounded-lg hover:bg-[#1a2340] transition-colors"
+            className="bg-[#242F5C] rounded-[12px] text-white px-4 py-2 rounded-lg hover:bg-[#1a2340] transition-colors"
           >
             Unblock
           </button>

@@ -254,7 +254,7 @@ export default function Friends() {
               )}
               {activeItem === "Friend Requests" && (
                 <div className="space-y-2">
-                  {friendRequestsData.friends.length > 0 ? (
+                  {friendRequestsData?.friends && friendRequestsData.friends.length > 0 ? (
                     friendRequestsData.friends.map((request) => (
                       <FriendRequests 
                         key={request.freindship_id} 
@@ -271,18 +271,18 @@ export default function Friends() {
               )}
               {activeItem === "Blocked Friends" && (
                 <div className="space-y-2">
-                  {blockedFriendsData.friends.length > 0 ? (
+                  {!blockedFriendsData?.friends || blockedFriendsData.friends.length === 0 ? (
+                    <div className="flex flex-col items-center justify-center w-full h-[200px] p-4">
+                      <IconForbid2 size={50} color="#242F5C" />
+                      <h3 className="text-[#242F5C] text-lg font-semibold mt-3">No Blocked users</h3>
+                   </div>
+                  ) : (
                     blockedFriendsData.friends.map((blockedFriend) => (
                       <BlockedFriends 
                         key={blockedFriend.freindship_id} 
                         blockedFriend={blockedFriend}
                       />
                     ))
-                  ) : (
-                    <div className="flex flex-col items-center justify-center w-full h-[200px] p-4">
-                      <IconForbid2 size={50} color="#242F5C" />
-                      <h3 className="text-[#242F5C] text-lg font-semibold mt-3">No Blocked users</h3>
-                   </div>
                   )}
                 </div>
               )}

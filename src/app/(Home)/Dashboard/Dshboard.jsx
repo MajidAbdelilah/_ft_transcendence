@@ -48,7 +48,7 @@ function Dashboard() {
 
     <div className="flex-1 overflow-y-auto p-4 flex flex-wrap items-center justify-center h-full">
       <PlayNow />
-      <Achievements />
+      {/* <Achievements /> */}
       <MatchHistory />
     </div>
   );
