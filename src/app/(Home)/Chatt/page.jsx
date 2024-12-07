@@ -25,8 +25,9 @@ import axios from 'axios';
 import { fetchOldConversation } from './components/fetchOldConversation';
 import toast, { Toaster } from 'react-hot-toast';
 import ListFriends from "./components/ListFriends";
-
-
+import {WebSocketProvider} from "./WebSocketProvider";
+import {useWebSocket} from "./WebSocketProvider";
+import { useContext } from 'react';
 // -- font -----------------------------------------------------
 import { Inter, Montserrat } from "next/font/google";
 import path from "path";
@@ -117,7 +118,7 @@ export default function Chat() {
 
       let filledUser = {
         username: LoggedInUser.userData.username || 'Loading',   
-        id: LoggedInUser.userData.id || null,        
+        id: LoggedInUser.userData.id || 0,        
         name: LoggedInUser.userData.username || 'Loading', 
         avatar: "/images/avatarprofile.svg", 
         status: 'Loading', 
@@ -223,8 +224,41 @@ const getSelectedFriend = (friend) => {
     // i supose to get the message weeither i am a sender or reciver , and insert it inside conversation , and map function should simply desplay it to the user 
 
 
+    const { connect, messages } = useWebSocket();
+
+    // Connect to WebSocket when component mounts or user changes
+    // useEffect(() => {
+    //   if (LoggedInUser.userData) {
+    //     connect(LoggedInUser.userData.id);
+    //   }
+    //   }, [LoggedInUser.userData]);
+      useEffect(() => {
+        if (loggedInUser.id !== 0) {
+          connect(loggedInUser.id);
+        }
+        }, [loggedInUser]);
 
 
+
+      // Update conversation when new messages arrive
+      useEffect(() => {
+        if (friend && messages.length > 0) {
+          const filteredMessages = messages.filter(
+            msg => (msg.send === friend.user.username || msg.receive === friend.user.username)
+          );
+          setConversation(prev => [...prev, ...filteredMessages]);
+        }
+      }, [messages, friend]);
+
+      // Existing conversation loading logic remains the same
+      useEffect(() => {
+        const loadConversation = async () => {
+          if (friend === null) return;
+          const conversation = await fetchOldConversation(loggedInUser, friend.user);
+          setConversation(conversation);
+        };
+        loadConversation();
+      }, [loggedInUser, friend]);
 
 
 
@@ -297,7 +331,7 @@ const getSelectedFriend = (friend) => {
 
   return (
 
-
+        <WebSocketProvider>
         <div className="chattSection flex-1 p-5 md:p-10 h-full w-full ">
           <Toaster /> 
           <div className="boxes relative flex h-full w-full border-2 border-[#C6C6E1] bg-[#F4F4FF] rounded-xl flex-row-revers overflow-auto">
@@ -344,7 +378,7 @@ const getSelectedFriend = (friend) => {
 
              </div>
         </div>
-
+        </WebSocketProvider>
   );
 }
 

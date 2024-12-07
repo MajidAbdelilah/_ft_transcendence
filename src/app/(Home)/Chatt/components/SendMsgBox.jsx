@@ -2,7 +2,7 @@
 
 import { RiSendPlaneLine } from "react-icons/ri";
 import { getCurrentTime, createFriendMsgBox, createMyMsgBox } from './peerToPeer';
-import { useWebSocket } from '../../../contexts/WebSocketProvider';
+import { useWebSocket } from '../WebSocketProvider';
 
 
 
@@ -12,12 +12,32 @@ import { useWebSocket } from '../../../contexts/WebSocketProvider';
   
     const { send } = useWebSocket();
     const sendMessage = async (e) => {
+      
+
+
       if (e.code !== 'Enter' && e.type !== 'click') return;
   
       const inputText = document.querySelector('.msgToSend');
       if (!inputText || inputText.value.trim() === '') return;
   
       const messageContent = inputText.value.trim();
+
+      const messageObject = {
+        message: messageContent,
+        send: loggedInUser.username,
+        receive: friend.username,
+        timestamp: new Date().toISOString(),
+        chat_id: loggedInUser.id.toString()
+      };
+  
+      send(messageObject);
+      inputText.value = ''; // Clear input after sending
+
+
+
+
+
+
       // const timestamp = new Date().toISOString();
       // const chatId = `${loggedInUser.id}_${friend.id}`;
   
