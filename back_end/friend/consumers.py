@@ -108,7 +108,36 @@ def get_friends(user):
 #         }))
 
 
-
+@database_sync_to_async
+def get_friendship(freindship_id):
+    try:
+        return Friendship.objects.get(freindship_id=freindship_id)
+    except Friendship.DoesNotExist:
+        return None
+@database_sync_to_async
+def get_user(user_id):
+    try:
+        return User.objects.get(id=user_id)
+    except User.DoesNotExist:
+        return None
+@database_sync_to_async
+def get_user_from(friendship):
+    try:
+        return User.objects.get(id=friendship.user_from.id)
+    except User.DoesNotExist:
+        return None
+@database_sync_to_async
+def get_user_to(friendship):
+    try:
+        return User.objects.get(id=friendship.user_to.id)
+    except User.DoesNotExist:
+        return None
+@database_sync_to_async
+def is_same(user_id, user_id2):
+    return user_id == user_id2
+@database_sync_to_async
+def save_friendship(friendship):
+    return friendship.save()
 class FriendRequestConsumer(AsyncWebsocketConsumer):
     async def connect(self):
         if self.scope["user"].is_authenticated:
@@ -132,6 +161,8 @@ class FriendRequestConsumer(AsyncWebsocketConsumer):
             await self.handle_friend_add(data)
         elif data['type'] == 'friends-accept':
             await self.handle_friend_accept(data)
+        elif data['type'] == 'friends-block':
+            await self.handle_friend_block(data)
 
     @database_sync_to_async
     def create_friend_request(self, to_user_id):
@@ -188,48 +219,128 @@ class FriendRequestConsumer(AsyncWebsocketConsumer):
             }))
 
     async def handle_friend_accept(self, data):
-        freindship_id = data.get('freindship_id')
-        if not freindship_id:
+        try:
+            # print("+++++++++++")
+
+            freindship_id = data.get('freindship_id')
+            is_accepted = data.get('is_accepted')
+            # print("+++++++++++", freindship_id, is_accepted)
+            if not freindship_id:
+                await self.send(text_data=json.dumps({
+                    'status': 'error',
+                    'message': 'Invalid friendship ID'
+                }))
+                return
+
+            # Accept friend request
+            friendship = await get_friendship(freindship_id)
+            if not friendship:
+                await self.send(text_data=json.dumps({
+                    'status': 'error',
+                    'message': 'Friend request not found'
+                }))
+                return
+
+            user_from = await get_user_from(friendship)
+            print("**********", user_from)
+            user_to = await get_user_to(friendship)
+            if friendship:
+                print("**********", user_to.id)
+                same = await is_same(user_from.id, self.user.id)
+                print("///////", same)
+                if same:
+                    if is_accepted == "True":
+                        friendship.is_accepted = True
+                        print("is_accepted")
+                        await save_friendship(friendship)
+                        user = {
+                            'username': user_from.username,
+                            'image_name': user_from.image_name or ''
+                        }
+                        await self.channel_layer.group_send(
+                            f'user_{user_to.id}',
+                            {
+                                'type': 'friends_accept',
+                                'freindship_id': user_from.id,
+                                'user': user
+                            }
+                        )
+
+                        await self.send(text_data=json.dumps({
+                            'status': 'success',
+                            'message': 'Friend request accepted',
+                            'type': 'friends_accept',
+                            'freindship_id': user_from.id,
+                            'user': user
+                        }))
+                    else:
+                        friendship.delete()
+                        await self.send(text_data=json.dumps({
+                            'status': 'success',
+                            'message': 'Friend request blockd'
+                        }))
+        except Exception as e:
+            print("Error: ", e)
             await self.send(text_data=json.dumps({
                 'status': 'error',
-                'message': 'Invalid friendship ID'
+                'message': 'An error occurred'
             }))
-            return
-
-        # Accept friend request
-        friendship = await self.accept_friend_request(freindship_id)
-        
-        if friendship:
-            # Notify both users about the accepted friendship
-            await self.channel_layer.group_send(
-                f'user_{friendship.user_from.id}',
-                {
-                    'type': 'friends_accept',
-                    'freindship_id': friendship.freindship_id,
-                    'user': {
-                        'username': self.user.username,
-                        'profile_photo': self.user.image_name or ''
-                    }
-                }
-            )
+    async def handle_friend_block(self, data):
+        try: 
+            freindship_id = data.get('freindship_id')
+            u_one_is_blocked_u_two = data.get('u_one_is_blocked_u_two')
+            u_two_is_blocked_u_one = data.get('u_two_is_blocked_u_one')
+            if not freindship_id:
+                await self.send(text_data=json.dumps({
+                    'status': 'error',
+                    'message': 'Invalid friendship ID'
+                }))
+                return
+            # Block friend request
+            friendship = await get_friendship(freindship_id)
+            if not friendship:
+                await self.send(text_data=json.dumps({
+                    'status': 'error',
+                    'message': 'Friend request not found'
+                }))
+                return
             
+            user_from = await get_user_from(friendship)
+            user_to = await get_user_to(friendship)
+            if friendship:
+                same = await is_same(user_to.id, self.user.id)
+                if same:
+                    if u_one_is_blocked_u_two == "True":
+                        friendship.u_one_is_blocked_u_two = True
+                        await save_friendship(friendship)
+                        user = {
+                            'username': user_from.username,
+                            'image_name': user_from.image_name or ''
+                        }
+                        await self.channel_layer.group_send(
+                            f'user_{user_to.id}',
+                            {
+                                'type': 'friends_block',
+                                'freindship_id': user_from.id,
+                                'user': user
+                            }
+                        )
+                        await self.send(text_data=json.dumps({
+                            'status': 'success',
+                            'message': 'Friend request blocked',
+                            'type': 'friends_block',
+                            'freindship_id': user_from.id,
+                            'user': user
+                        }))
+                    else:
+                        friendship.delete()
+                        await self.send(text_data=json.dumps({
+                            'status': 'success',
+                            'message': 'Friend request blockd'
+                        }))
+        except Exception as e:
+            print("Error: ", e)
             await self.send(text_data=json.dumps({
-                'status': 'success',
-                'message': 'Friend request accepted'
+                'status': 'error',
+                'message': 'An error occurred'
             }))
-
-    async def friends_add(self, event):
-        # Sends friend add notification to the target user
-        await self.send(text_data=json.dumps({
-            'type': 'friends-add',
-            'freindship_id': event['freindship_id'],
-            'user': event['user']
-        }))
-
-    async def friends_accept(self, event):
-        # Sends friend accept notification to the original requester
-        await self.send(text_data=json.dumps({
-            'type': 'friends-accept',
-            'freindship_id': event['freindship_id'],
-            'user': event['user']
-        }))
