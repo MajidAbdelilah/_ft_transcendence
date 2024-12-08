@@ -7,8 +7,8 @@ from .views import (FriendsView,
                     BlockFriendshipView,
                     UnblockFriendshipView,
                     BlockedFriendsView,
-                    NotificationsView,
-                    NotificationDetailView,
+                  #   NotificationsView,
+                  #   NotificationDetailView,
                     FriendsRequestsView
 
                    )
@@ -23,7 +23,7 @@ urlpatterns = [
    path('friends-block/', BlockFriendshipView.as_view(), name="friends-block"),
    path('friends-unblock/', UnblockFriendshipView.as_view(), name="friends-unblock"),
    path('blocked-friends/', BlockedFriendsView.as_view(), name="friends-unblock"),
-   path('notifications/', NotificationsView.as_view(), name="notifications"),
-   path('notification-delete/<int:notification_id>', NotificationDetailView.as_view(), name='notification-delete'),
+   # path('notifications/', NotificationsView.as_view(), name="notifications"),
+   # path('notification-delete/<int:notification_id>', NotificationDetailView.as_view(), name='notification-delete'),
    path('friend-request/', FriendsRequestsView.as_view(), name='friend-request'),
 ]

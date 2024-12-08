@@ -217,14 +217,3 @@ class User_view(APIView):
         else:
             response.data = {"user": {"massage": "Error in getting user informations"}}
             return response
-
-
-class Profile_image(APIView):
-    permission_classes = [IsAuthenticated]
-    def get(self, request):
-        user = request.user
-        if user.image_field != None :
-            return Response(user.image_field)
-        
-        
-        

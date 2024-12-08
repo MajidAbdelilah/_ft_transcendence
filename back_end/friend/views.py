@@ -7,12 +7,13 @@ from rest_framework_simplejwt.authentication import JWTAuthentication
 from .serializer import (FriendsSerializer,
                          UserSerializer,
                          BlockedFriendsSerializer,
-                         NotificationUserSerializer,
                          FriendsRequestSerializer,
+                         FSerializer,
+                         BSerializer
                          )
-from .models import Friendship, Notification
+from .models import Friendship
 from authapp.models import User
-from friend.models import Notification
+# from friend.models import Notification
 from rest_framework import status
 from rest_framework.generics import GenericAPIView
 from django.db.models import F, Q
@@ -25,12 +26,24 @@ from django.conf import settings
 class FriendsView(APIView):
     # authentication_classes = [JWTAuthentication]
     permission_classes = [IsAuthenticated]
-    serializer_class = FriendsSerializer
+    serializer_class = FSerializer
 
     def get(self, request):
-        user = request.user
-        serializer = self.serializer_class(instance=user)
-        return Response(serializer.data)
+            
+            friends_1 = Friendship.objects.filter(user_to=request.user, is_accepted=True, u_one_is_blocked_u_two=False, u_two_is_blocked_u_one=False)
+            # print("*********   ",friends_1)
+            friends_2 = Friendship.objects.filter(user_from=request.user, is_accepted=True, u_one_is_blocked_u_two=False, u_two_is_blocked_u_one=False)
+            friends_2 = friends_1.union(friends_2)
+            # print("-------->   ",friends_2)
+            serializer = FSerializer(friends_2, many=True)
+            print(  "////////////->",serializer.data)
+
+            return Response(serializer.data)
+        # else:
+        #     return Response([])
+        # user = request.user
+        # serializer = self.serializer_class(instance=user)
+        # return Response(serializer.data)
 
 class UserSearchView(APIView):
     # authentication_classes = [JWTAuthentication]
@@ -111,7 +124,7 @@ class AddFriendshipView(APIView):
         try:
 
             friendship = Friendship.objects.create(user_from=user_from, user_to=user_add,
-                                                   is_accepted = False)
+                                                   is_accepted = False,user_is_logged_in=user_from.id)
             friendship.save()
 
             # notification = Notification.objects.create(
@@ -216,53 +229,52 @@ class UnblockFriendshipView(APIView):
 class BlockedFriendsView(APIView):
     # authentication_classes = [JWTAuthentication]
     permission_classes = [IsAuthenticated]
-    serializer_class = BlockedFriendsSerializer
+    serializer_class = BSerializer
 
     def get(self, request):
-        if Friendship.objects.filter(user_to=request.user, u_one_is_blocked_u_two=False,u_two_is_blocked_u_one=False).exists():
-            friends_requests = Friendship.objects.filter(user_to=request.user, is_accepted=False)
-            serializer = FriendsRequestSerializer(friends_requests, many=True)
+            blocked_users = Friendship.objects.filter(user_to=request.user, u_one_is_blocked_u_two=True).union(
+                Friendship.objects.filter(user_to=request.user, u_two_is_blocked_u_one=True)).union(
+                    Friendship.objects.filter(user_from=request.user, u_two_is_blocked_u_one=True)).union(Friendship.objects.filter(user_from=request.user, u_one_is_blocked_u_two=True))
+            serializer =  BSerializer(blocked_users, many=True)
+            print("bloooock *********  ",serializer.data)
             return Response(serializer.data)
-        else:
-            return Response([])
+# class NotificationsView(APIView):
+#     # authentication_classes = [JWTAuthentication]
+#     permission_classes = [IsAuthenticated]
+#     serializer_class = NotificationUserSerializer
 
-class NotificationsView(APIView):
-    # authentication_classes = [JWTAuthentication]
-    permission_classes = [IsAuthenticated]
-    serializer_class = NotificationUserSerializer
+#     def get(self, request):
+#         user = request.user
+#         serializer = self.serializer_class(instance=user)
+#         return Response(serializer.data)
 
-    def get(self, request):
-        user = request.user
-        serializer = self.serializer_class(instance=user)
-        return Response(serializer.data)
+# class NotificationDetailView(APIView):
+#     # authentication_classes = [JWTAuthentication]
+#     permission_classes = [IsAuthenticated]
 
-class NotificationDetailView(APIView):
-    # authentication_classes = [JWTAuthentication]
-    permission_classes = [IsAuthenticated]
-
-    def delete(self, request, notification_id):
-        user = request.user
-        try:
-            notification = Notification.objects.get(notification_id=notification_id)
-            if notification.user != request.user:
-                return Response({'error': {'You do not have permission to delete this notification'}}, status=status.HTTP_403_FORBIDDEN)
-            notification.delete()
-            channel_layer = get_channel_layer()
-            async_to_sync(channel_layer.group_send)(
-                f"user_{user.id}",
-                {
-                    "type": "send_notification",
-                    "notification_id": notification.notification_id,
-                    "count": Notification.objects.filter(user = user).count(),
-                    "is_chat_notif": notification.is_chat_notif,
-                    "is_friend_notif": notification.is_friend_notif,
-                    "is_tourn_notif": notification.is_tourn_notif,
-                    "is_match_notif": notification.is_match_notif,
-                },
-            )
-            return Response({'success': {'Notification deleted'}}, status=status.HTTP_200_OK)
-        except Notification.DoesNotExist:
-            return Response({'error': {'Notification does not exist'}}, status=status.HTTP_404_NOT_FOUND)
+#     def delete(self, request, notification_id):
+#         user = request.user
+#         try:
+#             notification = Notification.objects.get(notification_id=notification_id)
+#             if notification.user != request.user:
+#                 return Response({'error': {'You do not have permission to delete this notification'}}, status=status.HTTP_403_FORBIDDEN)
+#             notification.delete()
+#             channel_layer = get_channel_layer()
+#             async_to_sync(channel_layer.group_send)(
+#                 f"user_{user.id}",
+#                 {
+#                     "type": "send_notification",
+#                     "notification_id": notification.notification_id,
+#                     "count": Notification.objects.filter(user = user).count(),
+#                     "is_chat_notif": notification.is_chat_notif,
+#                     "is_friend_notif": notification.is_friend_notif,
+#                     "is_tourn_notif": notification.is_tourn_notif,
+#                     "is_match_notif": notification.is_match_notif,
+#                 },
+#             )
+#             return Response({'success': {'Notification deleted'}}, status=status.HTTP_200_OK)
+#         except Notification.DoesNotExist:
+#             return Response({'error': {'Notification does not exist'}}, status=status.HTTP_404_NOT_FOUND)
 
 
 #GET FRIENDS REQUESTS
@@ -272,12 +284,11 @@ class FriendsRequestsView(APIView):
     serializer_class = FriendsSerializer
     
     def get(self, request):
-        if Friendship.objects.filter(user_to=request.user, is_accepted=False).exists():
-            friends_requests = Friendship.objects.filter(user_to=request.user, is_accepted=False)
-            serializer = FriendsRequestSerializer(friends_requests, many=True)
-            return Response(serializer.data)
-        else:
-            return Response([])
+        request_users = Friendship.objects.filter(user_to=request.user, is_accepted=False)
+        # print ("*********0   ",request_users)
+        serializer = FriendsRequestSerializer(request_users, many=True)
+        # print ("*********1   ",serializer.data)
+        return Response(serializer.data)
         # user = request.user
         # serializer = self.serializer_class(instance=user)
         # print(serializer.data)
