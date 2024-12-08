@@ -17,13 +17,13 @@ interface Friend {
   user: {
     id: number;
     username: string;
-    profile_photo: string;
-    is_on: boolean;
+    is_on: number;
   };
-  friendship_id: number;
+  freindship_id: number;
   is_accepted: boolean;
-  blocked: boolean;
-  is_user_from: boolean;
+  user_from: number;
+  user_to: number;
+  user_is_logged_in: number;
 }
 
 interface FriendsListProps {
@@ -40,11 +40,11 @@ export default function FriendsList({ friends = [] }: FriendsListProps) {
   const handleInviteGame = async (friend: Friend) => {
     try {
       await customAxios.post(`/api/game/invite`, {
-        friendship_id: friend.friendship_id
+        freindship_id: friend.freindship_id
       });
       send({
         type: 'GAME_INVITE',
-        friendship_id: friend.friendship_id,
+        freindship_id: friend.freindship_id,
         message: `Invited ${friend.user.username} to a game`
       });
     } catch (error) {
@@ -55,11 +55,11 @@ export default function FriendsList({ friends = [] }: FriendsListProps) {
   const handleChat = async (friend: Friend) => {
     try {
       await customAxios.post(`/api/chat/messages`, {
-        friendship_id: friend.friendship_id
+        freindship_id: friend.freindship_id
       });
       send({
         type: 'messages',
-        friendship_id: friend.friendship_id
+        freindship_id: friend.freindship_id
       });
     } catch (error) {
       console.error('Error initiating chat:', error);
@@ -69,11 +69,11 @@ export default function FriendsList({ friends = [] }: FriendsListProps) {
   const handleBlock = async (friend: Friend) => {
     try {
       await customAxios.post(`/api/friends/block`, {
-        friendship_id: friend.friendship_id
+        freindship_id: friend.freindship_id
       });
       send({
         type: 'friends-block',
-        friendship_id: friend.friendship_id
+        freindship_id: friend.freindship_id
       });
     } catch (error) {
       console.error('Error blocking friend:', error);
@@ -115,26 +115,19 @@ export default function FriendsList({ friends = [] }: FriendsListProps) {
         friends.map((friend) => (
           <div onClick={() => getProfile(friend.user.username)} key={friend.user.id} className={`w-full h-20 lg:h-[12%] cursor-pointer md:h-[15%] md:h-[20%] rounded-xl bg-[#D8D8F7] shadow-md shadow-[#BCBCC9] relative ${isMobile ? 'w-full' : 'min-h-[90px]'}`}>
             <div className="flex items-center h-full p-2">
-              <div  className="flex flex-row items-center justify-center lg:w-[10%] lg:h-[90%] md:w-[10%] md:h-[90%] w-[20%] h-[90%] relative">
-                {imageLoadingStates[friend.user.id] !== false && (
-                  <div className="absolute inset-0 flex items-center justify-center">
-                    <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-[#242F5C]"></div>
-                  </div>
-                )}
-                <Image 
-                  priority 
-                  src={friend.user.profile_photo}
-                  alt={`${friend.user.username}'s avatar`}
-                  width={50} 
-                  height={50} 
-                  className={`absolute inset-0 lg:w-[90%] lg:h-[90%] md:w-[80%] md:h-[80%] w-[100%] h-[100%] transition-opacity duration-300 ${imageLoadingStates[friend.user.id] === false ? 'opacity-100' : 'opacity-0'}`}
-                  onLoad={() => handleImageLoad(friend.user.id.toString())}
+              <div className="flex flex-row items-center justify-center lg:w-[10%] lg:h-[90%] md:w-[10%] md:h-[90%] w-[20%] h-[90%]">
+                <Image
+                  src="/images/default-avatar.png"
+                  alt={`${friend.user.username}'s profile`}
+                  width={50}
+                  height={50}
+                  className="lg:w-[90%] lg:h-[90%] md:w-[80%] md:h-[80%] w-[100%] h-[100%] rounded-full"
                 />
               </div>
               <div className="ml-4 flex flex-col justify-center">
                 <h2 className="text-[#242F5C] text-sm lg:text-lg md:text-base font-bold">{friend.user.username}</h2>
-                <p className={`${friend.user.is_on ? 'text-green-600' : 'text-gray-500'} lg:text-sm text-xs font-medium`}>
-                  {friend.user.is_on ? 'Online' : 'Offline'}
+                <p className={`${friend.user.is_on === 1 ? 'text-green-600' : 'text-gray-500'} lg:text-sm text-xs font-medium`}>
+                  {friend.user.is_on === 1 ? 'Online' : 'Offline'}
                 </p>
               </div>
               <div className="flex flex-row items-center justify-end lg:w-[90%] lg:h-[90%] md:w-[90%] md:h-[90%] w-[90%] h-[90%] absolute md:right-10 right-5 top-1 lg:gap-12 md:gap-4 gap-4">

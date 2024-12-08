@@ -393,10 +393,10 @@ function Navbar() {
               <Skeleton className="sm:w-10 sm:h-10 w-8 h-8 rounded-full bg-[#d1daff]" />
             </>
             ) : (
-            <Image
+            <img
               id="avatarButton"
               className="sm:w-10 sm:h-10 w-8 h-8 rounded-full bg-[#D7D7EA] cursor-pointer rounded-full"
-              src={userData?.avatar || "/images/avatar.svg"}
+              src={userData?.image_field ? `http://127.0.0.1:8000/api${userData.image_field}` : "/images/Default_profile.png"}
               alt="User dropdown"
               width={100}
               height={100}

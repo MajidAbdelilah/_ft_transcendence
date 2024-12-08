@@ -14,16 +14,16 @@ const montserrat = Montserrat({
 
 interface FriendRequestProps {
   request: {
+    freindship_id: number;
+    is_accepted: boolean;
     user: {
       id: number;
       username: string;
-      profile_photo: string;
-      is_on: boolean;
+      is_on: number;
     };
-    friendship_id: number;
-    is_accepted: boolean;
-    blocked: boolean;
-    is_user_from: boolean;
+    user_from: number;
+    user_to: number;
+    user_is_logged_in: number;
   }
 }
 
@@ -42,12 +42,12 @@ export default function FriendRequests({ request }: FriendRequestProps) {
     setError(null);
     setIsLoading(prev => ({ ...prev, accept: true }));
     try {
-      await customAxios.post(`/api/friends/accept`, { 
-        friendship_id: request.friendship_id 
+      await customAxios.post(`http://127.0.0.1:8000/friend/friends-accept`, { 
+        freindship_id: request.freindship_id 
       })
       send({
         type: 'friends-accept',
-        friendship_id: request.friendship_id
+        freindship_id: request.freindship_id
       })
     } catch (error) {
       console.error('Error accepting friend request:', error)
@@ -62,12 +62,12 @@ export default function FriendRequests({ request }: FriendRequestProps) {
     setError(null);
     setIsLoading(prev => ({ ...prev, reject: true }));
     try {
-      await customAxios.post(`/api/friends/reject`, {
-        friendship_id: request.friendship_id
+      await customAxios.post(`http://127.0.0.1:8000/friend/friends-remove`, {
+        freindship_id: request.freindship_id
       })
       send({
         type: 'friends-reject',
-        friendship_id: request.friendship_id
+        freindship_id: request.freindship_id
       })
     } catch (error) {
       console.error('Error rejecting friend request:', error)
@@ -113,8 +113,8 @@ export default function FriendRequests({ request }: FriendRequestProps) {
           </div>
           <div className="ml-4 flex flex-col justify-center">
             <h2 className="text-[#242F5C] text-sm lg:text-lg md:text-base font-bold">{request.user.username}</h2>
-            <p className={`${request.user.is_on ? 'text-green-600' : 'text-gray-500'} lg:text-sm text-xs font-medium`}>
-              {request.user.is_on ? 'Online' : 'Offline'}
+            <p className={`${request.user.is_on === 1 ? 'text-green-600' : 'text-gray-500'} lg:text-sm text-xs font-medium`}>
+              {request.user.is_on === 1 ? 'Online' : 'Offline'}
             </p>
           </div>
           {!isMobileRq ? (
@@ -130,7 +130,7 @@ export default function FriendRequests({ request }: FriendRequestProps) {
                   md:bottom-[7%] 
                   lg:bottom-[5%] lg:right-[4%]
                   text-base tracking-wide
-                  bg-[#242F5C] text-white px-4 py-2 rounded-lg 
+                  bg-[#242F5C] text-white px-4 py-2 rounded-[8px] 
                   ${(isLoading.accept || isLoading.reject) ? 'opacity-50 cursor-not-allowed' : 'hover:bg-[#1a2340]'}
                   transition-colors
                 `}
@@ -141,7 +141,7 @@ export default function FriendRequests({ request }: FriendRequestProps) {
                 onClick={handleReject}
                 disabled={isLoading.accept || isLoading.reject}
                 className={`
-                  bg-red-500 text-white px-4 py-2 rounded-lg 
+                  bg-red-500 text-white px-4 py-2 rounded-[8px] 
                   ${(isLoading.accept || isLoading.reject) ? 'opacity-50 cursor-not-allowed' : 'hover:bg-red-600'}
                   transition-colors
                 `}
@@ -150,12 +150,12 @@ export default function FriendRequests({ request }: FriendRequestProps) {
               </button>
             </div>
           ) : (
-            <div className="flex flex-row items-center justify-end lg:w-[20%] lg:h-[90%] md:w-[20%] md:h-[90%] w-[20%] h-[90%] absolute md:right-4 right-5 top-1 md:gap-5 gap-5">
+            <div className="flex flex-row items-center justify-end lg:w-[30%] lg:h-[90%] md:w-[30%] md:h-[90%] w-[30%] h-[90%] absolute md:right-4 lg:right-12 right-5 top-1 md:gap-8 gap-5">
               <button onClick={handleAccept} aria-label={`Accept friend request from ${request.user.username}`}>
-                <Image src="/images/Accept.svg" alt="Accept" width={50} height={50} className="lg:w-[32%] lg:h-[32%] md:w-[40%] md:h-[40%] w-[30%] h-[30%] cursor-pointer" />
+                <Image src="/images/Accept.svg" alt="Accept" width={150} height={150} className="lg:w-[100%] lg:h-[100%] md:w-[90%] md:h-[90%] w-[80%] h-[80%] cursor-pointer" />
               </button>
               <button onClick={handleReject} aria-label={`Reject friend request from ${request.user.username}`}>
-                <Image src="/images/Reject.svg" alt="Reject" width={50} height={50} className="lg:w-[32%] lg:h-[32%] md:w-[40%] md:h-[40%] w-[30%] h-[30%] cursor-pointer" />
+                <Image src="/images/Reject.svg" alt="Reject" width={150} height={150} className="lg:w-[100%] lg:h-[100%] md:w-[90%] md:h-[90%] w-[80%] h-[80%] cursor-pointer" />
               </button>
             </div>
           )}

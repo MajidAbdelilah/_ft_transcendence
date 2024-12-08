@@ -17,13 +17,13 @@ interface BlockedFriendProps {
     user: {
       id: number;
       username: string;
-      profile_photo: string;
-      is_on: boolean;
+      is_on: number;
     };
-    friendship_id: number;
+    freindship_id: number;
     is_accepted: boolean;
-    blocked: boolean;
-    is_user_from: boolean;
+    user_from: number;
+    user_to: number;
+    user_is_logged_in: number;
   }
 }
 
@@ -34,11 +34,11 @@ export default function BlockedFriends({ blockedFriend }: BlockedFriendProps) {
   const handleUnblock = async () => {
     try {
       await customAxios.post(`/api/friends/unblock`, { 
-        friendship_id: blockedFriend.friendship_id 
+        freindship_id: blockedFriend.freindship_id 
       })
       send({
         type: 'friends-unblock',
-        friendship_id: blockedFriend.friendship_id
+        freindship_id: blockedFriend.freindship_id
       })
     } catch (error) {
       console.error('Error unblocking friend:', error)
@@ -61,18 +61,20 @@ export default function BlockedFriends({ blockedFriend }: BlockedFriendProps) {
     <div className={`w-full mx-auto h-20 lg:h-[12%] md:h-[20%] mt-2 rounded-xl bg-[#D8D8F7] shadow-md shadow-[#BCBCC9] relative ${isMobile ? '' : ' min-h-[90px]'} ${montserrat.className}`}>
       <div className="flex items-center h-full p-2">
         <div className="flex flex-row items-center justify-center lg:w-[10%] lg:h-[90%] md:w-[10%] md:h-[90%] w-[20%] h-[90%]">
-          <Image
-            priority
-            src={blockedFriend.user.profile_photo}
-            alt={`${blockedFriend.user.username}'s profile`}
-            width={50}
-            height={50}
-            className="lg:w-[90%] lg:h-[90%] md:w-[80%] md:h-[80%] w-[100%] h-[100%]"
+          <Image 
+            priority 
+            src="/images/default-avatar.png"
+            alt={`${blockedFriend.user.username}'s profile`} 
+            width={50} 
+            height={50} 
+            className="lg:w-[90%] lg:h-[90%] md:w-[80%] md:h-[80%] w-[100%] h-[100%] rounded-full" 
           />
         </div>
         <div className="ml-4 flex flex-col justify-center">
           <h2 className="text-[#242F5C] text-sm lg:text-lg md:text-base font-bold">{blockedFriend.user.username}</h2>
-          <p className="text-red-500 lg:text-sm text-xs font-medium">Blocked</p>
+          <p className={`${blockedFriend.user.is_on === 1 ? 'text-green-600' : 'text-gray-500'} lg:text-sm text-xs font-medium`}>
+            {blockedFriend.user.is_on === 1 ? 'Online' : 'Offline'}
+          </p>
         </div>
         <div className="flex flex-row items-center justify-end lg:w-[50%] lg:h-[90%] md:w-[10%] md:h-[90%] w-[20%] h-[90%] absolute md:right-10 right-5 top-1 md:gap-5 gap-2">
           <button
