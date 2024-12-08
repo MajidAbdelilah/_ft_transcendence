@@ -207,6 +207,7 @@
         });
 
         document.addEventListener('keyup', function(event) {
+            console.log('Key up:', event.key);
             if ((event.key === 'ArrowUp' || event.key === 'ArrowDown') && gameStarted) {
                 socket.send(JSON.stringify({
                     'player': player,

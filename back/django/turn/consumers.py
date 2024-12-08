@@ -68,8 +68,8 @@ class PingPongConsumer(AsyncWebsocketConsumer):
                     },
                 'is_tournament': True,
                 'end_tournament': False
-            }
-            asyncio.create_task(self.game_loop())
+                }
+                asyncio.create_task(self.game_loop())
 
     async def disconnect(self, close_code):
         await self.channel_layer.group_discard(
@@ -123,8 +123,7 @@ class PingPongConsumer(AsyncWebsocketConsumer):
     
         if player:
             players = self.room_var[self.room_name]['players']
-            if direction is not None:
-                players[player]['direction'] = direction
+            players[player]['direction'] = direction
     
             if 'gameStarted' in data:
                 players[player]['ready'] = data['gameStarted']
@@ -362,7 +361,26 @@ class PingPongConsumer(AsyncWebsocketConsumer):
         self.room_var[self.room_name]['players']['player2']['full'] = False
         self.room_var[self.room_name]['players']['player3']['full'] = False
         self.room_var[self.room_name]['players']['player4']['full'] = False
-        self.room_var[self.room_name]['game_start'] = False
+        self.room_var[self.room_name]['players']['player1']['username'] = ''
+        self.room_var[self.room_name]['players']['player2']['username'] = ''
+        self.room_var[self.room_name]['players']['player3']['username'] = ''
+        self.room_var[self.room_name]['players']['player4']['username'] = ''
+        self.room_var[self.room_name]['players']['player1']['current_match'] = 'match1'
+        self.room_var[self.room_name]['players']['player2']['current_match'] = 'match1'
+        self.room_var[self.room_name]['players']['player3']['current_match'] = 'match2'
+        self.room_var[self.room_name]['players']['player4']['current_match'] = 'match2'
+        self.room_var[self.room_name]['matches']['match1']['player1'] = None
+        self.room_var[self.room_name]['matches']['match1']['player2'] = None
+        self.room_var[self.room_name]['matches']['match1']['winner'] = None
+        self.room_var[self.room_name]['matches']['match1']['game_start'] = False
+        self.room_var[self.room_name]['matches']['match2']['player1'] = None
+        self.room_var[self.room_name]['matches']['match2']['player2'] = None
+        self.room_var[self.room_name]['matches']['match2']['winner'] = None
+        self.room_var[self.room_name]['matches']['match2']['game_start'] = False
+        self.room_var[self.room_name]['matches']['final']['player1'] = None
+        self.room_var[self.room_name]['matches']['final']['player2'] = None
+        self.room_var[self.room_name]['matches']['final']['winner'] = None
+        self.room_var[self.room_name]['final']['game_start'] = False
         self.room_var[self.room_name]['end_tournement'] = True
         print("Tournament ended")
         
@@ -372,16 +390,15 @@ class PingPongConsumer(AsyncWebsocketConsumer):
         current_match = self.room_var[self.room_name]['players'][winner]['current_match']
         print("current_match: ", current_match)
         self.room_var[self.room_name]['matches'][current_match]['winner'] = winner
-        if current_match == 'match1':
-            self.room_var[self.room_name]['players']['player1']['current_match'] = 'match2'
-            self.room_var[self.room_name]['players']['player2']['current_match'] = 'match2'
-            self.room_var[self.room_name]['matches']['ball1'] = {'x': self.width / 2, 'y': self.height / 2, 'radius': 5, 'vx': 5, 'vy': 5}
-        elif current_match == 'match2':
-            self.room_var[self.room_name]['players']['player3']['current_match'] = 'final'
-            self.room_var[self.room_name]['players']['player4']['current_match'] = 'final'
-            self.room_var[self.room_name]['matches']['ball2'] = {'x': self.width / 2, 'y': self.height / 2, 'radius': 5, 'vx': 5, 'vy': 5}
-        elif current_match == 'final':
+        if(current_match == 'match1'):
+            self.room_var[self.room_name]['matches']['match1']['winner'] = winner
+            self.room_var[self.room_name]['matches']['match1']['game_start'] = False
+        elif(current_match == 'match2'):
+            self.room_var[self.room_name]['matches']['match2']['winner'] = winner
+            self.room_var[self.room_name]['matches']['match2']['game_start'] = False
+        elif(current_match == 'final'):
             self.room_var[self.room_name]['matches']['final']['winner'] = winner
+            self.room_var[self.room_name]['matches']['final']['game_start'] = False
         
         match = self.room_var[self.room_name]['matches'][current_match];
         print(match, current_match, winner)
@@ -399,6 +416,7 @@ class PingPongConsumer(AsyncWebsocketConsumer):
             )
             await database_sync_to_async(tournament.save)()
             self.end_tournament(winner)
+
 
         # Reset the game state
         if self.room_var[self.room_name]['matches']['match1']['winner'] and self.room_var[self.room_name]['matches']['match2']['winner']:
