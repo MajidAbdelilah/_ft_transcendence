@@ -46,7 +46,7 @@
             };
             socket.onmessage = function(e) {
                 const data = JSON.parse(e.data);
-                console.log('Received:', data);
+                // console.log('Received:', data);
                 if (data.is_tournament) {
                     // Determine player's assigned role and match
                     if (data.players.player1.username === username) {
@@ -62,13 +62,15 @@
                         player = 'player4';
                         match = data.players.player4.current_match;
                     }
-                    
-                    if (!data.matches[match]['game_start']) {
-                        console.log('Waiting for other player to be ready...');
-                        // Optionally, display a message on the canvas
-                        updateWaitingScreen();
-                        return;
-                    }
+                    if(match)
+                    {
+                        if (!data.matches[match]['game_start']) {
+                            console.log('Waiting for other player to be ready...');
+                            // Optionally, display a message on the canvas
+                            updateWaitingScreen();
+                            return;
+                        }
+                    }    
 
                     // Find the opponent in the same match
                     player2 = null;
@@ -80,16 +82,19 @@
                     }
 
                     // Check if the current match has ended
-                    if (data.matches[match]['winner'] && gameStarted) {
-                        console.log('Match ended');
-                        if (data.matches[match]['winner'] === username) {
-                            // alert('You won the match!');
-                        } else {
-                            // alert('You lost the match.');
-                            socket.close();
+                    if(match)
+                    {
+                        if (data.matches[match]['winner'] && gameStarted) {
+                            console.log('Match ended');
+                            if (data.matches[match]['winner'] === username) {
+                                // alert('You won the match!');
+                            } else {
+                                // alert('You lost the match.');
+                                socket.close();
+                            }
+                            init();
+                            return;
                         }
-                        init();
-                        return;
                     }
                 } else {
                     // Non-tournament mode
@@ -114,10 +119,10 @@
             canvas.width = 800; // Replace with your canvas width
             canvas.height = 600; // Replace with your canvas height
             ctx.clearRect(0, 0, canvas.width, canvas.height);
-            ctx.font = '30px Arial';
+            ctx.font = '28px Arial';
             ctx.fillStyle = 'black';
             ctx.textAlign = 'center';
-            ctx.fillText('Waiting for other player to be ready...', canvas.width / 2, canvas.height / 2);
+            ctx.fillText('Waiting for other player to be ready... press space to be ready', canvas.width / 2, canvas.height / 2);
         }
         // Update game state
         function updateGame(data) {
@@ -137,16 +142,25 @@
 
             if (data.is_tournament) {
                 // Draw players and ball for the tournament match
-                ctx.font = '100px Arial';
-                ctx.fillStyle = 'rgba(0, 0, 0, 0.5)';
-
+               
+                
                 if (player) {
-                    ctx.fillText(data.players[player].score, canvas.width / 2 - 150, canvas.height / 2 + 50);
+                    ctx.font = '100px Arial';
+                    ctx.fillStyle = 'rgba(0, 0, 0, 0.5)';
+                    ctx.fillText(data.players[player]. score, (data.players[player].x < (canvas.width / 2)) ? data.players[player].x + 50 : data.players[player].x - 125 , canvas.height / 2 + 50);
                     ctx.fillRect(data.players[player].x, data.players[player].y, data.players[player].width, data.players[player].height);
+                    // display username
+                    ctx.font = '30px Arial';
+                    ctx.fillText(data.players[player].username, (data.players[player].x < (canvas.width / 2)) ? data.players[player].x + 50 : data.players[player].x - 125, 50);
                 }
                 if (player2) {
-                    ctx.fillText(data.players[player2].score, canvas.width / 2 + 50, canvas.height / 2 + 50);
+                    ctx.font = '100px Arial';
+                    ctx.fillStyle = 'rgba(0, 0, 0, 0.5)';
+                    ctx.fillText(data.players[player2].score, (data.players[player2].x < (canvas.width / 2)) ? data.players[player2].x + 50 : data.players[player2].x - 125, canvas.height / 2 + 50);
                     ctx.fillRect(data.players[player2].x, data.players[player2].y, data.players[player2].width, data.players[player2].height);
+                    // display username
+                    ctx.font = '30px Arial';
+                    ctx.fillText(data.players[player2].username, (data.players[player2].x < (canvas.width / 2)) ? data.players[player2].x + 50 : data.players[player2].x - 125, 50);
                 }
 
                 // Draw the ball for the current match

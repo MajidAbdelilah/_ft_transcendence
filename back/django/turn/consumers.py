@@ -82,6 +82,7 @@ class PingPongConsumer(AsyncWebsocketConsumer):
                 self.tournament_group_name,
                 self.channel_name
             )
+        
 
     def assign_player(self, username):
         players = self.room_var[self.room_name]['players']
@@ -174,7 +175,7 @@ class PingPongConsumer(AsyncWebsocketConsumer):
                 if self.room_var[self.room_name]['is_tournament']:
                     matches = self.room_var[self.room_name]['matches']
                     # Check if all matches have ended
-                    if(matches['match1']['winner'] and matches['match2']['winner'] and matches['final']['winner']):
+                    if(self.room_var[self.room_name]['end_tournament']):
                         await self.disconnect(1000)
                         del self.room_var[self.room_name]
                         break
@@ -352,7 +353,7 @@ class PingPongConsumer(AsyncWebsocketConsumer):
         if self.room_var[self.room_name]['players'][player]['score'] >= 10:  # Assuming 10 points to win
             await self.end_match(player)
 
-    def end_tournament(self, winner):
+    async def end_tournament(self, winner):
         self.room_var[self.room_name]['players']['player1']['score'] = 0
         self.room_var[self.room_name]['players']['player2']['score'] = 0
         self.room_var[self.room_name]['players']['player3']['score'] = 0
@@ -387,7 +388,33 @@ class PingPongConsumer(AsyncWebsocketConsumer):
         self.room_var[self.room_name]['matches']['final']['p2_score'] = 0
         self.room_var[self.room_name]['matches']['final']['winner'] = None
         self.room_var[self.room_name]['matches']['final']['game_start'] = False
-        self.room_var[self.room_name]['end_tournement'] = True
+        self.room_var[self.room_name]['end_tournament'] = True
+        if not self.room_var[self.room_name]['is_tournament']:
+            await self.channel_layer.group_send(
+                self.room_group_name,
+                {
+                    'type': 'game_update',
+                    'ball': self.room_var[self.room_name]['ball'],
+                    'players': self.room_var[self.room_name]['players'],
+                    'width': self.width,
+                    'height': self.height,
+                    'start_game': self.room_var[self.room_name]['game_start'],
+                    'is_tournament': self.room_var[self.room_name]['is_tournament']
+                }
+            )
+        else:
+            await self.channel_layer.group_send(
+                self.tournament_group_name,
+                {
+                    'type': 'game_update',
+                    'matches': self.room_var[self.room_name]['matches'],
+                    'players': self.room_var[self.room_name]['players'],
+                    'width': self.width,
+                    'height': self.height,
+                    # Do not include 'start_game' here
+                    'is_tournament': self.room_var[self.room_name]['is_tournament']
+                }
+            )
         print("Tournament ended")
         
 
@@ -430,7 +457,7 @@ class PingPongConsumer(AsyncWebsocketConsumer):
                 matches=self.room_var[self.room_name]['matches']  # Include matches data
             )
             await database_sync_to_async(tournament.save)()
-            self.end_tournament(winner)
+            await self.end_tournament(winner)
 
 
         # Reset the game state
