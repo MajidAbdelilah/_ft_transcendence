@@ -3,7 +3,12 @@
 
 
 import MatchHistory from "../../Dashboard/MatchHistory";
-import DashProvider from "../../Dashboard/Dashcontext";
+import { DashContext } from "../../Dashboard/Dashcontext";
+import { useContext } from "react"; // Import DashProvider
+
+
+
+
 
 import UserProfile from "./components/UserProfile";
 import LeaderBoard from "./components/LeaderBoard";
@@ -111,8 +116,7 @@ export default function Profile() {
     }
   }, []); 
 
-
-
+ 
 
 
 
@@ -120,6 +124,8 @@ export default function Profile() {
   // searchedText - Searched user from the URL -------------------------------------------------------
   const params = useParams();
   const searchedText = params.username;
+  const DashData = useContext(DashContext);
+
 
   const [userSearchedFor, setUserSearchedFor] = useState(null);
   const [tracker, setTracker] = useState(false);
@@ -161,6 +167,29 @@ export default function Profile() {
   
   }, [searchedText]);
 
+  useEffect(() => {
+    const handleResize = () => {
+      DashData.setIsMobile(window.innerWidth <= 640);
+    };
+
+    handleResize();
+    window.addEventListener("resize", handleResize);
+  }, [DashData]);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.scrollY > 0) {
+        DashData.setIsScrolled(true);
+      } else {
+        DashData.setIsScrolled(false);
+      }
+    };
+    window.addEventListener("scroll", handleScroll);
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  });
+
 
 
 
@@ -186,20 +215,16 @@ export default function Profile() {
   
    
   return (
-    // <DashProvider>
       <div
         className={`flex-1 overflow-y-auto p-4 flex flex-wrap items-center justify-center h-full ${montserrat.variable}`}
       >
         <div className="flex flex-col lg:flex-row w-full  items-center justify-center lg:gap-10 xl:gap-32 2xl:gap-60      lg:mx-10 xl:mx-28 2xl:mx-40">
           {userSearchedFor && (<UserProfile loggedInUser={loggedInUser} user={userSearchedFor} isSelf={isSelf}/>)}
           
-          <LeaderBoard first={user3} second={user2} third={user3} />
+          {/* <LeaderBoard first={user3} second={user2} third={user3} /> */}
         </div>
-
+        
         {/* <MatchHistory /> */}
-
-
       </div>
-    // </DashProvider>
   );
 }

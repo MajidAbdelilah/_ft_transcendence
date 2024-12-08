@@ -7,7 +7,7 @@ import Loading from "../components/Loading";
 interface UserData {
   username: string;
   email: string;
-  profile_photo: string;
+  image_field: string;
   is_2fa: boolean;
   id: number;
   _2fa_code: string;

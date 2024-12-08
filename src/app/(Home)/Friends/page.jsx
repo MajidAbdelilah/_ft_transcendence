@@ -26,9 +26,9 @@ export default function Friends() {
     "Friend Requests",
     "Blocked Friends",
   ])
-  const [friendsData, setFriendsData] = useState({ id: '', username: '', profile_photo: '', friends: [] })
-  const [friendRequestsData, setFriendRequestsData] = useState({ id: '', username: '', profile_photo: '', friends: [] })
-  const [blockedFriendsData, setBlockedFriendsData] = useState({ id: '', username: '', profile_photo: '', friends: [] })
+  const [friendsData, setFriendsData] = useState([])
+  const [friendRequestsData, setFriendRequestsData] = useState([])  
+  const [blockedFriendsData, setBlockedFriendsData] = useState([])
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState(null)
 
@@ -97,80 +97,61 @@ export default function Friends() {
         switch (data.type) {
           case 'user_status':
             
-            setFriendsData(prev => ({
-              ...prev,
-              friends: prev.friends.map(friend => 
-                friend.user.id === data.id 
-                  ? { 
-                      ...friend,
-                      user: { 
-                        ...friend.user, 
-                        is_on: data.is_on
-                      } 
-                    }
-                  : friend
-              )
-            }));
+            setFriendsData(prev => prev.map(friend => 
+              friend.user.id === data.id 
+                ? { 
+                    ...friend,
+                    user: { 
+                      ...friend.user, 
+                      is_on: data.is_on
+                    } 
+                  }
+                : friend
+            ));
             break;
 
           case 'friends-add':
-            setFriendRequestsData(prev => ({
-              ...prev,
-              friends: [...prev.friends, {
-                freindship_id: data.freindship_id,
-                user: data.user,
-                is_accepted: false,
-                blocked: false,
-                is_user_from: false
-              }]
-            }));
+            setFriendRequestsData(prev => [...prev, {
+              freindship_id: data.freindship_id,
+              user: data.user,
+              is_accepted: false,
+              user_from: data.user_from,
+              user_to: data.user_to,
+              user_is_logged_in: data.user_is_logged_in
+            }]);
             break;
 
           case 'friends-accept':
-            setFriendRequestsData(prev => ({
-              ...prev,
-              friends: prev.friends.filter(request => 
-                request.freindship_id !== data.freindship_id
-              )
-            }));
-            setFriendsData(prev => ({
-              ...prev,
-              friends: [...prev.friends, {
-                freindship_id: data.freindship_id,
-                user: data.user,
-                is_accepted: true,
-                blocked: false,
-                is_user_from: data.is_user_from
-              }]
-            }));
+            setFriendRequestsData(prev => 
+              prev.filter(request => request.freindship_id !== data.freindship_id)
+            );
+            setFriendsData(prev => [...prev, {
+              freindship_id: data.freindship_id,
+              user: data.user,
+              user_from: data.user_from,
+              user_to: data.user_to,
+              user_is_logged_in: data.user_is_logged_in,
+              is_accepted: true
+            }]);
             break;
 
           case 'friends-block':
-            setFriendsData(prev => ({
-              ...prev,
-              friends: prev.friends.filter(friend => 
-                friend.freindship_id !== data.freindship_id
-              )
-            }));
-            setBlockedFriendsData(prev => ({
-              ...prev,
-              friends: [...prev.friends, {
-                freindship_id: data.freindship_id,
-                user: data.user,
-                is_accepted: true,
-                blocked: true,
-                is_user_from: data.is_user_from
-              }]
-            }));
+            setFriendsData(prev => prev.filter(friend => 
+              friend.freindship_id !== data.freindship_id
+            ));
+            setBlockedFriendsData(prev => [...prev, {
+              freindship_id: data.freindship_id,
+              user: data.user,
+              is_accepted: true,
+              blocked: true,
+              is_user_from: data.is_user_from
+            }]);
             break;
 
           case 'friends-unblock':
-            setBlockedFriendsData(prev => ({
-              ...prev,
-              friends: prev.friends.filter(blocked => 
-                blocked.freindship_id !== data.freindship_id
-              )
-            }));
+            setBlockedFriendsData(prev => prev.filter(blocked => 
+              blocked.freindship_id !== data.freindship_id
+            ));
             break;
 
           default:
@@ -250,39 +231,33 @@ export default function Friends() {
           <div className="w-full h-full flex flex-col  space-y-7 overflow-y-auto scrollbar-hide custom-scrollbar motion-preset-expand  ">
             <ScrollBlur>
               {activeItem === "Friends List" && (
-                <FriendsComponent friends={friendsData.friends} />
+                <FriendsComponent friends={friendsData} />
               )}
               {activeItem === "Friend Requests" && (
-                <div className="space-y-2">
-                  {friendRequestsData.friends.length > 0 ? (
-                    friendRequestsData.friends.map((request) => (
-                      <FriendRequests 
-                        key={request.freindship_id} 
-                        request={request}
-                      />
+                <div className="flex flex-col gap-4">
+                  {friendRequestsData.length > 0 ? (
+                    friendRequestsData.map((request) => (
+                      <FriendRequests key={request.freindship_id} request={request} />
                     ))
                   ) : (
-                    <div className="flex flex-col items-center justify-center w-full h-[200px] p-4">
-                      <IconUserExclamation size={50} color="#242F5C" />
-                      <h3 className="text-[#242F5C] text-lg font-semibold mt-3">No Friend Requests</h3>
+                    <div className="flex flex-col items-center justify-center h-full gap-4">
+                      <IconUserExclamation className="w-16 h-16 text-gray-400" />
+                      <p className="text-gray-500">No friend requests</p>
                     </div>
                   )}
                 </div>
               )}
               {activeItem === "Blocked Friends" && (
-                <div className="space-y-2">
-                  {blockedFriendsData.friends.length > 0 ? (
-                    blockedFriendsData.friends.map((blockedFriend) => (
-                      <BlockedFriends 
-                        key={blockedFriend.freindship_id} 
-                        blockedFriend={blockedFriend}
-                      />
+                <div className="flex flex-col gap-4">
+                  {blockedFriendsData.length > 0 ? (
+                    blockedFriendsData.map((blocked) => (
+                      <BlockedFriends key={blocked.friendship_id} blockedFriend={blocked} />
                     ))
                   ) : (
-                    <div className="flex flex-col items-center justify-center w-full h-[200px] p-4">
-                      <IconForbid2 size={50} color="#242F5C" />
-                      <h3 className="text-[#242F5C] text-lg font-semibold mt-3">No Blocked users</h3>
-                   </div>
+                    <div className="flex flex-col items-center justify-center h-full gap-4">
+                      <IconUserExclamation className="w-16 h-16 text-gray-400" />
+                      <p className="text-gray-500">No blocked users</p>
+                    </div>
                   )}
                 </div>
               )}

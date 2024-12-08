@@ -6,6 +6,7 @@ import { useState, useEffect } from "react"
 import customAxios from '../../customAxios'
 import { useWebSocket } from '../../contexts/WebSocketProvider';
 import {IconUserExclamation} from '@tabler/icons-react'
+import { useUser } from '../../contexts/UserContext';
 
 const montserrat = Montserrat({
   subsets: ['latin'],
@@ -14,40 +15,42 @@ const montserrat = Montserrat({
 
 interface FriendRequestProps {
   request: {
+    freindship_id: number;
+    is_accepted: boolean;
     user: {
       id: number;
       username: string;
-      profile_photo: string;
-      is_on: boolean;
+      is_on: number;
     };
-    friendship_id: number;
-    is_accepted: boolean;
-    blocked: boolean;
-    is_user_from: boolean;
+    user_from: number;
+    user_to: number;
+    user_is_logged_in: number;
   }
 }
 
 export default function FriendRequests({ request }: FriendRequestProps) {
+  const { userData } = useUser();
   const [isMobileRq, setIsMobileRq] = useState(false)
+  
   const [isMobile, setIsMobile] = useState(false)
   const [isLoading, setIsLoading] = useState({
     accept: false,
     reject: false
   })
   const [error, setError] = useState<string | null>(null)
-  const { send } = useWebSocket();
+  const { send} = useWebSocket();
 
   const handleAccept = async () => {
     if (isLoading.accept) return;
     setError(null);
     setIsLoading(prev => ({ ...prev, accept: true }));
     try {
-      await customAxios.post(`/api/friends/accept`, { 
-        friendship_id: request.friendship_id 
+      await customAxios.post(`http://127.0.0.1:8000/friend/friends-accept`, { 
+        freindship_id: request.freindship_id 
       })
       send({
         type: 'friends-accept',
-        friendship_id: request.friendship_id
+        freindship_id: request.freindship_id
       })
     } catch (error) {
       console.error('Error accepting friend request:', error)
@@ -62,12 +65,12 @@ export default function FriendRequests({ request }: FriendRequestProps) {
     setError(null);
     setIsLoading(prev => ({ ...prev, reject: true }));
     try {
-      await customAxios.post(`/api/friends/reject`, {
-        friendship_id: request.friendship_id
+      await customAxios.post(`http://127.0.0.1:8000/friend/friends-remove`, {
+        freindship_id: request.freindship_id
       })
       send({
         type: 'friends-reject',
-        friendship_id: request.friendship_id
+        freindship_id: request.freindship_id
       })
     } catch (error) {
       console.error('Error rejecting friend request:', error)
@@ -100,66 +103,69 @@ export default function FriendRequests({ request }: FriendRequestProps) {
           </p>
         </div>
       ) : (
-        <div className="flex items-center h-full p-2">
-          <div className="flex flex-row items-center justify-center lg:w-[10%] lg:h-[90%] md:w-[10%] md:h-[90%] w-[20%] h-[90%]">
-            <Image 
-              priority 
-              src={request.user.profile_photo} 
-              alt={`${request.user.username}'s profile`} 
-              width={50} 
-              height={50} 
-              className="lg:w-[90%] lg:h-[90%] md:w-[80%] md:h-[80%] w-[100%] h-[100%]" 
-            />
+        isLoading.accept || isLoading.reject ? (
+          <div className="flex items-center justify-center h-full">
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#242F5C]"></div>
           </div>
-          <div className="ml-4 flex flex-col justify-center">
-            <h2 className="text-[#242F5C] text-sm lg:text-lg md:text-base font-bold">{request.user.username}</h2>
-            <p className={`${request.user.is_on ? 'text-green-600' : 'text-gray-500'} lg:text-sm text-xs font-medium`}>
-              {request.user.is_on ? 'Online' : 'Offline'}
-            </p>
+        ) : (
+          <div className="flex items-center h-full p-2" key={request.user.id}>
+            <div className="relative w-16 h-16 md:w-20 md:h-20 lg:w-15 lg:h-15">
+              <img
+                src={userData?.image_field ? `http://127.0.0.1:8000/api${userData.image_field}` : "/images/Default_profile.png"}
+                alt={`${request.user.username}'s profile`} 
+                className="w-full h-full rounded-full object-cover border-2 border-[#BCBCC9]" 
+              />
+            </div>
+            <div className="ml-4 flex flex-col justify-center">
+              <h2 className="text-[#242F5C] text-sm lg:text-lg md:text-base font-bold">{request.user.username}</h2>
+              <p className={`${request.user.is_on === 1 ? 'text-green-600' : 'text-gray-500'} lg:text-sm text-xs font-medium`}>
+                {request.user.is_on === 1 ? 'Online' : 'Offline'}
+              </p>
+            </div>
+            {!isMobileRq ? (
+              <div className="flex flex-row items-center justify-end lg:w-[50%] lg:h-[90%] md:w-[10%] md:h-[90%] w-[20%] h-[90%] absolute md:right-10 right-5 top-1 md:gap-5 gap-2">
+                {error && (
+                  <p className="text-red-500 text-sm">{error}</p>
+                )}
+                <button
+                  onClick={handleAccept}
+                  disabled={isLoading.accept || isLoading.reject}
+                  className={`
+                    bottom-2 right-[8%] 
+                    md:bottom-[7%] 
+                    lg:bottom-[5%] lg:right-[4%]
+                    text-base tracking-wide
+                    bg-[#242F5C] text-white px-4 py-2 rounded-[8px] 
+                    ${(isLoading.accept || isLoading.reject) ? 'opacity-50 cursor-not-allowed' : 'hover:bg-[#1a2340]'}
+                    transition-colors
+                  `}
+                >
+                  {isLoading.accept ? 'Accepting...' : 'Accept'}
+                </button>
+                <button
+                  onClick={handleReject}
+                  disabled={isLoading.accept || isLoading.reject}
+                  className={`
+                    bg-red-500 text-white px-4 py-2 rounded-[8px] 
+                    ${(isLoading.accept || isLoading.reject) ? 'opacity-50 cursor-not-allowed' : 'hover:bg-red-600'}
+                    transition-colors
+                  `}
+                >
+                  {isLoading.reject ? 'Rejecting...' : 'Reject'}
+                </button>
+              </div>
+            ) : (
+              <div className="flex flex-row items-center justify-end lg:w-[30%] lg:h-[90%] md:w-[30%] md:h-[90%] w-[30%] h-[90%] absolute md:right-4 lg:right-12 right-5 top-1 md:gap-8 gap-5">
+                <button onClick={handleAccept} aria-label={`Accept friend request from ${request.user.username}`}>
+                  <Image src="/images/Accept.svg" alt="Accept" width={150} height={150} className="lg:w-[100%] lg:h-[100%] md:w-[90%] md:h-[90%] w-[80%] h-[80%] cursor-pointer" />
+                </button>
+                <button onClick={handleReject} aria-label={`Reject friend request from ${request.user.username}`}>
+                  <Image src="/images/Reject.svg" alt="Reject" width={150} height={150} className="lg:w-[100%] lg:h-[100%] md:w-[90%] md:h-[90%] w-[80%] h-[80%] cursor-pointer" />
+                </button>
+              </div>
+            )}
           </div>
-          {!isMobileRq ? (
-            <div className="flex flex-row items-center justify-end lg:w-[50%] lg:h-[90%] md:w-[10%] md:h-[90%] w-[20%] h-[90%] absolute md:right-10 right-5 top-1 md:gap-5 gap-2">
-              {error && (
-                <p className="text-red-500 text-sm">{error}</p>
-              )}
-              <button
-                onClick={handleAccept}
-                disabled={isLoading.accept || isLoading.reject}
-                className={`
-                  bottom-2 right-[8%] 
-                  md:bottom-[7%] 
-                  lg:bottom-[5%] lg:right-[4%]
-                  text-base tracking-wide
-                  bg-[#242F5C] text-white px-4 py-2 rounded-lg 
-                  ${(isLoading.accept || isLoading.reject) ? 'opacity-50 cursor-not-allowed' : 'hover:bg-[#1a2340]'}
-                  transition-colors
-                `}
-              >
-                {isLoading.accept ? 'Accepting...' : 'Accept'}
-              </button>
-              <button
-                onClick={handleReject}
-                disabled={isLoading.accept || isLoading.reject}
-                className={`
-                  bg-red-500 text-white px-4 py-2 rounded-lg 
-                  ${(isLoading.accept || isLoading.reject) ? 'opacity-50 cursor-not-allowed' : 'hover:bg-red-600'}
-                  transition-colors
-                `}
-              >
-                {isLoading.reject ? 'Rejecting...' : 'Reject'}
-              </button>
-            </div>
-          ) : (
-            <div className="flex flex-row items-center justify-end lg:w-[20%] lg:h-[90%] md:w-[20%] md:h-[90%] w-[20%] h-[90%] absolute md:right-4 right-5 top-1 md:gap-5 gap-5">
-              <button onClick={handleAccept} aria-label={`Accept friend request from ${request.user.username}`}>
-                <Image src="/images/Accept.svg" alt="Accept" width={50} height={50} className="lg:w-[32%] lg:h-[32%] md:w-[40%] md:h-[40%] w-[30%] h-[30%] cursor-pointer" />
-              </button>
-              <button onClick={handleReject} aria-label={`Reject friend request from ${request.user.username}`}>
-                <Image src="/images/Reject.svg" alt="Reject" width={50} height={50} className="lg:w-[32%] lg:h-[32%] md:w-[40%] md:h-[40%] w-[30%] h-[30%] cursor-pointer" />
-              </button>
-            </div>
-          )}
-        </div>
+        )
       )}
     </div>
   )
