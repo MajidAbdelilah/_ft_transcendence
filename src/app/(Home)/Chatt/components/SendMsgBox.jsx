@@ -35,31 +35,6 @@ import { useWebSocket } from '../WebSocketProvider';
 
 
 
-
-
-
-      // const timestamp = new Date().toISOString();
-      // const chatId = `${loggedInUser.id}_${friend.id}`;
-  
-
-      // console.log("----------", messageContent);
-
-
-      // i should send here an object to the bachend trough the socket and ...
-      // Compose the message object
-      // const messageObject = {
-      //   type: 'CHAT_MESSAGE',
-      //   message: messageContent,
-      //   send: loggedInUser.username,
-      //   receive: friend.username,
-      //   timestamp : new Date().toISOString(),
-      //   chat_id: loggedInUser.username,
-      // };
-  
-
-
-
-
     };
 
 

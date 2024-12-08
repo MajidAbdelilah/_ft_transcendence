@@ -237,10 +237,12 @@ const getSelectedFriend = (friend) => {
     // Connect to WebSocket when component mounts or user changes
 
       useEffect(() => {
-        if (loggedInUser.id !== 0) {
+        
+        if (loggedInUser &&  loggedInUser.id !== 0) {
+          // console.log("triggered ----", loggedInUser.id);
           connect(loggedInUser.id);
         }
-        }, [loggedInUser]);
+        }, [loggedInUser.id]);
 
 
 
@@ -248,7 +250,8 @@ const getSelectedFriend = (friend) => {
 
 
       useEffect(() => {
-        if (friend && loggedInUser && messages.length === 1) {
+        console.log("Incoming messages -----------------", messages);
+        if (friend && loggedInUser && messages.length > 0) {
           // Directly access the single message
           if (
             (messages[0].send === loggedInUser.username && messages[0].receive === friend.user.username) ||
@@ -267,44 +270,15 @@ const getSelectedFriend = (friend) => {
         
             // Update the conversation state
             setConversation((prev) => [newMessage, ...prev]);
+            // setConversation((prev) => [...latestMessages, ...prev]);
+
 
           }
 
 
-
-   
-
         }
 
-
-
-
-
-
-        // if (friend && messages.length > 0 && messages.length < 2) {
-        //   console.log("Incoming messages -----------------", messages);
-      
-        //   // Check and transform messages
-        //   const newMessages = messages.filter( (msg) =>
-        //         (msg.send === loggedInUser.username && msg.receive === friend.user.username) ||
-        //         (msg.send === friend.user.username && msg.receive === loggedInUser.username)
-        //     )
-        //     .map((msg) => ({
-        //       // messages_id: "", // Replace with a real ID if available
-        //       chat_id: msg.chat_id,
-        //       sender: msg.send,
-        //       receiver: msg.receive,
-        //       message_content: msg.message,
-        //       message_date: msg.timestamp,
-        //       // user_one: 0, // Assuming user_one and user_two are loggedInUser.id and friend.user.id
-        //       // user_two: 0,
-        //     }));
-      
-        //   if (newMessages.length > 0) {
-        //     setConversation((prev) => [...prev, ...newMessages]);
-        //   }
-        // }
-      }, [friend, messages, loggedInUser]);
+      }, [messages]);
 
 
 
