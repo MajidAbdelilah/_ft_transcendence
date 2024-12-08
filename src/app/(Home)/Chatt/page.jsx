@@ -257,7 +257,7 @@ const getSelectedFriend = (friend) => {
             (messages[0].send === loggedInUser.username && messages[0].receive === friend.user.username) ||
             (messages[0].send === friend.user.username && messages[0].receive === loggedInUser.username) ) 
             {
-              const newMessage = {
+              let newMessage = {
                 // messages_id: ??, 
                 chat_id: messages[0].chat_id,
                 sender: messages[0].send,
@@ -267,9 +267,16 @@ const getSelectedFriend = (friend) => {
                 // user_one: ??,
                 // user_two: ??,
             };
-        
+            
+            const lastMessage = conversation[0]; // The last inserted message in the conversation
+            const isSameMessage = lastMessage && 
+              lastMessage.message_date === newMessage.message_date &&
+              lastMessage.message_content === newMessage.message_content;
+
+
+
             // Update the conversation state
-            setConversation((prev) => [newMessage, ...prev]);
+            if (!isSameMessage) {setConversation((prev) => [newMessage, ...prev]);}
             // setConversation((prev) => [...latestMessages, ...prev]);
 
 

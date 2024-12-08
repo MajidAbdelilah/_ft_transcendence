@@ -20,7 +20,7 @@ export function WebSocketProvider({ children }) {
 
     newSocket.onmessage = (event) => {
       const message = JSON.parse(event.data);
-      setMessages(prev => [...prev, message]);
+      setMessages([message]);
     };
 
     newSocket.onclose = () => {
