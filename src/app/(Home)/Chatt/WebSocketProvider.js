@@ -21,6 +21,8 @@ export function WebSocketProvider({ children }) {
     newSocket.onmessage = (event) => {
       const message = JSON.parse(event.data);
       setMessages([message]);
+      // setMessages((prevMessages) => [...prevMessages, message]); // Append new message
+
     };
 
     newSocket.onclose = () => {
@@ -31,6 +33,15 @@ export function WebSocketProvider({ children }) {
 
     return () => newSocket.close();
   }, []);
+  
+  useEffect(() => {
+    return () => {
+      if (socket) {
+        socket.close();
+      }
+    };
+  }, [socket]);
+
 
   const send = useCallback((message) => {
     if (socket && socket.readyState === WebSocket.OPEN) {
