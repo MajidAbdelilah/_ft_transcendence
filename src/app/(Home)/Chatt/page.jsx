@@ -272,14 +272,9 @@ const getSelectedFriend = (friend) => {
             const isSameMessage = lastMessage && 
               lastMessage.message_date === newMessage.message_date &&
               lastMessage.message_content === newMessage.message_content;
-
-
-
             // Update the conversation state
             if (!isSameMessage) {setConversation((prev) => [newMessage, ...prev]);}
             // setConversation((prev) => [...latestMessages, ...prev]);
-
-
           }
 
 
@@ -359,7 +354,7 @@ const getSelectedFriend = (friend) => {
             <p className="text-center text-gray-500">Loading...</p>
           )}
 
-          {conversation.length > 0 && (
+          {conversation && conversation.length > 0 && (
               <div style={{ display: 'none' }}>
                 {setTimeout(() => {
                   if (conversationContainer.current) {
