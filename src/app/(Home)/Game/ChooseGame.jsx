@@ -174,7 +174,8 @@ function MainComponent() {
               <div className="flex flex-col sm:flex-row justify-center items-center gap-4 w-full px-4 md:px-0">
                 <button 
                   onClick={() => setIsMode('Friends')} 
-                  className="relative w-full sm:w-auto py-3 md:py-4 px-6 md:px-8 lg:px-12 bg-[#242F5C] rounded-xl md:rounded-full cursor-pointer font-bold md:font-extrabold text-base md:text-lg text-white shadow-md hover:shadow-lg flex items-center justify-center gap-2 transition-all duration-300 hover:scale-105"
+                  disabled={!selectedMap}
+                  className={`relative w-full sm:w-auto py-3 md:py-4 px-6 md:px-8 lg:px-12 bg-[#242F5C] rounded-xl md:rounded-full cursor-pointer font-bold md:font-extrabold text-base md:text-lg text-white shadow-md hover:shadow-lg flex items-center justify-center gap-2 transition-all duration-300 ${selectedMap ? 'hover:scale-105' : 'opacity-50 cursor-not-allowed hover:scale-100'}`}
                 >
                   <img 
                     src="/images/PlayWithFriends.svg" 
@@ -191,7 +192,8 @@ function MainComponent() {
 
                 <button 
                   onClick={() => setIsMode('Bot')} 
-                  className="relative w-full sm:w-auto py-3 md:py-4 px-6 md:px-8 lg:px-12 bg-[#242F5C] rounded-xl md:rounded-full cursor-pointer font-bold md:font-extrabold text-base md:text-lg text-white shadow-md hover:shadow-lg flex items-center justify-center gap-2 transition-all duration-300 hover:scale-105"
+                  disabled={!selectedMap}
+                  className={`relative w-full sm:w-auto py-3 md:py-4 px-6 md:px-8 lg:px-12 bg-[#242F5C] rounded-xl md:rounded-full cursor-pointer font-bold md:font-extrabold text-base md:text-lg text-white shadow-md hover:shadow-lg flex items-center justify-center gap-2 transition-all duration-300 ${selectedMap ? 'hover:scale-105' : 'opacity-50 cursor-not-allowed hover:scale-100'}`}
                 >
                   <img 
                     src="/images/PlayWithFriends.svg" 

@@ -6,6 +6,7 @@ import { useState, useEffect } from "react"
 import customAxios from '../../customAxios'
 import { useWebSocket } from '../../contexts/WebSocketProvider';
 import {IconUserCancel} from '@tabler/icons-react'
+import { useUser } from '../../contexts/UserContext';
 
 const montserrat = Montserrat({
   subsets: ['latin'],
@@ -29,6 +30,7 @@ interface BlockedFriendProps {
 
 export default function BlockedFriends({ blockedFriend }: BlockedFriendProps) {
   const [isMobile, setIsMobile] = useState(false)
+  const { userData } = useUser();
   const { send } = useWebSocket();
 
   const handleUnblock = async () => {
@@ -60,14 +62,11 @@ export default function BlockedFriends({ blockedFriend }: BlockedFriendProps) {
   return (
     <div className={`w-full mx-auto h-20 lg:h-[12%] md:h-[20%] mt-2 rounded-xl bg-[#D8D8F7] shadow-md shadow-[#BCBCC9] relative ${isMobile ? '' : ' min-h-[90px]'} ${montserrat.className}`}>
       <div className="flex items-center h-full p-2">
-        <div className="flex flex-row items-center justify-center lg:w-[10%] lg:h-[90%] md:w-[10%] md:h-[90%] w-[20%] h-[90%]">
-          <Image 
-            priority 
-            src="/images/default-avatar.png"
+        <div className="relative w-16 h-16 md:w-20 md:h-20 lg:w-15 lg:h-15">
+          <img
+            src={userData?.image_field ? `http://127.0.0.1:8000/api${userData.image_field}` : "/images/Default_profile.png"}
             alt={`${blockedFriend.user.username}'s profile`} 
-            width={50} 
-            height={50} 
-            className="lg:w-[90%] lg:h-[90%] md:w-[80%] md:h-[80%] w-[100%] h-[100%] rounded-full" 
+            className="w-full h-full rounded-full object-cover border-2 border-[#BCBCC9]"
           />
         </div>
         <div className="ml-4 flex flex-col justify-center">

@@ -221,7 +221,7 @@ export default function Profile() {
         <div className="flex flex-col lg:flex-row w-full  items-center justify-center lg:gap-10 xl:gap-32 2xl:gap-60      lg:mx-10 xl:mx-28 2xl:mx-40">
           {userSearchedFor && (<UserProfile loggedInUser={loggedInUser} user={userSearchedFor} isSelf={isSelf}/>)}
           
-          <LeaderBoard first={user3} second={user2} third={user3} />
+          {/* <LeaderBoard first={user3} second={user2} third={user3} /> */}
         </div>
         
         {/* <MatchHistory /> */}

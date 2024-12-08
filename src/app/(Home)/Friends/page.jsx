@@ -112,7 +112,7 @@ export default function Friends() {
 
           case 'friends-add':
             setFriendRequestsData(prev => [...prev, {
-              friendship_id: data.friendship_id,
+              freindship_id: data.freindship_id,
               user: data.user,
               is_accepted: false,
               user_from: data.user_from,
@@ -123,10 +123,10 @@ export default function Friends() {
 
           case 'friends-accept':
             setFriendRequestsData(prev => 
-              prev.filter(request => request.friendship_id !== data.friendship_id)
+              prev.filter(request => request.freindship_id !== data.freindship_id)
             );
             setFriendsData(prev => [...prev, {
-              friendship_id: data.friendship_id,
+              freindship_id: data.freindship_id,
               user: data.user,
               user_from: data.user_from,
               user_to: data.user_to,
@@ -137,10 +137,10 @@ export default function Friends() {
 
           case 'friends-block':
             setFriendsData(prev => prev.filter(friend => 
-              friend.friendship_id !== data.friendship_id
+              friend.freindship_id !== data.freindship_id
             ));
             setBlockedFriendsData(prev => [...prev, {
-              friendship_id: data.friendship_id,
+              freindship_id: data.freindship_id,
               user: data.user,
               is_accepted: true,
               blocked: true,
@@ -150,7 +150,7 @@ export default function Friends() {
 
           case 'friends-unblock':
             setBlockedFriendsData(prev => prev.filter(blocked => 
-              blocked.friendship_id !== data.friendship_id
+              blocked.freindship_id !== data.freindship_id
             ));
             break;
 
@@ -237,7 +237,7 @@ export default function Friends() {
                 <div className="flex flex-col gap-4">
                   {friendRequestsData.length > 0 ? (
                     friendRequestsData.map((request) => (
-                      <FriendRequests key={request.friendship_id} request={request} />
+                      <FriendRequests key={request.freindship_id} request={request} />
                     ))
                   ) : (
                     <div className="flex flex-col items-center justify-center h-full gap-4">
