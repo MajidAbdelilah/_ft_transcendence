@@ -21,7 +21,8 @@ from django.http import JsonResponse
 from authapp.serializers import UserSerializer
 from authapp.authenticate import CustomAuthentication
 from django.http import HttpResponseRedirect
-
+import requests
+from django.core.files.base import ContentFile
 class login (APIView):
     permission_classes=[AllowAny]
     def get(self, request):
@@ -61,8 +62,9 @@ class callback(APIView):
                 )
         if user_response.status_code != 200:
             return JsonResponse({'message': 'Failed to fetch user info', "data": None}, status=400)
+        # print("///////////******/////", profile_image)
         user_data = user_response.json()
-
+        profile_image = user_data['url']
         existeduser = User.objects.filter(email = user_data['email']).first()
         if existeduser is not None:
             authenticate(email = user_data['email'], password = "")
@@ -70,7 +72,11 @@ class callback(APIView):
             resp.data = {"message": "user exist in database and now he is logged in succefully", "data": serializer.data }
             return resp
         else:
-            user = User.objects.create(username=user_data['login'], email=user_data['email'], password="", profile_photo= user_data['url'])
+            image_response = requests.get('https://cdn.intra.42.fr/users/2eb70e46fa2b2e9092cb3a5cc8c7973c/gghaya.jpg')
+            user = User.objects.create(username=user_data['login'], email=user_data['email'], password="", image_field="https://cdn.intra.42.fr/users/2eb70e46fa2b2e9092cb3a5cc8c7973c/gghaya.jpg")
+            filename = profile_image.split('/')[-1] 
+            user.image_field.save("gghaya", ContentFile(image_response.content))
+            user.save()
             serializer = UserSerializer(instance=user)
             resp.data ={"message": "user added succefully", "data": serializer.data}
             return resp
