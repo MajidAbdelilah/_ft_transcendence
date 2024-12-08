@@ -59,7 +59,13 @@ function LoginPage() {
         toast.error(errorMsg || "Something Went Wrong!");
       } else {
         if (response.data.data.tokens.access) {
-          router.replace("/Dashboard");
+          console.log(response.data.data.user.is_2fa);
+          if(response.data.data.user.is_2fa){
+            router.replace("/authLogin");
+            
+          }
+          else
+            router.replace("/Dashboard");
         }
       }
     } catch (error) {

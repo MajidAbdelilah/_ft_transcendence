@@ -8,6 +8,8 @@ import { UserProvider } from '../contexts/UserContext';
 import { WebSocketProvider } from '../contexts/WebSocketProvider';
 import { useRouter } from 'next/navigation';
 import DashProvider from './Dashboard/Dashcontext';
+// import { useUser } from '../contexts/UserContext';
+
 
 const montserrat = Montserrat({
     subsets: ["latin"],
@@ -16,7 +18,8 @@ const montserrat = Montserrat({
 
 function RootLayout({ children }) {
   const [isMobile, setIsMobile] = useState(false); 
-  const router = useRouter();
+  // const [userData] = useUser();
+  // const router = useRouter();
 
   useEffect(() => {
     const handleResize = () => {
@@ -29,6 +32,14 @@ function RootLayout({ children }) {
       window.removeEventListener("resize", handleResize)
     };
   }, []);
+
+
+
+  // useEffect(() => {
+  //  if(userData.2fa_enable == false){
+  //     router.replace('/authLogin')
+  //  }
+  // }, []);
 
   return (
     <UserProvider>
