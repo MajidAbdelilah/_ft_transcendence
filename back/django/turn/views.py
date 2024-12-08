@@ -1,18 +1,26 @@
+# views.py
+
 from django.shortcuts import render
 from django.http import JsonResponse
 from .models import Tournament, Match
 
-# filter tournaments by player in the matches json field
-def get_tournaments_by_player(request, username):
-    tournaments = Tournament.objects.filter(matches__contains=username)
+def get_tournaments_by_player(request, username): 
+    tournaments = Tournament.objects.all()
     
     data = []
     for tournament in tournaments:
-        data.append({
-            'winner': tournament.winner,
-            'date': tournament.date,
-            'matches': tournament.matches,
-        })
+        matches = tournament.matches  # Already a Python dict
+        
+        # Iterate over match entries only (exclude ball entries)
+        for key, match in matches.items():
+            if isinstance(match, dict) and ('p1_username' in match or 'p2_username' in match):
+                if match.get('p1_username') == username or match.get('p2_username') == username:
+                    data.append({
+                        'winner': tournament.winner,
+                        'date': tournament.date,
+                        'matches': matches,
+                    })
+                    break  # Avoid duplicate entries
     
     return JsonResponse(data, safe=False)
 

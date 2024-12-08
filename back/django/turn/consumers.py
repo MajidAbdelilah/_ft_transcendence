@@ -59,11 +59,11 @@ class PingPongConsumer(AsyncWebsocketConsumer):
                         'player4': {'y': self.height/2 - 25, 'height': 100, 'x': self.width - 10, 'width': 10, 'direction': None, 'score': 0, 'full': False, 'username': '', 'game_start': False, 'current_match': 'match2'},
                     },
                     'matches': {
-                        'match1': {'player1': None, 'p1_username': None, 'player2': None, 'p2_username': None, 'winner': None, 'game_start': False},
+                        'match1': {'player1': None, 'p1_username': None, 'p1_score': 0, 'player2': None, 'p2_username': None, 'p2_score': 0, 'winner': None, 'game_start': False},
                         'ball1': {'x': self.width / 2, 'y': self.height / 2, 'radius': 5, 'vx': 5, 'vy': 5},
-                        'match2': {'player1': None, 'p1_username': None, 'player2': None, 'p2_username': None, 'winner': None, 'game_start': False},
+                        'match2': {'player1': None, 'p1_username': None, 'p1_score': 0, 'player2': None, 'p2_username': None, 'p2_score': 0, 'winner': None, 'game_start': False},
                         'ball2': {'x': self.width / 2, 'y': self.height / 2, 'radius': 5, 'vx': 5, 'vy': 5},
-                        'final': {'player1': None, 'p1_username': None, 'player2': None, 'p2_username': None, 'winner': None, 'game_start': False},
+                        'final': {'player1': None, 'p1_username': None, 'p1_score': 0, 'player2': None, 'p2_username': None, 'p2_score': 0, 'winner': None, 'game_start': False},
                         'ball_final': {'x': self.width / 2, 'y': self.height / 2, 'radius': 5, 'vx': 5, 'vy': 5},
                     },
                 'is_tournament': True,
@@ -371,14 +371,20 @@ class PingPongConsumer(AsyncWebsocketConsumer):
         self.room_var[self.room_name]['players']['player4']['current_match'] = 'match2'
         self.room_var[self.room_name]['matches']['match1']['player1'] = None
         self.room_var[self.room_name]['matches']['match1']['player2'] = None
+        self.room_var[self.room_name]['matches']['match1']['p1_score'] = 0
+        self.room_var[self.room_name]['matches']['match1']['p2_score'] = 0
         self.room_var[self.room_name]['matches']['match1']['winner'] = None
         self.room_var[self.room_name]['matches']['match1']['game_start'] = False
         self.room_var[self.room_name]['matches']['match2']['player1'] = None
         self.room_var[self.room_name]['matches']['match2']['player2'] = None
+        self.room_var[self.room_name]['matches']['match2']['p1_score'] = 0
+        self.room_var[self.room_name]['matches']['match2']['p2_score'] = 0
         self.room_var[self.room_name]['matches']['match2']['winner'] = None
         self.room_var[self.room_name]['matches']['match2']['game_start'] = False
         self.room_var[self.room_name]['matches']['final']['player1'] = None
         self.room_var[self.room_name]['matches']['final']['player2'] = None
+        self.room_var[self.room_name]['matches']['final']['p1_score'] = 0
+        self.room_var[self.room_name]['matches']['final']['p2_score'] = 0
         self.room_var[self.room_name]['matches']['final']['winner'] = None
         self.room_var[self.room_name]['matches']['final']['game_start'] = False
         self.room_var[self.room_name]['end_tournement'] = True
@@ -388,20 +394,27 @@ class PingPongConsumer(AsyncWebsocketConsumer):
 
     async def end_match(self, winner):
         current_match = self.room_var[self.room_name]['players'][winner]['current_match']
+        matches = self.room_var[self.room_name]['matches']
+        players = self.room_var[self.room_name]['players']
         print("current_match: ", current_match)
         self.room_var[self.room_name]['matches'][current_match]['winner'] = winner
         if(current_match == 'match1'):
             self.room_var[self.room_name]['matches']['match1']['winner'] = winner
             self.room_var[self.room_name]['matches']['match1']['game_start'] = False
+            self.room_var[self.room_name]['matches']['match1']['p1_score'] = players[matches['match1']['player1']]['score']
+            self.room_var[self.room_name]['matches']['match1']['p2_score'] = players[matches['match1']['player2']]['score']
         elif(current_match == 'match2'):
             self.room_var[self.room_name]['matches']['match2']['winner'] = winner
             self.room_var[self.room_name]['matches']['match2']['game_start'] = False
+            self.room_var[self.room_name]['matches']['match2']['p1_score'] = players[matches['match2']['player1']]['score']
+            self.room_var[self.room_name]['matches']['match2']['p2_score'] = players[matches['match2']['player2']]['score']
         elif(current_match == 'final'):
             self.room_var[self.room_name]['matches']['final']['winner'] = winner
             self.room_var[self.room_name]['matches']['final']['game_start'] = False
+            self.room_var[self.room_name]['matches']['final']['p1_score'] = players[matches['final']['player1']]['score']
+            self.room_var[self.room_name]['matches']['final']['p2_score'] = players[matches['final']['player2']]['score']
         
         match = self.room_var[self.room_name]['matches'][current_match];
-        players = self.room_var[self.room_name]['players']
         print(match, current_match, winner)
         await self.save_match_data(players[match['player1']]['username'], 
         players[match['player1']]['score'], 
