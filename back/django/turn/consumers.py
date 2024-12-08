@@ -380,7 +380,7 @@ class PingPongConsumer(AsyncWebsocketConsumer):
         self.room_var[self.room_name]['matches']['final']['player1'] = None
         self.room_var[self.room_name]['matches']['final']['player2'] = None
         self.room_var[self.room_name]['matches']['final']['winner'] = None
-        self.room_var[self.room_name]['final']['game_start'] = False
+        self.room_var[self.room_name]['matches']['final']['game_start'] = False
         self.room_var[self.room_name]['end_tournement'] = True
         print("Tournament ended")
         
@@ -401,14 +401,16 @@ class PingPongConsumer(AsyncWebsocketConsumer):
             self.room_var[self.room_name]['matches']['final']['game_start'] = False
         
         match = self.room_var[self.room_name]['matches'][current_match];
+        players = self.room_var[self.room_name]['players']
         print(match, current_match, winner)
-        await self.save_match_data(match['player1'], 
-        self.room_var[self.room_name]['players'][match['player1']]['score'], 
-        match['player2'], 
-        self.room_var[self.room_name]['players'][match['player2']]['score'],
-         winner)
+        await self.save_match_data(players[match['player1']]['username'], 
+        players[match['player1']]['score'], 
+        players[match['player2']]['username'], 
+        players[match['player2']]['score'],
+        players[winner]['username'])
         # Save the tournament data if final match is completed
         if self.room_var[self.room_name]['matches']['final']['winner']:
+            print("Saving tournament data, winner:", self.room_var[self.room_name]['matches']['final']['winner'])
             tournament = Tournament(
                 winner=self.room_var[self.room_name]['matches']['final']['winner'],
                 date=timezone.now(),
@@ -472,7 +474,7 @@ class PingPongConsumer(AsyncWebsocketConsumer):
         self.room_var[self.room_name]['players'][self.room_var[self.room_name]['matches']['final']['player1']]['current_match'] = 'final'
         self.room_var[self.room_name]['players'][self.room_var[self.room_name]['matches']['final']['player2']]['current_match'] = 'final'
         
-        self.room_var[self.room_name]['game_start'] = True
+        self.room_var[self.room_name]['matches']['final']['game_start'] = True
 
 
     def reset_ball_tournament(self, ball):
