@@ -19,8 +19,8 @@ export default function ListFriends({ getSelectedFriend, switchChatState }) {
             
             { withCredentials: true, headers: {} }
             );
-            // console.log("===", response);
-            setFriendsList(response.data.friends); // Assuming the API returns { friends: [...] }
+            console.log("======", response);
+            setFriendsList(response.data); // Assuming the API returns { friends: [...] }
         } catch (error) {
             console.error("Error fetching friends data:", error);
         }
@@ -31,7 +31,7 @@ export default function ListFriends({ getSelectedFriend, switchChatState }) {
 
 
     
-    if (friendsList.length === 0) {
+    if (friendsList && friendsList.length === 0) {
         return <p className="text-center text-gray-500">loading friends ...</p>;
     }
 
@@ -40,7 +40,7 @@ export default function ListFriends({ getSelectedFriend, switchChatState }) {
     return (
         <div className="friendsList">
 
-        {friendsList.map((friend) => (
+        {friendsList && friendsList.map((friend) => (
             <div 
             key={friend.user.id} 
             className="friendInfo my-2 px-1 w-full flex flex-row items-center overflow-hidden cursor-pointer" 
