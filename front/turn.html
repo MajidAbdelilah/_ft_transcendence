@@ -23,6 +23,7 @@
         let gameStarted = false;
         let match = '';
         let username = '';
+        let direction = null;
 
         // Initialize WebSocket for PingPong game
         function initializeWebSocket() {
@@ -41,13 +42,17 @@
             console.log("player", player);
             socket.onopen = function() {
                 socket.send(JSON.stringify({
-                    'username': username
+                    'player': player,
+                    'direction': direction,
+                    'username': username,
+                    'gameStarted': gameStarted
                 }));
             };
             socket.onmessage = function(e) {
                 const data = JSON.parse(e.data);
-                // console.log('Received:', data);
+                console.log('Received:', data);
                 if (data.is_tournament) {
+                    
                     // Determine player's assigned role and match
                     if (data.players.player1.username === username) {
                         player = 'player1';
@@ -99,7 +104,9 @@
                 } else {
                     // Non-tournament mode
                     if (data.start_game === false) {
-                        console.log('Game not started');
+                        //console.log('Game not started');
+                        // reload the page
+                        window.location.reload();
                         socket.close();
                         init();
                         return;
@@ -184,6 +191,10 @@
                 ctx.fillStyle = 'rgba(0, 0, 0, 0.5)';
                 ctx.fillText(data.players.player1.score, canvas.width / 2 - 150, canvas.height / 2 + 50);
                 ctx.fillText(data.players.player2.score, canvas.width / 2 + 50, canvas.height / 2 + 50);
+                ctx.font = '30px Arial';
+                ctx.fillStyle = 'rgba(0, 0, 0, 0.5)';
+                ctx.fillText(data.players.player1.username, canvas.width / 2 - 150, 50);
+                ctx.fillText(data.players.player2.username, canvas.width / 2 + 50, 50);
                 ctx.fillRect(data.players.player1.x, data.players.player1.y, data.players.player1.width, data.players.player1.height);
                 ctx.fillRect(data.players.player2.x, data.players.player2.y, data.players.player2.width, data.players.player2.height);
                 ctx.beginPath();
@@ -194,16 +205,23 @@
         
         // Handle key events to control paddles
         document.addEventListener('keydown', function(event) {
+            let direction = null;
+            if(!socket || socket.readyState !== WebSocket.OPEN)
+            {
+                return;
+            }
             if (!gameStarted && event.key === ' ') {
                 gameStarted = true;
+
                 // Notify the server that the player is ready
                 socket.send(JSON.stringify({
+                    'player': player,
+                    'direction': direction,
                     'username': username,
                     'gameStarted': gameStarted
                 }));
             }
 
-            let direction = null;
             if (event.key === 'ArrowUp') {
                 direction = 'up';
             } else if (event.key === 'ArrowDown') {
