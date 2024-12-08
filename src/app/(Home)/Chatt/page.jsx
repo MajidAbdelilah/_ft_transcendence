@@ -266,7 +266,7 @@ const getSelectedFriend = (friend) => {
             };
         
             // Update the conversation state
-            setConversation((prev) => [...prev, newMessage]);
+            setConversation((prev) => [newMessage, ...prev]);
 
           }
 
@@ -353,7 +353,7 @@ const getSelectedFriend = (friend) => {
         
         <div className="Conversation  flex flex-col flex-grow overflow-y-auto custom-scrollbar break-words p-2 scroll-smooth" ref={conversationContainer}>
         
-          {Array.isArray(conversation) && conversation.length > 0 ? (
+          {/* {Array.isArray(conversation) && conversation.length > 0 ? (
             conversation.map((message, index) =>
               message.sender === friend.user.username ? (
                 <FriendMsgBox key={index} time={message.message_date} msg={message.message_content} />
@@ -361,6 +361,19 @@ const getSelectedFriend = (friend) => {
                 <MyMsgBox key={index} time={message.message_date} msg={message.message_content} />
               )
             )
+          ) : (
+            <p className="text-center text-gray-500">Loading...</p>
+          )} */}
+          {Array.isArray(conversation) && conversation.length > 0 ? (
+            [...conversation]
+              .reverse()
+              .map((message, index) =>
+                message.sender === friend.user.username ? (
+                  <FriendMsgBox key={index} time={message.message_date} msg={message.message_content} />
+                ) : (
+                  <MyMsgBox key={index} time={message.message_date} msg={message.message_content} />
+                )
+              )
           ) : (
             <p className="text-center text-gray-500">Loading...</p>
           )}
