@@ -70,12 +70,21 @@ export default function FriendsList({ friends = [] }: FriendsListProps) {
 
   const handleBlock = async (friend: Friend) => {
     try {
-      await customAxios.post(`/api/friends/block`, {
-        freindship_id: friend.freindship_id
+      console.log("Sending friend block request:", {
+        freindship_id: friend.freindship_id,
+        user: friend.user
       });
       send({
         type: 'friends-block',
-        freindship_id: friend.freindship_id
+        freindship_id: friend.freindship_id,
+        user: friend.user,
+        user_from: friend.user_from,
+        user_to: friend.user_to,
+        user_is_logged_in: friend.user_is_logged_in
+      });
+      console.log("Friend block message sent:", {
+        freindship_id: friend.freindship_id,
+        user: friend.user
       });
     } catch (error) {
       console.error('Error blocking friend:', error);
@@ -119,7 +128,7 @@ export default function FriendsList({ friends = [] }: FriendsListProps) {
             <div className="flex items-center h-full p-2">
               <div className="relative w-16 h-16 md:w-20 md:h-20 lg:w-15 lg:h-15">
                 <img
-                  src={userData?.image_field ? `http://127.0.0.1:8000/api${userData.image_field}` : "/images/Default_profile.png"}
+                  src={"/images/Default_profile.png"}
                   alt={`${friend.user.username}'s profile`}
                   className="w-full h-full rounded-full object-cover border-2 border-[#BCBCC9]"
                 />

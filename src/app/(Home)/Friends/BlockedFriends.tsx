@@ -35,13 +35,22 @@ export default function BlockedFriends({ blockedFriend }: BlockedFriendProps) {
 
   const handleUnblock = async () => {
     try {
-      await customAxios.post(`/api/friends/unblock`, { 
-        freindship_id: blockedFriend.freindship_id 
-      })
+      console.log("Sending friend unblock request:", {
+        freindship_id: blockedFriend.freindship_id,
+        user: blockedFriend.user
+      });
       send({
         type: 'friends-unblock',
-        freindship_id: blockedFriend.freindship_id
-      })
+        freindship_id: blockedFriend.freindship_id,
+        user: blockedFriend.user,
+        user_from: blockedFriend.user_from,
+        user_to: blockedFriend.user_to,
+        user_is_logged_in: blockedFriend.user_is_logged_in
+      });
+      console.log("Friend unblock message sent:", {
+        freindship_id: blockedFriend.freindship_id,
+        user: blockedFriend.user
+      });
     } catch (error) {
       console.error('Error unblocking friend:', error)
     }
@@ -64,7 +73,7 @@ export default function BlockedFriends({ blockedFriend }: BlockedFriendProps) {
       <div className="flex items-center h-full p-2">
         <div className="relative w-16 h-16 md:w-20 md:h-20 lg:w-15 lg:h-15">
           <img
-            src={userData?.image_field ? `http://127.0.0.1:8000/api${userData.image_field}` : "/images/Default_profile.png"}
+            src={"/images/Default_profile.png"}
             alt={`${blockedFriend.user.username}'s profile`} 
             className="w-full h-full rounded-full object-cover border-2 border-[#BCBCC9]"
           />

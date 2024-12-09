@@ -45,13 +45,22 @@ export default function FriendRequests({ request }: FriendRequestProps) {
     setError(null);
     setIsLoading(prev => ({ ...prev, accept: true }));
     try {
-      await customAxios.post(`http://127.0.0.1:8000/friend/friends-accept`, { 
-        freindship_id: request.freindship_id 
-      })
+      console.log("Sending friend accept request:", {
+        freindship_id: request.freindship_id,
+        user: request.user
+      });
       send({
-        type: 'friends-accept',
-        freindship_id: request.freindship_id
-      })
+        type: 'friend-accept',
+        freindship_id: request.freindship_id,
+        user: request.user,
+        user_from: request.user_from,
+        user_to: request.user_to,
+        user_is_logged_in: request.user_is_logged_in
+      });
+      console.log("Friend request accept message sent:", {
+        freindship_id: request.freindship_id,
+        user: request.user
+      });
     } catch (error) {
       console.error('Error accepting friend request:', error)
       setError('Failed to accept friend request. Please try again.')
@@ -65,13 +74,22 @@ export default function FriendRequests({ request }: FriendRequestProps) {
     setError(null);
     setIsLoading(prev => ({ ...prev, reject: true }));
     try {
-      await customAxios.post(`http://127.0.0.1:8000/friend/friends-remove`, {
-        freindship_id: request.freindship_id
-      })
+      console.log("Sending friend reject request:", {
+        freindship_id: request.freindship_id,
+        user: request.user
+      });
       send({
         type: 'friends-reject',
-        freindship_id: request.freindship_id
-      })
+        freindship_id: request.freindship_id,
+        user: request.user,
+        user_from: request.user_from,
+        user_to: request.user_to,
+        user_is_logged_in: request.user_is_logged_in
+      });
+      console.log("Friend request reject message sent:", {
+        freindship_id: request.freindship_id,
+        user: request.user
+      });
     } catch (error) {
       console.error('Error rejecting friend request:', error)
       setError('Failed to reject friend request. Please try again.')
@@ -111,7 +129,7 @@ export default function FriendRequests({ request }: FriendRequestProps) {
           <div className="flex items-center h-full p-2" key={request.user.id}>
             <div className="relative w-16 h-16 md:w-20 md:h-20 lg:w-15 lg:h-15">
               <img
-                src={userData?.image_field ? `http://127.0.0.1:8000/api${userData.image_field}` : "/images/Default_profile.png"}
+                src={"/images/Default_profile.png"}
                 alt={`${request.user.username}'s profile`} 
                 className="w-full h-full rounded-full object-cover border-2 border-[#BCBCC9]" 
               />
