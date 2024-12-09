@@ -114,6 +114,11 @@ def get_friendship(freindship_id):
         return Friendship.objects.get(freindship_id=freindship_id)
     except Friendship.DoesNotExist:
         return None
+def get_friendship_by_user(user_from, user_to):
+    try:
+        return Friendship.objects.get(Q(user_from=user_from, user_to=user_to) | Q(user_from=user_to, user_to=user_from))
+    except Friendship.DoesNotExist:
+        return None
 @database_sync_to_async
 def get_user(user_id):
     try:
@@ -190,34 +195,51 @@ class FriendRequestConsumer(AsyncWebsocketConsumer):
             return None
 
     async def handle_friend_add(self, data):
-        to_user_id = data.get('to_user_id')
-        if not to_user_id:
+        try:
+            to_user_id = data.get('to_user_id')
+            if not to_user_id:
+                await self.send(text_data=json.dumps({
+                    'status': 'error',
+                    'message': 'Invalid user ID'
+                }))
+                return
+
+            # Create friend request
+            # friendship = await self.create_friend_request(to_user_id)
+            friendship = get_friendship_by_user(self.user, to_user_id)
+            if not friendship:
+                friendshipcreate = Friendship.objects.create(
+                    user_from=self.user,
+                    user_to=User.objects.get(id=to_user_id),
+                    is_accepted=False
+                )
+                if not friendshipcreate:
+                    await self.send(text_data=json.dumps({
+                        'status': 'error',
+                        'message': 'Friend request not sent'
+                    }))
+                    return
+                # Notify the target user about the friend request
+                await self.channel_layer.group_send(
+                    f'user_{to_user_id}',
+                    {
+                        'type': 'friends-add',
+                        'freindship_id': friendship.freindship_id,
+                        'user': {
+                            'username': self.user.username,
+                            'image_name': self.user.image_name or ''
+                        }
+                    }
+                )
+
+                await self.send(text_data=json.dumps({
+                    'status': 'success',
+                    'message': 'Friend request sent'
+                }))
+        except Exception as e:
             await self.send(text_data=json.dumps({
                 'status': 'error',
-                'message': 'Invalid user ID'
-            }))
-            return
-
-        # Create friend request
-        friendship = await self.create_friend_request(to_user_id)
-        
-        if friendship:
-            # Notify the target user about the friend request
-            await self.channel_layer.group_send(
-                f'user_{to_user_id}',
-                {
-                    'type': 'friends_add',
-                    'freindship_id': friendship.freindship_id,
-                    'user': {
-                        'username': self.user.username,
-                        'image_name': self.user.image_name or ''
-                    }
-                }
-            )
-            
-            await self.send(text_data=json.dumps({
-                'status': 'success',
-                'message': 'Friend request sent'
+                'message': str(e)
             }))
 
     async def handle_friend_accept(self, data):
