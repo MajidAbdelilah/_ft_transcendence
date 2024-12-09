@@ -241,8 +241,9 @@ const getSelectedFriend = (friend) => {
         if (loggedInUser &&  loggedInUser.id !== 0) {
           // console.log("triggered ----", loggedInUser.id);
           connect(loggedInUser.id);
+          console.log("id ;  ----", loggedInUser.id);
         }
-        }, [loggedInUser.id]);
+        }, []);
 
 
 

@@ -34,13 +34,13 @@ export function WebSocketProvider({ children }) {
     return () => newSocket.close();
   }, []);
   
-  useEffect(() => {
-    return () => {
-      if (socket) {
-        socket.close();
-      }
-    };
-  }, [socket]);
+  // useEffect(() => {
+  //   return () => {
+  //     if (socket) {
+  //       socket.close();
+  //     }
+  //   };
+  // }, [socket]);
 
 
   const send = useCallback((message) => {
