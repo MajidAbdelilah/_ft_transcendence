@@ -203,7 +203,7 @@ function Navbar() {
 
   useEffect(() => {
     const handleWebSocketMessage = (data) => {
-      if (!data || !data.type) return;
+      if (!data) return;
 
       try {
         switch (data.type) {
@@ -211,7 +211,7 @@ function Navbar() {
             handleNewNotification({
               id: data.freindship_id,
               type: 'friend_request',
-              avatar: data.user.profiles_photo,
+              avatar: data.user.image_name ? `/${data.user.image_name}` : '/images/Default_profile.png',
               message: `${data.user.username} sent you a friend request`,
               timestamp: new Date().toISOString(),
               isNew: true,
@@ -219,17 +219,34 @@ function Navbar() {
             });
             break;
 
-          case 'friends-accept':
+          case 'friends_accept':
             handleNewNotification({
               id: data.freindship_id,
               type: 'friend_accept',
-              avatar: data.user.profile_photo,
+              avatar: data.user.image_name ? `/${data.user.image_name}` : '/images/Default_profile.png',
               message: `${data.user.username} accepted your friend request`,
               timestamp: new Date().toISOString(),
               isNew: true,
               senderUsername: data.user.username
             });
             break;
+
+          case 'friends_list_update':
+            // Update friends list silently
+            if (typeof window !== 'undefined') {
+              const event = new CustomEvent('friendsListUpdate', { detail: data });
+              window.dispatchEvent(event);
+            }
+            break;
+
+          case 'friends_accept_error':
+          case 'friends_block_success':
+          case 'friends_block_error':
+            // These are status messages, we can ignore them
+            break;
+
+          default:
+            console.log('Unhandled WebSocket message type:', data.type);
         }
       } catch (error) {
         console.error('Error handling notification:', error);
@@ -395,7 +412,7 @@ function Navbar() {
             ) : (
             <img
               id="avatarButton"
-              className="sm:w-10 sm:h-10 w-8 h-8 rounded-full bg-[#D7D7EA] cursor-pointer rounded-full"
+              className=" bg-red-500 sm:w-10 sm:h-10 w-8 h-8 rounded-full bg-[#D7D7EA] cursor-pointer rounded-full"
               src={userData?.image_field ? `http://127.0.0.1:8000/api${userData.image_field}` : "/images/Default_profile.png"}
               alt="User dropdown"
               width={100}

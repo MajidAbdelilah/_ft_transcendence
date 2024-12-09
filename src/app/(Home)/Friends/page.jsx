@@ -108,37 +108,52 @@ export default function Friends() {
                   }
                 : friend
             ));
+            console.log("Updated friendsData:", friendsData);
             break;
 
-          case 'friends-add':
-            setFriendRequestsData(prev => [...prev, {
-              freindship_id: data.freindship_id,
-              user: data.user,
-              is_accepted: false,
-              user_from: data.user_from,
-              user_to: data.user_to,
-              user_is_logged_in: data.user_is_logged_in
-            }]);
-            break;
-
-          case 'friends-accept':
-            setFriendRequestsData(prev => 
-              prev.filter(request => request.freindship_id !== data.freindship_id)
-            );
-            setFriendsData(prev => [...prev, {
-              freindship_id: data.freindship_id,
-              user: data.user,
-              user_from: data.user_from,
-              user_to: data.user_to,
-              user_is_logged_in: data.user_is_logged_in,
-              is_accepted: true
-            }]);
+          case 'friends_accept':
+            console.log("Received friend accept message:", data);
+            console.log("Current friend requests:", friendRequestsData);
+            console.log("Current friends:", friendsData);
+            
+            // Remove from friend requests
+            setFriendRequestsData(prev => {
+              console.log("Filtering friend requests. Current:", prev);
+              const updated = prev.filter(request => request.freindship_id !== data.freindship_id);
+              console.log("Updated friend requests:", updated);
+              return updated;
+            });
+            
+            // Add to friends list if not already there
+            setFriendsData(prev => {
+              console.log("Updating friends list. Current:", prev);
+              const exists = prev.some(friend => friend.freindship_id === data.freindship_id);
+              if (!exists) {
+                const newFriend = {
+                  freindship_id: data.freindship_id,
+                  user: data.user,
+                  user_from: data.user_from,
+                  user_to: data.user_to,
+                  user_is_logged_in: data.user_is_logged_in,
+                  is_accepted: true
+                };
+                console.log("Adding new friend:", newFriend);
+                return [...prev, newFriend];
+              }
+              console.log("Friend already exists in list");
+              return prev;
+            });
+            console.log("Updated friendsData:", friendsData);
+            console.log("Updated friendRequestsData:", friendRequestsData);
             break;
 
           case 'friends-block':
+            console.log("reciiiiiiiiced");
+
             setFriendsData(prev => prev.filter(friend => 
               friend.freindship_id !== data.freindship_id
             ));
+            console.log("Updated friendsData:", friendsData);
             setBlockedFriendsData(prev => [...prev, {
               freindship_id: data.freindship_id,
               user: data.user,
@@ -146,12 +161,25 @@ export default function Friends() {
               blocked: true,
               is_user_from: data.is_user_from
             }]);
+            console.log("Updated blockedFriendsData:", blockedFriendsData);
             break;
 
           case 'friends-unblock':
+            console.log("reciiiiiiiiced");
+
             setBlockedFriendsData(prev => prev.filter(blocked => 
               blocked.freindship_id !== data.freindship_id
             ));
+            console.log("Updated blockedFriendsData:", blockedFriendsData);
+            break;
+
+          case 'friends_list_update':
+            if (data.action === 'add') {
+              // Add new friend to friends list
+              setFriendsData(prev => [...prev, data.friend]);
+              // Remove from friend requests if it exists
+              setFriendRequestsData(prev => prev.filter(req => req.freindship_id !== data.friend.freindship_id));
+            }
             break;
 
           default:
