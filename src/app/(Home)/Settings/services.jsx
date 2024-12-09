@@ -55,10 +55,11 @@ const Services = {
         const formData = new FormData();
 
         // Append the other data fields
-        formData.append('username', data.username);
-        formData.append('current_password', data.current_password);
-        formData.append('new_password', data.new_password);
-        formData.append('profile_photo', data.profile_image); 
+        console.log(data)
+        formData.append('username', data.username ?data.username: "");
+        formData.append('current_password', data.current_password ?data.current_password:'');
+        formData.append('new_password', data.new_password ?data.new_password:"");
+        formData.append('profile_photo', data.profile_image ?data.profile_image:{}); 
 
 
 
