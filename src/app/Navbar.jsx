@@ -394,6 +394,7 @@ function Navbar() {
               <Skeleton className="sm:w-10 sm:h-10 w-8 h-8 rounded-full bg-[#d1daff]" />
             </>
             ) : (
+              // <Skeleton className="sm:w-10 sm:h-10 w-8 h-8 rounded-full bg-[#d1daff]" />
             <img
               id="avatarButton"
               className="sm:w-10 sm:h-10 w-8 h-8 rounded-full bg-[#D7D7EA] cursor-pointer rounded-full"
@@ -401,8 +402,9 @@ function Navbar() {
               alt="User dropdown"
               width={100}
               height={100}
-              />
-            )}
+              /> 
+            )
+              }
             <Image
               className="w-4 h-8 cursor-pointer absolute bottom-[-10px] right-0"
               src="/images/Frame21.svg"

@@ -3,8 +3,10 @@ import { useState, useEffect} from "react";
 import Image from "next/image";
 import axios from "axios";
 
+import { useUser } from '../../../contexts/UserContext';
 
 export default function ListFriends({ getSelectedFriend, switchChatState }) {
+    const { userData, isLoading, setUserData } = useUser();
 
     const [friendsList, setFriendsList] = useState([]);
 
@@ -47,7 +49,7 @@ export default function ListFriends({ getSelectedFriend, switchChatState }) {
             onClick={() =>{ getSelectedFriend(friend); switchChatState()}} >
             
             
-                <Image 
+                {/* <Image 
                     src={friend.user.profile_photo === undefined || friend.user.profile_photo === null || friend.user.profile_photo === "" || friend.user.profile_photo === "/images/%7B%7D" 
                         ? "/images/avatarprofile.svg" 
                         : friend.user.profile_photo}
@@ -56,7 +58,25 @@ export default function ListFriends({ getSelectedFriend, switchChatState }) {
                     height={45}
                     className="rounded-full left-0 top-0 w-[45px] h-[45px]"
 
-                />
+                /> */}
+                {isLoading ? (
+                    <>
+                    <Skeleton className="sm:w-10 sm:h-10 w-8 h-8 rounded-full bg-[#d1daff]" />
+                    </>
+                    ) : (
+                    <img
+                    id="avatarButton"
+                    className="rounded-full left-0 top-0 w-[45px] h-[45px]"
+                    src={friend?.image_field ? `http://127.0.0.1:8000/api${friend.image_field}` : "/images/Default_profile.png"}
+                    alt="User dropdown"
+                    width={45}
+                    height={45}
+                    /> 
+                    )
+                }
+
+
+
                 <h3 className="text-xl xl:text-2xl top-0 left-0 text-[#242F5C] ml-2 ">{friend.user.username}</h3>
 
                 <div
