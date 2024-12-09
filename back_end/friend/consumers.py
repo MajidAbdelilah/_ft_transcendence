@@ -225,7 +225,7 @@ class FriendRequestConsumer(AsyncWebsocketConsumer):
             await self.handle_friend_accept(data)
         elif data['type'] == 'friends-block':
             await self.handle_friend_block(data)
-        elif data['type'] == 'friends-remove':
+        elif data['type'] == 'friends-reject':
             await self.handle_friend_remove(data)
 
     @database_sync_to_async
@@ -517,6 +517,14 @@ class FriendRequestConsumer(AsyncWebsocketConsumer):
             'user_to': event['user_to'],
             'user_is_logged_in': event['user_is_logged_in']
         }))
+
+    async def friend_rejected(self, event):
+        """
+        Handler for friend-rejected event
+        """
+        message = event['message']
+        await self.send(text_data=json.dumps(message))
+
     async def handle_friend_remove(self, data):
         try:
             freindship_id = data.get('freindship_id')
@@ -543,6 +551,31 @@ class FriendRequestConsumer(AsyncWebsocketConsumer):
                 same = same1 or same2
                 if same:
                     await sync_to_async(friendship.delete)()
+                    # Send friend-rejected event to both users
+                    await self.channel_layer.group_send(
+                        f'user_{user_from.id}',
+                        {
+                            'type': 'friend_rejected',
+                            'message': {
+                                'type': 'friend-rejected',
+                                'status': 'success',
+                                'user_from': user_from.id,
+                                'user_to': user_to.id
+                            }
+                        }
+                    )
+                    await self.channel_layer.group_send(
+                        f'user_{user_to.id}',
+                        {
+                            'type': 'friend_rejected',
+                            'message': {
+                                'type': 'friend-rejected',
+                                'status': 'success',
+                                'user_from': user_from.id,
+                                'user_to': user_to.id
+                            }
+                        }
+                    )
                     await self.send(text_data=json.dumps({
                         'type': 'friends_remove_success',
                         'status': 'success',
