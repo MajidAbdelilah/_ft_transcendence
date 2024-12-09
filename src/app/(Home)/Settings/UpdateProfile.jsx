@@ -80,29 +80,19 @@ export default function UpdateProfile({setIsProfile})
 
       try {
         const result = await Services.updateProfileService(data);
-        // console.log('--------------------------------------------');
-        // console.log(data);
-        // console.log('--------------------------------------------');
 
-        // console.log(" ------- result : --------");
-        // console.log(result);
-        console.log("data : ", data);
+        if (successMsg) {
+          toast.success(successMsg); // Display a success toast
+        } else {
+          toast.error("Unexpected response format."); // Handle unexpected format
+        }
 
-        // if(!data) {
-        //   const errorMsg = result.data.message;
-        //   // console.log(errorMsg);
-        //   toast.error( errorMsg?errorMsg:'Something Went Wrong!');
-        //   setErrors(errorMsg);
-        // }
-        // else {
-          const successMsg = result.data.message;
-          console.log(successMsg);
-          toast.success(successMsg);
-          // window.location.reload();
+
+
         
       }
       catch (error) {
-        console.log("### http request failed: ", error);
+        console.log("Updating profile http request failed... ", error);
 
 
       }
