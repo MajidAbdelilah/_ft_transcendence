@@ -12,6 +12,13 @@ const NotificationIcon = ({ type }) => {
           strokeWidth={2}
         />
       );
+    case 'friend_request_sent':
+      return (
+        <IconUserPlus
+          className="w-5 h-5 text-blue-500"
+          strokeWidth={2}
+        />
+      );
     case 'friend_accept':
       return (
         <IconUserCheck

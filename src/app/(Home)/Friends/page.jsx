@@ -31,6 +31,7 @@ export default function Friends() {
   const [blockedFriendsData, setBlockedFriendsData] = useState([])
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState(null)
+  const [friendRequestsCount, setFriendRequestsCount] = useState(0);
 
   const navItemsIcons = [
     {
@@ -96,55 +97,59 @@ export default function Friends() {
       try {
         switch (data.type) {
           case 'user_status':
-            
-            setFriendsData(prev => prev.map(friend => 
-              friend.user.id === data.id 
-                ? { 
+            console.log('Received user_status update:', data);
+            setFriendsData(prev => {
+              const updatedFriends = prev.map(friend => {
+                if (friend.user.id === data.id) {
+                  console.log(`Updating status for friend ${friend.user.username} to ${data.is_on ? 'online' : 'offline'}`);
+                  return {
                     ...friend,
-                    user: { 
-                      ...friend.user, 
+                    user: {
+                      ...friend.user,
                       is_on: data.is_on
-                    } 
-                  }
-                : friend
-            ));
-            console.log("Updated friendsData:", friendsData);
+                    }
+                  };
+                }
+                return friend;
+              });
+              console.log('Updated friends data:', updatedFriends);
+              return updatedFriends;
+            });
+            break;
+
+          case 'friends_list_update':
+            if (data.action === 'add') {
+              // Add new friend to friends list
+              setFriendsData(prev => [...prev, data.friend]);
+              // Remove from friend requests if it exists
+              setFriendRequestsData(prev => prev.filter(req => req.freindship_id !== data.friend.freindship_id));
+            }
+            break;
+
+          case 'friends-add':
+          case 'friends_add':
+            console.log('Friend request received:', data);
+            setFriendRequestsCount(prev => prev + 1);
+            // Add the new friend request to the list
+            setFriendRequestsData(prev => [...prev, {
+              freindship_id: data.freindship_id,
+              user: data.user,
+              is_accepted: false
+            }]);
+            break;
+
+          case 'friend_request_sent':
+            console.log('Friend request sent:', data);
+            // Don't increment the count for sent requests
             break;
 
           case 'friends_accept':
-            console.log("Received friend accept message:", data);
-            console.log("Current friend requests:", friendRequestsData);
-            console.log("Current friends:", friendsData);
-            
-            // Remove from friend requests
-            setFriendRequestsData(prev => {
-              console.log("Filtering friend requests. Current:", prev);
-              const updated = prev.filter(request => request.freindship_id !== data.freindship_id);
-              console.log("Updated friend requests:", updated);
-              return updated;
-            });
-            
-            // Add to friends list if not already there
-            setFriendsData(prev => {
-              console.log("Updating friends list. Current:", prev);
-              const exists = prev.some(friend => friend.freindship_id === data.freindship_id);
-              if (!exists) {
-                const newFriend = {
-                  freindship_id: data.freindship_id,
-                  user: data.user,
-                  user_from: data.user_from,
-                  user_to: data.user_to,
-                  user_is_logged_in: data.user_is_logged_in,
-                  is_accepted: true
-                };
-                console.log("Adding new friend:", newFriend);
-                return [...prev, newFriend];
-              }
-              console.log("Friend already exists in list");
-              return prev;
-            });
-            console.log("Updated friendsData:", friendsData);
-            console.log("Updated friendRequestsData:", friendRequestsData);
+            console.log('Friend request accepted:', data);
+            // Update friend request count and data
+            setFriendRequestsCount(prev => Math.max(0, prev - 1));
+            setFriendRequestsData(prev => 
+              prev.filter(req => req.freindship_id !== data.freindship_id)
+            );
             break;
 
           case 'friends-block':
@@ -173,15 +178,6 @@ export default function Friends() {
             console.log("Updated blockedFriendsData:", blockedFriendsData);
             break;
 
-          case 'friends_list_update':
-            if (data.action === 'add') {
-              // Add new friend to friends list
-              setFriendsData(prev => [...prev, data.friend]);
-              // Remove from friend requests if it exists
-              setFriendRequestsData(prev => prev.filter(req => req.freindship_id !== data.friend.freindship_id));
-            }
-            break;
-
           default:
             console.warn('Unknown WebSocket message type:', data.type);
         }
@@ -197,6 +193,11 @@ export default function Friends() {
       removeHandler(handleWebSocketMessage);
     };
   }, [addHandler, removeHandler])
+
+  useEffect(() => {
+    const pendingRequests = friendRequestsData.filter(request => !request.is_accepted);
+    setFriendRequestsCount(pendingRequests.length);
+  }, [friendRequestsData]);
 
   if (isLoading) {
     return <LoadingSpinner/>
@@ -218,41 +219,49 @@ export default function Friends() {
           </h1>
           <hr className="lg:w-[50%] lg:h-[3px] md:w-[40%] md:h-[3px] w-[65%] h-[3px] bg-[#CDCDE5] border-none rounded-full" />
           {!isMobile ? (
-            <div className="flex w-[70%] h-[8%] flex-row justify-between items-center space-y-4 md:space-y-0 md:space-x-4 lg:space-x-8 xl:space-x-12 motion-preset-bounce  ">
+            <div className="flex w-[70%] h-[8%] flex-row justify-between items-center space-y-4 md:space-y-0 md:space-x-4 lg:space-x-8 xl:space-x-12 motion-preset-bounce">
               {navItems.map((item) => (
-                <h1
-                  key={item}
-                  className={`
+                <div key={item} className="relative">
+                  <h1
+                    className={`
                       md:text-sm lg:text-3xl
                       font-extrabold tracking-wide text-center cursor-pointer
                       transition-colors duration-200
                       ${activeItem === item
-                      ? "text-[#242F5C]"
-                      : "text-[#A7ACBE]"
-                    }
+                        ? "text-[#242F5C]"
+                        : "text-[#A7ACBE]"
+                      }
                     `}
-                  onClick={() => setActiveItem(item)}
-                >
-                  {item}
-                </h1>
+                    onClick={() => setActiveItem(item)}
+                  >
+                    {item}
+                  </h1>
+                  {item === "Friend Requests" && friendRequestsCount > 0 && (
+                    <div className="absolute -top-2 -right-2 w-4 h-4 bg-red-500 rounded-full flex items-center justify-center">
+                      <span className="text-white text-xs">{friendRequestsCount}</span>
+                    </div>
+                  )}
+                </div>
               ))}
             </div>
           ) : (
-            <div className="w-full h-[10%] flex flex-row items-center content-center justify-around motion-preset-bounce  ">
+            <div className="w-full h-[10%] flex flex-row items-center content-center justify-around motion-preset-bounce">
               {navItemsIcons.map((item) => (
-                <Image
-                  key={item.name}
-                  src={
-                    activeIcon === item.activeImg
-                      ? item.activeImg
-                      : item.inactiveImg
-                  }
-                  alt={item.name}
-                  width={35}
-                  height={35}
-                  className="cursor-pointer transition-opacity duration-200 hover:opacity-80 w-[35px] h-[35px]"
-                  onClick={() => { setActiveIcon(item.activeImg); setActiveItem(item.name); }}
-                />
+                <div key={item.name} className="relative">
+                  <Image
+                    src={activeIcon === item.activeImg ? item.activeImg : item.inactiveImg}
+                    alt={item.name}
+                    width={35}
+                    height={35}
+                    className="cursor-pointer transition-opacity duration-200 hover:opacity-80 w-[35px] h-[35px]"
+                    onClick={() => { setActiveIcon(item.activeImg); setActiveItem(item.name); }}
+                  />
+                  {item.name === "Friend Requests" && friendRequestsCount > 0 && (
+                    <div className="absolute -top-1 -right-1 w-4 h-4 bg-red-500 rounded-full flex items-center justify-center">
+                      <span className="text-white text-xs">{friendRequestsCount}</span>
+                    </div>
+                  )}
+                </div>
               ))}
             </div>
           )}

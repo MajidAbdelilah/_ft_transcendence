@@ -51,7 +51,7 @@ const connectWebSocket = () => {
             // console.log('WebSocket disconnected:', event.code, event.reason);
             
             // Attempt to reconnect if not closed intentionally
-            if (!event.wasClean && reconnectAttempts < MAX_RECONNECT_ATTEMPTS) {
+            if (!event.wasClean && reconnectAttempts < MAX_RECONNECT_ATTEMPTS && !ws.intentionalClose) {
                 reconnectAttempts++;
                 // console.log(`Reconnecting... Attempt ${reconnectAttempts} of ${MAX_RECONNECT_ATTEMPTS}`);
                 setTimeout(connectWebSocket, RECONNECT_INTERVAL);
@@ -101,9 +101,10 @@ const sendMessage = (message) => {
 
 const disconnect = () => {
     if (ws) {
-        ws.close(1000, 'User disconnected');
+        // Set a flag to prevent reconnection attempts
+        ws.intentionalClose = true;
+        ws.close();
         ws = null;
-        reconnectAttempts = 0;
     }
 };
 
@@ -117,5 +118,5 @@ export default {
     addHandler: addMessageHandler,
     removeHandler: removeMessageHandler,
     send: sendMessage,
-    isConnected
+    isConnected: () => ws && ws.readyState === WebSocket.OPEN
 };

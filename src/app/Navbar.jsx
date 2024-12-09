@@ -208,11 +208,25 @@ function Navbar() {
       try {
         switch (data.type) {
           case 'friends-add':
+            // Handle receiving a friend request
             handleNewNotification({
               id: data.freindship_id,
               type: 'friend_request',
               avatar: data.user.image_name ? `/${data.user.image_name}` : '/images/Default_profile.png',
               message: `${data.user.username} sent you a friend request`,
+              timestamp: new Date().toISOString(),
+              isNew: true,
+              senderUsername: data.user.username
+            });
+            break;
+
+          case 'friend_request_sent':
+            // Handle sending a friend request
+            handleNewNotification({
+              id: data.freindship_id,
+              type: 'friend_request_sent',
+              avatar: data.user.image_name ? `/${data.user.image_name}` : '/images/Default_profile.png',
+              message: `You sent a friend request to ${data.user.username}`,
               timestamp: new Date().toISOString(),
               isNew: true,
               senderUsername: data.user.username
@@ -267,7 +281,9 @@ function Navbar() {
     // Show toast notification
     const message = notification.type === 'friend_request' 
       ? `New friend request from ${notification.senderUsername}`
-      : `${notification.senderUsername} accepted your friend request`;
+      : notification.type === 'friend_request_sent'
+        ? `You sent a friend request to ${notification.senderUsername}`
+        : `${notification.senderUsername} accepted your friend request`;
       
     showAlert(message, 'info');
   };
