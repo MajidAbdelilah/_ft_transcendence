@@ -15,33 +15,6 @@ import toast, { Toaster } from 'react-hot-toast';
 
 
 
-// loggedInUser --------------------------
-// {
-//   "userName": "UserId1",
-//   "userId": 1,
-//   "name": "UserId1",
-//   "avatar": "/images/avatarprofile.svg",
-//   "status": "Online",
-//   "level": 0,
-//   "score": "",
-//   "result": "",
-//   "map": ""
-// }
-// user --------------------------
-// {
-//   "id": 1,
-//   "password": "pbkdf2_sha256$600000$WPB5zIWRwuWqBhBgaiHPOk$m1chTvfAFUhSED42D333HWsE61ONKArensEWqUIATD4=",
-//   "username": "UserId1",
-//   "fullname": "",
-//   "email": "user1user1@gmail.com",
-//   "image_name": "profilepng.png",
-//   "image_field": "",
-//   "is_2fa": false,
-//   "_2fa_code": "",
-//   "state": "no state assigned",
-//   "is_on": 0
-// }
-
 
 
 
@@ -75,10 +48,6 @@ const handleAddFriend = async (loggedInUser, user) => {
 };
 
 
-
-
-
-
 const handleBlockUser = async (loggedInUser, user) => {
   try {
     const respond = await axios.post(
@@ -104,11 +73,19 @@ const handleBlockUser = async (loggedInUser, user) => {
 
 
 
-
+              // <img
+              // id="avatarButton"
+              // className=" rounded-full left-0 top-0 w-[60px] h-[60px] "
+              // src={path ? path : "/images/Default_profile.png"}
+              // alt="User dropdown"
+              // width={60}
+              // height={60}
+              // /> 
 
 
 
 function Part1({loggedInUser, user, isSelf}) {
+
   const router = useRouter();
   return (
     <div className="part1 relative w-1/3 p-2 rounded-l-2xl bg-[#F4F4FF] border-[#BCBCC9] border-r-2 min-w-32 ">
@@ -116,14 +93,14 @@ function Part1({loggedInUser, user, isSelf}) {
 
     <div className="flex flex-col items-center">
         <img
-        src={user.image_feild === undefined || user.image_feiled === null || user.image_feiled === "" 
-          ? "/images/avatarprofile.svg"
-          : user.image_feild}
-
+        src={user.image_feild ? user.image_feild : "/images/Default_profile.png"}// image_feiled
+            width={60}
+            height={60}
         
-        alt="Profile"
+        // alt="Profile"
         className="absolute w-20 h-20 rounded-full border-2 border-[#BCBCC9] -top-10  shadow-md shadow-[#BCBCC9]"
         />
+
       <div className="mt-12 text-sm md:text-md lg:text-lg xl:text-xl font-bold text-[#242F5C]">
         {user.username}
       </div>

@@ -142,7 +142,7 @@ export default function Profile() {
         // console.log("searchedText : -----------------", searchedText);
 
         const user = usersArray.find( (u) => u.username === searchedText );
-        // console.log("user : -----------------", user);
+        console.log("user : -----------------", user);
         if(user )
         {
           setUserSearchedFor(user);

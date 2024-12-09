@@ -37,21 +37,7 @@ export function HisProfile ({path, name, status}) {
         ) : (
 
 
-          //           <Image
-          //   src={path === undefined || path === null || path === "" || path === "/images/%7B%7D" 
-          //     ? "/images/avatarprofile.svg" 
-          //     : path}
-          //   alt="avatarprofile"
-          //   width={60}
-          //   height={60}
-          //   className=" rounded-full left-0 top-0 w-[60px] h-[60px] "
-          // />
 
-          // {isLoading ? (
-          //     // <>
-          //     <Skeleton className="sm:w-10 sm:h-10 w-8 h-8 rounded-full bg-[#d1daff]" />
-          //     // </>
-          //   ) : (
             <img
               id="avatarButton"
               className=" rounded-full left-0 top-0 w-[60px] h-[60px] "
@@ -60,8 +46,7 @@ export function HisProfile ({path, name, status}) {
               width={60}
               height={60}
               /> 
-          //   )
-              // }
+
 
 
 
