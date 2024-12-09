@@ -113,3 +113,4 @@ class logout_intra(APIView):
             }
             request.session.flush()
             return response
+        

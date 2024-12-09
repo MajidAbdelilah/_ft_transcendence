@@ -22,6 +22,9 @@ from  ._2fa import Send2FAcode,CodeVerification, _2fa_verification, _42_generate
 import requests
 
 
+from rest_framework_simplejwt.tokens import UntypedToken
+from rest_framework_simplejwt.exceptions import InvalidToken, TokenError
+from django.conf import settings
 
            
     
@@ -177,10 +180,10 @@ class Update_user(APIView):
     def post(self , request):
         response = Response()
         user = User.objects.get(email=request.user)
-        new_password = request.data['new_password'] or None
-        current_password = request.data['current_password'] or None
-        username = request.data['username'] or None
-        profile_photo = request.FILES.get('profile_photo') or None
+        new_password = request.data['new_password'] if request.data['new_password']!="" else None
+        current_password = request.data['current_password'] if request.data['current_password']!="" else None
+        username = request.data['username'] if request.data['username']!="" else None
+        profile_photo = request.FILES.get('profile_photo') if request.data['profile_photo']!="" else None
         print("data ///// :", new_password,current_password, username,profile_photo)
         if user is not None  and current_password is not None and user.check_password(current_password):
             if username is not None : 
@@ -217,3 +220,36 @@ class User_view(APIView):
         else:
             response.data = {"user": {"massage": "Error in getting user informations"}}
             return response
+    
+    
+class User_is_logged_in(APIView):
+    permission_classes = [AllowAny]
+    def get(self, request):
+        response = Response()
+        user = request.COOKIES.get(settings.SIMPLE_JWT['AUTH_COOKIE'])
+        if user is  None :
+            response.data = {"date":None,"message": "False"}
+            return response
+        else:
+            validated_token = UntypedToken(user)
+            if validated_token.payload['user_id'] == request.user['id']:
+                print("ussser**")
+            # user_s = (self.get_user(validated_token))
+            response.data = {"date":None,"message": "True"}
+            return response
+
+
+
+# def decode_jwt_token(token):
+#     try:
+#         # Decode the token using UntypedToken
+#         decoded_token = UntypedToken(token)
+#         return {"decoded_token": decoded_token.payload, "message": "Token is valid"}
+#     except InvalidToken as e:
+#         return {"error": "Invalid token", "details": str(e)}
+#     except TokenError as e:
+#         return {"error": "Token error", "details": str(e)}
+
+# # Example usage
+# token = "your.jwt.token"
+# result = decode_jwt_token(token)
