@@ -16,7 +16,7 @@ urlpatterns = [
     path('user/', views.User_view.as_view(), name='user'),
     path('users/', views.get_users.as_view(), name='users'),
     path('user_2fa/', views._2fa_verification.as_view(), name='2fa_verification'),
-    path('password_generate/', views._42_generated_password.as_view())
+    path('password_generate/', views._42_generated_password.as_view(),name='generate_password')
 ]
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL,

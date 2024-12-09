@@ -175,28 +175,28 @@ class get_users(APIView):
 class Update_user(APIView):
     permission_classes = [IsAuthenticated]
     def post(self , request):
-        response = Response ()
+        response = Response()
         user = User.objects.get(email=request.user)
-        new_password = request.data['new_password'] 
-        current_password = request.data['current_password']   
-        username = request.data['username'] 
-        profile_photo = request.FILES.get('profile_photo') 
-        if user is not None  and current_password is not None and  user.check_password(current_password) :
+        new_password = request.data['new_password'] or None
+        current_password = request.data['current_password'] or None
+        username = request.data['username'] or None
+        profile_photo = request.FILES.get('profile_photo') or None
+        print("data ///// :", new_password,current_password, username,profile_photo)
+        if user is not None  and current_password is not None and user.check_password(current_password):
             if username is not None : 
-                otheruser =  User.objects.filter(username=request.data['username']).first()
-                if otheruser is None :
+                otheruser =  User.objects.filter(username=username).first()
+                if otheruser is not None and otheruser.email == user.email or otheruser is None:
                     user.username = username
-            else:
-                response.data = {"message" : "username exist in database"}
-                return response
+                    user.save()
+                    print("******* change username *********")       
             if new_password is not None:
                 user.set_password(new_password)
+                user.save()  
+                print("******* change pass *********")     
             if profile_photo is not None:
                 user.image_field  = profile_photo
-                print("shfhhf jsgjg *********")
-            else:
-                response.data = {"message" : "Error in uploading profile image"}
-                return response
+                user.save()       
+                print("******* change photo *********")
             user.save()       
             userserialize=UserSerializer(user)
             response.data = {"data" : userserialize.data , "message" : "updated succefully ! "}

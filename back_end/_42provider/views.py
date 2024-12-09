@@ -23,6 +23,8 @@ from authapp.authenticate import CustomAuthentication
 from django.http import HttpResponseRedirect
 import requests
 from django.core.files.base import ContentFile
+from authapp.views import _42_generated_password
+from django.core.mail import send_mail
 class login (APIView):
     permission_classes=[AllowAny]
     def get(self, request):
@@ -62,9 +64,7 @@ class callback(APIView):
                 )
         if user_response.status_code != 200:
             return JsonResponse({'message': 'Failed to fetch user info', "data": None}, status=400)
-        # print("///////////******/////", profile_image)
         user_data = user_response.json()
-        profile_image = user_data['url']
         existeduser = User.objects.filter(email = user_data['email']).first()
         if existeduser is not None:
             authenticate(email = user_data['email'], password = "")
@@ -72,11 +72,14 @@ class callback(APIView):
             resp.data = {"message": "user exist in database and now he is logged in succefully", "data": serializer.data }
             return resp
         else:
-            image_response = requests.get('https://cdn.intra.42.fr/users/2eb70e46fa2b2e9092cb3a5cc8c7973c/gghaya.jpg')
-            user = User.objects.create(username=user_data['login'], email=user_data['email'], password="", image_field="https://cdn.intra.42.fr/users/2eb70e46fa2b2e9092cb3a5cc8c7973c/gghaya.jpg")
-            filename = profile_image.split('/')[-1] 
-            user.image_field.save("gghaya", ContentFile(image_response.content))
+            image_response = requests.get(user_data['image']['link'])
+            user = User.objects.create(username=user_data['login'], email=user_data['email'], password="")
+            user.image_field.save(user_data['login'], ContentFile(image_response.content))
             user.save()
+            code = "".join(map(str, random.sample(range(0, 10), 10)))
+            user.set_password(code)
+            user.save() 
+            send_mail("PONGS APPLICATION PASSWORD","This is your pong website password  :  "+code, settings.EMAIL_HOST_USER, [user_data['email'],], fail_silently=False,)
             serializer = UserSerializer(instance=user)
             resp.data ={"message": "user added succefully", "data": serializer.data}
             return resp
