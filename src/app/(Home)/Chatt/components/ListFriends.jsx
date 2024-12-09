@@ -67,7 +67,7 @@ export default function ListFriends({ getSelectedFriend, switchChatState }) {
                     <img
                     id="avatarButton"
                     className="rounded-full left-0 top-0 w-[45px] h-[45px]"
-                    src={friend ? friend.image_field  : "/images/Default_profile.png"}
+                    src={friend.image_field ? friend.image_field  : "/images/Default_profile.png"}
                     alt="User dropdown"
                     width={45}
                     height={45}
