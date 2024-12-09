@@ -232,19 +232,23 @@ const getSelectedFriend = (friend) => {
     // i supose to get the message weeither i am a sender or reciver , and insert it inside conversation , and map function should simply desplay it to the user 
 
 
-    const { connect, messages } = useWebSocket();
+    const { connect, messages, isConnected } = useWebSocket();
 
     // Connect to WebSocket when component mounts or user changes
 
-      useEffect(() => {
+      // useEffect(() => {
         
-        if (loggedInUser &&  loggedInUser.id !== 0) {
-          // console.log("triggered ----", loggedInUser.id);
+      //   if (loggedInUser &&  loggedInUser.id !== 0) {
+      //     // console.log("triggered ----", loggedInUser.id);
+      //     connect(loggedInUser.id);
+      //     console.log("id ;  ----", loggedInUser.id);
+      //   }
+      //   }, []);
+      useEffect(() => {
+        if (loggedInUser && loggedInUser.id !== 0 && !isConnected) {
           connect(loggedInUser.id);
-          console.log("id ;  ----", loggedInUser.id);
         }
-        }, []);
-
+      }, [loggedInUser, connect, isConnected]);
 
 
 

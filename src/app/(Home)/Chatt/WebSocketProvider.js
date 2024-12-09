@@ -5,44 +5,42 @@ const WebSocketContext = createContext(null);
 export function WebSocketProvider({ children }) {
   const [socket, setSocket] = useState(null);
   const [messages, setMessages] = useState([]);
+  const [isConnected, setIsConnected] = useState(false);
 
   const connect = useCallback((userId) => {
-    // Close existing connection
+    // Prevent multiple connections
+    if (isConnected) return;
+
+    // Close existing connection if any
     if (socket) socket.close();
 
     // Create new WebSocket connection
-
     const newSocket = new WebSocket(`ws://127.0.0.1:8000/ws/chat/${userId}/`);
     
     newSocket.onopen = () => {
       console.log('WebSocket connected ---');
+      setIsConnected(true);
     };
 
     newSocket.onmessage = (event) => {
       const message = JSON.parse(event.data);
       setMessages([message]);
-      // setMessages((prevMessages) => [...prevMessages, message]); // Append new message
-
     };
 
     newSocket.onclose = () => {
       console.log('WebSocket disconnected---');
+      setIsConnected(false);
     };
 
     setSocket(newSocket);
 
-    return () => newSocket.close();
-  }, []);
+    // Cleanup function
+    return () => {
+      newSocket.close();
+      setIsConnected(false);
+    };
+  }, [isConnected]);
   
-  // useEffect(() => {
-  //   return () => {
-  //     if (socket) {
-  //       socket.close();
-  //     }
-  //   };
-  // }, [socket]);
-
-
   const send = useCallback((message) => {
     if (socket && socket.readyState === WebSocket.OPEN) {
       socket.send(JSON.stringify(message));
@@ -50,7 +48,7 @@ export function WebSocketProvider({ children }) {
   }, [socket]);
 
   return (
-    <WebSocketContext.Provider value={{ connect, send, messages }}>
+    <WebSocketContext.Provider value={{ connect, send, messages, isConnected }}>
       {children}
     </WebSocketContext.Provider>
   );
