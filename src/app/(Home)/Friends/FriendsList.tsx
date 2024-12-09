@@ -126,12 +126,19 @@ export default function FriendsList({ friends = [] }: FriendsListProps) {
         friends.map((friend) => (
           <div onClick={() => getProfile(friend.user.username)} key={friend.user.id} className={`w-full h-20 lg:h-[12%] cursor-pointer md:h-[15%] md:h-[20%] rounded-xl bg-[#D8D8F7] shadow-md shadow-[#BCBCC9] relative ${isMobile ? 'w-full' : 'min-h-[90px]'}`}>
             <div className="flex items-center h-full p-2">
-              <div className="  relative w-16 h-16 md:w-20 md:h-20 lg:w-15 lg:h-15">
-                <img
-                  src={"/images/Default_profile.png"}
+              <div className="relative w-16 h-16 md:w-20 md:h-20 lg:w-15 lg:h-15">
+                <Image
+                  src="/images/Default_profile.png"
                   alt={`${friend.user.username}'s profile`}
+                  width={80}
+                  height={80}
                   className="w-full h-full rounded-full object-cover border-2 border-[#BCBCC9]"
                 />
+                {friend.is_accepted === false && (
+                  <div className="absolute -top-1 -right-1 w-4 h-4 bg-red-500 rounded-full flex items-center justify-center">
+                    <span className="text-white text-xs">1</span>
+                  </div>
+                )}
               </div>
               <div className="ml-4 flex flex-col justify-center">
                 <h2 className="text-[#242F5C] text-sm lg:text-lg md:text-base font-bold">{friend.user.username}</h2>

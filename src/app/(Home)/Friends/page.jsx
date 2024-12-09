@@ -31,6 +31,7 @@ export default function Friends() {
   const [blockedFriendsData, setBlockedFriendsData] = useState([])
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState(null)
+  const [friendRequestsCount, setFriendRequestsCount] = useState(0);
 
   const navItemsIcons = [
     {
@@ -96,19 +97,24 @@ export default function Friends() {
       try {
         switch (data.type) {
           case 'user_status':
-            
-            setFriendsData(prev => prev.map(friend => 
-              friend.user.id === data.id 
-                ? { 
+            console.log('Received user_status update:', data);
+            setFriendsData(prev => {
+              const updatedFriends = prev.map(friend => {
+                if (friend.user.id === data.id) {
+                  console.log(`Updating status for friend ${friend.user.username} to ${data.is_on ? 'online' : 'offline'}`);
+                  return {
                     ...friend,
-                    user: { 
-                      ...friend.user, 
+                    user: {
+                      ...friend.user,
                       is_on: data.is_on
-                    } 
-                  }
-                : friend
-            ));
-            console.log("Updated friendsData:", friendsData);
+                    }
+                  };
+                }
+                return friend;
+              });
+              console.log('Updated friends data:', updatedFriends);
+              return updatedFriends;
+            });
             break;
 
           case 'friends_accept':
@@ -182,6 +188,13 @@ export default function Friends() {
             }
             break;
 
+          case 'friend_request':
+            setFriendRequestsCount(prev => prev + 1);
+            break;
+          case 'friend_request_accepted':
+            setFriendRequestsCount(prev => Math.max(0, prev - 1));
+            break;
+
           default:
             console.warn('Unknown WebSocket message type:', data.type);
         }
@@ -197,6 +210,10 @@ export default function Friends() {
       removeHandler(handleWebSocketMessage);
     };
   }, [addHandler, removeHandler])
+
+  useEffect(() => {
+    setFriendRequestsCount(friendRequestsData.filter(request => !request.is_accepted).length);
+  }, [friendRequestsData]);
 
   if (isLoading) {
     return <LoadingSpinner/>
@@ -238,21 +255,23 @@ export default function Friends() {
               ))}
             </div>
           ) : (
-            <div className="w-full h-[10%] flex flex-row items-center content-center justify-around motion-preset-bounce  ">
+            <div className="w-full h-[10%] flex flex-row items-center content-center justify-around motion-preset-bounce">
               {navItemsIcons.map((item) => (
-                <Image
-                  key={item.name}
-                  src={
-                    activeIcon === item.activeImg
-                      ? item.activeImg
-                      : item.inactiveImg
-                  }
-                  alt={item.name}
-                  width={35}
-                  height={35}
-                  className="cursor-pointer transition-opacity duration-200 hover:opacity-80 w-[35px] h-[35px]"
-                  onClick={() => { setActiveIcon(item.activeImg); setActiveItem(item.name); }}
-                />
+                <div key={item.name} className="relative">
+                  <Image
+                    src={activeIcon === item.activeImg ? item.activeImg : item.inactiveImg}
+                    alt={item.name}
+                    width={35}
+                    height={35}
+                    className="cursor-pointer transition-opacity duration-200 hover:opacity-80 w-[35px] h-[35px]"
+                    onClick={() => { setActiveIcon(item.activeImg); setActiveItem(item.name); }}
+                  />
+                  {item.name === "Friend Requests" && friendRequestsCount > 0 && (
+                    <div className="absolute -top-1 -right-1 w-4 h-4 bg-red-500 rounded-full flex items-center justify-center">
+                      <span className="text-white text-xs">{friendRequestsCount}</span>
+                    </div>
+                  )}
+                </div>
               ))}
             </div>
           )}

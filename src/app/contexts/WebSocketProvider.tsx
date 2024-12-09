@@ -17,8 +17,12 @@ const WebSocketContext = createContext<WebSocketContextType>({
 
 export function WebSocketProvider({ children }: { children: React.ReactNode }) {
     useEffect(() => {
+        // Connect WebSocket when component mounts
         websocketService.connect();
+
+        // Properly disconnect when component unmounts
         return () => {
+            console.log('WebSocket Provider unmounting - disconnecting WebSocket');
             websocketService.disconnect();
         };
     }, []);
