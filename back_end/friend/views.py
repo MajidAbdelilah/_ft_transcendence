@@ -1,4 +1,3 @@
-
 from rest_framework.views import APIView
 # from rest_
 from rest_framework.permissions import IsAuthenticated
@@ -35,7 +34,7 @@ class FriendsView(APIView):
             friends_2 = Friendship.objects.filter(user_from=request.user, is_accepted=True, u_one_is_blocked_u_two=False, u_two_is_blocked_u_one=False)
             friends_2 = friends_1.union(friends_2)
             # print("-------->   ",friends_2)
-            serializer = FSerializer(friends_2, many=True)
+            serializer = FSerializer(friends_2, many=True, context={'user_is_logged_in': request.user.id})
             print(  "////////////->",serializer.data)
 
             return Response(serializer.data)

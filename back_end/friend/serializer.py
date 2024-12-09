@@ -136,13 +136,13 @@ class FSerializer(serializers.ModelSerializer):
 
     @extend_schema_field(UserSerializer())
     def get_user(self, obj) -> dict:
-        user_id = obj.user_from.id if obj.user_from.id != obj.user_is_logged_in else obj.user_to.id
+        logged_in_user_id = self.context.get('user_is_logged_in')
+        # Return the other user's data (not the logged-in user)
+        user_id = obj.user_to.id if obj.user_from.id == logged_in_user_id else obj.user_from.id
         print("user_id********     ", user_id)
         user_data = User.objects.get(id=user_id)
         serializer = UserSerializer(user_data)
         return serializer.data
-
-
 
 class BSerializer(serializers.ModelSerializer):
     user = serializers.SerializerMethodField()
