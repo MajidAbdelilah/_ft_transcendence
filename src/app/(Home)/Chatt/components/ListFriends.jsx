@@ -1,7 +1,8 @@
 "use client";
 import { useState, useEffect} from "react";
 import Image from "next/image";
-import axios from "axios";
+import customAxios from "../../../customAxios"
+
 
 import { useUser } from '../../../contexts/UserContext';
 
@@ -17,11 +18,8 @@ export default function ListFriends({ getSelectedFriend, switchChatState }) {
         const fetchFriends = async () => {
         try {
             // console.log()
-            const response = await axios.get("http://127.0.0.1:8000/friend/friends",
-            
-            { withCredentials: true, headers: {} }
-            );
-            console.log("======", response);
+            const response = await customAxios.get("http://127.0.0.1:8000/friend/friends",);
+            console.log("======", response.data);
             setFriendsList(response.data); // Assuming the API returns { friends: [...] }
         } catch (error) {
             console.error("Error fetching friends data:", error);
