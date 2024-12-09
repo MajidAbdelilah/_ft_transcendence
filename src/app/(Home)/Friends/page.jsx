@@ -126,7 +126,7 @@ export default function Friends() {
             }
             break;
 
-          case 'friends-add':
+          // case 'friends-add':
           case 'friends_add':
             console.log('Friend request received:', data);
             setFriendRequestsCount(prev => prev + 1);
@@ -149,6 +149,28 @@ export default function Friends() {
             setFriendRequestsCount(prev => Math.max(0, prev - 1));
             setFriendRequestsData(prev => 
               prev.filter(req => req.freindship_id !== data.freindship_id)
+            );
+            break;
+
+          case 'friend-rejected':
+          case 'friend_rejected':
+            console.log('Friend request rejected:', data);
+            // Update friend request count and data
+            setFriendRequestsCount(prev => Math.max(0, prev - 1));
+            setFriendRequestsData(prev => 
+              prev.filter(req => 
+                !(req.user_from === data.user_from && req.user_to === data.user_to)
+              )
+            );
+            break;
+
+          case 'friends_remove_success':
+            console.log('Friend request removed successfully:', data);
+            // Update friend request data
+            setFriendRequestsData(prev => 
+              prev.filter(req => 
+                req.freindship_id !== data.freindship_id
+              )
             );
             break;
 
