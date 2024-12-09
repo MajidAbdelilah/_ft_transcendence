@@ -225,6 +225,8 @@ class FriendRequestConsumer(AsyncWebsocketConsumer):
             await self.handle_friend_accept(data)
         elif data['type'] == 'friends-block':
             await self.handle_friend_block(data)
+        elif data['type'] == 'friends-remove':
+            await self.handle_friend_remove(data)
 
     @database_sync_to_async
     def create_friend_request(self, to_user_id):
@@ -286,6 +288,15 @@ class FriendRequestConsumer(AsyncWebsocketConsumer):
                     }
                 )
 
+                await self.send(text_data=json.dumps({
+                    'status': 'success',
+                    'message': 'Friend request sent',
+                    'friendship_id': friendshipcreate.freindship_id,
+                    'user': {
+                        'username': self.user.username,
+                        'image_name': self.user.image_name or ''
+                    }
+                }))
                 await self.send(text_data=json.dumps({
                     'status': 'success',
                     'message': 'Friend request sent'
@@ -506,3 +517,42 @@ class FriendRequestConsumer(AsyncWebsocketConsumer):
             'user_to': event['user_to'],
             'user_is_logged_in': event['user_is_logged_in']
         }))
+    async def handle_friend_remove(self, data):
+        try:
+            freindship_id = data.get('freindship_id')
+            if not freindship_id:
+                await self.send(text_data=json.dumps({
+                    'type': 'friends_remove_error',
+                    'status': 'error',
+                    'message': 'Invalid friendship ID'
+                }))
+                return
+            friendship = await get_friendship(freindship_id)
+            if not friendship:
+                await self.send(text_data=json.dumps({
+                    'type': 'friends_remove_error',
+                    'status': 'error',
+                    'message': 'Friend request not found'
+                }))
+                return
+            user_from = await get_user_from(friendship)
+            user_to = await get_user_to(friendship)
+            if friendship:
+                same1 = await is_same(user_to.id, self.user.id)
+                same2 = await is_same(user_from.id, self.user.id)
+                same = same1 or same2
+                if same:
+                    await sync_to_async(friendship.delete)()
+                    await self.send(text_data=json.dumps({
+                        'type': 'friends_remove_success',
+                        'status': 'success',
+                        'message': 'Friend request removed'
+                    }))
+                    return
+        except Exception as e:
+            print("Error: ", e)
+            await self.send(text_data=json.dumps({
+                'type': 'friends_remove_error',
+                'status': 'error',
+                'message': 'An error occurred'
+            }))
