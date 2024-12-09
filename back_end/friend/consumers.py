@@ -18,94 +18,79 @@ def get_user(user_id):
     except User.DoesNotExist:
         return AnonymousUser()
 
-# @database_sync_to_async
-# def update_user_status(user_id, online):
-#     if online:
-#         # print("**************", User.is_on)
-#         return User.objects.filter(id=user_id).update(is_on=F('is_on') + 1)
-#     else:
-#         user = User.objects.get(id=user_id)
-#         if user.is_on > 0:
-#             return User.objects.filter(id=user_id).update(is_on=F('is_on') - 1)
-#         return None
+@database_sync_to_async
+def update_user_status(user_id, online):
+    try:
+        user = User.objects.get(id=user_id)
+        user.is_on = 1 if online else 0
+        user.save()
+        return user
+    except User.DoesNotExist:
+        return None
 
 @database_sync_to_async
 def get_friends(user):
     return list(Friendship.objects.filter(Q(user_from=user) | Q(user_to=user)).select_related('user_from', 'user_to'))
 
 
-# class UserStatusConsumer(AsyncWebsocketConsumer):
-#     async def connect(self):
-#         if self.scope["user"].is_authenticated:
-#             self.user = await get_user(self.scope["user"].id)
-#             await self.accept()
+class UserStatusConsumer(AsyncWebsocketConsumer):
+    async def connect(self):
+        if self.scope["user"].is_authenticated:
+            self.user = await get_user(self.scope["user"].id)
+            await self.accept()
 
-#             self.group_name = f'user_{self.user.id}'
-#             await self.channel_layer.group_add(self.group_name, self.channel_name)
+            self.group_name = f'user_{self.user.id}'
+            await self.channel_layer.group_add(self.group_name, self.channel_name)
 
-#             await self.update_user_online_status(True)
-#         else:
-#             await self.close()
-#     async def disconnect(self, close_code):
-#         if self.scope["user"].is_authenticated:
-#             await self.update_user_online_status(False)
+            await self.update_user_online_status(True)
+        else:
+            await self.close()
 
-#             await self.channel_layer.group_discard(self.group_name, self.channel_name)
+    async def disconnect(self, close_code):
+        if self.scope["user"].is_authenticated:
+            await self.update_user_online_status(False)
+            await self.channel_layer.group_discard(self.group_name, self.channel_name)
 
-#     async def update_user_online_status(self, is_on):
-#         if is_on:
-#             await update_user_status(self.user.id, True)
-#             await self.notify_friends(True)
-#         else:
-#             await update_user_status(self.user.id, False)
-#             await self.notify_friends(False)
+    async def update_user_online_status(self, is_on):
+        if is_on:
+            await update_user_status(self.user.id, True)
+            await self.notify_friends(True)
+        else:
+            await update_user_status(self.user.id, False)
+            await self.notify_friends(False)
 
-#     async def notify_friends(self, is_on):
-#         print("************1", is_on)
-#         friends = await get_friends(self.user)
-#         for friendship in friends:
-#             friend = friendship.user_to if friendship.user_from == self.user else friendship.user_from
-#             group_name = f'user_{friend.id}'
-#             await self.channel_layer.group_send(
-#                 group_name,
-#                 {
-#                     'type': 'user_status',
-#                     'id': self.user.id,
-#                     'username': self.user.username,
-#                     'is_on': is_on,
-#                     'profile_photo': self.user.profile_photo or ''
-#                 }
-#             )
-#             await self.send(text_data=json.dumps({
-#                     'status': 'success',
-#                     'message': 'notify_friends successfully.',
-#                 }))
+    async def notify_friends(self, is_on):
+        friends = await get_friends(self.user)
+        for friendship in friends:
+            friend = friendship.user_to if friendship.user_from == self.user else friendship.user_from
+            group_name = f'user_{friend.id}'
+            await self.channel_layer.group_send(
+                group_name,
+                {
+                    'type': 'user_status',
+                    'id': self.user.id,
+                    'is_on': is_on
+                }
+            )
 
-#     async def user_status(self, event):
-#         print("************2", event)
-#         await self.send(text_data=json.dumps({
-#             'type': 'user_status',
-#             'id': event['id'],
-#             'username': event['username'],
-#             'is_on': event['is_on'],
-#             'profile_photo': event['profile_photo']
-#         }))
-#         await self.send(text_data=json.dumps({
-#                     'status': 'success',
-#                     'message': 'user_status successfully.',
-#         }))
+    async def user_status(self, event):
+        await self.send(text_data=json.dumps({
+            'type': 'user_status',
+            'id': event['id'],
+            'is_on': event['is_on']
+        }))
 
-#     async def send_notification(self, event):
-#         print("************3", event)
-#         await self.send(text_data=json.dumps({
-#             'type': 'notification',
-#             'notification_id': event['notification_id'],
-#             'count': event['count']
-#         }))
-#         await self.send(text_data=json.dumps({
-#                     'status': 'success',
-#                     'message': 'Invitation status updated successfully.',
-#         }))
+    async def send_notification(self, event):
+        print("************3", event)
+        await self.send(text_data=json.dumps({
+            'type': 'notification',
+            'notification_id': event['notification_id'],
+            'count': event['count']
+        }))
+        await self.send(text_data=json.dumps({
+                    'status': 'success',
+                    'message': 'Invitation status updated successfully.',
+        }))
 
 
 @database_sync_to_async
@@ -147,12 +132,44 @@ class FriendRequestConsumer(AsyncWebsocketConsumer):
             # Create a personal group for the user to receive friend-related notifications
             self.group_name = f'user_{self.user.id}'
             await self.channel_layer.group_add(self.group_name, self.channel_name)
+
+            # Set user as online and notify friends
+            await self.update_user_online_status(True)
         else:
             await self.close()
 
     async def disconnect(self, close_code):
-        if self.scope["user"].is_authenticated:
+        if hasattr(self, 'user') and self.user.is_authenticated:
+            # Set user as offline and notify friends
+            await self.update_user_online_status(False)
             await self.channel_layer.group_discard(self.group_name, self.channel_name)
+
+    async def update_user_online_status(self, is_on):
+        # Update user status in database
+        user = await update_user_status(self.user.id, is_on)
+        if user:
+            # Get all friends to notify them about status change
+            friends = await get_friends(user)
+            
+            # Notify all friends about the status change
+            for friendship in friends:
+                friend_id = friendship.user_to.id if friendship.user_from.id == user.id else friendship.user_from.id
+                await self.channel_layer.group_send(
+                    f'user_{friend_id}',
+                    {
+                        'type': 'user_status',
+                        'id': user.id,
+                        'is_on': 1 if is_on else 0
+                    }
+                )
+
+    async def user_status(self, event):
+        # Send status update to WebSocket
+        await self.send(text_data=json.dumps({
+            'type': 'user_status',
+            'id': event['id'],
+            'is_on': event['is_on']
+        }))
 
     async def receive(self, text_data):
         data = json.loads(text_data)
