@@ -237,6 +237,9 @@ class FriendRequestConsumer(AsyncWebsocketConsumer):
         friendship = await self.create_friend_request(to_user_id)
         
         if friendship:
+            # Get the target user
+            to_user = await get_user(to_user_id)
+            
             # Notify the target user about the friend request
             await self.channel_layer.group_send(
                 f'user_{to_user_id}',
@@ -250,7 +253,14 @@ class FriendRequestConsumer(AsyncWebsocketConsumer):
                 }
             )
             
+            # Send notification to the sender's channel
             await self.send(text_data=json.dumps({
+                'type': 'friend_request_sent',
+                'freindship_id': friendship.freindship_id,
+                'user': {
+                    'username': to_user.username,
+                    'image_name': to_user.image_name or ''
+                },
                 'status': 'success',
                 'message': 'Friend request sent'
             }))
