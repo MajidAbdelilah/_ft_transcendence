@@ -7,6 +7,7 @@ from django.db.models import F, Q
 
 from authapp.models import User
 from friend.models import Friendship
+from asgiref.sync import sync_to_async
 #JWTAuthentication
 from rest_framework_simplejwt.authentication import JWTAuthentication
 
@@ -99,10 +100,25 @@ def get_friendship(freindship_id):
         return Friendship.objects.get(freindship_id=freindship_id)
     except Friendship.DoesNotExist:
         return None
+
+@database_sync_to_async
 def get_friendship_by_user(user_from, user_to):
+    print("User from:")  # Debug log
+    print("User to:")  # Debug log
     try:
-        return Friendship.objects.get(Q(user_from=user_from, user_to=user_to) | Q(user_from=user_to, user_to=user_from))
+        friendship = Friendship.objects.filter(Q(user_from=user_from, user_to=user_to)
+        | Q(user_from=user_to, user_to=user_from)).exists()
+        print("----------Friendship:", friendship)  # Debug log  
+        return friendship
     except Friendship.DoesNotExist:
+        print("Friendship not found")  # Debug log
+        return None
+
+@database_sync_to_async
+def get_userby_username(username):
+    try:
+        return User.objects.get(username=username)
+    except User.DoesNotExist:
         return None
 @database_sync_to_async
 def get_user(user_id):
@@ -125,6 +141,10 @@ def get_user_to(friendship):
 @database_sync_to_async
 def is_same(user_id, user_id2):
     return user_id == user_id2
+@database_sync_to_async
+def get_id(user):
+    print("User ID:", user.id)  # Debug log
+    return user.id
 @database_sync_to_async
 def save_friendship(friendship):
     return friendship.save()
@@ -213,21 +233,20 @@ class FriendRequestConsumer(AsyncWebsocketConsumer):
 
     async def handle_friend_add(self, data):
         try:
-            to_user_id = data.get('to_user_id')
-            if not to_user_id:
+            username = data.get('username')
+            if not username:
                 await self.send(text_data=json.dumps({
                     'status': 'error',
                     'message': 'Invalid user ID'
                 }))
                 return
-
-            # Create friend request
-            # friendship = await self.create_friend_request(to_user_id)
-            friendship = get_friendship_by_user(self.user, to_user_id)
+            user = await get_userby_username(username)
+            id_user = user.id
+            friendship = await get_friendship_by_user(self.user, user)
             if not friendship:
-                friendshipcreate = Friendship.objects.create(
+                friendshipcreate = await sync_to_async(Friendship.objects.create)(
                     user_from=self.user,
-                    user_to=User.objects.get(id=to_user_id),
+                    user_to=user,
                     is_accepted=False
                 )
                 if not friendshipcreate:
@@ -238,10 +257,10 @@ class FriendRequestConsumer(AsyncWebsocketConsumer):
                     return
                 # Notify the target user about the friend request
                 await self.channel_layer.group_send(
-                    f'user_{to_user_id}',
+                    f'user_{user.id}',
                     {
                         'type': 'friends-add',
-                        'freindship_id': friendship.freindship_id,
+                        'freindship_id': friendshipcreate.freindship_id,
                         'user': {
                             'username': self.user.username,
                             'image_name': self.user.image_name or ''
@@ -253,6 +272,12 @@ class FriendRequestConsumer(AsyncWebsocketConsumer):
                     'status': 'success',
                     'message': 'Friend request sent'
                 }))
+            else:
+                await self.send(text_data=json.dumps({
+                    'status': 'error',
+                    'message': 'Friend request already sent'
+                }))
+                return
         except Exception as e:
             await self.send(text_data=json.dumps({
                 'status': 'error',

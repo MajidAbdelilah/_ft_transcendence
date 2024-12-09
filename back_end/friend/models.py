@@ -16,6 +16,7 @@ class Friendship(models.Model):
     u_one_is_blocked_u_two = models.BooleanField(default=False)
     u_two_is_blocked_u_one = models.BooleanField(default=False)
     user_is_logged_in = models.IntegerField(default=0)
+    just_test = models.IntegerField(default=0)
 
     class Meta:
         db_table = "Friendship"
