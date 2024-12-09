@@ -25,8 +25,10 @@ import axios from 'axios';
 import { fetchOldConversation } from './components/fetchOldConversation';
 import toast, { Toaster } from 'react-hot-toast';
 import ListFriends from "./components/ListFriends";
-import { useWebSocket } from '../../contexts/WebSocketProvider';
-
+import {WebSocketProvider} from "./WebSocketProvider";
+import {useWebSocket} from "./WebSocketProvider";
+import { useContext } from 'react';
+import { useLayoutEffect } from 'react';
 // -- font -----------------------------------------------------
 import { Inter, Montserrat } from "next/font/google";
 import path from "path";
@@ -117,7 +119,7 @@ export default function Chat() {
 
       let filledUser = {
         username: LoggedInUser.userData.username || 'Loading',   
-        id: LoggedInUser.userData.id || null,        
+        id: LoggedInUser.userData.id || 0,        
         name: LoggedInUser.userData.username || 'Loading', 
         avatar: "/images/avatarprofile.svg", 
         status: 'Loading', 
@@ -140,8 +142,7 @@ export default function Chat() {
 
 const [selectedFriend, setSelectedFriend] = useState(null);
 const getSelectedFriend = (friend) => {
-  setSelectedFriend(friend); // Update the selected friend state
-  // console.log("Selected Friend:", friend); // Log the selected friend
+  setSelectedFriend(friend); 
 };
 
 
@@ -204,9 +205,16 @@ const getSelectedFriend = (friend) => {
 
 
 
-// -----------------------------------------------------------------------------------------
+// #########################################################################
 
   function MessagesBox({ friend }) {
+    const conversationContainer = useRef(null);
+
+
+
+
+
+    //----------------------------------
     const [conversation, setConversation] = useState([]);
 
     useEffect(() => {
@@ -223,40 +231,71 @@ const getSelectedFriend = (friend) => {
 
     // i supose to get the message weeither i am a sender or reciver , and insert it inside conversation , and map function should simply desplay it to the user 
 
-    const { addHandler, removeHandler } = useWebSocket();
-    useEffect(() => {
-      const loadConversation = async () => {
-        if (!friend) return;
-        const oldConversation = await fetchOldConversation(loggedInUser, friend.user);
-        setConversation(oldConversation);
-      };
-      loadConversation();
-    }, [loggedInUser, friend]);
-  
-    useEffect(() => {
-      if (!friend) return;
-  
-      const messageHandler = (data) => {
-        if (data.chat_id === `${loggedInUser.id}_${friend.user.id}`) {
-          setConversation((prev) => [...prev, data]);
+
+    const { connect, messages } = useWebSocket();
+
+    // Connect to WebSocket when component mounts or user changes
+
+      useEffect(() => {
+        
+        if (loggedInUser &&  loggedInUser.id !== 0) {
+          // console.log("triggered ----", loggedInUser.id);
+          connect(loggedInUser.id);
         }
-      };
-  
-      addHandler(messageHandler);
-      return () => {
-        removeHandler(messageHandler);
-      };
-    }, [friend, loggedInUser, addHandler, removeHandler]);
+        }, [loggedInUser.id]);
+
+
+
+
+
+
+      useEffect(() => {
+        console.log("Incoming messages -----------------", messages);
+        if (friend && loggedInUser && messages.length > 0) {
+          // Directly access the single message
+          if (
+            (messages[0].send === loggedInUser.username && messages[0].receive === friend.user.username) ||
+            (messages[0].send === friend.user.username && messages[0].receive === loggedInUser.username) ) 
+            {
+              let newMessage = {
+                // messages_id: ??, 
+                chat_id: messages[0].chat_id,
+                sender: messages[0].send,
+                receiver: messages[0].receive,
+                message_content: messages[0].message,
+                message_date: messages[0].timestamp,
+                // user_one: ??,
+                // user_two: ??,
+            };
+            
+            const lastMessage = conversation[0]; // The last inserted message in the conversation
+            const isSameMessage = lastMessage && 
+              lastMessage.message_date === newMessage.message_date &&
+              lastMessage.message_content === newMessage.message_content;
+            // Update the conversation state
+            if (!isSameMessage) {setConversation((prev) => [newMessage, ...prev]);}
+            // setConversation((prev) => [...latestMessages, ...prev]);
+          }
+
+
+        }
+
+      }, [messages]);
+
+
+
+
+
 
 
 
 
 
     // no friend selected yet just return FriendChatInfo compomet with empty friend object
-    if (friend == null) {
+    if (friend === null) {
       let noFriendYet = { avatar: "", name: "", status: "" };
       return (
-        <div className="messagesBox w-full lg:w-3/5 p-2 h-full rounded-tr-xl rounded-br-xl  flex flex-col ">
+        <div className="messagesBox w-full h-full lg:w-3/5 p-2 h-full rounded-tr-xl rounded-br-xl  flex flex-col ">
           <FriendChatInfo
             loggedInUser={loggedInUser}
             friend={noFriendYet}
@@ -287,8 +326,10 @@ const getSelectedFriend = (friend) => {
         />
         
         {/* Conversataion ---------------------------------------------------------------------------------------*/}
-        <div className="Conversation flex flex-col flex-grow overflow-y-auto custom-scrollbar break-words p-2">
-          {Array.isArray(conversation) && conversation.length > 0 ? (
+        
+        <div className="Conversation  flex flex-col flex-grow overflow-y-auto custom-scrollbar break-words p-2 scroll-smooth" ref={conversationContainer}>
+        
+          {/* {Array.isArray(conversation) && conversation.length > 0 ? (
             conversation.map((message, index) =>
               message.sender === friend.user.username ? (
                 <FriendMsgBox key={index} time={message.message_date} msg={message.message_content} />
@@ -297,8 +338,31 @@ const getSelectedFriend = (friend) => {
               )
             )
           ) : (
-            <p className="text-center text-gray-500">No conversation yet.</p>
+            <p className="text-center text-gray-500">Loading...</p>
+          )} */}
+          {Array.isArray(conversation) && conversation.length > 0 ? (
+            [...conversation]
+              .reverse()
+              .map((message, index) =>
+                message.sender === friend.user.username ? (
+                  <FriendMsgBox key={index} time={message.message_date} msg={message.message_content} />
+                ) : (
+                  <MyMsgBox key={index} time={message.message_date} msg={message.message_content} />
+                )
+              )
+          ) : (
+            <p className="text-center text-gray-500">Loading...</p>
           )}
+
+          {conversation && conversation.length > 0 && (
+              <div style={{ display: 'none' }}>
+                {setTimeout(() => {
+                  if (conversationContainer.current) {
+                    conversationContainer.current.scrollTop = conversationContainer.current.scrollHeight;
+                  }
+                }, 500)}
+              </div>
+            )}
         </div>
 
 
@@ -313,8 +377,9 @@ const getSelectedFriend = (friend) => {
 
   return (
 
+        <WebSocketProvider>
 
-        <div className="chattSection flex-1 p-5 md:p-10 h-full w-full ">
+          <div className="chattSection flex-1 p-5 md:p-10 w-full h-[calc(100vh-50px)] ">
           <Toaster /> 
           <div className="boxes relative flex h-full w-full border-2 border-[#C6C6E1] bg-[#F4F4FF] rounded-xl flex-row-revers overflow-auto">
             {/* friendsBox ------------------------------------------------------- */}
@@ -360,7 +425,7 @@ const getSelectedFriend = (friend) => {
 
              </div>
         </div>
-
+        </WebSocketProvider>
   );
 }
 

@@ -2,7 +2,7 @@
 
 import { RiSendPlaneLine } from "react-icons/ri";
 import { getCurrentTime, createFriendMsgBox, createMyMsgBox } from './peerToPeer';
-import { useWebSocket } from '../../../contexts/WebSocketProvider';
+import { useWebSocket } from '../WebSocketProvider';
 
 
 
@@ -12,50 +12,33 @@ import { useWebSocket } from '../../../contexts/WebSocketProvider';
   
     const { send } = useWebSocket();
     const sendMessage = async (e) => {
+      
+
+
       if (e.code !== 'Enter' && e.type !== 'click') return;
   
       const inputText = document.querySelector('.msgToSend');
       if (!inputText || inputText.value.trim() === '') return;
   
       const messageContent = inputText.value.trim();
-      const timestamp = new Date().toISOString();
-      const chatId = `${loggedInUser.id}_${friend.id}`;
-  
-      // Compose the message object
+
       const messageObject = {
         message: messageContent,
         send: loggedInUser.username,
         receive: friend.username,
-        timestamp,
-        chat_id: chatId,
+        timestamp: new Date().toISOString(),
+        chat_id: loggedInUser.id.toString()
       };
   
-      // Send the message via WebSocket
       send(messageObject);
-  
-      // Clear the input field
-      inputText.value = '';
+      inputText.value = ''; // Clear input after sending
+
+
+
     };
 
 
 
-
-    // const sendMessage = async (e) => {
-
-    //   if (e.code !== "Enter" && e.type !== "click") return;
-    //   let inputText = document.getElementsByClassName("msgToSend")[0];
-    //   if (inputText.value.trim() === "") return ;
-        
-    //   const messageContent = inputText.value;
-
-
-
-
-
-    //   //  -----  using websocket i should send the message  -------------------------------------------------------
-
-    //   // i should use the wesocket to send a message from out suer to the friend...
-    // }
 
     return (
       <div className="sendMsgBox mx-8 my-5 relative ">
