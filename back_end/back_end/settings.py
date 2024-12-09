@@ -81,7 +81,10 @@ ROOT_URLCONF = 'back_end.urls'
 
 CHANNEL_LAYERS = {
     'default': {
-        'BACKEND': 'channels.layers.InMemoryChannelLayer',
+        'BACKEND': 'channels_redis.core.RedisChannelLayer',
+        'CONFIG': {
+            "hosts": [('127.0.0.1', 6379)],
+        },
     },
 }
 TEMPLATES = [
@@ -190,17 +193,6 @@ CORS_ALLOW_HEADERS = [
 ]
 
 CORS_EXPOSE_HEADERS = ['content-type', 'x-csrftoken']
-
-CHANNEL_LAYERS = {
-    "default": {
-        "BACKEND": "channels_redis.core.RedisChannelLayer",
-        "CONFIG": {
-            "hosts": [('localhost', 6379)],   # Change localhost to the ip in which you have redis server running on.
-        },
-    },
-}
-
-
 
 
 from datetime import timedelta

@@ -21,12 +21,15 @@ def get_user(user_id):
 
 @database_sync_to_async
 def update_user_status(user_id, online):
+    print(f"Updating user {user_id} status to {'online' if online else 'offline'}")
     try:
         user = User.objects.get(id=user_id)
         user.is_on = 1 if online else 0
-        user.save()
+        user.save(update_fields=['is_on'])
+        print(f"Updated user {user_id} is_on to {user.is_on}")
         return user
     except User.DoesNotExist:
+        print(f"User {user_id} not found")
         return None
 
 @database_sync_to_async
@@ -151,6 +154,7 @@ def save_friendship(friendship):
 class FriendRequestConsumer(AsyncWebsocketConsumer):
     async def connect(self):
         if self.scope["user"].is_authenticated:
+            print(f"User {self.scope['user'].id} connected")
             self.user = self.scope["user"]
             await self.accept()
 
@@ -160,41 +164,55 @@ class FriendRequestConsumer(AsyncWebsocketConsumer):
 
             # Set user as online and notify friends
             await self.update_user_online_status(True)
+            print(f"User {self.user.id} set to online")
         else:
+            print("Unauthenticated user tried to connect")
             await self.close()
 
     async def disconnect(self, close_code):
+        print(f"Disconnect called with code {close_code}")
         if hasattr(self, 'user') and self.user.is_authenticated:
-            # Set user as offline and notify friends
-            await self.update_user_online_status(False)
+            print(f"User {self.user.id} disconnected")
+            # First leave the group
             await self.channel_layer.group_discard(self.group_name, self.channel_name)
+            # Then update status and notify friends
+            await self.update_user_online_status(False)
+            print(f"User {self.user.id} set to offline")
+        else:
+            print("Disconnect called but no authenticated user found")
 
     async def update_user_online_status(self, is_on):
+        print(f"Updating online status for user {self.user.id} to {'online' if is_on else 'offline'}")
         # Update user status in database
         user = await update_user_status(self.user.id, is_on)
         if user:
             # Get all friends to notify them about status change
             friends = await get_friends(user)
+            print(f"Found {len(friends)} friends to notify")
             
             # Notify all friends about the status change
             for friendship in friends:
                 friend_id = friendship.user_to.id if friendship.user_from.id == user.id else friendship.user_from.id
-                await self.channel_layer.group_send(
-                    f'user_{friend_id}',
-                    {
-                        'type': 'user_status',
-                        'id': user.id,
-                        'is_on': 1 if is_on else 0
-                    }
-                )
+                print(f"Notifying friend {friend_id} about status change")
+                message = {
+                    'type': 'user_status',
+                    'id': user.id,
+                    'is_on': 0 if not is_on else 1
+                }
+                print(f"Sending message: {message}")
+                await self.channel_layer.group_send(f'user_{friend_id}', message)
+                print(f"Sent status update to friend {friend_id}")
 
     async def user_status(self, event):
-        # Send status update to WebSocket
-        await self.send(text_data=json.dumps({
+        print(f"Sending status update: {event}")
+        message = {
             'type': 'user_status',
             'id': event['id'],
             'is_on': event['is_on']
-        }))
+        }
+        print(f"Sending WebSocket message: {message}")
+        await self.send(text_data=json.dumps(message))
+        print("Status update sent")
 
     async def receive(self, text_data):
         data = json.loads(text_data)
