@@ -246,7 +246,7 @@ const getSelectedFriend = (friend) => {
 
 
 useEffect(() => {
-  console.log("Incoming messages -----------------", messages);
+  // console.log("Incoming messages -----------------", messages);
   if (friend && loggedInUser ) {
     // const latestMessage = messages[messages.length - 1]; // Get the last message received
     const latestMessage = messages; // Get the last message received
