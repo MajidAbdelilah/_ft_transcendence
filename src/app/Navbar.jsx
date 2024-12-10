@@ -212,7 +212,7 @@ function Navbar() {
             handleNewNotification({
               id: data.freindship_id,
               type: 'friend_request',
-              avatar: data.user.image_name ? `/${data.user.image_name}` : '/images/Default_profile.png',
+              avatar: data.user.image_field ? `http://127.0.0.1:8000/api${data.user.image_field}` : '/images/Default_profile.png',
               message: `${data.user.username} sent you a friend request`,
               timestamp: new Date().toISOString(),
               isNew: true,
@@ -225,7 +225,7 @@ function Navbar() {
             handleNewNotification({
               id: data.freindship_id,
               type: 'friend_request_sent',
-              avatar: data.user.image_name ? `/${data.user.image_name}` : '/images/Default_profile.png',
+              avatar: data.user.image_field ? `http://127.0.0.1:8000/api${data.user.image_field}` : '/images/Default_profile.png',
               message: `You sent a friend request to ${data.user.username}`,
               timestamp: new Date().toISOString(),
               isNew: true,
@@ -237,7 +237,7 @@ function Navbar() {
             handleNewNotification({
               id: data.freindship_id,
               type: 'friend_accept',
-              avatar: data.user.image_name ? `/${data.user.image_name}` : '/images/Default_profile.png',
+              avatar: data.user.image_field ? `http://127.0.0.1:8000/api${data.user.image_field}` : '/images/Default_profile.png',
               message: `${data.user.username} accepted your friend request`,
               timestamp: new Date().toISOString(),
               isNew: true,

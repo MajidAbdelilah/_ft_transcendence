@@ -87,13 +87,14 @@ const handleBlockUser = async (loggedInUser, user) => {
 function Part1({loggedInUser, user, isSelf}) {
 
   const router = useRouter();
+  console.log(user.image_field);
   return (
     <div className="part1 relative w-1/3 p-2 rounded-l-2xl bg-[#F4F4FF] border-[#BCBCC9] border-r-2 min-w-32 ">
 
 
     <div className="flex flex-col items-center">
         <img
-        src={user.image_feild ? user.image_feild : "/images/Default_profile.png"}// image_feiled
+        src={user.image_field ? `http://127.0.0.1:8000/api/${user.image_field}` : "/images/Default_profile.png"}// image_feiled
             width={60}
             height={60}
         
