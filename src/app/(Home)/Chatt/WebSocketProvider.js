@@ -14,7 +14,7 @@ export function WebSocketProvider({ children }) {
     // Close existing connection if any
     if (socket) socket.close();
 
-    // Create new WebSocket connection
+    // // Create new WebSocket connection
     const newSocket = new WebSocket(`ws://127.0.0.1:8000/ws/chat/${userId}/`);
     
     newSocket.onopen = () => {
@@ -22,11 +22,15 @@ export function WebSocketProvider({ children }) {
       setIsConnected(true);
     };
 
+
+
+
+
     // newSocket.onmessage = (event) => {
     //   console.log('WebSocket message received in onmessage .................');
     //   const message = JSON.parse(event.data);
     //   const recievedMessage = message;
-    //   setMessages([recievedMessage]);
+    //   setMessages(recievedMessage);
     // };
 
     newSocket.onmessage = (event) => {
@@ -37,7 +41,7 @@ export function WebSocketProvider({ children }) {
     };
 
 
-    
+
     newSocket.onclose = () => {
       console.log('WebSocket disconnected---');
       setIsConnected(false);

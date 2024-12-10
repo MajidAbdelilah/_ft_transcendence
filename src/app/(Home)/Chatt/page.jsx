@@ -225,7 +225,7 @@ const getSelectedFriend = (friend) => {
           setConversation(conversation);
         };
         loadConversation();
-    }, [loggedInUser, friend]);
+    }, [friend]);
 
     //  -----  impliment the logic of reciving a message using websocket  -------------------------------------------------------
 
@@ -282,7 +282,7 @@ const getSelectedFriend = (friend) => {
 //       });
 //     }
 //   }
-// }, [messages, friend, loggedInUser]);
+// }, [messages]);
 
 useEffect(() => {
   console.log("Incoming messages -----------------", messages);
