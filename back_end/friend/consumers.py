@@ -243,28 +243,6 @@ class FriendRequestConsumer(AsyncWebsocketConsumer):
             await self.handle_friend_unblock(data)
         elif data['type'] == 'friends-list':
             await self.get_friends_list(data)
-    @database_sync_to_async
-    def create_friend_request(self, to_user_id):
-        try:
-            to_user = User.objects.get(id=to_user_id)
-            friendship = Friendship.objects.create(
-                user_from=self.user,
-                user_to=to_user,
-                status='pending'
-            )
-            return friendship
-        except User.DoesNotExist:
-            return None
-
-    @database_sync_to_async
-    def accept_friend_request(self, freindship_id):
-        try:
-            friendship = Friendship.objects.get(freindship_id =freindship_id, user_to=self.user)
-            friendship.status = 'accepted'
-            friendship.save()
-            return friendship
-        except Friendship.DoesNotExist:
-            return None
 
     async def handle_friend_add(self, data):
         try:
