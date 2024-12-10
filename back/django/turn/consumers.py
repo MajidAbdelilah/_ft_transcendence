@@ -7,6 +7,7 @@ from django.utils import timezone
 from channels.db import database_sync_to_async
 import random
 import string
+from channels.layers import get_channel_layer
 
 
 class PingPongConsumer(AsyncWebsocketConsumer):
@@ -36,7 +37,21 @@ class PingPongConsumer(AsyncWebsocketConsumer):
                 }
             }
         }
-        await self.send(text_data=json.dumps(bracket_update))
+        # print("Sending bracket update")
+
+        channel_layer = get_channel_layer()
+        await channel_layer.group_send(
+            self.room_group_name,
+            {
+                "type": "bracket.update",
+                "message": bracket_update
+            }
+        )
+
+    async def bracket_update(self, event):
+        message = event['message']
+        await self.send(text_data=json.dumps(message))
+    
 
     async def delete_active_tournament(self):
         await database_sync_to_async(ActiveTournament.objects.filter(room_name=self.room_name).delete)()
@@ -137,6 +152,7 @@ class PingPongConsumer(AsyncWebsocketConsumer):
                 await self.save_active_tournament()
                 await self.send_bracket_update()
                 asyncio.create_task(self.game_loop())
+            await self.send_bracket_update()
 
     async def disconnect(self, close_code):
         await self.channel_layer.group_discard(
@@ -149,7 +165,6 @@ class PingPongConsumer(AsyncWebsocketConsumer):
                 self.tournament_group_name,
                 self.channel_name
             )
-        await self.send_bracket_update()
         await self.delete_active_tournament()
 
     def assign_player(self, username):
@@ -168,7 +183,7 @@ class PingPongConsumer(AsyncWebsocketConsumer):
                 return player_key
         return None
 
-    def assign_player_tournament(self, username):
+    async def assign_player_tournament(self, username):
         players = self.room_var[self.room_name]['players']
         print("player: ", username)
         for player_key, player_data in players.items():
@@ -197,6 +212,7 @@ class PingPongConsumer(AsyncWebsocketConsumer):
 
                 print("player_key: ", player_key)
                 print("match: ", match, match_name)
+                await self.send_bracket_update()
                 return player_key
         return None
     
@@ -208,7 +224,7 @@ class PingPongConsumer(AsyncWebsocketConsumer):
     
         if not player:
             if(self.room_var[self.room_name]['is_tournament']):
-                player = self.assign_player_tournament(username)
+                player = await self.assign_player_tournament(username)
             else:
                 player = self.assign_player(username)
     
@@ -227,6 +243,7 @@ class PingPongConsumer(AsyncWebsocketConsumer):
                         self.room_var[self.room_name]['matches'][current_match]['game_start'] = True
         if(self.room_var[self.room_name]['is_tournament']):
             await self.save_active_tournament()
+            self.send_bracket_update()
 
 
     async def game_loop(self):
@@ -270,6 +287,7 @@ class PingPongConsumer(AsyncWebsocketConsumer):
                     if(self.room_var[self.room_name]['end_tournament']):
                         await self.disconnect(1000)
                         del self.room_var[self.room_name]
+                        print("tournament room deleted")
                         break
                     else:
                         await self.update_game_state_tournament()
@@ -306,7 +324,8 @@ class PingPongConsumer(AsyncWebsocketConsumer):
                         del self.room_var[self.room_name]
                         break
                     print('5')
-    
+                # await self.send_bracket_update()
+
                 await asyncio.sleep(1/60)
             except Exception as e:
                 print(f"Error in game loop: {e}")
@@ -486,23 +505,8 @@ class PingPongConsumer(AsyncWebsocketConsumer):
         self.room_var[self.room_name]['players']['player2']['current_match'] = 'match1'
         self.room_var[self.room_name]['players']['player3']['current_match'] = 'match2'
         self.room_var[self.room_name]['players']['player4']['current_match'] = 'match2'
-        self.room_var[self.room_name]['matches']['match1']['player1'] = None
-        self.room_var[self.room_name]['matches']['match1']['player2'] = None
-        self.room_var[self.room_name]['matches']['match1']['p1_score'] = 0
-        self.room_var[self.room_name]['matches']['match1']['p2_score'] = 0
-        self.room_var[self.room_name]['matches']['match1']['winner'] = None
         self.room_var[self.room_name]['matches']['match1']['game_start'] = False
-        self.room_var[self.room_name]['matches']['match2']['player1'] = None
-        self.room_var[self.room_name]['matches']['match2']['player2'] = None
-        self.room_var[self.room_name]['matches']['match2']['p1_score'] = 0
-        self.room_var[self.room_name]['matches']['match2']['p2_score'] = 0
-        self.room_var[self.room_name]['matches']['match2']['winner'] = None
         self.room_var[self.room_name]['matches']['match2']['game_start'] = False
-        self.room_var[self.room_name]['matches']['final']['player1'] = None
-        self.room_var[self.room_name]['matches']['final']['player2'] = None
-        self.room_var[self.room_name]['matches']['final']['p1_score'] = 0
-        self.room_var[self.room_name]['matches']['final']['p2_score'] = 0
-        self.room_var[self.room_name]['matches']['final']['winner'] = None
         self.room_var[self.room_name]['matches']['final']['game_start'] = False
         self.room_var[self.room_name]['end_tournament'] = True
         if not self.room_var[self.room_name]['is_tournament']:

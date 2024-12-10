@@ -31,8 +31,8 @@
             const roomName = document.getElementById('roomName').value;
             const tournamentRoomName = document.getElementById('tournamentRoomName').value;
             const url = tournamentRoomName ? 
-                `ws://127.0.0.1:8001/ws/tournament/${roomName}/${tournamentRoomName}/` : 
-                `ws://127.0.0.1:8001/ws/tournament/${roomName}/`;
+                `ws://10.11.6.4:8001/ws/tournament/${roomName}/${tournamentRoomName}/` : 
+                `ws://10.11.6.4:8001/ws/tournament/${roomName}/`;
 
             socket = new WebSocket(url);
             
@@ -50,9 +50,13 @@
             };
             socket.onmessage = function(e) {
                 const data = JSON.parse(e.data);
-                console.log('Received:', data);
-                if(data.type === "BRACKET_UPDATE")
-                    return ;
+                // console.log('Players:', data.players);
+                if(data.type === 'BRACKET_UPDATE')
+                {
+                    console.log('Received:', data);
+                    return;
+                }
+                
                 if (data.is_tournament) {
                     
                     // Determine player's assigned role and match
@@ -97,6 +101,7 @@
                                 // alert('You won the match!');
                             } else {
                                 // alert('You lost the match.');
+                                window.location.reload();
                                 socket.close();
                             }
                             init();
