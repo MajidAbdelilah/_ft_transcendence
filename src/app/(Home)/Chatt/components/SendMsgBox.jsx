@@ -3,7 +3,7 @@
 import { RiSendPlaneLine } from "react-icons/ri";
 import { getCurrentTime, createFriendMsgBox, createMyMsgBox } from './peerToPeer';
 import { useWebSocket } from '../WebSocketProvider';
-
+import toast, { Toaster } from 'react-hot-toast';
 
   
   export function SendMsgBox({ loggedInUser, friend}) {
@@ -22,6 +22,15 @@ import { useWebSocket } from '../WebSocketProvider';
   
       const messageContent = inputText.value.trim();
 
+
+      if (messageContent.length > 512) {
+        toast.error('Message is too long, must be less than 512 characters.');
+        return; // Stop further execution if message is too long
+      }
+
+
+
+      
       const messageObject = {
         message: messageContent,
         send: loggedInUser.username,
