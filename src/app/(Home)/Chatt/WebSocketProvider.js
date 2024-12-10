@@ -22,13 +22,22 @@ export function WebSocketProvider({ children }) {
       setIsConnected(true);
     };
 
+    // newSocket.onmessage = (event) => {
+    //   console.log('WebSocket message received in onmessage .................');
+    //   const message = JSON.parse(event.data);
+    //   const recievedMessage = message;
+    //   setMessages([recievedMessage]);
+    // };
+
     newSocket.onmessage = (event) => {
       console.log('WebSocket message received in onmessage ....');
       const message = JSON.parse(event.data);
-      const recievedMessage = message;
-      setMessages([recievedMessage]);
+    
+      setMessages((prevMessages) => [...prevMessages, message]); // Append the new message
     };
 
+
+    
     newSocket.onclose = () => {
       console.log('WebSocket disconnected---');
       setIsConnected(false);
