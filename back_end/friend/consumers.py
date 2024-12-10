@@ -276,7 +276,7 @@ class FriendRequestConsumer(AsyncWebsocketConsumer):
                         'freindship_id': friendshipcreate.freindship_id,
                         'user': {
                             'username': self.user.username,
-                            'image_name': self.user.image_name or ''
+                            'image_field': self.user.image_field or ''
                         }
                     }
                 )
@@ -287,7 +287,7 @@ class FriendRequestConsumer(AsyncWebsocketConsumer):
                     'friendship_id': friendshipcreate.freindship_id,
                     'user': {
                         'username': self.user.username,
-                        'image_name': self.user.image_name or ''
+                        'image_field': self.user.image_field or ''
                     }
                 }))
                 await self.send(text_data=json.dumps({
@@ -353,14 +353,14 @@ class FriendRequestConsumer(AsyncWebsocketConsumer):
             # Prepare user data for both users
             user_from_data = {
                 'username': user_from.username,
-                'image_name': user_from.image_name.lstrip('/') if user_from.image_name else '',
+                'image_field': str(user_from.image_field.url) if user_from.image_field else '',
                 'id': user_from.id,
                 'is_on': user_from.is_on
             }
             
             user_to_data = {
                 'username': user_to.username,
-                'image_name': user_to.image_name.lstrip('/') if user_to.image_name else '',
+                'image_field': str(user_to.image_field.url) if user_to.image_field else '',
                 'id': user_to.id,
                 'is_on': user_to.is_on
             }
@@ -628,7 +628,7 @@ class FriendRequestConsumer(AsyncWebsocketConsumer):
                 friends_list.append({
                     'freindship_id': friendship.freindship_id,
                     'username': friend.username,
-                    'image_name': friend.image_name or '',
+                    'image_field': str(friend.image_field.url) if friend.image_field else '',
                     'id': friend.id,
                     'is_on': friend.is_on
                 })

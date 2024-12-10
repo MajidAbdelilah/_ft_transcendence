@@ -7,7 +7,7 @@ from drf_spectacular.utils import extend_schema_field
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ('id', 'username', 'is_on','image_name')
+        fields = ('id', 'username', 'is_on','image_field')
 
 class FriendshipSerializer(serializers.ModelSerializer):
     user = serializers.SerializerMethodField()
