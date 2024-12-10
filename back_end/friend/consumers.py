@@ -456,16 +456,23 @@ class FriendRequestConsumer(AsyncWebsocketConsumer):
 
     async def handle_friend_block(self, data):
         try:
-            username = data.get('username')
-            if not username:
+            # Extract data from the frontend structure
+            freindship_id = data.get('freindship_id')
+            user_data = data.get('user', {})
+            user_from = data.get('user_from')
+            user_to = data.get('user_to')
+            user_is_logged_in = data.get('user_is_logged_in')
+
+            if not freindship_id:
                 await self.send(text_data=json.dumps({
                     'type': 'friends_block_error',
                     'status': 'error',
-                    'message': 'Invalid user ID'
+                    'message': 'Invalid friendship ID'
                 }))
                 return
-            user = await get_userby_username(username)
-            friendship = await get_friendship_by_userone(self.user, user)
+
+            # Get friendship directly by ID
+            friendship = await get_friendship(freindship_id)
             if not friendship:
                 await self.send(text_data=json.dumps({
                     'type': 'friends_block_error',
@@ -473,60 +480,158 @@ class FriendRequestConsumer(AsyncWebsocketConsumer):
                     'message': 'Friend request not found'
                 }))
                 return
-            user_from = await get_user_from(friendship)
-            if not user_from:
+
+            user_from_obj = await get_user_from(friendship)
+            if not user_from_obj:
                 await self.send(text_data=json.dumps({
-                    'type': 'friends_remove_error',
+                    'type': 'friends_block_error',
                     'status': 'error',
                     'message': 'User not found'
                 }))
                 return
-            user_to = await get_user_to(friendship)
-            if not user_to:
+
+            user_to_obj = await get_user_to(friendship)
+            if not user_to_obj:
                 await self.send(text_data=json.dumps({
-                    'type': 'friends_remove_error',
+                    'type': 'friends_block_error',
                     'status': 'error',
                     'message': 'User not found'
                 }))
                 return
-            if friendship:
-                same1 = await is_same(user_from.id, self.user.id)
-                same2 = await is_same(user_to.id, self.user.id)
-                same = same1 or same2
-                if same:
-                    if same1:
-                        friendship.u_one_is_blocked_u_two = True
-                    else:
-                        friendship.u_two_is_blocked_u_one = True
-                    friendship.is_accepted = False
-                    await save_friendship(friendship)
-                    await self.send(text_data=json.dumps({
-                        'type': 'friends_block_success',
-                        'status': 'success',
-                        'message': 'Friend request blocked'
-                    }))
-                    return
+
+            # Verify current user is part of the friendship
+            same1 = await is_same(user_from_obj.id, self.user.id)
+            same2 = await is_same(user_to_obj.id, self.user.id)
+            same = same1 or same2
+
+            if same:
+                if same1:
+                    friendship.u_one_is_blocked_u_two = True
                 else:
-                    await self.send(text_data=json.dumps({
-                        'type': 'friends_block_error',
-                        'status': 'error',
-                        'message': 'Not authorized to block this request'
-                    }))
-                    return
+                    friendship.u_two_is_blocked_u_one = True
+                friendship.is_accepted = False
+                await save_friendship(friendship)
+
+                # Send success response with all the data frontend sent
+                response_data = {
+                    'type': 'friends_block_success',
+                    'status': 'success',
+                    'message': 'Friend request blocked',
+                    'freindship_id': freindship_id,
+                    'user': user_data,
+                    'user_from': user_from,
+                    'user_to': user_to,
+                    'user_is_logged_in': user_is_logged_in
+                }
+                await self.send(text_data=json.dumps(response_data))
+
+                # Also notify the other user about being blocked
+                other_user_id = user_to if same1 else user_from
+                await self.channel_layer.group_send(
+                    f'user_{other_user_id}',
+                    {
+                        'type': 'friends_list_update',
+                        'action': 'block',
+                        'friend': response_data
+                    }
+                )
+                return
             else:
                 await self.send(text_data=json.dumps({
                     'type': 'friends_block_error',
                     'status': 'error',
-                    'message': 'Friend request not found'
+                    'message': 'Not authorized to block this request'
                 }))
                 return
+
         except Exception as e:
-            print("Error: ", e)
+            print("Error in block: ", str(e))
             await self.send(text_data=json.dumps({
                 'type': 'friends_block_error',
                 'status': 'error',
-                'message': 'An error occurred'
+                'message': str(e)
             }))
+
+    async def handle_friend_unblock(self, data):
+        try:
+            # Extract data from the frontend structure
+            freindship_id = data.get('freindship_id')
+            user_data = data.get('user', {})
+            username = user_data.get('username')
+
+            if not freindship_id:
+                await self.send(text_data=json.dumps({
+                    'type': 'friends_unblock_error',
+                    'status': 'error',
+                    'message': 'Invalid friendship ID'
+                }))
+                return
+
+            # Get friendship directly by ID
+            friendship = await get_friendship(freindship_id)
+            if not friendship:
+                await self.send(text_data=json.dumps({
+                    'type': 'friends_unblock_error',
+                    'status': 'error',
+                    'message': 'Friend request not found'
+                }))
+                return
+
+            user_from = await get_user_from(friendship)
+            if not user_from:
+                await self.send(text_data=json.dumps({
+                    'type': 'friends_unblock_error',
+                    'status': 'error',
+                    'message': 'User not found'
+                }))
+                return
+
+            user_to = await get_user_to(friendship)
+            if not user_to:
+                await self.send(text_data=json.dumps({
+                    'type': 'friends_unblock_error',
+                    'status': 'error',
+                    'message': 'User not found'
+                }))
+                return
+
+            # Verify current user is part of the friendship
+            same1 = await is_same(user_from.id, self.user.id)
+            same2 = await is_same(user_to.id, self.user.id)
+            same = same1 or same2
+
+            if same:
+                if same1:
+                    friendship.u_one_is_blocked_u_two = False
+                else:
+                    friendship.u_two_is_blocked_u_one = False
+                await sync_to_async(friendship.delete)()
+
+                # Send success response with the data frontend expects
+                await self.send(text_data=json.dumps({
+                    'type': 'friends_unblock_success',
+                    'status': 'success',
+                    'message': 'Friend request unblocked',
+                    'freindship_id': freindship_id,
+                    'user': user_data
+                }))
+                return
+            else:
+                await self.send(text_data=json.dumps({
+                    'type': 'friends_unblock_error',
+                    'status': 'error',
+                    'message': 'Not authorized to unblock this request'
+                }))
+                return
+
+        except Exception as e:
+            print("Error in unblock: ", str(e))
+            await self.send(text_data=json.dumps({
+                'type': 'friends_unblock_error',
+                'status': 'error',
+                'message': str(e)
+            }))
+
     async def get_friends_list(self, data):
         try:
             friends = await get_friends(self.user)
@@ -559,78 +664,6 @@ class FriendRequestConsumer(AsyncWebsocketConsumer):
                 'type': 'friends_list_error',
                 'status': 'error',
                 'message': str(e)
-            }))
-    async def handle_friend_unblock(self, data):
-        try:
-            username = data.get('username')
-            if not username:
-                await self.send(text_data=json.dumps({
-                    'type': 'friends_unblock_error',
-                    'status': 'error',
-                    'message': 'Invalid user ID'
-                }))
-                return
-            user = await get_userby_username(username)
-            friendship = await get_friendship_by_userone(self.user, user)
-            if not friendship:
-                await self.send(text_data=json.dumps({
-                    'type': 'friends_unblock_error',
-                    'status': 'error',
-                    'message': 'Friend request not found'
-                }))
-                return
-            user_from = await get_user_from(friendship)
-            if not user_from:
-                await self.send(text_data=json.dumps({
-                    'type': 'friends_unblock_error',
-                    'status': 'error',
-                    'message': 'User not found'
-                }))
-                return
-            user_to = await get_user_to(friendship)
-            if not user_to:
-                await self.send(text_data=json.dumps({
-                    'type': 'friends_unblock_error',
-                    'status': 'error',
-                    'message': 'User not found'
-                }))
-                return
-            if friendship:
-                same1 = await is_same(user_from.id, self.user.id)
-                same2 = await is_same(user_to.id, self.user.id)
-                same = same1 or same2
-                if same:
-                    if same1:
-                        friendship.u_one_is_blocked_u_two = False
-                    else:
-                        friendship.u_two_is_blocked_u_one = False
-                    await sync_to_async(friendship.delete)()
-                    await self.send(text_data=json.dumps({
-                        'type': 'friends_unblock_success',
-                        'status': 'success',
-                        'message': 'Friend request unblocked'
-                    }))
-                    return
-                else:
-                    await self.send(text_data=json.dumps({
-                        'type': 'friends_unblock_error',
-                        'status': 'error',
-                        'message': 'Not authorized to unblock this request'
-                    }))
-                    return
-            else:
-                await self.send(text_data=json.dumps({
-                    'type': 'friends_unblock_error',
-                    'status': 'error',
-                    'message': 'Friend request not found'
-                }))
-                return
-        except Exception as e:
-            print("Error: ", e)
-            await self.send(text_data=json.dumps({
-                'type': 'friends_unblock_error',
-                'status': 'error',
-                'message': 'An error occurred'
             }))
     async def friends_accept(self, event):
         """
