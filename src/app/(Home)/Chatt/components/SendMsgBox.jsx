@@ -5,13 +5,13 @@ import { getCurrentTime, createFriendMsgBox, createMyMsgBox } from './peerToPeer
 import { useWebSocket } from '../WebSocketProvider';
 
 
-
   
   export function SendMsgBox({ loggedInUser, friend}) {
     // socket ---------------------------------------------------------
   
-    const { send } = useWebSocket();
+    const { send, connect, isConnected } = useWebSocket();
     const sendMessage = async (e) => {
+      
       
 
 
@@ -29,8 +29,17 @@ import { useWebSocket } from '../WebSocketProvider';
         timestamp: new Date().toISOString(),
         chat_id: loggedInUser.id.toString()
       };
-  
-      send(messageObject);
+      
+      if (!isConnected)
+      {
+        connect(loggedInUser.id); 
+        setTimeout(() => send(messageObject), 500); 
+      }
+      else
+      {
+        send(messageObject);
+      }
+      
       inputText.value = ''; // Clear input after sending
 
 
