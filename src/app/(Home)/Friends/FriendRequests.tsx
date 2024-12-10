@@ -21,6 +21,7 @@ interface FriendRequestProps {
       id: number;
       username: string;
       is_on: number;
+      image_field: string
     };
     user_from: number;
     user_to: number;
@@ -129,7 +130,7 @@ export default function FriendRequests({ request }: FriendRequestProps) {
           <div className="flex items-center h-full p-2" key={request.user.id}>
             <div className="relative w-16 h-16 md:w-20 md:h-20 lg:w-15 lg:h-15">
               <img
-                src={"/images/Default_profile.png"}
+                src={request.user.image_field ? `http://127.0.0.1:8000/api${request.user.image_field}` : "/images/Default_profile.png"}
                 alt={`${request.user.username}'s profile`} 
                 className="w-full h-full rounded-full object-cover border-2 border-[#BCBCC9]" 
               />

@@ -395,7 +395,7 @@ When there’s an update to the tournament bracket, the backend will send:
     "tournamentId": "123",
     "matches": {
         "semifinals": {
-            "match1": {
+            "match1": {  // First semi-final match
                 "player1": "Player1",
                 "player2": "Player2",
                 "winner": "Player1"
@@ -412,6 +412,9 @@ When there’s an update to the tournament bracket, the backend will send:
             "winner": null
         }
     }
+
+
+    
 }
 ```
 
@@ -483,6 +486,34 @@ const getTournamentData = async () => {
     setTournamentData(result.data);
   }
 };
+```
+
+## Game Service Implementation
+
+```javascript
+export const gameService = {
+    // Join tournament matchmaking queue (HTTP)
+    joinTournament: async (userData, mapType) => {
+        try {
+            const response = await customAxios.post('/tournament/join', {
+                userId: userData.id,
+                username: userData.username,
+                mapType
+            });
+            return {
+                success: true,
+                tournamentId: response.data.tournamentId,
+                message: response.data.message
+            };
+        } catch (error) {
+            console.error('Error joining tournament:', error);
+            return {
+                success: false,
+                error: error.message
+            };
+        }
+    }
+}
 ```
 
 ## State Management

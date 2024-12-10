@@ -149,7 +149,8 @@ export default function Friends() {
             setFriendRequestsData(prev => [...prev, {
               freindship_id: data.freindship_id,
               user: data.user,
-              is_accepted: false
+              is_accepted: false,
+              image_field : data.user.image_field,
             }]);
             break;
 
@@ -203,7 +204,9 @@ export default function Friends() {
               user: {
                 id: data.user.id,
                 username: data.user.username,
-                is_on: data.user_is_logged_in
+                is_on: data.user_is_logged_in,
+                image_field : data.user.image_field,
+
               },
               is_accepted: false,
               user_from: data.user_from,
@@ -230,7 +233,8 @@ export default function Friends() {
                 user: {
                   id: unblockedUser.user.id,
                   username: unblockedUser.user.username,
-                  is_on: unblockedUser.user.is_on
+                  is_on: unblockedUser.user.is_on,
+                  image_field : unblockedUser.user.image_field,
                 },
                 is_accepted: true,
                 user_from: data.user_from,

@@ -19,6 +19,7 @@ interface Friend {
     id: number;
     username: string;
     is_on: number;
+    image_field: string
   };
   freindship_id: number;
   is_accepted: boolean;
@@ -36,6 +37,8 @@ export default function FriendsList({ friends = [] }: FriendsListProps) {
   const { userData } = useUser();
   const [imageLoadingStates, setImageLoadingStates] = useState<{ [key: string]: boolean }>({});
   const { send } = useWebSocket();
+
+  console.log(friends);
 
   const router = useRouter();
 
@@ -127,8 +130,8 @@ export default function FriendsList({ friends = [] }: FriendsListProps) {
           <div  key={friend.user.id} className={`w-full h-20 lg:h-[12%] cursor-pointer md:h-[15%] md:h-[20%] rounded-xl bg-[#D8D8F7] shadow-md shadow-[#BCBCC9] relative ${isMobile ? 'w-full' : 'min-h-[90px]'}`}>
             <div className="flex items-center h-full p-2">
               <div className="relative w-16 h-16 md:w-20 md:h-20 lg:w-15 lg:h-15">
-                <Image
-                  src="/images/Default_profile.png"
+                <img
+                  src={friend.user.image_field ? `http://127.0.0.1:8000/api${friend.user.image_field}` : "/images/Default_profile.png"}
                   alt={`${friend.user.username}'s profile`}
                   width={80}
                   height={80}

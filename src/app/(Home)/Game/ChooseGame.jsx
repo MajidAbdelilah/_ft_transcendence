@@ -25,7 +25,7 @@ function MainComponent() {
   const [tournamentId, setTournamentId] = useState(null);
   const [tournamentData, setTournamentData] = useState(null);
   const [showFriendsPopup, setShowFriendsPopup] = useState(false);
-  const [friends, setFriends] = useState({ friends: [] });
+  const [friends, setFriends] = useState([]);
   const [error, setError] = useState(null);
 
   useEffect(() => {
@@ -33,13 +33,14 @@ function MainComponent() {
       try {
         const response = await customAxios.get('http://127.0.0.1:8000/friend/friends');
         if (response.data) {
+          console.log(response.data);
           setFriends(response.data);
           setError(null);
         }
       } catch (error) {
         console.error('Error fetching friends:', error);
         setError('Failed to load friends');
-        setFriends({ friends: [] });
+        setFriends([]);
       }
     };
 
@@ -298,7 +299,7 @@ function MainComponent() {
                 )}
                 
                 <div className="space-y-3 max-h-[40vh] overflow-y-auto pr-2 custom-scrollbar">
-                  {!friends?.friends || friends.friends.length === 0 ? (
+                  {!friends || friends.length === 0 ? (
                     <div className="text-center py-8">
                       <img 
                         src="/images/PlayWithFriends.svg" 
@@ -308,27 +309,35 @@ function MainComponent() {
                       <p className="text-gray-500">No friends available</p>
                     </div>
                   ) : (
-                    friends.friends.map((friend) => (
+                    friends.map((friend) => (
                       <div
-                        key={friend.friendship_id}
+                      key={friend.freindship_id}
                         className="flex items-center justify-between p-4 bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow duration-300"
                       >
                         <div className="flex items-center gap-4">
                           <div className="relative">
                             <Image
-                              src={friend.user.profile_photo || "/images/avatarInvite.svg"}
+                              src={friend.user.image_field || "/images/Default_profile.png"}
                               alt={friend.user.username}
                               width={48}
                               height={48}
                               className="rounded-xl"
                             />
+                            <span
+                              className={`absolute bottom-0 right-0 w-3 h-3 rounded-full ${
+                                friend.user.is_on ? 'bg-green-500' : 'bg-gray-500'
+                              }`}
+                            />
                           </div>
                           <div>
                             <p className="font-bold text-[#242F5C]">{friend.user.username}</p>
+                            <p className="text-sm text-gray-500">
+                              {friend.user.is_on ? 'Online' : 'Offline'}
+                            </p>
                           </div>
                         </div>
                         <button
-                          onClick={() => handleInviteFriend(friend.friendship_id)}
+                          onClick={() => handleInviteFriend(friend.freindship_id)}
                           disabled={!friend.user.is_on}
                           className="px-5 py-2 rounded-xl font-semibold transition-all cursor-pointer ease-in-out duration-300 bg-[#242F5C] text-white hover:bg-[#1a2340] hover:scale-105"
                         >
