@@ -5,7 +5,8 @@ import asyncio
 from .models import Match, Tournament, ActiveTournament  # Import the Match model
 from django.utils import timezone
 from channels.db import database_sync_to_async
-
+import random
+import string
 
 
 class PingPongConsumer(AsyncWebsocketConsumer):
@@ -18,9 +19,10 @@ class PingPongConsumer(AsyncWebsocketConsumer):
         tournament_data = self.room_var[self.room_name]
         num_players = sum(1 for player in tournament_data['players'].values() if player.get('full'))
 
-        print(f"Saving ActiveTournament: {self.room_name}, Num Players: {num_players}")
-        print(f"Data being saved: {tournament_data}")  # Debugging line
-
+        # print(f"Saving ActiveTournament: {self.room_name}, Num Players: {num_players}")
+        # print(f"Data being saved: {tournament_data}")  # Debugging line
+        for room_name in self.room_var:
+            print("room_name: ", room_name)
         await database_sync_to_async(
             ActiveTournament.objects.update_or_create
         )(
@@ -30,19 +32,31 @@ class PingPongConsumer(AsyncWebsocketConsumer):
                 'end_tournament': tournament_data.get('end_tournament', False),
                 'num_players': num_players,
                 'players': tournament_data['players'],
-                'matches': tournament_data.get('matches', {})
             }
         )
-
+    def generate_random_tournament_name(self, length=8):
+        letters = string.ascii_letters
+        return ''.join(random.choices(letters, k=length))
+    
     async def connect(self):
         self.room_name = self.scope['url_route']['kwargs']['room_name']
         self.room_group_name = f'pingpong_{self.room_name}'
         self.tournament_room_name = self.scope['url_route']['kwargs'].get('tournament_room_name', None)
         self.tournament_group_name = f'tournament_{self.tournament_room_name}' if self.tournament_room_name else None
 
-        if self.tournament_room_name:
-            self.room_name = self.tournament_room_name
-            self.room_group_name = f'pingpong_{self.room_name}'
+        for room_name in self.room_var:
+            if(self.room_var[room_name].get('is_tournament', False)):
+                num_players = sum(1 for player in self.room_var[room_name]['players'].values() if player.get('full'))
+                if num_players < 4:
+                    self.room_name = room_name
+                    self.tournament_room_name = room_name
+                    
+        if(self.room_name not in self.room_var and self.tournament_room_name):
+            self.room_name = self.generate_random_tournament_name()
+            self.tournament_room_name = self.room_name
+        
+        self.room_group_name = f'pingpong_{self.room_name}'
+        self.tournament_group_name = f'tournament_{self.tournament_room_name}' if self.tournament_room_name else None
 
         self.width = 1000
         self.height = 600
@@ -232,7 +246,7 @@ class PingPongConsumer(AsyncWebsocketConsumer):
                     else:
                         await self.update_game_state_tournament()
                 else:
-                    # print('players: ', self.room_var[self.room_name]['players'])
+                    print('players: ', self.room_var[self.room_name]['players'])
                     if(not self.room_var[self.room_name]['game_start']):
                         print("Game has ended")
                         await self.disconnect(1000)
@@ -242,12 +256,12 @@ class PingPongConsumer(AsyncWebsocketConsumer):
                     if not players['player1']['game_start'] or not players['player2']['game_start']:
                         await asyncio.sleep(1/60)
                         continue
-                    # print('2')
+                    print('2')
                     if not self.room_var[self.room_name]['game_start']:
                         await self.disconnect(1000)
                         del self.room_var[self.room_name]
                         break
-                    # print('3')
+                    print('3')
                     await self.update_game_state()
                     if(not self.room_var[self.room_name]['game_start']):
                         print("Game has ended")
@@ -258,12 +272,12 @@ class PingPongConsumer(AsyncWebsocketConsumer):
                     if not players['player1']['game_start'] or not players['player2']['game_start']:
                         await asyncio.sleep(1/60)
                         continue
-                    # print('2')
+                    print('4')
                     if not self.room_var[self.room_name]['game_start']:
                         await self.disconnect(1000)
                         del self.room_var[self.room_name]
                         break
-                    
+                    print('5')
     
                 await asyncio.sleep(1/60)
             except Exception as e:
