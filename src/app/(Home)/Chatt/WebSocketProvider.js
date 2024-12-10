@@ -25,7 +25,8 @@ export function WebSocketProvider({ children }) {
     newSocket.onmessage = (event) => {
       console.log('WebSocket message received in onmessage ....');
       const message = JSON.parse(event.data);
-      setMessages([message]);
+      const recievedMessage = message;
+      setMessages([recievedMessage]);
     };
 
     newSocket.onclose = () => {
