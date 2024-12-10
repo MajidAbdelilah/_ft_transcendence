@@ -143,3 +143,112 @@ Consider implementing:
 - Max connections per IP
 - Join request rate limits
 - Message frequency limits
+
+## WebSocket Utility Functions
+
+### setupBracketListener
+Sets up a listener for all tournament-related WebSocket messages.
+
+```typescript
+function setupBracketListener(
+  tournamentId: string, 
+  onUpdate: (data: any) => void
+): () => void
+```
+
+#### Parameters
+- `tournamentId`: Unique identifier for the tournament
+- `onUpdate`: Callback function that will be called with parsed message data for any tournament update
+
+#### Returns
+- Cleanup function that removes the event listener when called
+
+#### Example Usage
+```javascript
+const cleanup = gameService.setupBracketListener(
+  'tournament123',
+  (data) => {
+    // Handle any tournament update
+    console.log('Tournament update:', data);
+    updateBracketUI(data);
+  }
+);
+
+// When component unmounts or listener is no longer needed
+cleanup();
+```
+
+### getWebSocket
+Returns the current WebSocket instance.
+
+```typescript
+function getWebSocket(): WebSocket | null
+```
+
+#### Returns
+- Active WebSocket instance or null if no connection exists
+
+#### Example Usage
+```javascript
+const ws = gameService.getWebSocket();
+if (ws && ws.readyState === WebSocket.OPEN) {
+  // WebSocket is available and connected
+}
+```
+
+### disconnect
+Closes the current WebSocket connection and cleans up resources.
+
+```typescript
+function disconnect(): void
+```
+
+#### Behavior
+1. Checks if WebSocket instance exists
+2. Closes the connection if it exists
+3. Sets the WebSocket instance to null
+4. Frees up resources
+
+#### Example Usage
+```javascript
+// When leaving tournament page or cleaning up application
+gameService.disconnect();
+```
+
+## Best Practices for Utility Functions
+
+### Event Listener Management
+```javascript
+// In React component
+useEffect(() => {
+  const cleanup = gameService.setupBracketListener(tournamentId, handleUpdate);
+  return cleanup;
+}, [tournamentId]);
+```
+
+### Connection Management
+```javascript
+// Check connection before operations
+const ws = gameService.getWebSocket();
+if (!ws || ws.readyState !== WebSocket.OPEN) {
+  console.error('No active connection');
+  return;
+}
+
+// Clean up on component unmount
+useEffect(() => {
+  return () => {
+    gameService.disconnect();
+  };
+}, []);
+```
+
+### Implementation Notes
+1. All tournament messages trigger onUpdate callback without filtering
+2. Event listeners are properly cleaned up to prevent memory leaks
+3. WebSocket connections are properly closed when disconnecting
+4. Always check WebSocket states:
+   - `WebSocket.CONNECTING` (0)
+   - `WebSocket.OPEN` (1)
+   - `WebSocket.CLOSING` (2)
+   - `WebSocket.CLOSED` (3)
