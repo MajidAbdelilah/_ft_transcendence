@@ -124,7 +124,7 @@ export default function FriendsList({ friends = [] }: FriendsListProps) {
         </div>
       ) : (
         friends.map((friend) => (
-          <div onClick={() => getProfile(friend.user.username)} key={friend.user.id} className={`w-full h-20 lg:h-[12%] cursor-pointer md:h-[15%] md:h-[20%] rounded-xl bg-[#D8D8F7] shadow-md shadow-[#BCBCC9] relative ${isMobile ? 'w-full' : 'min-h-[90px]'}`}>
+          <div  key={friend.user.id} className={`w-full h-20 lg:h-[12%] cursor-pointer md:h-[15%] md:h-[20%] rounded-xl bg-[#D8D8F7] shadow-md shadow-[#BCBCC9] relative ${isMobile ? 'w-full' : 'min-h-[90px]'}`}>
             <div className="flex items-center h-full p-2">
               <div className="relative w-16 h-16 md:w-20 md:h-20 lg:w-15 lg:h-15">
                 <Image

@@ -69,7 +69,10 @@ export default function BlockedFriends({ blockedFriend }: BlockedFriendProps) {
   }, [])
 
   return (
-    <div className={`w-full mx-auto h-20 lg:h-[12%] md:h-[20%] mt-2 rounded-xl bg-[#D8D8F7] shadow-md shadow-[#BCBCC9] relative ${isMobile ? '' : ' min-h-[90px]'} ${montserrat.className}`}>
+    <div 
+      key={blockedFriend.freindship_id}
+      className={`w-full mx-auto h-20 lg:h-[12%] md:h-[20%] mt-2 rounded-xl bg-[#D8D8F7] shadow-md shadow-[#BCBCC9] relative ${isMobile ? '' : ' min-h-[90px]'} ${montserrat.className}`}
+    >
       <div className="flex items-center h-full p-2">
         <div className="relative w-16 h-16 md:w-20 md:h-20 lg:w-15 lg:h-15">
           <img
