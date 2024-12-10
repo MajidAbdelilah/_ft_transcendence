@@ -254,8 +254,39 @@ const getSelectedFriend = (friend) => {
 
 
 
+useEffect(() => {
+  console.log("Incoming messages -----------------", messages);
+  if (friend && loggedInUser ) {
+    // const latestMessage = messages[messages.length - 1]; // Get the last message received
+    const latestMessage = messages; // Get the last message received
+
+    if (
+      (latestMessage.send === loggedInUser.username && latestMessage.receive === friend.user.username) ||
+      (latestMessage.send === friend.user.username && latestMessage.receive === loggedInUser.username)
+    ) {
+      const newMessage = {
+        chat_id: latestMessage.chat_id,
+        sender: latestMessage.send,
+        receiver: latestMessage.receive,
+        message_content: latestMessage.message,
+        message_date: latestMessage.timestamp,
+      };
+
+      setConversation((prev) => {
+        const lastMessage = prev[0]; // Check for duplication
+        const isSameMessage =
+          lastMessage &&
+          lastMessage.message_date === newMessage.message_date &&
+          lastMessage.message_content === newMessage.message_content;
+
+        return isSameMessage ? prev : [newMessage, ...prev];
+      });
+    }
+  }
+}, [messages]);
+
 // useEffect(() => {
-//   console.log("Incoming messages -----------------", messages);
+//   // console.log("Incoming messages -----------------", messages);
 //   if (friend && loggedInUser && messages.length > 0) {
 //     const latestMessage = messages[messages.length - 1]; // Get the last message received
 
@@ -282,37 +313,7 @@ const getSelectedFriend = (friend) => {
 //       });
 //     }
 //   }
-// }, [messages]);
-
-useEffect(() => {
-  console.log("Incoming messages -----------------", messages);
-  if (friend && loggedInUser && messages.length > 0) {
-    const latestMessage = messages[messages.length - 1]; // Get the last message received
-
-    if (
-      (latestMessage.send === loggedInUser.username && latestMessage.receive === friend.user.username) ||
-      (latestMessage.send === friend.user.username && latestMessage.receive === loggedInUser.username)
-    ) {
-      const newMessage = {
-        chat_id: latestMessage.chat_id,
-        sender: latestMessage.send,
-        receiver: latestMessage.receive,
-        message_content: latestMessage.message,
-        message_date: latestMessage.timestamp,
-      };
-
-      setConversation((prev) => {
-        const lastMessage = prev[0]; // Check for duplication
-        const isSameMessage =
-          lastMessage &&
-          lastMessage.message_date === newMessage.message_date &&
-          lastMessage.message_content === newMessage.message_content;
-
-        return isSameMessage ? prev : [newMessage, ...prev];
-      });
-    }
-  }
-}, [messages]);// [messages, friend, loggedInUser]
+// }, [messages]);// [messages, friend, loggedInUser]
 
 
 

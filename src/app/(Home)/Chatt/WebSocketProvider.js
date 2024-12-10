@@ -26,19 +26,20 @@ export function WebSocketProvider({ children }) {
 
 
 
-    // newSocket.onmessage = (event) => {
-    //   console.log('WebSocket message received in onmessage .................');
-    //   const message = JSON.parse(event.data);
-    //   const recievedMessage = message;
-    //   setMessages(recievedMessage);
-    // };
-
     newSocket.onmessage = (event) => {
-      console.log('WebSocket message received in onmessage ....');
+      
       const message = JSON.parse(event.data);
-    
-      setMessages((prevMessages) => [...prevMessages, message]); // Append the new message
+      console.log('WebSocket message received in onmessage---> ', message);
+      const recievedMessage = message;
+      setMessages(message);
     };
+
+    // newSocket.onmessage = (event) => {
+    //   console.log('WebSocket message received in onmessage ....');
+    //   const message = JSON.parse(event.data);
+    
+    //   setMessages((prevMessages) => [...prevMessages, message]); // Append the new message
+    // };
 
 
 
