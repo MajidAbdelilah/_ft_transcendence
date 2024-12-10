@@ -38,8 +38,6 @@ export default function FriendsList({ friends = [] }: FriendsListProps) {
   const [imageLoadingStates, setImageLoadingStates] = useState<{ [key: string]: boolean }>({});
   const { send } = useWebSocket();
 
-  console.log(friends);
-
   const router = useRouter();
 
   const handleInviteGame = async (friend: Friend) => {
