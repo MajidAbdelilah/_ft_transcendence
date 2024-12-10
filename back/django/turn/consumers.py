@@ -12,6 +12,32 @@ import string
 class PingPongConsumer(AsyncWebsocketConsumer):
     room_var = {}
 
+    async def send_bracket_update(self):
+        bracket_update = {
+            "type": "BRACKET_UPDATE",
+            "tournamentId": self.room_name,
+            "matches": {
+                "semifinals": {
+                    "match1": {
+                        "player1": self.room_var[self.room_name]['matches']['match1']['p1_username'],
+                        "player2": self.room_var[self.room_name]['matches']['match1']['p2_username'],
+                        "winner": self.room_var[self.room_name]['matches']['match1']['winner']
+                    },
+                    "match2": {
+                        "player1": self.room_var[self.room_name]['matches']['match2']['p1_username'],
+                        "player2": self.room_var[self.room_name]['matches']['match2']['p2_username'],
+                        "winner": self.room_var[self.room_name]['matches']['match2']['winner']
+                    }
+                },
+                "final": {
+                    "player1": self.room_var[self.room_name]['matches']['final']['p1_username'],
+                    "player2": self.room_var[self.room_name]['matches']['final']['p2_username'],
+                    "winner": self.room_var[self.room_name]['matches']['final']['winner']
+                }
+            }
+        }
+        await self.send(text_data=json.dumps(bracket_update))
+
     async def delete_active_tournament(self):
         await database_sync_to_async(ActiveTournament.objects.filter(room_name=self.room_name).delete)()
 
@@ -109,6 +135,7 @@ class PingPongConsumer(AsyncWebsocketConsumer):
                 'end_tournament': False
                 }
                 await self.save_active_tournament()
+                await self.send_bracket_update()
                 asyncio.create_task(self.game_loop())
 
     async def disconnect(self, close_code):
@@ -122,6 +149,7 @@ class PingPongConsumer(AsyncWebsocketConsumer):
                 self.tournament_group_name,
                 self.channel_name
             )
+        await self.send_bracket_update()
         await self.delete_active_tournament()
 
     def assign_player(self, username):
@@ -503,6 +531,7 @@ class PingPongConsumer(AsyncWebsocketConsumer):
                     'is_tournament': self.room_var[self.room_name]['is_tournament']
                 }
             )
+        await self.send_bracket_update()
         await self.delete_active_tournament()
         print("Tournament ended")
         
@@ -554,9 +583,8 @@ class PingPongConsumer(AsyncWebsocketConsumer):
             self.room_var[self.room_name]['matches']['final']['player1'] = self.room_var[self.room_name]['matches']['match1']['winner']
             self.room_var[self.room_name]['matches']['final']['player2'] = self.room_var[self.room_name]['matches']['match2']['winner']
             await self.start_final_match()
-        # else:
-        #     self.room_var[self.room_name]['game_start'] = False
 
+        await self.send_bracket_update()
 
 
   

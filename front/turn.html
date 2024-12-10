@@ -51,6 +51,8 @@
             socket.onmessage = function(e) {
                 const data = JSON.parse(e.data);
                 console.log('Received:', data);
+                if(data.type === "BRACKET_UPDATE")
+                    return ;
                 if (data.is_tournament) {
                     
                     // Determine player's assigned role and match
