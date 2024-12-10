@@ -9,6 +9,8 @@ import customAxios from '../../customAxios';
 import TournamentBracket from "../../components/TournamentBracket";
 import { gameService } from '../../services/gameService';
 import { useUser } from '../../contexts/UserContext';
+import { useRouter } from 'next/navigation';
+import toast from 'react-hot-toast';
 
 const montserrat = Montserrat({
   subsets: ['latin'],
@@ -17,6 +19,7 @@ const montserrat = Montserrat({
 
 function MainComponent() {
   const { userData } = useUser();
+  const router = useRouter();
   const [showTournament, setShowTournament] = useState(false);
   const [selectedMap, setSelectedMap] = useState(null);
   const [isMode, setIsMode] = useState(null);
@@ -27,6 +30,9 @@ function MainComponent() {
   const [showFriendsPopup, setShowFriendsPopup] = useState(false);
   const [friends, setFriends] = useState([]);
   const [error, setError] = useState(null);
+  const [isJoining, setIsJoining] = useState(false);
+
+ 
 
   useEffect(() => {
     const fetchFriends = async () => {
@@ -86,19 +92,20 @@ function MainComponent() {
     }
   };
 
-  const handleJoinTournament = async () => {
-    setIsSearching(true);
-    
+  const handleJoinTournament = async (mapType) => {
+    setIsJoining(true);
     try {
-      const response = await gameService.joinTournament(tournamentCreator, selectedMap);
-      
-      if (response.success) {
-        setTournamentId(response.tournamentId);
-        setShowTournament(true);
-        setIsSearching(false);
+      const result = await gameService.joinTournament(userData, mapType);
+      if (result.success) {
+        toast.success('Successfully joined tournament queue!');
+      } else {
+        toast.error(result.error || 'Failed to join tournament');
       }
     } catch (error) {
-      console.error('Error starting tournament:', error);
+      console.error('Error joining tournament:', error);
+      toast.error(error.message || 'Failed to join tournament');
+    } finally {
+      setIsJoining(false);
     }
   };
 
@@ -223,15 +230,15 @@ function MainComponent() {
 
                 <button 
                   className="w-full md:w-[300px] mx-auto py-3 md:py-4 bg-[#242F5C] rounded-xl md:rounded-full cursor-pointer font-bold md:font-extrabold text-base md:text-lg text-white shadow-md hover:shadow-lg flex items-center justify-center gap-2 transition-all duration-300 hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
-                  onClick={handleJoinTournament}
-                  disabled={isSearching}
+                  onClick={() => handleJoinTournament(selectedMap)}
+                  disabled={isJoining}
                 >
                   <img 
                     src="/images/ADD.svg" 
                     alt="ADD icon" 
                     className="w-5 h-5 md:w-6 md:h-6"
                   />
-                  {isSearching ? 'Searching...' : 'Join Tournament'}
+                  {isJoining ? 'Joining...' : 'Join Tournament'}
                 </button>
 
                 {isSearching && (
