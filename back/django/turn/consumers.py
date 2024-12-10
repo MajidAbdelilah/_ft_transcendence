@@ -2,12 +2,37 @@ import json
 from time import sleep
 from channels.generic.websocket import AsyncWebsocketConsumer
 import asyncio
-from .models import Match, Tournament  # Import the Match model
+from .models import Match, Tournament, ActiveTournament  # Import the Match model
 from django.utils import timezone
 from channels.db import database_sync_to_async
 
+
+
 class PingPongConsumer(AsyncWebsocketConsumer):
     room_var = {}
+
+    async def delete_active_tournament(self):
+        await database_sync_to_async(ActiveTournament.objects.filter(room_name=self.room_name).delete)()
+
+    async def save_active_tournament(self):
+        tournament_data = self.room_var[self.room_name]
+        num_players = sum(1 for player in tournament_data['players'].values() if player.get('full'))
+
+        print(f"Saving ActiveTournament: {self.room_name}, Num Players: {num_players}")
+        print(f"Data being saved: {tournament_data}")  # Debugging line
+
+        await database_sync_to_async(
+            ActiveTournament.objects.update_or_create
+        )(
+            room_name=self.room_name,
+            defaults={
+                'is_tournament': tournament_data.get('is_tournament', True),
+                'end_tournament': tournament_data.get('end_tournament', False),
+                'num_players': num_players,
+                'players': tournament_data['players'],
+                'matches': tournament_data.get('matches', {})
+            }
+        )
 
     async def connect(self):
         self.room_name = self.scope['url_route']['kwargs']['room_name']
@@ -69,6 +94,7 @@ class PingPongConsumer(AsyncWebsocketConsumer):
                 'is_tournament': True,
                 'end_tournament': False
                 }
+                await self.save_active_tournament()
                 asyncio.create_task(self.game_loop())
 
     async def disconnect(self, close_code):
@@ -82,7 +108,7 @@ class PingPongConsumer(AsyncWebsocketConsumer):
                 self.tournament_group_name,
                 self.channel_name
             )
-        
+        await self.delete_active_tournament()
 
     def assign_player(self, username):
         players = self.room_var[self.room_name]['players']
@@ -157,7 +183,9 @@ class PingPongConsumer(AsyncWebsocketConsumer):
                     match_players = [p for p, pdata in players.items() if pdata['current_match'] == current_match]
                     if all(players[p].get('game_start') for p in match_players):
                         self.room_var[self.room_name]['matches'][current_match]['game_start'] = True
-            
+        if(self.room_var[self.room_name]['is_tournament']):
+            await self.save_active_tournament()
+
 
     async def game_loop(self):
         while True:
@@ -461,6 +489,7 @@ class PingPongConsumer(AsyncWebsocketConsumer):
                     'is_tournament': self.room_var[self.room_name]['is_tournament']
                 }
             )
+        await self.delete_active_tournament()
         print("Tournament ended")
         
 

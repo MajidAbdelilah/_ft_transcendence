@@ -2,7 +2,7 @@
 
 from django.shortcuts import render
 from django.http import JsonResponse
-from .models import Tournament, Match
+from .models import Tournament, Match, ActiveTournament
 
 def get_tournaments_by_player(request, username): 
     tournaments = Tournament.objects.all()
@@ -40,4 +40,23 @@ def get_match_by_player(request, username):
             'date': match.date,
         })
     
+    return JsonResponse(data, safe=False)
+
+def get_available_tournaments(request):
+    tournaments = ActiveTournament.objects.filter(
+        is_tournament=True,
+        end_tournament=False,
+        num_players__lt=4
+    )
+
+    data = []
+    for tournament in tournaments:
+        players = tournament.players
+        player_usernames = [player['username'] for player in players.values() if player.get('full')]
+        data.append({
+            'room_name': tournament.room_name,
+            'num_players': tournament.num_players,
+            'players': player_usernames,
+        })
+
     return JsonResponse(data, safe=False)

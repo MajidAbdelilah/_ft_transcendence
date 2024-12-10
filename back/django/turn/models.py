@@ -18,3 +18,14 @@ class Tournament(models.Model):
 
     def __str__(self):
         return f"Tournament on {self.date} won by {self.winner}"
+
+
+class ActiveTournament(models.Model):
+    room_name = models.CharField(max_length=255, unique=True)
+    is_tournament = models.BooleanField(default=False)
+    end_tournament = models.BooleanField(default=False)
+    num_players = models.IntegerField(default=0)
+    players = models.JSONField(default=dict)  # Store players as JSON data
+
+    def __str__(self):
+        return f'Tournament {self.room_name}'
