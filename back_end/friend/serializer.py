@@ -146,14 +146,18 @@ class FSerializer(serializers.ModelSerializer):
 
 class BSerializer(serializers.ModelSerializer):
     user = serializers.SerializerMethodField()
+    
     class Meta:
         model = Friendship
         fields = ('user', 'freindship_id', 'is_accepted', 'user_from', 'user_to', 'user_is_logged_in')
 
     @extend_schema_field(UserSerializer())
     def get_user(self, obj) -> dict:
-        user_id = obj.user_from.id if obj.user_from.id != obj.user_is_logged_in else obj.user_to.id
-        print("user_id********     ", user_id)
-        user_data = User.objects.get(id=user_id)
-        serializer = UserSerializer(user_data)
+        if not hasattr(obj, 'user_is_logged_in'):
+            return None
+            
+        logged_in_user_id = obj.user_is_logged_in
+        # Get the other user in the friendship
+        other_user = obj.user_to if obj.user_from.id == logged_in_user_id else obj.user_from
+        serializer = UserSerializer(other_user)
         return serializer.data

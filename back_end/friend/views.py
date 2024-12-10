@@ -3,6 +3,7 @@ from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework_simplejwt.authentication import JWTAuthentication
+from rest_framework_simplejwt.tokens import RefreshToken
 from .serializer import (FriendsSerializer,
                          UserSerializer,
                          BlockedFriendsSerializer,
@@ -28,16 +29,16 @@ class FriendsView(APIView):
     serializer_class = FSerializer
 
     def get(self, request):
-            print("*********   ",request.user)
-            friends_1 = Friendship.objects.filter(user_to=request.user, is_accepted=True, u_one_is_blocked_u_two=False, u_two_is_blocked_u_one=False)
-            # print("*********   ",friends_1)
-            friends_2 = Friendship.objects.filter(user_from=request.user, is_accepted=True, u_one_is_blocked_u_two=False, u_two_is_blocked_u_one=False)
-            friends_2 = friends_1.union(friends_2)
-            # print("-------->   ",friends_2)
-            serializer = FSerializer(friends_2, many=True, context={'user_is_logged_in': request.user.id})
-            print(  "////////////->",serializer.data)
-
-            return Response(serializer.data)
+        # Get all accepted friendships where neither user has blocked the other
+        friends = Friendship.objects.filter(
+            (Q(user_to=request.user) | Q(user_from=request.user)) &
+            Q(is_accepted=True) &
+            Q(u_one_is_blocked_u_two=False) &
+            Q(u_two_is_blocked_u_one=False)
+        ).distinct()
+        
+        serializer = FSerializer(friends, many=True, context={'user_is_logged_in': request.user.id})
+        return Response(serializer.data)
         # else:
         #     return Response([])
         # user = request.user
@@ -234,17 +235,39 @@ class UnblockFriendshipView(APIView):
             return Response({'error': 'Friendship does not exist'})
 
 class BlockedFriendsView(APIView):
-    # authentication_classes = [JWTAuthentication]
     permission_classes = [IsAuthenticated]
     serializer_class = BSerializer
 
     def get(self, request):
-            blocked_users = Friendship.objects.filter(user_to=request.user, u_one_is_blocked_u_two=True).union(
-                Friendship.objects.filter(user_to=request.user, u_two_is_blocked_u_one=True)).union(
-                    Friendship.objects.filter(user_from=request.user, u_two_is_blocked_u_one=True)).union(Friendship.objects.filter(user_from=request.user, u_one_is_blocked_u_two=True))
-            serializer =  BSerializer(blocked_users, many=True)
-            print("bloooock *********  ",serializer.data)
-            return Response(serializer.data)
+        # Get friendships where the logged-in user has blocked the other user
+        blocked_users = Friendship.objects.filter(
+            (
+                (Q(user_from=request.user) & Q(u_one_is_blocked_u_two=True)) |  # user_from blocked user_to
+                (Q(user_to=request.user) & Q(u_two_is_blocked_u_one=True))      # user_to blocked user_from
+            )
+        ).distinct()
+        
+        # Update each friendship to include the logged-in user's ID
+        for friendship in blocked_users:
+            friendship.user_is_logged_in = request.user.id
+            
+        serializer = BSerializer(blocked_users, many=True)
+        return Response(serializer.data)
+
+class FriendsRequestsView(APIView):
+    permission_classes = [IsAuthenticated]
+    serializer_class = FriendsSerializer
+    
+    def get(self, request):
+        # Get pending friend requests where neither user has blocked the other
+        request_users = Friendship.objects.filter(
+            user_to=request.user,
+            is_accepted=False,
+            u_one_is_blocked_u_two=False,
+            u_two_is_blocked_u_one=False
+        )
+        serializer = FriendsRequestSerializer(request_users, many=True)
+        return Response(serializer.data)
 # class NotificationsView(APIView):
 #     # authentication_classes = [JWTAuthentication]
 #     permission_classes = [IsAuthenticated]
@@ -282,21 +305,3 @@ class BlockedFriendsView(APIView):
 #             return Response({'success': {'Notification deleted'}}, status=status.HTTP_200_OK)
 #         except Notification.DoesNotExist:
 #             return Response({'error': {'Notification does not exist'}}, status=status.HTTP_404_NOT_FOUND)
-
-
-#GET FRIENDS REQUESTS
-
-class FriendsRequestsView(APIView):
-    permission_classes = [IsAuthenticated]
-    serializer_class = FriendsSerializer
-    
-    def get(self, request):
-        request_users = Friendship.objects.filter(user_to=request.user, is_accepted=False)
-        # print ("*********0   ",request_users)
-        serializer = FriendsRequestSerializer(request_users, many=True)
-        # print ("*********1   ",serializer.data)
-        return Response(serializer.data)
-        # user = request.user
-        # serializer = self.serializer_class(instance=user)
-        # print(serializer.data)
-        # return Response(serializer.data)
