@@ -25,6 +25,16 @@ import requests
 from django.core.files.base import ContentFile
 from authapp.views import _42_generated_password
 from django.core.mail import send_mail
+from rest_framework_simplejwt.tokens import RefreshToken
+
+
+def get_tokens_for_user(user):
+    refresh = RefreshToken.for_user(user)
+    return {
+        'refresh': str(refresh),
+        'access': str(refresh.access_token),
+    }
+
 class login (APIView):
     permission_classes=[AllowAny]
     def get(self, request):
@@ -67,7 +77,37 @@ class callback(APIView):
         user_data = user_response.json()
         existeduser = User.objects.filter(email = user_data['email']).first()
         if existeduser is not None:
-            authenticate(email = user_data['email'], password = "")
+            print("--------- ", existeduser.password)
+            authenticate(email = user_data['email'], password = existeduser.password)
+            data = get_tokens_for_user(existeduser)
+            userserialize = UserSerializer(existeduser)
+            if data["access"] :
+                if existeduser.is_2fa == True:
+                        # response.headers["Location"] = 'http://127.0.0.1:3000/settings'
+                        # response.status_code = status.HTTP_302_FOUND
+                        resp.data = {"message" : "Login successfully","data":{"user": userserialize.data , "tokens":data }}
+                        resp.set_cookie(
+                            key = settings.SIMPLE_JWT['AUTH_COOKIE'],
+                            value = data["access"],
+                            expires = settings.SIMPLE_JWT['ACCESS_TOKEN_LIFETIME'],
+                            secure = settings.SIMPLE_JWT['AUTH_COOKIE_SECURE'],
+                            httponly = settings.SIMPLE_JWT['AUTH_COOKIE_HTTP_ONLY'],
+                            samesite = settings.SIMPLE_JWT['AUTH_COOKIE_SAMESITE'],
+                            path='/',
+                            max_age=settings.SIMPLE_JWT['ACCESS_TOKEN_LIFETIME'].total_seconds()
+                )
+                else:
+                        if data["access"] :
+                            resp.set_cookie(
+                                key = settings.SIMPLE_JWT['AUTH_COOKIE'],
+                                value = data["access"],
+                                expires = settings.SIMPLE_JWT['ACCESS_TOKEN_LIFETIME'],
+                                secure = settings.SIMPLE_JWT['AUTH_COOKIE_SECURE'],
+                                httponly = settings.SIMPLE_JWT['AUTH_COOKIE_HTTP_ONLY'],
+                                samesite = settings.SIMPLE_JWT['AUTH_COOKIE_SAMESITE'],
+                                path='/',
+                                max_age=settings.SIMPLE_JWT['ACCESS_TOKEN_LIFETIME'].total_seconds())
+                            resp.data = {"message" : "Login successfully","data":{"user": userserialize.data , "tokens":data }}
             serializer = UserSerializer(instance = existeduser)
             resp.data = {"message": "user exist in database and now he is logged in succefully", "data": serializer.data }
             return resp
