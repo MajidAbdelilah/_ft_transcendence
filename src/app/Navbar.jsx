@@ -1,7 +1,6 @@
 "use client";
 import Image from "next/image";
 import { useClickAway } from "@uidotdev/usehooks";
-import { Montserrat } from "next/font/google";
 import { useState, useRef, useEffect } from "react";
 import { motion } from "framer-motion";
 import Link from "next/link";
@@ -19,11 +18,6 @@ import  useSearch from './contexts/SearchContext';
 
 import { Skeleton}  from "../compo/ui/Skeleton";
 import NotificationDropdown from './components/NotificationDropdown';
-
-const montserrat = Montserrat({
-  subsets: ["latin"],
-  variable: "--font-montserrat",
-});
 
 const logout = async ({ setUserData }) => {
 
@@ -212,7 +206,7 @@ function Navbar() {
             handleNewNotification({
               id: data.freindship_id,
               type: 'friend_request',
-              avatar: data.user.image_name ? `/${data.user.image_name}` : '/images/Default_profile.png',
+              avatar: data.user.image_field ? `http://127.0.0.1:8000/api${data.user.image_field}` : '/images/Default_profile.png',
               message: `${data.user.username} sent you a friend request`,
               timestamp: new Date().toISOString(),
               isNew: true,
@@ -225,7 +219,7 @@ function Navbar() {
             handleNewNotification({
               id: data.freindship_id,
               type: 'friend_request_sent',
-              avatar: data.user.image_name ? `/${data.user.image_name}` : '/images/Default_profile.png',
+              avatar: data.user.image_field ? `http://127.0.0.1:8000/api${data.user.image_field}` : '/images/Default_profile.png',
               message: `You sent a friend request to ${data.user.username}`,
               timestamp: new Date().toISOString(),
               isNew: true,
@@ -237,7 +231,7 @@ function Navbar() {
             handleNewNotification({
               id: data.freindship_id,
               type: 'friend_accept',
-              avatar: data.user.image_name ? `/${data.user.image_name}` : '/images/Default_profile.png',
+              avatar: data.user.image_field ? `http://127.0.0.1:8000/api${data.user.image_field}` : '/images/Default_profile.png',
               message: `${data.user.username} accepted your friend request`,
               timestamp: new Date().toISOString(),
               isNew: true,
@@ -317,7 +311,7 @@ function Navbar() {
 
   return (
     <nav
-      className={`bg-[#F4F4FF] py-4 h-[90px] flex items-center shadow-md shadow-[#BCBCC9] z-[9] ${montserrat.className}`}
+      className={`bg-[#F4F4FF] py-4 h-[90px] flex items-center shadow-md shadow-[#BCBCC9] z-[9]`}
     >
       <div className="flex justify-end flex-auto sm:gap-5 gap-3 sm:mr-10">
         {/* -------------------------------------------------------------------- */}
@@ -430,8 +424,8 @@ function Navbar() {
               // <Skeleton className="sm:w-10 sm:h-10 w-8 h-8 rounded-full bg-[#d1daff]" />
             <img
               id="avatarButton"
-              className=" bg-red-500 sm:w-10 sm:h-10 w-8 h-8 rounded-full bg-[#D7D7EA] cursor-pointer rounded-full"
-              src={userData?.image_field ? `http://127.0.0.1:8000/api${userData.image_field}` : "/images/Default_profile.png"}
+              className="sm:w-10 sm:h-10 w-8 h-8 rounded-full bg-[#D7D7EA] cursor-pointer rounded-full"
+              src={userData?.image_field ? `http://127.0.0.1:8000/api${userData.image_field}` : "/images/DefaultAvatar.svg"}
               alt="User dropdown"
               width={100}
               height={100}

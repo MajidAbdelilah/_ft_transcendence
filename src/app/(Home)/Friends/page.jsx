@@ -123,6 +123,21 @@ export default function Friends() {
               setFriendsData(prev => [...prev, data.friend]);
               // Remove from friend requests if it exists
               setFriendRequestsData(prev => prev.filter(req => req.freindship_id !== data.friend.freindship_id));
+            } else if (data.action === 'block') {
+              // We've been blocked by someone
+              console.log('Blocked by user:', data);
+              const friendshipId = data.friend.freindship_id;
+              // Remove from friends list
+              setFriendsData(prev => 
+                prev.filter(friend => friend.freindship_id !== friendshipId)
+              );
+              // Also remove from friend requests if present
+              setFriendRequestsData(prev => 
+                prev.filter(req => req.freindship_id !== friendshipId)
+              );
+            } else if (data.action === 'unblock') {
+              // We've been unblocked by someone
+              // No action needed as we need to send a new friend request
             }
             break;
 
@@ -134,7 +149,7 @@ export default function Friends() {
             setFriendRequestsData(prev => [...prev, {
               freindship_id: data.freindship_id,
               user: data.user,
-              is_accepted: false
+              is_accepted: false,
             }]);
             break;
 
@@ -174,30 +189,58 @@ export default function Friends() {
             );
             break;
 
-          case 'friends-block':
-            console.log("reciiiiiiiiced");
-
-            setFriendsData(prev => prev.filter(friend => 
-              friend.freindship_id !== data.freindship_id
-            ));
-            console.log("Updated friendsData:", friendsData);
+          case 'friends_block_success':
+            console.log('Friend blocked successfully:', data);
+            // Remove from friends list since is_accepted is set to false
+            setFriendsData(prev => 
+              prev.filter(friend => 
+                friend.freindship_id !== data.freindship_id
+              )
+            );
+            // Add to blocked friends list with correct structure
             setBlockedFriendsData(prev => [...prev, {
               freindship_id: data.freindship_id,
-              user: data.user,
-              is_accepted: true,
-              blocked: true,
-              is_user_from: data.is_user_from
+              user: {
+                id: data.user.id,
+                username: data.user.username,
+                is_on: data.user_is_logged_in,
+                image_field: data.user.image_field
+
+              },
+              is_accepted: false,
+              user_from: data.user_from,
+              user_to: data.user_to,
+              user_is_logged_in: data.user_is_logged_in
             }]);
-            console.log("Updated blockedFriendsData:", blockedFriendsData);
             break;
 
-          case 'friends-unblock':
-            console.log("reciiiiiiiiced");
-
-            setBlockedFriendsData(prev => prev.filter(blocked => 
-              blocked.freindship_id !== data.freindship_id
-            ));
-            console.log("Updated blockedFriendsData:", blockedFriendsData);
+          case 'friends_unblock_success':
+            console.log('Friend unblocked successfully:', data);
+            // Remove from blocked list
+            const unblockedUser = blockedFriendsData.find(blocked => 
+              blocked.freindship_id === data.freindship_id
+            );
+            setBlockedFriendsData(prev => 
+              prev.filter(blocked => 
+                blocked.freindship_id !== data.freindship_id
+              )
+            );
+            // Add to friends list matching the block response structure
+            if (unblockedUser && unblockedUser.user) {
+              setFriendsData(prev => [...prev, {
+                freindship_id: data.freindship_id,
+                user: {
+                  id: unblockedUser.user.id,
+                  username: unblockedUser.user.username,
+                  is_on: unblockedUser.user.is_on,
+                  image_field : unblockedUser.user.image_field,
+                },
+                is_accepted: true,
+                user_from: data.user_from,
+                user_to: data.user_to,
+                user_is_logged_in: unblockedUser.user.is_on
+              }]);
+            }
             break;
 
           default:
@@ -310,7 +353,7 @@ export default function Friends() {
                 <div className="flex flex-col gap-4">
                   {blockedFriendsData.length > 0 ? (
                     blockedFriendsData.map((blocked) => (
-                      <BlockedFriends key={blocked.friendship_id} blockedFriend={blocked} />
+                      <BlockedFriends key={blocked.freindship_id} blockedFriend={blocked} />
                     ))
                   ) : (
                     <div className="flex flex-col items-center justify-center h-full gap-4">

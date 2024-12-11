@@ -19,6 +19,7 @@ interface BlockedFriendProps {
       id: number;
       username: string;
       is_on: number;
+      image_field: string
     };
     freindship_id: number;
     is_accepted: boolean;
@@ -69,11 +70,14 @@ export default function BlockedFriends({ blockedFriend }: BlockedFriendProps) {
   }, [])
 
   return (
-    <div className={`w-full mx-auto h-20 lg:h-[12%] md:h-[20%] mt-2 rounded-xl bg-[#D8D8F7] shadow-md shadow-[#BCBCC9] relative ${isMobile ? '' : ' min-h-[90px]'} ${montserrat.className}`}>
+    <div 
+      key={blockedFriend.freindship_id}
+      className={`w-full mx-auto h-20 lg:h-[12%] md:h-[20%] mt-2 rounded-xl bg-[#D8D8F7] shadow-md shadow-[#BCBCC9] relative ${isMobile ? '' : ' min-h-[90px]'} ${montserrat.className}`}
+    >
       <div className="flex items-center h-full p-2">
         <div className="relative w-16 h-16 md:w-20 md:h-20 lg:w-15 lg:h-15">
           <img
-            src={"/images/Default_profile.png"}
+            src={blockedFriend.user.image_field ? `http://127.0.0.1:8000/api${blockedFriend.user.image_field}` : "/images/DefaultAvatar.svg"}
             alt={`${blockedFriend.user.username}'s profile`} 
             className="w-full h-full rounded-full object-cover border-2 border-[#BCBCC9]"
           />

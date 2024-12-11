@@ -1,17 +1,11 @@
 "use client"
 
 import Image from "next/image"
-import { Montserrat } from "next/font/google"
 import { useState, useEffect } from "react"
 import customAxios from '../../customAxios'
 import { useWebSocket } from '../../contexts/WebSocketProvider';
 import {IconUserExclamation} from '@tabler/icons-react'
 import { useUser } from '../../contexts/UserContext';
-
-const montserrat = Montserrat({
-  subsets: ['latin'],
-  variable: '--font-montserrat',
-})
 
 interface FriendRequestProps {
   request: {
@@ -21,6 +15,7 @@ interface FriendRequestProps {
       id: number;
       username: string;
       is_on: number;
+      image_field: string
     };
     user_from: number;
     user_to: number;
@@ -112,7 +107,7 @@ export default function FriendRequests({ request }: FriendRequestProps) {
   }, [])
 
   return (
-    <div className={`w-full mx-auto h-20 lg:h-[12%] md:h-[20%] mt-2 rounded-xl bg-[#D8D8F7] shadow-md shadow-[#BCBCC9] relative ${isMobile ? '' : ' min-h-[90px]'} ${montserrat.className}`}>
+    <div className={`w-full mx-auto h-20 lg:h-[12%] md:h-[20%] mt-2 rounded-xl bg-[#D8D8F7] shadow-md shadow-[#BCBCC9] relative ${isMobile ? '' : ' min-h-[90px]'} `}>
       {!request ? (
         <div className="flex flex-col items-center justify-center h-full p-4">
           <IconUserExclamation size={50} className="mb-2 opacity-50" />
@@ -129,7 +124,7 @@ export default function FriendRequests({ request }: FriendRequestProps) {
           <div className="flex items-center h-full p-2" key={request.user.id}>
             <div className="relative w-16 h-16 md:w-20 md:h-20 lg:w-15 lg:h-15">
               <img
-                src={"/images/Default_profile.png"}
+                src={request.user.image_field ? `http://127.0.0.1:8000/api${request.user.image_field}` : "/images/DefaultAvatar.svg"}
                 alt={`${request.user.username}'s profile`} 
                 className="w-full h-full rounded-full object-cover border-2 border-[#BCBCC9]" 
               />

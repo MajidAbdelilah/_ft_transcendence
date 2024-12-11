@@ -44,6 +44,8 @@ const NotificationItem = ({ notification, onClick }) => {
     ? formatDistanceToNow(new Date(notification.timestamp), { addSuffix: true })
     : '';
 
+  console.log('Notification data:', notification);  
+
   return (
     <div 
       className="sm:w-[95%] w-[98%] min-h-[70px] mt-[20px] bg-[#CDCDE5] hover:bg-[#BDBDD5] transition-colors rounded-xl flex items-start p-4 mb-2 cursor-pointer relative"
@@ -53,12 +55,10 @@ const NotificationItem = ({ notification, onClick }) => {
         <div className="absolute top-2 right-2 w-2 h-2 rounded-full bg-red-500 animate-pulse" />
       )}
       <div className="flex-shrink-0">
-        <Image 
-          src={notification.avatar || "/images/avatar.svg"} 
-          alt="profile" 
-          width={40} 
-          height={40} 
-          className="rounded-full" 
+        <img
+          src={notification.avatar}
+          alt="profile"
+          className="w-10 h-10 rounded-full"
         />
       </div>
       

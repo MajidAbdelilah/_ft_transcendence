@@ -19,6 +19,7 @@ interface Friend {
     id: number;
     username: string;
     is_on: number;
+    image_field: string
   };
   freindship_id: number;
   is_accepted: boolean;
@@ -39,33 +40,8 @@ export default function FriendsList({ friends = [] }: FriendsListProps) {
 
   const router = useRouter();
 
-  const handleInviteGame = async (friend: Friend) => {
-    try {
-      await customAxios.post(`/api/game/invite`, {
-        freindship_id: friend.freindship_id
-      });
-      send({
-        type: 'GAME_INVITE',
-        freindship_id: friend.freindship_id,
-        message: `Invited ${friend.user.username} to a game`
-      });
-    } catch (error) {
-      console.error('Error inviting friend to game:', error);
-    }
-  };
-
   const handleChat = async (friend: Friend) => {
-    try {
-      await customAxios.post(`/api/chat/messages`, {
-        freindship_id: friend.freindship_id
-      });
-      send({
-        type: 'messages',
-        freindship_id: friend.freindship_id
-      });
-    } catch (error) {
-      console.error('Error initiating chat:', error);
-    }
+    router.push("/Chatt");
   };
 
   const handleBlock = async (friend: Friend) => {
@@ -124,11 +100,11 @@ export default function FriendsList({ friends = [] }: FriendsListProps) {
         </div>
       ) : (
         friends.map((friend) => (
-          <div onClick={() => getProfile(friend.user.username)} key={friend.user.id} className={`w-full h-20 lg:h-[12%] cursor-pointer md:h-[15%] md:h-[20%] rounded-xl bg-[#D8D8F7] shadow-md shadow-[#BCBCC9] relative ${isMobile ? 'w-full' : 'min-h-[90px]'}`}>
+          <div  key={friend.user.id} className={`w-full h-20 lg:h-[12%] cursor-pointer md:h-[15%] md:h-[20%] rounded-xl bg-[#D8D8F7] shadow-md shadow-[#BCBCC9] relative ${isMobile ? 'w-full' : 'min-h-[90px]'}`}>
             <div className="flex items-center h-full p-2">
               <div className="relative w-16 h-16 md:w-20 md:h-20 lg:w-15 lg:h-15">
-                <Image
-                  src="/images/Default_profile.png"
+                <img
+                  src={friend.user.image_field ? `http://127.0.0.1:8000/api${friend.user.image_field}` : "/images/DefaultAvatar.svg"}
                   alt={`${friend.user.username}'s profile`}
                   width={80}
                   height={80}
@@ -147,13 +123,6 @@ export default function FriendsList({ friends = [] }: FriendsListProps) {
                 </p>
               </div>
               <div className="flex flex-row items-center justify-end lg:w-[90%] lg:h-[90%] md:w-[90%] md:h-[90%] w-[90%] h-[90%] absolute md:right-10 right-5 top-1 lg:gap-12 md:gap-4 gap-4">
-                <button 
-                  onClick={() => handleInviteGame(friend)}
-                  aria-label={`Invite ${friend.user.username} to game`} 
-                  className="cursor-pointer hover:scale-110 transition-transform"
-                >
-                  <Image src="/images/InviteGame.svg" alt="" width={50} height={50} className="lg:w-[40px] lg:h-[40px] md:w-[30px] md:h-[30px] w-[30px] h-[30px]" />
-                </button>
                 <button 
                   onClick={() => handleChat(friend)}
                   aria-label={`Chat with ${friend.user.username}`} 
