@@ -66,7 +66,8 @@ class callback(APIView):
             return JsonResponse({'message': 'Failed to fetch user info', "data": None}, status=400)
         user_data = user_response.json()
         existeduser = User.objects.filter(email = user_data['email']).first()
-        resp = HttpResponseRedirect("http://127.0.0.1:3000/Dashboard")
+        to_page = "http://127.0.0.1:3000/Dashboard"
+        resp = HttpResponseRedirect(to_page)
         if existeduser is not None:
             authenticate(email = existeduser.email, password = existeduser.password)
             data = get_tokens_for_user(existeduser)
@@ -84,9 +85,10 @@ class callback(APIView):
                 resp.data = {"message" : "Login successfully","data":{"user": userserialize.data , "tokens":data }}
             serializer = UserSerializer(instance = existeduser)
             resp.data = {"message": "user exist in database and now he is logged in succefully", "data": serializer.data }
+            if existeduser.is_2fa == True :
+                to_page = "http://127.0.0.1:3000/authLogin"
             return resp
         else:
-            print("TTTTTSSSSSSSTTTTTSSSSTTTTSSSSSSS")
             image_response = requests.get(user_data['image']['link'])
             user = User.objects.create(username=user_data['login'], email=user_data['email'], password="")
             user.image_field.save(user_data['login'], ContentFile(image_response.content))

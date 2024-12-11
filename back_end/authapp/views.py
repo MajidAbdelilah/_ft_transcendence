@@ -20,13 +20,15 @@ from django.http import JsonResponse
 from django.core.mail import send_mail
 from  ._2fa import Send2FAcode,CodeVerification, _2fa_verification, _42_generated_password
 import requests
-
+from django.db.models import F, Q
 
 from rest_framework_simplejwt.tokens import UntypedToken
 from rest_framework_simplejwt.exceptions import InvalidToken, TokenError
 from django.conf import settings
-
-           
+from datetime import datetime, timezone
+from friend.models import Friendship
+from django.db.models import Case, When, F, IntegerField
+  
     
 class Register_view(APIView):
     permission_classes = [AllowAny]
@@ -167,14 +169,27 @@ class LoginView(APIView):
 class get_users(APIView):
     permission_classes = [IsAuthenticated]
     def get(self, request):
-        users = User.objects.values()
+        all_users = User.objects.values_list('id', flat=True)
+        users_blocked = Friendship.objects.filter(
+                ((Q(user_to=request.user, u_one_is_blocked_u_two=True) | Q(user_to=request.user, u_two_is_blocked_u_one=True) )|
+                (Q(user_from=request.user, u_two_is_blocked_u_one=True) | Q(user_to=request.user, u_two_is_blocked_u_one=True))
+            )).annotate(
+                other_user_id=Case(
+                    When(user_to=request.user, then=F('user_from')),
+                    When(user_from=request.user, then=F('user_to')),
+                    output_field=IntegerField(),
+                )
+            ).values_list('other_user_id', flat=True)
+        users_non_blocked =[item for item in list(all_users) if item not in list(users_blocked)]
+        Users = User.objects.filter(id__in=users_non_blocked).values('username', 'is_on', 'image_field')
+        print("TTTTTTTTTTTTTTTT  ", Users)
         listUsers = {}
-        for i in users:
+        for i in Users:
             listUsers[i['username']] = i
             print( " i    ---->    ", listUsers[i['username']])
-        for j in listUsers:
-            print("j:   ",listUsers[j])
         return Response(listUsers)
+    
+
 class Update_user(APIView):
     permission_classes = [IsAuthenticated]
     def post(self , request):
@@ -228,15 +243,16 @@ class User_is_logged_in(APIView):
         response = Response()
         user = request.COOKIES.get(settings.SIMPLE_JWT['AUTH_COOKIE'])
         if user is  None :
-            response.data = {"date":None,"message": "False"}
+            response.data = {"date":None,"message": "Error"}
             return response
         else:
             validated_token = UntypedToken(user)
-            if validated_token.payload['user_id'] == request.user['id']:
-                print("ussser**")
-            # user_s = (self.get_user(validated_token))
-            response.data = {"date":None,"message": "True"}
-            return response
+            if request.user is not None:
+                user_ = User.objects.get(email=request.user)
+            if validated_token.payload['user_id'] == user_.id and datetime.fromtimestamp(validated_token.payload['exp'], tz=timezone.utc) > datetime.now(timezone.utc):
+                serializer = UserSerializer(user_)
+                response.data = {"date":serializer.data,"message": "done"}
+                return response
 
 
 

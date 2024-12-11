@@ -208,6 +208,7 @@ class UnblockFriendshipView(APIView):
     serializer_class = FriendsSerializer
 
     def unblock_friend(self, friendship, user_from):
+        print("TYYYYTYYTYTYTYTYTYTYTYTYTYTYTYTYTYTYT")
         if friendship.user_from == user_from:
             block_flag = 'u_one_is_blocked_u_two'
         else:
