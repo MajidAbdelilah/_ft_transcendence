@@ -40,33 +40,8 @@ export default function FriendsList({ friends = [] }: FriendsListProps) {
 
   const router = useRouter();
 
-  const handleInviteGame = async (friend: Friend) => {
-    try {
-      await customAxios.post(`/api/game/invite`, {
-        freindship_id: friend.freindship_id
-      });
-      send({
-        type: 'GAME_INVITE',
-        freindship_id: friend.freindship_id,
-        message: `Invited ${friend.user.username} to a game`
-      });
-    } catch (error) {
-      console.error('Error inviting friend to game:', error);
-    }
-  };
-
   const handleChat = async (friend: Friend) => {
-    try {
-      await customAxios.post(`/api/chat/messages`, {
-        freindship_id: friend.freindship_id
-      });
-      send({
-        type: 'messages',
-        freindship_id: friend.freindship_id
-      });
-    } catch (error) {
-      console.error('Error initiating chat:', error);
-    }
+    router.push("/Chatt");
   };
 
   const handleBlock = async (friend: Friend) => {
@@ -148,13 +123,6 @@ export default function FriendsList({ friends = [] }: FriendsListProps) {
                 </p>
               </div>
               <div className="flex flex-row items-center justify-end lg:w-[90%] lg:h-[90%] md:w-[90%] md:h-[90%] w-[90%] h-[90%] absolute md:right-10 right-5 top-1 lg:gap-12 md:gap-4 gap-4">
-                <button 
-                  onClick={() => handleInviteGame(friend)}
-                  aria-label={`Invite ${friend.user.username} to game`} 
-                  className="cursor-pointer hover:scale-110 transition-transform"
-                >
-                  <Image src="/images/InviteGame.svg" alt="" width={50} height={50} className="lg:w-[40px] lg:h-[40px] md:w-[30px] md:h-[30px] w-[30px] h-[30px]" />
-                </button>
                 <button 
                   onClick={() => handleChat(friend)}
                   aria-label={`Chat with ${friend.user.username}`} 

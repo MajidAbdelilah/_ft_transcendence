@@ -122,7 +122,19 @@ function MainComponent() {
     if (isMode === 'Friends' && selectedMap) {
       setShowFriendsPopup(true);
     } else if (isMode === 'Bot' && selectedMap) {
-      // Handle bot game logic here
+      const gameData = {
+        type: 'bot_game_start',
+        data: {
+          map: selectedMap,
+          player: {
+            username: userData.username,
+            image: userData.image_field
+          }
+        }
+      };
+      console.log("Bot game data :",gameData);
+      send(gameData);
+      // router.push(`/Game/play?map=${selectedMap}&mode=bot`);
     }
   };
 
