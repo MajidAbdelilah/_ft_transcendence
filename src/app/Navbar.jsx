@@ -1,7 +1,6 @@
 "use client";
 import Image from "next/image";
 import { useClickAway } from "@uidotdev/usehooks";
-import { Montserrat } from "next/font/google";
 import { useState, useRef, useEffect } from "react";
 import { motion } from "framer-motion";
 import Link from "next/link";
@@ -19,11 +18,6 @@ import  useSearch from './contexts/SearchContext';
 
 import { Skeleton}  from "../compo/ui/Skeleton";
 import NotificationDropdown from './components/NotificationDropdown';
-
-const montserrat = Montserrat({
-  subsets: ["latin"],
-  variable: "--font-montserrat",
-});
 
 const logout = async ({ setUserData }) => {
 
@@ -317,7 +311,7 @@ function Navbar() {
 
   return (
     <nav
-      className={`bg-[#F4F4FF] py-4 h-[90px] flex items-center shadow-md shadow-[#BCBCC9] z-[9] ${montserrat.className}`}
+      className={`bg-[#F4F4FF] py-4 h-[90px] flex items-center shadow-md shadow-[#BCBCC9] z-[9]`}
     >
       <div className="flex justify-end flex-auto sm:gap-5 gap-3 sm:mr-10">
         {/* -------------------------------------------------------------------- */}
@@ -431,7 +425,7 @@ function Navbar() {
             <img
               id="avatarButton"
               className="sm:w-10 sm:h-10 w-8 h-8 rounded-full bg-[#D7D7EA] cursor-pointer rounded-full"
-              src={userData?.image_field ? `http://127.0.0.1:8000/api${userData.image_field}` : "/images/Default_profile.png"}
+              src={userData?.image_field ? `http://127.0.0.1:8000/api${userData.image_field}` : "/images/DefaultAvatar.svg"}
               alt="User dropdown"
               width={100}
               height={100}

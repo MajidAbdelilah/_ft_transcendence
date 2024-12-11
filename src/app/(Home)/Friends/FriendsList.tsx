@@ -104,7 +104,7 @@ export default function FriendsList({ friends = [] }: FriendsListProps) {
             <div className="flex items-center h-full p-2">
               <div className="relative w-16 h-16 md:w-20 md:h-20 lg:w-15 lg:h-15">
                 <img
-                  src={friend.user.image_field ? `http://127.0.0.1:8000/api${friend.user.image_field}` : "/images/Default_profile.png"}
+                  src={friend.user.image_field ? `http://127.0.0.1:8000/api${friend.user.image_field}` : "/images/DefaultAvatar.svg"}
                   alt={`${friend.user.username}'s profile`}
                   width={80}
                   height={80}

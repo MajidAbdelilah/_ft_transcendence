@@ -3,24 +3,14 @@
 import { useEffect, useState } from "react";
 import Navbar from "./../Navbar";
 import Sidebar from "./../sidebar.tsx";
-import { Montserrat } from "next/font/google";
 import { UserProvider } from '../contexts/UserContext';
 import { WebSocketProvider } from '../contexts/WebSocketProvider';
 import { useRouter } from 'next/navigation';
 import DashProvider from './Dashboard/Dashcontext';
 import GameInvitationHandler from './Game/GameInvitationHandler';
-// import { useUser } from '../contexts/UserContext';
-
-
-const montserrat = Montserrat({
-    subsets: ["latin"],
-    variable: "--font-montserrat",
-});
 
 function RootLayout({ children }) {
   const [isMobile, setIsMobile] = useState(false); 
-  // const [userData] = useUser();
-  // const router = useRouter();
 
   useEffect(() => {
     const handleResize = () => {
@@ -46,7 +36,7 @@ function RootLayout({ children }) {
     <UserProvider>
       <WebSocketProvider>
         <DashProvider>
-          <div className={`flex flex-col h-screen ${montserrat.className}`}>
+          <div className="flex flex-col h-screen">
             <Navbar />
             <GameInvitationHandler />
             <div className="flex flex-1 overflow-y-auto flex-wrap">

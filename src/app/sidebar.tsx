@@ -1,22 +1,15 @@
 'use client'
 
-import { Inter, Montserrat } from "next/font/google";
-import Image from "next/image";
-import { useState, useEffect } from "react";
 import Link from "next/link";
-import { FaBarsStaggered } from "react-icons/fa6";
+import { useRouter } from 'next/navigation';
+import { useState, useEffect } from "react";
 import { useClickAway } from "@uidotdev/usehooks";
 import { motion } from "framer-motion";
-import { useRouter } from 'next/navigation';
+import Image from "next/image";
 import { useUser } from './contexts/UserContext';
 import { Skeleton}  from "../compo/ui/Skeleton";
 import authService from "./authService";
-
-
-const montserrat = Montserrat({
-  subsets: ["latin"],
-  variable: "--font-montserrat",
-});
+import { FaBarsStaggered } from "react-icons/fa6";
 
 const variants = {
   open: { opacity: 1, x: 0 },
@@ -92,8 +85,8 @@ export default function Sidebar() {
           ? `fixed top-0 left-0 h-full w-64 transform ${isMobileMenuOpen ? "translate-x-0" : "-translate-x-full"
           } transition-transform duration-300 ease-in-out z-40`
           : "w-64 h-full"
-        } bg-[#F4F4FF] items-center flex justify-center shadow-md shadow-[#BCBCC9] flex-col fixed top-0 z-[10] ${montserrat.className
-        } `}
+        } bg-[#F4F4FF] items-center flex justify-center shadow-md shadow-[#BCBCC9] flex-col fixed top-0 z-[10] 
+        `}
         animate={isMobile ? (isMobileMenuOpen ? "open" : "closed") : "open"}
         variants={variants}
         initial={isMobile ? "closed" : "open"}
@@ -202,7 +195,7 @@ export default function Sidebar() {
                     </div>
                   )}
                   <img
-                    src={userData?.image_field ? `http://127.0.0.1:8000/api${userData.image_field}` : "/images/Default_profile.png"}
+                    src={userData?.image_field ? `http://127.0.0.1:8000/api${userData.image_field}` : "/images/DefaultAvatar.svg"}
                     alt="User avatar"
                     width={50}
                     height={50}
