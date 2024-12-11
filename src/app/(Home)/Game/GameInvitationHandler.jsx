@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { useWebSocket } from '../../contexts/WebSocketProvider';
 import { useRouter } from 'next/navigation';
 import { useUser } from '../../contexts/UserContext';
@@ -22,6 +22,7 @@ export default function GameInvitationHandler() {
   const { addHandler, removeHandler, send } = useWebSocket();
   const router = useRouter();
   const { userData } = useUser();
+  const recentInvitationsRef = useRef(new Set());
 
   useEffect(() => {
     if (!userData) return;
@@ -31,8 +32,37 @@ export default function GameInvitationHandler() {
         console.log('Received WebSocket message:', data);
         
         if (data.type === 'game_invitation_received') {
+          const inviteKey = `${data.sender_username}-${data.friendship_id}`;
+          
+          if (recentInvitationsRef.current.has(inviteKey)) {
+            console.log('Duplicate invitation detected, skipping:', inviteKey);
+            return;
+          }
+          
+          recentInvitationsRef.current.add(inviteKey);
+          
+          setTimeout(() => {
+            recentInvitationsRef.current.delete(inviteKey);
+          }, 2000);
+
           console.log('Received game invitation:', data);
           
+          // Dispatch a custom event for the notification system
+          if (typeof window !== 'undefined') {
+            const notificationEvent = new CustomEvent('newNotification', {
+              detail: {
+                id: Date.now(),
+                type: 'game_invitation',
+                avatar: data.sender_image ? `http://127.0.0.1:8000/api${data.sender_image}` : '/images/DefaultAvatar.svg',
+                message: `${data.sender_username} invited you to play a game`,
+                timestamp: new Date().toISOString(),
+                isNew: true,
+                senderUsername: data.sender_username
+              }
+            });
+            window.dispatchEvent(notificationEvent);
+          }
+
           toast((t) => (
             <div className="w-[500px] bg-[#F4F4FF] shadow-md rounded-3xl">
               <div className="p-4">

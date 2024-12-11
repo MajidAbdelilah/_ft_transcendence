@@ -178,6 +178,19 @@ function Navbar() {
     };
   }, []);
 
+  useEffect(() => {
+    const handleNewNotificationEvent = (event) => {
+      const notification = event.detail;
+      handleNewNotification(notification);
+    };
+
+    window.addEventListener('newNotification', handleNewNotificationEvent);
+
+    return () => {
+      window.removeEventListener('newNotification', handleNewNotificationEvent);
+    };
+  }, []);
+
   const toggleUserDropdown = (e) => {
     e.stopPropagation();
     setUserDropdown((prev) => !prev);

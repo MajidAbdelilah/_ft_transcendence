@@ -1,7 +1,7 @@
 import Image from "next/image";
 import { motion } from "framer-motion";
 import { formatDistanceToNow } from 'date-fns';
-import {IconHourglassEmpty, IconUserPlus, IconUserCheck} from '@tabler/icons-react'
+import {IconHourglassEmpty, IconUserPlus, IconUserCheck, IconDeviceGamepad2} from '@tabler/icons-react'
 
 const NotificationIcon = ({ type }) => {
   switch (type) {
@@ -22,6 +22,13 @@ const NotificationIcon = ({ type }) => {
     case 'friend_accept':
       return (
         <IconUserCheck
+          className="w-5 h-5"
+          strokeWidth={2}
+        />
+      );
+    case 'game_invitation':
+      return (
+        <IconDeviceGamepad2
           className="w-5 h-5"
           strokeWidth={2}
         />
