@@ -37,6 +37,8 @@ class CodeVerification(APIView):
             if user.is_2fa == False :
                 user.is_2fa = True
                 user.save()
+            else :
+                redirect_to = True
             user._2fa_code = ""
             user.save()
             return Response({"message":"2fa is done"})

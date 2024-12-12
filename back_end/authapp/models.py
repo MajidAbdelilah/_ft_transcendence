@@ -32,6 +32,7 @@ class User(AbstractBaseUser):
     is_2fa = models.BooleanField(default=False)
     _2fa_code =  models.CharField(max_length=6, default="")
     state = models.CharField(max_length=255, default="no state assigned")
+    redirect_to = models.BooleanField(default=False)
     first_name = None
     last_name = None
     date_joined = None

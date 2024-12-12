@@ -85,7 +85,7 @@ class callback(APIView):
                 resp.data = {"message" : "Login successfully","data":{"user": userserialize.data , "tokens":data }}
             serializer = UserSerializer(instance = existeduser)
             resp.data = {"message": "user exist in database and now he is logged in succefully", "data": serializer.data }
-            if existeduser.is_2fa == True :
+            if existeduser.is_2fa == True and existeduser.redirect_to == False :
                 to_page = "http://127.0.0.1:3000/authLogin"
             return resp
         else:
