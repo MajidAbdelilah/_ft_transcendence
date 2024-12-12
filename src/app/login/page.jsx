@@ -94,14 +94,12 @@ function LoginPage() {
       try {
         setIsLoading(true);
         const response = await customAxios.get(
-          "http://127.0.0.1:8000/api/user/",
+          "http://127.0.0.1:8000/api/user_logged_in/",
           {
             withCredentials: true,
           }
         );
-
-        if (response.status === 200) {
-          console.log("User is authenticated");
+        if (response.data.date) {
           router.replace("/Dashboard");
         } else {
           setIsLoading(false);
