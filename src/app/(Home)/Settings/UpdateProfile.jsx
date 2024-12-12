@@ -70,17 +70,17 @@ export default function UpdateProfile({setIsProfile})
         // 2 update the data object ------------------------------------------------
 
         const data = {
-          username: formData.usernameSt || null,
-          current_password: formData.currentPasswordSt || null,
-          new_password: formData.newPasswordSt || null,
-          profile_image: imageSrc || null,
+          username: formData.usernameSt || '',
+          current_password: formData.currentPasswordSt || '',
+          new_password: formData.newPasswordSt || '',
+          profile_image: imageSrc || {},
       };
 
       // 3 send the data to the backend ------------------------------------------------
 
       try {
         const result = await Services.updateProfileService(data);
-        successMsg = result.data.message;
+        
           const successMsg = result.data.message;
         if (successMsg) {
           toast.success(successMsg); // Display a success toast
