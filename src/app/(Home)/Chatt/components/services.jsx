@@ -38,8 +38,8 @@ export async function profileService(friend, router) {
 export async function playWithService(friend, loggedInUser, send)
 {
     
-    console.log('loggedInUser called with:--------', loggedInUser);
-    toast.success('impliment a play with logic!');
+    // console.log('loggedInUser called with:--------', loggedInUser);
+    // toast.success('impliment a play with logic!');
 
 
 
@@ -59,7 +59,7 @@ export async function playWithService(friend, loggedInUser, send)
 
           console.log('📤 Sending invitation message:', message);
           send(message);
-          toast.success(`Invitation sent to ${friendUsername}!`);
+          toast.success(`Invitation sent to ${friend.username}!`);
 
         // } else {
         //   console.warn('❌ No map selected when trying to invite friend');
