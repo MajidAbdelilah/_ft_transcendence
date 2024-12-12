@@ -223,11 +223,20 @@ const getSelectedFriend = (friend) => {
       const loadConversation = async () => 
         {
           if(friend === null) return;
+
+
+          // const conversation = await fetchOldConversation(loggedInUser, friend.user);
           const conversation = await fetchOldConversation(loggedInUser, friend.user);
+          
           setConversation(conversation);
+          
+
+
+          
+          
         };
         loadConversation();
-    }, [selectedFriend]);// changes it to frind if that does not work
+    }, [selectedFriend, conversation]);// changes it to frind if that does not work
 
 
     

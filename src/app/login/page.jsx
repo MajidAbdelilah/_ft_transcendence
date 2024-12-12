@@ -100,6 +100,10 @@ function LoginPage() {
           }
         );
         if (response.data.date) {
+          if(response.data.data.user.is_2fa){ 
+            router.replace("/authLogin");
+          }
+          else
           router.replace("/Dashboard");
         } else {
           setIsLoading(false);

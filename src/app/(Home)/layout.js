@@ -28,8 +28,11 @@ function RootLayout({ children }) {
 
 
   // useEffect(() => {
-  //  if(userData.2fa_enable == false){
-  //     router.replace('/authLogin')
+  //  if(userData._2fa_enable == true){
+  //     if(userData.redirect_to == true)
+  //       router.replace("/Dashboard");
+  //     else
+  //       router.replace("/authLogin");
   //  }
   // }, []);
 
