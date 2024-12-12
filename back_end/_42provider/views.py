@@ -66,12 +66,14 @@ class callback(APIView):
             return JsonResponse({'message': 'Failed to fetch user info', "data": None}, status=400)
         user_data = user_response.json()
         existeduser = User.objects.filter(email = user_data['email']).first()
-        to_page = "http://127.0.0.1:3000/Dashboard"
-        resp = HttpResponseRedirect(to_page)
         if existeduser is not None:
             authenticate(email = existeduser.email, password = existeduser.password)
             data = get_tokens_for_user(existeduser)
             userserialize = UserSerializer(existeduser)
+            to_page = "http://127.0.0.1:3000/Dashboard"
+            if existeduser.is_2fa == True and existeduser.redirect_to == False:
+                to_page = "http://127.0.0.1:3000/authLogin"
+            resp = HttpResponseRedirect(to_page)
             if data["access"] :
                 resp.set_cookie(
                     key = settings.SIMPLE_JWT['AUTH_COOKIE'],
@@ -85,8 +87,11 @@ class callback(APIView):
                 resp.data = {"message" : "Login successfully","data":{"user": userserialize.data , "tokens":data }}
             serializer = UserSerializer(instance = existeduser)
             resp.data = {"message": "user exist in database and now he is logged in succefully", "data": serializer.data }
-            if existeduser.is_2fa == True and existeduser.redirect_to == False :
-                to_page = "http://127.0.0.1:3000/authLogin"
+            # print("***********777777555777****************777777777********")
+            # if existeduser.is_2fa == True and existeduser.redirect_to == False :
+            #     print("***********777777777****************777777777********")
+            #     to_page = "http://127.0.0.1:3000/authLogin"
+            # print("ttt   ", to_page)
             return resp
         else:
             image_response = requests.get(user_data['image']['link'])
