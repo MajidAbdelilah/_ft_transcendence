@@ -11,7 +11,7 @@ import { gameService } from '../../services/gameService';
 import { useUser } from '../../contexts/UserContext';
 import { useRouter } from 'next/navigation';
 import toast from 'react-hot-toast';
-import { useWebSocket } from '../../contexts/WebSocketProvider';
+import { useGameInviteWebSocket } from '../../contexts/GameInviteWebSocket';
 
 const montserrat = Montserrat({
   subsets: ['latin'],
@@ -33,7 +33,7 @@ function MainComponent() {
   const [error, setError] = useState(null);
   const [isJoining, setIsJoining] = useState(false);
   const [hasJoinedTournament, setHasJoinedTournament] = useState(false);
-  const { send } = useWebSocket();
+  const { send } = useGameInviteWebSocket();
 
   useEffect(() => {
     const fetchFriends = async () => {
@@ -59,7 +59,7 @@ function MainComponent() {
       setTournamentCreator({
         id: userData.id,
         username: userData.username,
-        profile_photo: userData.profile_photo
+        image_field: userData.image_field
       });
     }
   }, [userData]);
@@ -113,6 +113,7 @@ function MainComponent() {
       console.log('📤 Sending invitation message:', message);
       send(message);
       toast.success(`Invitation sent to ${friendUsername}!`);
+      setShowFriendsPopup(false);
     } else {
       console.warn('❌ No map selected when trying to invite friend');
       toast.error('Please select a map first!');
