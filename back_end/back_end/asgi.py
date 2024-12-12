@@ -8,6 +8,7 @@ from django_channels_jwt_auth_middleware.auth import JWTAuthMiddlewareStack
 from django.core.asgi import get_asgi_application
 import  chat.routing 
 import friend.routing
+import double_game.routing
 # from tournament.routing import websocket_urlpatterns
 from friend.routing import websocket_urlpatterns
 from django.conf import settings
@@ -84,7 +85,8 @@ application = ProtocolTypeRouter({
         URLRouter(
             websocket_urlpatterns +  # assuming it's a list or iterable
             chat.routing.websocket_urlpatterns +
-            friend.routing.websocket_urlpatterns
+            friend.routing.websocket_urlpatterns +
+            double_game.routing.websocket_urlpatterns
         )
     ),
 })
