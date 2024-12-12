@@ -73,6 +73,7 @@ export const gameService = {
           const handleJoinResponse = (event) => {
             const response = JSON.parse(event.data);
             if (response.type === 'join_tournament_response') {
+              console.log('Received join tournament response:');
               socket.removeEventListener('message', handleJoinResponse);
               if (response.success) {
                 resolve({

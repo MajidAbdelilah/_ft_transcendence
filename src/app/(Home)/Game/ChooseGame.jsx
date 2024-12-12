@@ -11,7 +11,7 @@ import { gameService } from '../../services/gameService';
 import { useUser } from '../../contexts/UserContext';
 import { useRouter } from 'next/navigation';
 import toast from 'react-hot-toast';
-import { useWebSocket } from '../../contexts/WebSocketProvider';
+import { useGameInviteWebSocket } from '../../contexts/GameInviteWebSocket';
 
 const montserrat = Montserrat({
   subsets: ['latin'],
@@ -32,7 +32,8 @@ function MainComponent() {
   const [friends, setFriends] = useState([]);
   const [error, setError] = useState(null);
   const [isJoining, setIsJoining] = useState(false);
-  const { send } = useWebSocket();
+  const [hasJoinedTournament, setHasJoinedTournament] = useState(false);
+  const { send } = useGameInviteWebSocket();
 
   useEffect(() => {
     const fetchFriends = async () => {
@@ -50,17 +51,15 @@ function MainComponent() {
       }
     };
 
-    if (isMode === 'Friends') {
-      fetchFriends();
-    }
-  }, [isMode]);
+    fetchFriends();
+  }, []);
 
   useEffect(() => {
     if (userData) {
       setTournamentCreator({
         id: userData.id,
         username: userData.username,
-        profile_photo: userData.profile_photo
+        image_field: userData.image_field
       });
     }
   }, [userData]);
@@ -68,17 +67,36 @@ function MainComponent() {
   useEffect(() => {
     if (!tournamentId) return;
 
+    console.log('🎮 Fetching tournament data for tournament ID:', tournamentId);
+
     const cleanup = gameService.setupBracketListener(tournamentId, (bracketData) => {
-      setTournamentData(prevData => ({
-        ...prevData,
-        matches: bracketData
-      }));
+      console.log('Received tournament data:', bracketData);
+      
+      if (bracketData.type === 'gamestart') {
+        // Redirect to game when match is ready with 4 players
+        const params = new URLSearchParams({
+          room_name: bracketData.room_name,
+          player1: bracketData.player1,
+          player2: bracketData.player2,
+          player3: bracketData.player3,
+          player4: bracketData.player4,
+          map: bracketData.map,
+        });
+        const gameUrl = `/front/turn.html?${params.toString()}`;
+        console.log('🎮 Redirecting to tournament game:', gameUrl);
+        router.push(gameUrl);
+      } else {
+        setTournamentData(prevData => ({
+          ...prevData,
+          matches: bracketData
+        }));
+      }
     });
 
     return () => {
       cleanup();
     };
-  }, [tournamentId]);
+  }, [tournamentId, router]);
 
   const handleInviteFriend = (friendshipId, friendUsername) => {
     console.log('🎮 Attempting to send game invitation to:', friendUsername);
@@ -95,24 +113,42 @@ function MainComponent() {
       console.log('📤 Sending invitation message:', message);
       send(message);
       toast.success(`Invitation sent to ${friendUsername}!`);
+      setShowFriendsPopup(false);
     } else {
       console.warn('❌ No map selected when trying to invite friend');
       toast.error('Please select a map first!');
     }
   };
 
-  const handleJoinTournament = async (mapType) => {
+  const handleJoinTournament = async () => {
+    if (!selectedMap) {
+      toast.error('Please select a map first!');
+      return;
+    }
+    
     setIsJoining(true);
     try {
-      const result = await gameService.joinTournament(userData, mapType);
+      const result = await gameService.joinTournament(userData, selectedMap);
       if (result.success) {
+        setHasJoinedTournament(true);
+        setTournamentId(result.tournamentId);
         toast.success('Successfully joined tournament queue!');
       } else {
-        toast.error(result.error || 'Failed to join tournament');
+        if (result.error === 'already in tournament') {
+          setHasJoinedTournament(true);
+          toast.error('You are already in a tournament');
+        } else {
+          toast.error(result.error || 'Failed to join tournament');
+        }
       }
     } catch (error) {
       console.error('Error joining tournament:', error);
-      toast.error(error.message || 'Failed to join tournament');
+      if (error.error === 'already in tournament') {
+        setHasJoinedTournament(true);
+        toast.error('You are already in a tournament');
+      } else {
+        toast.error(error.message || 'Failed to join tournament');
+      }
     } finally {
       setIsJoining(false);
     }
@@ -140,6 +176,15 @@ function MainComponent() {
 
   const handleCancelSearch = () => {
     setIsSearching(false);
+  };
+
+  const handleModeSelect = (mode) => {
+    // If the same mode is clicked again, unselect it
+    if (isMode === mode) {
+      setIsMode(null);
+    } else {
+      setIsMode(mode);
+    }
   };
 
   return (
@@ -201,7 +246,7 @@ function MainComponent() {
             {/* Game Mode Selection */}
             <div className="flex flex-col sm:flex-row justify-center items-center gap-4 w-full px-4 md:px-0">
               <button 
-                onClick={() => setIsMode('Friends')} 
+                onClick={() => handleModeSelect('Friends')} 
                 disabled={!selectedMap}
                 className={`relative w-full sm:w-auto py-3 md:py-4 px-6 md:px-8 lg:px-12 bg-[#242F5C] rounded-xl md:rounded-full cursor-pointer font-bold md:font-extrabold text-base md:text-lg text-white shadow-md hover:shadow-lg flex items-center justify-center gap-2 transition-all duration-300 ${selectedMap ? 'hover:scale-105' : 'opacity-50 cursor-not-allowed hover:scale-100'}`}
               >
@@ -219,7 +264,7 @@ function MainComponent() {
               </button>
 
               <button 
-                onClick={() => setIsMode('Bot')} 
+                onClick={() => handleModeSelect('Bot')} 
                 disabled={!selectedMap}
                 className={`relative w-full sm:w-auto py-3 md:py-4 px-6 md:px-8 lg:px-12 bg-[#242F5C] rounded-xl md:rounded-full cursor-pointer font-bold md:font-extrabold text-base md:text-lg text-white shadow-md hover:shadow-lg flex items-center justify-center gap-2 transition-all duration-300 ${selectedMap ? 'hover:scale-105' : 'opacity-50 cursor-not-allowed hover:scale-100'}`}
               >
@@ -237,8 +282,7 @@ function MainComponent() {
               </button>
             </div>
 
-            <hr className="w-[80%] md:w-[50%] h-[3px] bg-[#CDCDE5] border-none rounded-full mt-8 md:mt-12" />
-            
+            {/* Play and Tournament buttons */}
             <div className="flex flex-col gap-4 w-full px-4 md:px-0">
               <button 
                 onClick={handlePlay}
@@ -247,28 +291,18 @@ function MainComponent() {
               >
                 PLAY
               </button>
-
               <button 
                 className="w-full md:w-[300px] mx-auto py-3 md:py-4 bg-[#242F5C] rounded-xl md:rounded-full cursor-pointer font-bold md:font-extrabold text-base md:text-lg text-white shadow-md hover:shadow-lg flex items-center justify-center gap-2 transition-all duration-300 hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
-                onClick={() => handleJoinTournament(selectedMap)}
-                disabled={isJoining}
+                onClick={() => handleJoinTournament()}
+                disabled={isJoining || hasJoinedTournament || !selectedMap || isMode === 'Friends' || isMode === 'Bot'}
               >
                 <img 
                   src="/images/ADD.svg" 
                   alt="ADD icon" 
                   className="w-5 h-5 md:w-6 md:h-6"
                 />
-                {isJoining ? 'Joining...' : 'Join Tournament'}
+                {isJoining ? 'Joining...' : hasJoinedTournament ? 'Already in Tournament' : 'Join Tournament'}
               </button>
-
-              {isSearching && (
-                <button 
-                  onClick={handleCancelSearch}
-                  className="w-full md:w-[300px] mx-auto py-3 md:py-4 bg-red-500 rounded-xl md:rounded-full cursor-pointer font-bold text-white shadow-md hover:shadow-lg flex items-center justify-center gap-2 transition-all duration-300 hover:scale-105 hover:bg-red-600"
-                >
-                  Cancel Search
-                </button>
-              )}
             </div>
           </div>
         </motion.div>
@@ -304,12 +338,13 @@ function MainComponent() {
 
               <div className="mb-6">
                 <div className="flex items-center gap-3 bg-white rounded-xl p-3 shadow-sm">
-                  <div className="w-10 h-10 rounded-lg bg-[#242F5C] flex items-center justify-center">
+                  <div className="w-10 h-10 rounded-[5px] bg-[#242F5C] flex items-center justify-center">
                     <img 
                       src={selectedMap === 'White Map' ? '/images/WhiteMap.svg' : '/images/BlueMap.svg'}
                       alt="Selected Map"
                       width={32}
                       height={32}
+                      
                     />
                   </div>
                   <div>

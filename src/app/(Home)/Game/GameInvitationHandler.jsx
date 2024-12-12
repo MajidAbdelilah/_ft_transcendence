@@ -1,124 +1,188 @@
-import { useEffect } from 'react';
-import { useWebSocket } from '../../contexts/WebSocketProvider';
+"use client";
+
+import { useEffect, useRef } from 'react';
+import { useGameInviteWebSocket } from '../../contexts/GameInviteWebSocket';
 import { useRouter } from 'next/navigation';
+import { useUser } from '../../contexts/UserContext';
 import toast from 'react-hot-toast';
+import Image from 'next/image';
+
+const styles = `
+  @keyframes shrink-width {
+    from {
+      width: 100%;
+    }
+    to {
+      width: 0%;
+    }
+  }
+`;
 
 export default function GameInvitationHandler() {
-  const { send, addHandler, removeHandler, socket } = useWebSocket();
+  const { send } = useGameInviteWebSocket();
   const router = useRouter();
+  const { userData } = useUser();
+  const recentInvitationsRef = useRef(new Set());
 
   useEffect(() => {
-    if (!socket) return;
+    if (!userData) return;
 
-    const handleGameInvitation = (data) => {
-      console.log('📩 Received WebSocket message:', data);
-
-      if (!data || !data.type) return;
-
-      switch (data.type) {
-        case 'game_invitation_received':
-          console.log('🎲 New game invitation received:', data);
-          // Show invitation toast with accept/decline options
-          toast.custom((t) => (
-            <div className="max-w-md w-full bg-[#F4F4FF] shadow-lg rounded-xl pointer-events-auto flex ring-1 ring-[#BCBCC9]">
-              <div className="flex-1 w-0 p-4">
-                <div className="flex items-start">
-                  <div className="flex-shrink-0 pt-0.5">
-                    <img
-                      className="h-10 w-10 rounded-full"
-                      src={data.sender_image || "/images/Default_profile.png"}
-                      alt=""
-                    />
-                  </div>
-                  <div className="ml-3 flex-1">
-                    <p className="text-sm font-medium text-[#242F5C]">
-                      Game Invitation from {data.sender_username}
-                    </p>
-                    <p className="mt-1 text-sm text-gray-500">
-                      Wants to play on {data.map}
-                    </p>
-                  </div>
-                </div>
-              </div>
-              <div className="flex border-l border-[#BCBCC9]">
-                <div className="flex flex-col border-l border-[#BCBCC9] divide-y divide-[#BCBCC9]">
-                  <button
-                    onClick={() => {
-                      console.log('✅ Accepting game invitation from:', data.sender_username);
-                      send({
-                        type: 'game_invitation_response',
-                        friendship_id: data.friendship_id,
-                        accepted: true,
-                        map: data.map
-                      });
-                      console.log('📤 Sending acceptance response:', {
-                        type: 'game_invitation_response',
-                        friendship_id: data.friendship_id,
-                        accepted: true,
-                        map: data.map
-                      });
-                      toast.dismiss(t.id);
-                      router.push(`/Game/play?map=${data.map}&mode=friend&opponent=${data.sender_username}`);
-                    }}
-                    className="w-full px-4 py-2 text-sm font-medium text-[#242F5C] hover:bg-[#242F5C] hover:text-white transition-colors"
-                  >
-                    Accept
-                  </button>
-                  <button
-                    onClick={() => {
-                      console.log('❌ Declining game invitation from:', data.sender_username);
-                      send({
-                        type: 'game_invitation_response',
-                        friendship_id: data.friendship_id,
-                        accepted: false
-                      });
-                      console.log('📤 Sending decline response:', {
-                        type: 'game_invitation_response',
-                        friendship_id: data.friendship_id,
-                        accepted: false
-                      });
-                      toast.dismiss(t.id);
-                    }}
-                    className="w-full px-4 py-2 text-sm font-medium text-red-600 hover:bg-red-50 transition-colors"
-                  >
-                    Decline
-                  </button>
-                </div>
-              </div>
-            </div>
-          ), {
-            duration: 15000, // 15 seconds
-            position: 'top-right',
-          });
-          break;
-
-        case 'game_invitation_response':
-          if (data.accepted) {
-            console.log('👍 Game invitation accepted!');
-            toast.success('Game invitation accepted! Starting game...');
-            router.push(`/Game/play?map=${data.map}&mode=friend&opponent=${data.receiver_username}`);
-          } else {
-            console.log('🚫 Game invitation declined');
-            toast.error('Game invitation declined');
-          }
-          break;
-
-        case 'game_invitation_error':
-          console.error('❌ Game invitation error:', data.message);
-          toast.error(data.message || 'Error with game invitation');
-          break;
+    const handleInvitationResponse = (accepted, data) => {
+      if (accepted) {
+        console.log('🎮 Accepting invitation with data:', data);
+        
+        // Generate a unique room name using friendship_id
+        const roomName = `game_${data.friendship_id}`;
+        
+        // Properly encode URL parameters
+        const params = new URLSearchParams({
+          room_name: roomName,
+          player1: data.sender_username,
+          player2: userData.username,
+          map: data.map
+        });
+        
+        // Create game URL with encoded parameters
+        const gameUrl = `/front/turn.html?${params.toString()}`;
+        console.log('🎮 Redirecting to:', gameUrl);
+        
+        // Send acceptance after preparing URL
+        send({
+          type: 'accept_invitation',
+          player1: data.sender_username,
+          player2: userData.username,
+          map: data.map,
+          friendship_id: data.friendship_id
+        });
+        
+        // Redirect receiver
+        router.push(gameUrl);
+      } else {
+        send({
+          type: 'decline_invitation',
+          sender: data.sender_username,
+          friendship_id: data.friendship_id
+        });
       }
     };
 
-    // Add the WebSocket message handler
-    addHandler(handleGameInvitation);
-    console.log('🎮 GameInvitationHandler: WebSocket listener attached');
+    const handleGameInvitation = (event) => {
+      console.log("🎮 Received game invitation event:", event);
+      const data = event.detail;
+      console.log("🎮 Invitation data:", data);
+      
+      const inviteKey = `${data.sender_username}-${data.friendship_id}`;
+      
+      if (recentInvitationsRef.current.has(inviteKey)) {
+        console.log('Duplicate invitation detected, skipping:', inviteKey);
+        return;
+      }
+
+      recentInvitationsRef.current.add(inviteKey);
+      setTimeout(() => {
+        recentInvitationsRef.current.delete(inviteKey);
+      }, 2000);
+
+      // Create and dispatch notification event
+      const notificationEvent = new CustomEvent('newNotification', {
+        detail: {
+          id: Date.now(),
+          type: 'game_invitation',
+          avatar: data.sender_image ? `http://127.0.0.1:8000/api${data.sender_image}` : "/images/DefaultAvatar.svg",
+          message: `${data.sender_username} invited you to play a game`,
+          timestamp: data.timestamp || new Date().toISOString(),
+          isNew: true,
+          senderUsername: data.sender_username
+        }
+      });
+      window.dispatchEvent(notificationEvent);
+
+      toast((t) => (
+        <div className="w-[500px] bg-[#F4F4FF] shadow-md rounded-3xl">
+          <div className="p-4">
+            <div className="flex items-center space-x-4">
+              <div className="flex-shrink-0">
+                <img
+                  width={40}
+                  height={40}
+                  className="h-10 w-10 rounded-full object-cover"
+                  src={data.sender_image ? `http://127.0.0.1:8000/api${data.sender_image}` : "/images/DefaultAvatar.svg"}
+                  alt=""
+                />
+              </div>
+              <div className="flex-1">
+                <div className="flex items-center space-x-2">
+                  <span className="text-sm font-medium text-[#242F5C]">
+                    {data.sender_username}
+                  </span>
+                  <span className="text-sm text-[#242F5C]">
+                    {data.map}
+                  </span>
+                </div>
+                <p className="mt-1 text-sm text-[#242F5C] opacity-70">
+                  invites you to play
+                </p>
+              </div>
+            </div>
+
+            <div className="mt-4 grid grid-cols-2 gap-3">
+              <button
+                onClick={() => {
+                  handleInvitationResponse(true, data);
+                  toast.dismiss(t.id);
+                }}
+                className="w-full px-4 py-2 text-sm font-medium text-white bg-[#242F5C] rounded-full hover:bg-opacity-90 transition-colors"
+              >
+                Accept
+              </button>
+              <button
+                onClick={() => {
+                  handleInvitationResponse(false, data);
+                  toast.dismiss(t.id);
+                }}
+                className="w-full px-4 py-2 text-sm font-medium text-red-600 bg-red-50 rounded-full hover:bg-red-100 transition-colors"
+              >
+                Decline
+              </button>
+            </div>
+
+            <div className="w-full h-0.5 bg-gray-200 mt-4 rounded-full overflow-hidden">
+              <div 
+                className="h-full bg-[#242F5C] origin-left"
+                style={{
+                  transform: 'scaleX(1)',
+                  transition: 'transform linear',
+                  transitionDuration: `${t.duration || 10000}ms`,
+                  transformOrigin: 'left'
+                }}
+                ref={(el) => {
+                  if (el) {
+                    requestAnimationFrame(() => {
+                      el.style.transform = 'scaleX(0)';
+                    });
+                  }
+                }}
+              />
+            </div>
+          </div>
+        </div>
+      ), {
+        duration: 10000,
+        position: 'top-center',
+        style: {
+          background: 'none',
+          boxShadow: 'none',
+        },
+      });
+    };
+
+    // Listen for game invitation events
+    window.addEventListener('game_invitation_received', handleGameInvitation);
 
     return () => {
-      removeHandler(handleGameInvitation);
-      console.log('🎮 GameInvitationHandler: WebSocket listener removed');
+      window.removeEventListener('game_invitation_received', handleGameInvitation);
     };
-  }, [send, addHandler, removeHandler, router, socket]);
+  }, [send, router, userData]);
 
-  return null; // This is a utility component, no UI needed
+  return null;
 }
