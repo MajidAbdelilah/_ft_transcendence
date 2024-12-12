@@ -6,7 +6,7 @@ import { Montserrat } from 'next/font/google'
 import { useRouter } from "next/navigation";
 import TextGenerateEffect from '/src/compo/ui/text-generate-effect'
 import { motion } from 'framer-motion'
-import axios from 'axios'
+import customAxios from "./customAxios";
 import Spinner from './components/Loading';
 
 const montserrat = Montserrat({
@@ -41,25 +41,25 @@ export default function LandingPage() {
   useEffect(() => {
     async function checkAuth() {
       try {
-        setIsLoading(true)
-        const response = await axios.get("http://127.0.0.1:8000/api/user/", {
-          withCredentials: true,
-        })
-  
-        if (response.status === 200) {
-          console.log("User is authenticated")
-          setIsAuthenticated(true)
-          router.replace('/Dashboard')
+        setIsLoading(true);
+        const response = await customAxios.get(
+          "http://127.0.0.1:8000/api/user_logged_in/",
+          {
+            withCredentials: true,
+          }
+        );
+        if (response.data.date) {
+          router.replace("/Dashboard");
+        } else {
+          setIsLoading(false);
         }
       } catch (error) {
-        console.log("User is not authenticated")
-        setIsAuthenticated(false)
-      } finally {
-        setIsLoading(false)
+        console.log(error.message);
+        setIsLoading(false);
       }
     }
-  
-    checkAuth()
+
+    checkAuth();
   }, [router])
 
   if (isLoading || isAuthenticated) {
