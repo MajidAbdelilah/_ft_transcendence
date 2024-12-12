@@ -109,6 +109,7 @@ export default function Chat() {
       score: "",
       result: "",
       map: "",
+      image_fieled: "",
     }
   );
 
@@ -121,6 +122,7 @@ export default function Chat() {
         username: LoggedInUser.userData.username || 'Loading',   
         id: LoggedInUser.userData.id || 0,        
         name: LoggedInUser.userData.username || 'Loading', 
+        image_fieled : LoggedInUser.userData.image_field,
         avatar: "/images/avatarprofile.svg", 
         status: 'Loading', 
         level: 0,
@@ -225,7 +227,10 @@ const getSelectedFriend = (friend) => {
           setConversation(conversation);
         };
         loadConversation();
-    }, [friend]);
+    }, [selectedFriend]);// changes it to frind if that does not work
+
+
+    
 
     //  -----  impliment the logic of reciving a message using websocket  -------------------------------------------------------
 
@@ -345,7 +350,7 @@ useEffect(() => {
                 )
               )
           ) : (
-            <p className="text-center text-gray-500">Loading...</p>
+            <p className="text-center text-gray-500">Loading ...</p>
           )}
 
           {conversation && conversation.length > 0 && (

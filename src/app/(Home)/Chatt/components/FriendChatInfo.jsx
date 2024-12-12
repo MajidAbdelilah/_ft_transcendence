@@ -9,7 +9,7 @@ import { FaAngleDown } from "react-icons/fa";
 import Link from 'next/link';
 import { useRouter } from "next/navigation";
 import { blockService, playWithService, profileService } from './services';
-
+import { useGameInviteWebSocket } from '../../../contexts/GameInviteWebSocket';
 
           // <Image
           //   src={path === undefined || path === null || path === "" || path === "/images/%7B%7D" 
@@ -107,10 +107,11 @@ export function PlayWithOption ({onClick}) {
   export function FriendChatInfo({ loggedInUser, friend, ...rest }) {
     
     const router = useRouter();
-    
+    const { send } = useGameInviteWebSocket();
 
   
     return (
+      
       <div className="friendChatInfo p-5 flex items-center border-b-2 mb-4 border-[#9191D6] border-opacity-30 ">
         {/* ChatListIcon  -------------------------------------------------------------- */}
 
@@ -145,7 +146,7 @@ export function PlayWithOption ({onClick}) {
           >
             <ProfileOption onClick={() => {profileService(friend, router); rest.setIconState({ dropDownState: false })} }/>
 
-            <PlayWithOption onClick={() => {playWithService(friend); rest.setIconState({dropDownState: false });}}/>
+            <PlayWithOption onClick={() => {playWithService(friend, loggedInUser, send); rest.setIconState({dropDownState: false });}}/>
             <BlockOption onClick={() => {blockService(friend); rest.setIconState({dropDownState: false });}}/>
 
 
