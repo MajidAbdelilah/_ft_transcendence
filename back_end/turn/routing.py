@@ -4,16 +4,14 @@ from django.core.asgi import get_asgi_application
 from django.urls import path
 from turn import consumers
 
-
 websocket_urlpatterns = [
-    path("ws/tournament/", consumers.PingPongConsumer.as_asgi()),
+    path("ws/tournament/<str:room_name>/", consumers.PingPongConsumer.as_asgi()),
+    path("ws/tournament/<str:room_name>/<str:tournament_room_name>/", consumers.PingPongConsumer.as_asgi()),
 ]
 
 application = ProtocolTypeRouter({
     "http": get_asgi_application(),
     "websocket": AuthMiddlewareStack(
-        URLRouter([
-            path("ws/tournament/", consumers.PingPongConsumer.as_asgi()),
-        ])
+        URLRouter(websocket_urlpatterns)
     ),
 })

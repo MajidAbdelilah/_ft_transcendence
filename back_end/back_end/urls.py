@@ -25,4 +25,5 @@ urlpatterns = [
     path('api/', include('double_game.urls')),
     path('chat/', include('chat.urls')),
     path('friend/', include('friend.urls')),
+    path('game/', include('turn.urls')),
 ]
