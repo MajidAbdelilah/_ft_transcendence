@@ -36,11 +36,21 @@ export default function ListFriends({ getSelectedFriend, switchChatState }) {
     }
 
 
+//     <img
+//     src={friend.user.image_field ? `http://127.0.0.1:8000/api${friend.user.image_field}` : "/images/DefaultAvatar.svg"}
+//     alt={`${friend.user.username}'s profile`}
+//     width={80}
+//     height={80}
+//     className="w-full h-full rounded-full object-cover border-2 border-[#BCBCC9]"
+//   />
+
+
 
     return (
         <div className="friendsList">
 
         {friendsList && friendsList.map((friend) => (
+
             <div 
             key={friend.user.id} 
             className="friendInfo my-2 px-1 w-full flex flex-row items-center overflow-hidden cursor-pointer" 
@@ -66,8 +76,8 @@ export default function ListFriends({ getSelectedFriend, switchChatState }) {
                     id="avatarButton"
                     className="rounded-full left-0 top-0 w-[45px] h-[45px]"
                     // src={friend.user.image_field ? `http://127.0.0.1:8000/api${friend.user.image_field}` : "/images/DefaultAvatar.svg"}
-
-                    src={friend.image_field ? `http://127.0.0.1:8000/api${friend.image_field}`  : "/images/DefaultAvatar.svg"}
+                    
+                    src={friend.user.image_field ? `http://127.0.0.1:8000/api${friend.user.image_field}`  : "/images/DefaultAvatar.svg"}
                     alt="User dropdown"
                     width={45}
                     height={45}
