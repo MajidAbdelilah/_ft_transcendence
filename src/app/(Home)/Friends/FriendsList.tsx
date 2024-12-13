@@ -40,6 +40,8 @@ export default function FriendsList({ friends = [] }: FriendsListProps) {
 
   const router = useRouter();
 
+
+
   const handleChat = async (friend: Friend) => {
     router.push("/Chatt");
   };

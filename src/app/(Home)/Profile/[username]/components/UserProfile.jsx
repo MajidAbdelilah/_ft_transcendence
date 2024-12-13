@@ -82,19 +82,35 @@ const handleBlockUser = async (loggedInUser, user) => {
               // height={60}
               // /> 
 
-
+              // {isLoading ? (
+              //   <>
+              //   <Skeleton className="sm:w-10 sm:h-10 w-8 h-8 rounded-full bg-[#d1daff]" />
+              // </>
+              // ) : (
+              //   // <Skeleton className="sm:w-10 sm:h-10 w-8 h-8 rounded-full bg-[#d1daff]" />
+              // <img
+              //   id="avatarButton"
+              //   className="sm:w-10 sm:h-10 w-8 h-8 rounded-full bg-[#D7D7EA] cursor-pointer rounded-full"
+              //   src={userData?.image_field ? `http://127.0.0.1:8000/api${userData.image_field}` : "/images/DefaultAvatar.svg"}
+              //   alt="User dropdown"
+              //   width={100}
+              //   height={100}
+              //   /> 
+              // )
+              //   }
 
 function Part1({loggedInUser, user, isSelf}) {
 
   const router = useRouter();
-  console.log(user.image_field);
+  console.log("user ====> ", user);
   return (
     <div className="part1 relative w-1/3 p-2 rounded-l-2xl bg-[#F4F4FF] border-[#BCBCC9] border-r-2 min-w-32 ">
 
 
     <div className="flex flex-col items-center">
         <img
-        src={user.image_field ? `http://127.0.0.1:8000/api/${user.image_field}` : "/images/Default_profile.png"}// image_feiled
+            src={user?.image_field? `http://127.0.0.1:8000/api/images/${user.image_field}` : "/images/DefaultAvatar.svg"} // image_feiled
+            alt="ProfileImage"
             width={60}
             height={60}
         
@@ -105,7 +121,7 @@ function Part1({loggedInUser, user, isSelf}) {
       <div className="mt-12 text-sm md:text-md lg:text-lg xl:text-xl font-bold text-[#242F5C]">
         {user.username}
       </div>
-      <span className="text-xs   mt-1 text-[#8988DE]">{user.state}</span>
+      <span className="text-xs   mt-1 text-[#8988DE] font-semibold">{user.is_on ? "Online" : "Offline"}</span>
       <div className={`flex flex-row mt-2 text-[#242F5C] ${isSelf === true ? "invisible" : "visible"}`}>
         <BsChatLeftText className="textUser mr-1 text-lg lg:text-xl cursor-pointer" onClick={() => handleTextUser(router)}/>
         <MdOutlinePersonAddAlt className="addFriend ml-1 text-xl lg:text-2xl cursor-pointer" onClick={() => handleAddFriend(loggedInUser, user)}/>
