@@ -31,8 +31,8 @@
             const roomName = document.getElementById('roomName').value;
             const tournamentRoomName = document.getElementById('tournamentRoomName').value;
             const url = tournamentRoomName ? 
-                `ws://10.11.6.4:8001/ws/tournament/${roomName}/${tournamentRoomName}/` : 
-                `ws://10.11.6.4:8001/ws/tournament/${roomName}/`;
+                `ws://127.0.0.1:8000/ws/tournament/${roomName}/${tournamentRoomName}/` : 
+                `ws://127.0.0.1:8000/ws/tournament/${roomName}/`;
 
             socket = new WebSocket(url);
             

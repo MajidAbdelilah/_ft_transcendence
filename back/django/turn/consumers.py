@@ -84,6 +84,7 @@ class PingPongConsumer(AsyncWebsocketConsumer):
         self.room_group_name = f'pingpong_{self.room_name}'
         self.tournament_room_name = self.scope['url_route']['kwargs'].get('tournament_room_name', None)
         self.tournament_group_name = f'tournament_{self.tournament_room_name}' if self.tournament_room_name else None
+        self.userId = ''
 
         for room_name in self.room_var:
             if(self.room_var[room_name].get('is_tournament', False)):
@@ -238,7 +239,7 @@ class PingPongConsumer(AsyncWebsocketConsumer):
                 # Check if both players in the match are ready
                 if self.room_var[self.room_name]['is_tournament']:
                     current_match = players[player]['current_match']
-                    match_players = [p for p, pdata in players.items() if pdata['current_match'] == current_match]
+                    match_players = [p for p, pdata in players.items()]
                     if all(players[p].get('game_start') for p in match_players):
                         self.room_var[self.room_name]['matches'][current_match]['game_start'] = True
         if(self.room_var[self.room_name]['is_tournament']):
