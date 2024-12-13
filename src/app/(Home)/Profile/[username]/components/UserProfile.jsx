@@ -73,31 +73,6 @@ const handleBlockUser = async (loggedInUser, user) => {
 
 
 
-              // <img
-              // id="avatarButton"
-              // className=" rounded-full left-0 top-0 w-[60px] h-[60px] "
-              // src={path ? path : "/images/Default_profile.png"}
-              // alt="User dropdown"
-              // width={60}
-              // height={60}
-              // /> 
-
-              // {isLoading ? (
-              //   <>
-              //   <Skeleton className="sm:w-10 sm:h-10 w-8 h-8 rounded-full bg-[#d1daff]" />
-              // </>
-              // ) : (
-              //   // <Skeleton className="sm:w-10 sm:h-10 w-8 h-8 rounded-full bg-[#d1daff]" />
-              // <img
-              //   id="avatarButton"
-              //   className="sm:w-10 sm:h-10 w-8 h-8 rounded-full bg-[#D7D7EA] cursor-pointer rounded-full"
-              //   src={userData?.image_field ? `http://127.0.0.1:8000/api${userData.image_field}` : "/images/DefaultAvatar.svg"}
-              //   alt="User dropdown"
-              //   width={100}
-              //   height={100}
-              //   /> 
-              // )
-              //   }
 
 function Part1({loggedInUser, user, isSelf}) {
 

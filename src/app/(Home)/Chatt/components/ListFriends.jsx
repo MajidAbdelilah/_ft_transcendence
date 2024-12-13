@@ -36,13 +36,6 @@ export default function ListFriends({ getSelectedFriend, switchChatState }) {
     }
 
 
-//     <img
-//     src={friend.user.image_field ? `http://127.0.0.1:8000/api${friend.user.image_field}` : "/images/DefaultAvatar.svg"}
-//     alt={`${friend.user.username}'s profile`}
-//     width={80}
-//     height={80}
-//     className="w-full h-full rounded-full object-cover border-2 border-[#BCBCC9]"
-//   />
 
 
 
@@ -57,16 +50,7 @@ export default function ListFriends({ getSelectedFriend, switchChatState }) {
             onClick={() =>{ getSelectedFriend(friend); switchChatState()}} >
             
             
-                {/* <Image 
-                    src={friend.user.profile_photo === undefined || friend.user.profile_photo === null || friend.user.profile_photo === "" || friend.user.profile_photo === "/images/%7B%7D" 
-                        ? "/images/avatarprofile.svg" 
-                        : friend.user.profile_photo}
-                    alt="/images/avatarprofile.svg"
-                    width={45}
-                    height={45}
-                    className="rounded-full left-0 top-0 w-[45px] h-[45px]"
 
-                /> */}
                 {isLoading ? (
                     <>
                     <Skeleton className="sm:w-10 sm:h-10 w-8 h-8 rounded-full bg-[#d1daff]" />
@@ -75,10 +59,8 @@ export default function ListFriends({ getSelectedFriend, switchChatState }) {
                     <img
                     id="avatarButton"
                     className="rounded-full left-0 top-0 w-[45px] h-[45px]"
-                    // src={friend.user.image_field ? `http://127.0.0.1:8000/api${friend.user.image_field}` : "/images/DefaultAvatar.svg"}
-                    
                     src={friend.user.image_field ? `http://127.0.0.1:8000/api${friend.user.image_field}`  : "/images/DefaultAvatar.svg"}
-                    alt="User dropdown"
+                    alt="profileImage"
                     width={45}
                     height={45}
                     /> 
