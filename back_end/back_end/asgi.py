@@ -15,8 +15,10 @@ from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import AnonymousUser
 import jwt
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'game.settings')
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'back_end.settings')
 django.setup()
+from back_end.routing import websocket_urlpatterns as game_websocket_urlpatterns
+from turn.routing import websocket_urlpatterns as turn_websocket_urlpatterns
 
 # class UserStatusConsumer(JWTAuthentication):
     
@@ -86,7 +88,9 @@ application = ProtocolTypeRouter({
             websocket_urlpatterns +  # assuming it's a list or iterable
             chat.routing.websocket_urlpatterns +
             friend.routing.websocket_urlpatterns +
-            double_game.routing.websocket_urlpatterns
+            double_game.routing.websocket_urlpatterns +
+            game_websocket_urlpatterns +
+            turn_websocket_urlpatterns
         )
     ),
 })
