@@ -8,6 +8,8 @@ import customAxios from '../../customAxios';
 import {IconUserExclamation} from '@tabler/icons-react'
 import { useRouter } from "next/navigation";
 import { useUser } from '../../contexts/UserContext';
+import { toast } from 'react-hot-toast';
+import { useGameInviteWebSocket } from '../../contexts/GameInviteWebSocket';
 
 const montserrat = Montserrat({
   subsets: ['latin'],
@@ -37,6 +39,7 @@ export default function FriendsList({ friends = [] }: FriendsListProps) {
   const { userData } = useUser();
   const [imageLoadingStates, setImageLoadingStates] = useState<{ [key: string]: boolean }>({});
   const { send } = useWebSocket();
+  const { send: sendGame } = useGameInviteWebSocket();
 
   const router = useRouter();
 
@@ -67,9 +70,13 @@ export default function FriendsList({ friends = [] }: FriendsListProps) {
     }
   };
 
+  
+
   const getProfile = (username: string) => {
     router.push(`/Profile/${username}`);
   };
+
+  
 
   useEffect(() => {
     const handleResize = () => {
@@ -86,6 +93,24 @@ export default function FriendsList({ friends = [] }: FriendsListProps) {
   const handleImageLoad = (friendId: string) => {
     setImageLoadingStates(prev => ({ ...prev, [friendId]: false }));
   };
+
+  const handleGameInvite = (friendshipId: number, friendUsername: string) => {
+    console.log('🎮 Attempting to send game invitation to:', friendUsername);
+
+      const message = {
+        type: 'game_invitation',
+        friendship_id: friendshipId,
+        map: "White Map",
+        sender_username: userData.username,
+        sender_image: userData.image_field,
+        receiver_username: friendUsername,
+        timestamp: new Date().toISOString()
+      };
+      console.log('📤 Sending invitation message:', message);
+      sendGame(message);
+      toast.success(`Invitation sent to ${friendUsername}!`);
+    };
+  
 
   return (
     <div className={`w-full mx-auto space-y-2 ${montserrat.className}`}>
@@ -130,6 +155,13 @@ export default function FriendsList({ friends = [] }: FriendsListProps) {
                   className="cursor-pointer hover:scale-110 transition-transform"
                 >
                   <Image src="/images/chat.svg" alt="" width={50} height={50} className="lg:w-[40px] lg:h-[40px] md:w-[30px] md:h-[30px] w-[30px] h-[30px]" />
+                </button>
+                <button 
+                  onClick={() => handleGameInvite(friend.freindship_id, friend.user.username)}
+                  aria-label={`Unfriend ${friend.user.username}`} 
+                  className="cursor-pointer hover:scale-110 transition-transform"
+                >
+                  <Image src="/images/inviteGame.svg" alt="" width={50} height={50} className="lg:w-[40px] lg:h-[40px] md:w-[30px] md:h-[30px] w-[30px] h-[30px]" />
                 </button>
                 <button 
                   onClick={() => handleBlock(friend)}
