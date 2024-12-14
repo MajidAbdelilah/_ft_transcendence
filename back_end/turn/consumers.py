@@ -84,7 +84,7 @@ class PingPongConsumer(AsyncWebsocketConsumer):
         self.room_group_name = f'pingpong_{self.room_name}'
         self.tournament_room_name = self.scope['url_route']['kwargs'].get('tournament_room_name', None)
         self.tournament_group_name = f'tournament_{self.tournament_room_name}' if self.tournament_room_name else None
-        self.userId = ''
+        self.username = ''
 
         for room_name in self.room_var:
             if(self.room_var[room_name].get('is_tournament', False)):
@@ -121,8 +121,8 @@ class PingPongConsumer(AsyncWebsocketConsumer):
         if self.room_name not in self.room_var and not self.tournament_room_name:
             self.room_var[self.room_name] = {
                 'players': {
-                    'player1': {'y': self.height/2 - 25, 'height': 100, 'x': 0, 'width': 10, 'direction': None, 'score': 0, 'full': False, 'username': '', 'game_start': False, 'current_match': 'match1'},
-                    'player2': {'y': self.height/2 - 25, 'height': 100, 'x': self.width - 10, 'width': 10, 'direction': None, 'score': 0, 'full': False, 'username': '', 'game_start': False, 'current_match': 'match1'},
+                    'player1': {'y': self.height/2 - 25, 'height': 100, 'x': 0, 'width': 10, 'direction': None, 'score': 0, 'full': False, 'username': '', 'game_start': False, 'current_match': 'match1', 'mapType': ''},
+                    'player2': {'y': self.height/2 - 25, 'height': 100, 'x': self.width - 10, 'width': 10, 'direction': None, 'score': 0, 'full': False, 'username': '', 'game_start': False, 'current_match': 'match1', 'mapType': ''},
                 },
                 'ball': {'x': self.width / 2, 'y': self.height / 2, 'radius': 5, 'vx': 5, 'vy': 5},
                 'game_start': True,
@@ -134,10 +134,10 @@ class PingPongConsumer(AsyncWebsocketConsumer):
             if self.room_name not in self.room_var:
                 self.room_var[self.room_name] = {
                     'players': {
-                        'player1': {'y': self.height/2 - 25, 'height': 100, 'x': 0, 'width': 10, 'direction': None, 'score': 0, 'full': False, 'username': '', 'game_start': False, 'current_match': 'match1'},
-                        'player2': {'y': self.height/2 - 25, 'height': 100, 'x': self.width - 10, 'width': 10, 'direction': None, 'score': 0, 'full': False, 'username': '', 'game_start': False, 'current_match': 'match1'},
-                        'player3': {'y': self.height/2 - 25, 'height': 100, 'x': 0, 'width': 10, 'direction': None, 'score': 0, 'full': False, 'username': '', 'game_start': False, 'current_match': 'match2'},
-                        'player4': {'y': self.height/2 - 25, 'height': 100, 'x': self.width - 10, 'width': 10, 'direction': None, 'score': 0, 'full': False, 'username': '', 'game_start': False, 'current_match': 'match2'},
+                        'player1': {'y': self.height/2 - 25, 'height': 100, 'x': 0, 'width': 10, 'direction': None, 'score': 0, 'full': False, 'username': '', 'game_start': False, 'current_match': 'match1', 'mapType': ''},
+                        'player2': {'y': self.height/2 - 25, 'height': 100, 'x': self.width - 10, 'width': 10, 'direction': None, 'score': 0, 'full': False, 'username': '', 'game_start': False, 'current_match': 'match1', 'mapType': ''},
+                        'player3': {'y': self.height/2 - 25, 'height': 100, 'x': 0, 'width': 10, 'direction': None, 'score': 0, 'full': False, 'username': '', 'game_start': False, 'current_match': 'match2', 'mapType': ''},
+                        'player4': {'y': self.height/2 - 25, 'height': 100, 'x': self.width - 10, 'width': 10, 'direction': None, 'score': 0, 'full': False, 'username': '', 'game_start': False, 'current_match': 'match2', 'mapType': ''},
                     },
                     'matches': {
                         'match1': {'player1': None, 'p1_username': None, 'p1_score': 0, 'player2': None, 'p2_username': None, 'p2_score': 0, 'winner': None, 'game_start': False},
@@ -166,8 +166,36 @@ class PingPongConsumer(AsyncWebsocketConsumer):
                 self.tournament_group_name,
                 self.channel_name
             )
+        
+        print("username: ", self.username)
+        print("room_var: ", self.room_var)
+        
+        if(self.room_var[self.room_name]['is_tournament']):
+            for player_key, player_data in self.room_var[self.room_name]['players'].items():
+                print("here")
+                if(player_data['username'] == self.username):
+                    player_data['username'] = ''
+                    player_data['full'] = False
+                    player_data['direction'] = None
+                    player_data['game_start'] = False
+                    player_data['score'] = 0
+                    player_data['mapType'] = ''
+                    break
+            room_is_empty = True
+            for(player_key, player_data) in self.room_var[self.room_name]['players'].items():
+                if(player_data['full']):
+                    room_is_empty = False
+                    break
+            if(room_is_empty):
+                del self.room_var[self.room_name]
+                print("Tournament room deleted")
+        elif(self.username in self.room_var[self.room_name]['players']):
+            del self.room_var[self.room_name]
+            print("Room deleted")
         await self.delete_active_tournament()
 
+
+        # await self.send_bracket_update()
     def assign_player(self, username):
         players = self.room_var[self.room_name]['players']
         for player_key, player_data in players.items():
@@ -216,13 +244,54 @@ class PingPongConsumer(AsyncWebsocketConsumer):
                 await self.send_bracket_update()
                 return player_key
         return None
-    
+    # data is like this   data:  {'type': 'join_tournament', 'data': {'userId': 4, 'username': 'amajid1', 'mapType': 'White Map'}}
+    async def assign_player_tournament_data(self, data):
+        players = self.room_var[self.room_name]['players']
+        print("player: ", data['username'])
+        for player_key, player_data in players.items():
+            if(player_data['username'] == data['username']):
+                return player_key
+        for player_key, player_data in players.items():
+            if(player_data['username'] == data['username']):
+                return player_key
+            match_name = self.room_var[self.room_name]['players'][player_key]['current_match']
+            match = self.room_var[self.room_name]['matches'][match_name]
+            if not player_data['full']:
+                if(player_key == 'player1'):
+                    match['player1'] = "player1"
+                    match['p1_username'] = data['username']
+                    match['mapType'] = data['mapType']
+                elif(player_key == 'player2'):
+                    match['player2'] = "player2"
+                    match['p2_username'] = data['username']
+                    match['mapType'] = data['mapType']
+                elif(player_key == 'player3'):
+                    match['player1'] = "player3"
+                    match['p1_username'] = data['username']
+                    match['mapType'] = data['mapType']
+                elif(player_key == 'player4'):
+                    match['player2'] = "player4"
+                    match['p2_username'] = data['username']
+                    match['mapType'] = data['mapType']
+                player_data['username'] = data['username']
+                player_data['full'] = True
+                self.username = data['username']
+                print("player_key: ", player_key)
+                print("match: ", match, match_name)
+                await self.send_bracket_update()
+                return player_key
+        return None
+
     async def receive(self, text_data):
         data = json.loads(text_data)
         direction = data.get('direction')
         username = data.get('username')
         player = data.get('player')
+        print("data: ", data)
     
+        if("type" in data and data["type"] == "join_tournament"):
+            player = await self.assign_player_tournament_data(data['data'])
+
         if not player:
             if(self.room_var[self.room_name]['is_tournament']):
                 player = await self.assign_player_tournament(username)
