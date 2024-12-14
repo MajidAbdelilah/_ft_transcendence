@@ -13,6 +13,46 @@ from channels.layers import get_channel_layer
 class PingPongConsumer(AsyncWebsocketConsumer):
     room_var = {}
 
+    # send gamestart to all player in the room , the game start data to send should look like this 
+    # {
+    #   type: 'gamestart',
+    #   room_name: 'tournament_game_1',
+    #   player1: 'username1',
+    #   player2: 'username2',
+    #   player3: 'username3',
+    #   player4: 'username4',
+    #   map: 'player_uniqe_map'
+    # }
+    async def send_gamestart(self):
+        players = self.room_var[self.room_name]['players']
+        player1 = players['player1']['username']
+        player2 = players['player2']['username']
+        player3 = players['player3']['username']
+        player4 = players['player4']['username']
+        map = players['player1']['mapType']
+        gamestart_data = {
+            "type": "gamestart",
+            "room_name": self.room_name,
+            "player1": player1,
+            "player2": player2,
+            "player3": player3,
+            "player4": player4,
+            "map": map
+        }
+        channel_layer = get_channel_layer()
+        await channel_layer.group_send(
+            self.tournament_group_name,
+            {
+                "type": "gamestart",
+                "message": gamestart_data
+            }
+        )
+
+    async def gamestart(self, event):
+        message = event['message']
+        await self.send(text_data=json.dumps(message))
+
+
     async def send_bracket_update(self):
         bracket_update = {
             "type": "BRACKET_UPDATE",
@@ -260,21 +300,18 @@ class PingPongConsumer(AsyncWebsocketConsumer):
                 if(player_key == 'player1'):
                     match['player1'] = "player1"
                     match['p1_username'] = data['username']
-                    match['mapType'] = data['mapType']
                 elif(player_key == 'player2'):
                     match['player2'] = "player2"
                     match['p2_username'] = data['username']
-                    match['mapType'] = data['mapType']
                 elif(player_key == 'player3'):
                     match['player1'] = "player3"
                     match['p1_username'] = data['username']
-                    match['mapType'] = data['mapType']
                 elif(player_key == 'player4'):
                     match['player2'] = "player4"
                     match['p2_username'] = data['username']
-                    match['mapType'] = data['mapType']
                 player_data['username'] = data['username']
                 player_data['full'] = True
+                player_data['mapType'] = data['mapType']
                 self.username = data['username']
                 print("player_key: ", player_key)
                 print("match: ", match, match_name)
@@ -313,7 +350,16 @@ class PingPongConsumer(AsyncWebsocketConsumer):
                         self.room_var[self.room_name]['matches'][current_match]['game_start'] = True
         if(self.room_var[self.room_name]['is_tournament']):
             await self.save_active_tournament()
+            turn_is_full = True
+            for player_key, player_data in self.room_var[self.room_name]['players'].items():
+                if not player_data['full']:
+                    turn_is_full = False
+                    break
+            print("turn_is_full: ", turn_is_full)
+            if turn_is_full:
+                await self.send_gamestart()
             self.send_bracket_update()
+        
 
 
     async def game_loop(self):
