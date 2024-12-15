@@ -325,10 +325,21 @@ class PingPongConsumer(AsyncWebsocketConsumer):
         username = data.get('username')
         player = data.get('player')
         print("data: ", data)
-    
+
         if("type" in data and data["type"] == "join_tournament"):
             player = await self.assign_player_tournament_data(data['data'])
-
+            # send this data back to the user
+            # resolve({
+            #       success: true,
+            #       tournamentId: response.tournamentId,
+            #       message: response.message
+            #     });
+            await self.send(text_data=json.dumps({
+                'type': 'join_tournament_response',
+                'success': True,
+                'tournamentId': self.room_name,
+                'message': 'Successfully joined tournament'
+            }))
         if not player:
             if(self.room_var[self.room_name]['is_tournament']):
                 player = await self.assign_player_tournament(username)
