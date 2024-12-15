@@ -65,14 +65,19 @@ function MainComponent() {
   }, [userData]);
 
   useEffect(() => {
-    if (!tournamentId) return;
+    console.log('🎮 freak');
+    if (!tournamentId) {
+      return;
+    }
 
     console.log('🎮 Fetching tournament data for tournament ID:', tournamentId);
 
     const cleanup = gameService.setupBracketListener(tournamentId, (bracketData) => {
       console.log('Received tournament data:', bracketData);
-      
+      console.log("bracketData.type",bracketData.type);  
+      console.log("fuck");    
       if (bracketData.type === 'gamestart') {
+        console.log("fuck");
         // Redirect to game when match is ready with 4 players
         const params = new URLSearchParams({
           room_name: bracketData.room_name,
@@ -129,6 +134,7 @@ function MainComponent() {
     setIsJoining(true);
     try {
       const result = await gameService.joinTournament(userData, selectedMap);
+      console.log('🎮 Join tournament result:');
       if (result.success) {
         setHasJoinedTournament(true);
         setTournamentId(result.tournamentId);

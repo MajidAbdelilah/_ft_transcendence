@@ -5,7 +5,7 @@ let ws = null;
 
 const initializeBracketWebSocket = () => {
   if (!ws || ws.readyState === WebSocket.CLOSED) {
-    ws = new WebSocket(`ws://10.11.6.4:8001/ws/tournament/tour/PLAY/`);
+    ws = new WebSocket(`ws://127.0.0.1:8000/ws/tournament/tour/PLAY/`);
   }
 
   return new Promise((resolve, reject) => {
@@ -69,9 +69,20 @@ export const gameService = {
             }
           }));
 
+          // Send join tournament message
+          socket.send(JSON.stringify({
+            type: 'join_tournament',
+            data: {
+              userId: userData.id,
+              username: userData.username,
+              mapType
+            }
+          }));
+
           // Set up one-time message handler for join response
           const handleJoinResponse = (event) => {
             const response = JSON.parse(event.data);
+            console.log('Received response:', response);
             if (response.type === 'join_tournament_response') {
               console.log('Received join tournament response:');
               socket.removeEventListener('message', handleJoinResponse);
@@ -89,7 +100,7 @@ export const gameService = {
               }
             }
           };
-
+          
           socket.addEventListener('message', handleJoinResponse);
         } catch (error) {
           reject({
