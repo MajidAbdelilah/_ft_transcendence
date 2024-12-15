@@ -40,6 +40,8 @@ class PingPongConsumer(AsyncWebsocketConsumer):
             "map": map
         }
         channel_layer = get_channel_layer()
+        # send to self player first with type gamestart
+        await self.send(text_data=json.dumps(gamestart_data))
         await channel_layer.group_send(
             self.tournament_group_name,
             {
@@ -361,14 +363,11 @@ class PingPongConsumer(AsyncWebsocketConsumer):
                         self.room_var[self.room_name]['matches'][current_match]['game_start'] = True
         if(self.room_var[self.room_name]['is_tournament']):
             await self.save_active_tournament()
-            turn_is_full = True
-            for player_key, player_data in self.room_var[self.room_name]['players'].items():
-                if not player_data['full']:
-                    turn_is_full = False
-                    break
-            print("turn_is_full: ", turn_is_full)
-            if turn_is_full:
+            # if number of players are 4, send gamestart to all players
+            num_players = sum(1 for player in self.room_var[self.room_name]['players'].values() if player.get('full'))
+            if num_players == 4:
                 await self.send_gamestart()
+                print("turn_is_full: ", turn_is_full)
             self.send_bracket_update()
         
 
