@@ -26,16 +26,7 @@ class Friendship(models.Model):
 class Notification(models.Model):
     notification_id = models.AutoField(primary_key=True)
     user = models.ForeignKey("authapp.User", models.DO_NOTHING, db_column="user")
-    image_url = models.CharField(max_length=200)
     message = models.CharField(max_length=200)
-    title = models.CharField(max_length=50)
-    link = models.CharField(max_length=200)
-    is_chat_notif = models.BooleanField(default=False)
-    is_friend_notif = models.BooleanField(default=False)
-    is_tourn_notif = models.BooleanField(default=False)
-    is_match_notif = models.BooleanField(default=False)
-    action_by = models.CharField(default="")
-    notification_date = models.DateTimeField(auto_now_add=True)
 
     class Meta:
         db_table = "Notification"
