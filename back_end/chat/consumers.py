@@ -90,6 +90,17 @@ class ChatConsumer(WebsocketConsumer):
             }
         )
 
+        async_to_sync(self.channel_layer.group_send)(
+                 f"user_{receiver_obj.id}",
+                 {
+                    "type": "send_notification",
+                    "message": message,
+                    "send": send,
+                    "receive": receive,
+                    "timestamp": timestamp,
+                    "chat_id": chat_id
+                 },
+             )
     def chat_message(self, event):
         print(f"[CHAT MESSAGE] Broadcast received in channel: {self.channel_name}")
         print(f"[CHAT MESSAGE] Event details: {event}")
@@ -111,3 +122,4 @@ class ChatConsumer(WebsocketConsumer):
         print(f"[CHAT MESSAGE] Message sent to WebSocket: {message}, for user {send} and {receive}")
 
 
+    #notify the receiver that the sender about a new message
