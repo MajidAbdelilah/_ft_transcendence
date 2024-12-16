@@ -342,9 +342,10 @@ export default function Friends() {
                       <FriendRequests key={request.freindship_id} request={request} />
                     ))
                   ) : (
-                    <div className="flex flex-col items-center justify-center h-full gap-4">
-                      <IconUserExclamation className="w-16 h-16 text-gray-400" />
-                      <p className="text-gray-500">No friend requests</p>
+                    <div className="flex flex-col items-center justify-center h-full gap-2">
+                      <IconUserExclamation className="w-16 h-16" color="#242F5C"  />
+                      <p className="text-[#242F5C] text-lg font-bold">No friend requests</p>
+                      <p className="text-[#7C829D] text-sm text-center">Connect with others by sending a friend request to initiate a conversation</p>
                     </div>
                   )}
                 </div>
@@ -356,9 +357,10 @@ export default function Friends() {
                       <BlockedFriends key={blocked.freindship_id} blockedFriend={blocked} />
                     ))
                   ) : (
-                    <div className="flex flex-col items-center justify-center h-full gap-4">
-                      <IconUserExclamation className="w-16 h-16 text-gray-400" />
-                      <p className="text-gray-500">No blocked users</p>
+                    <div className="flex flex-col items-center justify-center h-full gap-2">
+                      <IconUserExclamation className="w-16 h-16" color="#242F5C"  />
+                      <p className="text-[#242F5C] text-lg font-bold">No blocked users</p>
+                      <p className="text-[#7C829D] text-sm text-center">Your blocked users list is currently empty</p>
                     </div>
                   )}
                 </div>

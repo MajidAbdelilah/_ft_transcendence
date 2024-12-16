@@ -8,6 +8,8 @@ import customAxios from '../../customAxios';
 import {IconUserExclamation} from '@tabler/icons-react'
 import { useRouter } from "next/navigation";
 import { useUser } from '../../contexts/UserContext';
+import { toast } from 'react-hot-toast';
+import { useGameInviteWebSocket } from '../../contexts/GameInviteWebSocket';
 
 const montserrat = Montserrat({
   subsets: ['latin'],
@@ -37,6 +39,7 @@ export default function FriendsList({ friends = [] }: FriendsListProps) {
   const { userData } = useUser();
   const [imageLoadingStates, setImageLoadingStates] = useState<{ [key: string]: boolean }>({});
   const { send } = useWebSocket();
+  const { send: sendGame } = useGameInviteWebSocket();
 
   const router = useRouter();
 
@@ -69,9 +72,13 @@ export default function FriendsList({ friends = [] }: FriendsListProps) {
     }
   };
 
+  
+
   const getProfile = (username: string) => {
     router.push(`/Profile/${username}`);
   };
+
+  
 
   useEffect(() => {
     const handleResize = () => {
@@ -89,6 +96,24 @@ export default function FriendsList({ friends = [] }: FriendsListProps) {
     setImageLoadingStates(prev => ({ ...prev, [friendId]: false }));
   };
 
+  const handleGameInvite = (friendshipId: number, friendUsername: string) => {
+    console.log('🎮 Attempting to send game invitation to:', friendUsername);
+
+      const message = {
+        type: 'game_invitation',
+        friendship_id: friendshipId,
+        map: "White Map",
+        sender_username: userData.username,
+        sender_image: userData.image_field,
+        receiver_username: friendUsername,
+        timestamp: new Date().toISOString()
+      };
+      console.log('📤 Sending invitation message:', message);
+      sendGame(message);
+      toast.success(`Invitation sent to ${friendUsername}!`);
+    };
+  
+
   return (
     <div className={`w-full mx-auto space-y-2 ${montserrat.className}`}>
       {friends.length === 0 ? (
@@ -104,13 +129,14 @@ export default function FriendsList({ friends = [] }: FriendsListProps) {
         friends.map((friend) => (
           <div  key={friend.user.id} className={`w-full h-20 lg:h-[12%] cursor-pointer md:h-[15%] md:h-[20%] rounded-xl bg-[#D8D8F7] shadow-md shadow-[#BCBCC9] relative ${isMobile ? 'w-full' : 'min-h-[90px]'}`}>
             <div className="flex items-center h-full p-2">
-              <div className="relative w-16 h-16 md:w-20 md:h-20 lg:w-15 lg:h-15">
+              <div className="relative w-16  h-16 md:w-20 md:h-20 lg:w-15 lg:h-15">
                 <img
                   src={friend.user.image_field ? `http://127.0.0.1:8000/api${friend.user.image_field}` : "/images/DefaultAvatar.svg"}
                   alt={`${friend.user.username}'s profile`}
                   width={80}
                   height={80}
-                  className="w-full h-full rounded-full object-cover border-2 border-[#BCBCC9]"
+                  className="w-full h-full rounded-full object-cover border-2 border-[#BCBCC9] cursor-pointer"
+                  onClick={() => getProfile(friend.user.username)}
                 />
                 {friend.is_accepted === false && (
                   <div className="absolute -top-1 -right-1 w-4 h-4 bg-red-500 rounded-full flex items-center justify-center">
@@ -131,6 +157,13 @@ export default function FriendsList({ friends = [] }: FriendsListProps) {
                   className="cursor-pointer hover:scale-110 transition-transform"
                 >
                   <Image src="/images/chat.svg" alt="" width={50} height={50} className="lg:w-[40px] lg:h-[40px] md:w-[30px] md:h-[30px] w-[30px] h-[30px]" />
+                </button>
+                <button 
+                  onClick={() => handleGameInvite(friend.freindship_id, friend.user.username)}
+                  aria-label={`Unfriend ${friend.user.username}`} 
+                  className="cursor-pointer hover:scale-110 transition-transform"
+                >
+                  <Image src="/images/inviteGame.svg" alt="" width={50} height={50} className="lg:w-[40px] lg:h-[40px] md:w-[30px] md:h-[30px] w-[30px] h-[30px]" />
                 </button>
                 <button 
                   onClick={() => handleBlock(friend)}

@@ -6,6 +6,7 @@ import customAxios from '../../customAxios'
 import { useWebSocket } from '../../contexts/WebSocketProvider';
 import {IconUserExclamation} from '@tabler/icons-react'
 import { useUser } from '../../contexts/UserContext';
+import { useRouter } from 'next/navigation';
 
 interface FriendRequestProps {
   request: {
@@ -26,6 +27,7 @@ interface FriendRequestProps {
 export default function FriendRequests({ request }: FriendRequestProps) {
   const { userData } = useUser();
   const [isMobileRq, setIsMobileRq] = useState(false)
+  const router = useRouter();
   
   const [isMobile, setIsMobile] = useState(false)
   const [isLoading, setIsLoading] = useState({
@@ -106,6 +108,10 @@ export default function FriendRequests({ request }: FriendRequestProps) {
     }
   }, [])
 
+  const getProfile = (username: string) => {
+    router.push(`/Profile/${username}`);
+  };
+
   return (
     <div className={`w-full mx-auto h-20 lg:h-[12%] md:h-[20%] mt-2 rounded-xl bg-[#D8D8F7] shadow-md shadow-[#BCBCC9] relative ${isMobile ? '' : ' min-h-[90px]'} `}>
       {!request ? (
@@ -126,7 +132,8 @@ export default function FriendRequests({ request }: FriendRequestProps) {
               <img
                 src={request.user.image_field ? `http://127.0.0.1:8000/api${request.user.image_field}` : "/images/DefaultAvatar.svg"}
                 alt={`${request.user.username}'s profile`} 
-                className="w-full h-full rounded-full object-cover border-2 border-[#BCBCC9]" 
+                className="w-full h-full rounded-full object-cover border-2 border-[#BCBCC9] cursor-pointer"
+                onClick={() => getProfile(request.user.username)}
               />
             </div>
             <div className="ml-4 flex flex-col justify-center">
