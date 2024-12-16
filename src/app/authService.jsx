@@ -11,6 +11,7 @@ const authService = {
     return customAxios.post('http://127.0.0.1:8000/api/register/', { username, email, password });
   },
   logout: () => {
+    // localStorage.removeItem('codeSent');
     return customAxios.post('http://127.0.0.1:8000/api/logout/');
   },
   _42API: () => {

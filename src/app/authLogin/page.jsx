@@ -24,12 +24,12 @@ function auth2faPage() {
 
   useEffect(() => {
 
-    const codeSentFlag = localStorage.getItem('codeSent');
+    // const codeSentFlag = localStorage.getItem('codeSent');
 
-    if (!codeSentFlag) {
+    // if (!codeSentFlag) {
       sendCode();
-      localStorage.setItem('codeSent', 'true');
-    }
+    //   localStorage.setItem('codeSent', 'true');
+    // }
   }, []);
 
 
