@@ -110,15 +110,7 @@ class ChatConsumer(WebsocketConsumer):
                     "notif": notification.id,
                  },
              )
-        async_to_sync send_notification(self, notification.id)
-        print(f"[BROADCAST] Message broadcasted to group: {receiver_group}")
-           self.send(text_data=json.dumps({
-                "message": event["message"],
-                "send": event["send"],
-                "receive": event["receive"],
-                "timestamp": event["timestamp"],
-                "chat_id": event["chat_id"]
-            })) 
+    
     def chat_message(self, event):
         print(f"[CHAT MESSAGE] Broadcast received in channel: {self.channel_name}")
         print(f"[CHAT MESSAGE] Event details: {event}")
