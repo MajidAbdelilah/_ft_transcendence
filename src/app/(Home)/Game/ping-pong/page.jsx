@@ -1,7 +1,7 @@
 'use client';
 
 import { useSearchParams } from 'next/navigation';
-import PingPongGame from '../../(Home)/Game/PingPongGame';
+import PingPongGame from './PingPongGame';
 
 export default function PingPongGamePage() {
   const searchParams = useSearchParams();

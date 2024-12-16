@@ -1,0 +1,104 @@
+.gameContainer {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.canvas {
+    border-radius: 12px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    background-color: #242F5C;
+}
+
+.scoreDisplay {
+    position: absolute;
+    top: 40px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    padding: 12px 24px;
+    background: rgba(255, 255, 255, 0.08);
+    border-radius: 50px;
+    min-width: 200px;
+    justify-content: center;
+    margin-top: 10%;
+    width: 30%;
+    background-color:#c4cbe9;
+}
+
+.playerInfo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.playerAvatar {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.playerAvatar:hover {
+    border-color: rgba(216, 216, 247, 0.5);
+}
+
+.playerAvatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.playerName {
+    color: rgba(255, 255, 255, 0.9);
+    font-size: 30px;
+    font-weight: 500;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.scoreContainer {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 24px;
+    font-weight: 600;
+    color: white;
+    padding: 0 12px;
+}
+
+.score {
+    min-width: 24px;
+    text-align: center;
+}
+
+.scoreSeparator {
+    color: rgba(255, 255, 255, 0.3);
+    font-weight: 300;
+}
+
+.gameMessage {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: white;
+    font-size: 20px;
+    font-weight: 500;
+    text-align: center;
+    padding: 12px 24px;
+    background: rgba(255, 255, 255, 0.08);
+    border-radius: 50px;
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0% { opacity: 0.6; }
+    50% { opacity: 1; }
+    100% { opacity: 0.6; }
+}

@@ -1,5 +1,12 @@
 import { useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
+import styles from './PingPongGame.module.css';
+import { Montserrat } from 'next/font/google';
+
+const montserrat = Montserrat({
+  subsets: ['latin'],
+  variable: '--font-montserrat',
+})
 
 const PingPongGame = ({ roomName, player1, player2, player3, player4, map, isTournament }) => {
     const router = useRouter();
@@ -11,6 +18,7 @@ const PingPongGame = ({ roomName, player1, player2, player3, player4, map, isTou
     const [myUsername, setMyUsername] = useState('');
     const [direction, setDirection] = useState(null);
     const [isRedirecting, setIsRedirecting] = useState(false);
+    const [gameData, setGameData] = useState({ players: { player1: { score: 0 }, player2: { score: 0 } } });
     const canvasRef = useRef(null);
     const wsRef = useRef(null);
     const cleanupRef = useRef(false);
@@ -222,6 +230,8 @@ const PingPongGame = ({ roomName, player1, player2, player3, player4, map, isTou
         const canvas = canvasRef.current;
         if (!canvas) return;
 
+        setGameData(data);  // Update game data state
+
         const ctx = canvas.getContext('2d');
         canvas.width = data.width;
         canvas.height = data.height;
@@ -241,43 +251,70 @@ const PingPongGame = ({ roomName, player1, player2, player3, player4, map, isTou
         }
     };
 
+    const drawNormalGame = (ctx, canvas, data) => {
+        // Draw background
+        ctx.fillStyle = '#D8D8F7';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        
+        // Draw center line
+        ctx.setLineDash([10, 10]);
+        ctx.lineWidth = 2;
+        ctx.strokeStyle = '#242F5C';
+        ctx.beginPath();
+        ctx.moveTo(canvas.width / 2, 0);
+        ctx.lineTo(canvas.width / 2, canvas.height);
+        ctx.stroke();
+        ctx.setLineDash([]);
+
+        // Draw paddles
+        ctx.fillStyle = '#242F5C';
+        // Player 1 paddle
+        ctx.fillRect(data.players.player1.x, data.players.player1.y, 
+                    data.players.player1.width, data.players.player1.height);
+        // Player 2 paddle
+        ctx.fillRect(data.players.player2.x, data.players.player2.y,
+                    data.players.player2.width, data.players.player2.height);
+
+        // Draw ball with shadow
+        ctx.shadowColor = 'rgba(36, 47, 92, 0.3)';
+        ctx.shadowBlur = 10;
+        ctx.beginPath();
+        ctx.arc(data.ball.x, data.ball.y, data.ball.radius, 0, Math.PI * 2);
+        ctx.fillStyle = '#242F5C';
+        ctx.fill();
+        ctx.shadowBlur = 0;
+    };
+
     const drawTournamentGame = (ctx, canvas, data) => {
+        // Draw background
+        ctx.fillStyle = '#D8D8F7';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        
+        // Draw center line
+        ctx.setLineDash([10, 10]);
+        ctx.lineWidth = 2;
+        ctx.strokeStyle = '#242F5C';
+        ctx.beginPath();
+        ctx.moveTo(canvas.width / 2, 0);
+        ctx.lineTo(canvas.width / 2, canvas.height);
+        ctx.stroke();
+        ctx.setLineDash([]);
+
         if (playerRole) {
-            ctx.font = '100px Arial';
-            ctx.fillStyle = 'rgba(0, 0, 0, 0.5)';
-            ctx.fillText(
-                data.players[playerRole].score, 
-                (data.players[playerRole].x < (canvas.width / 2)) ? data.players[playerRole].x + 50 : data.players[playerRole].x - 125,
-                canvas.height / 2 + 50
-            );
-            ctx.fillRect(data.players[playerRole].x, data.players[playerRole].y, data.players[playerRole].width, data.players[playerRole].height);
-            
-            ctx.font = '30px Arial';
-            ctx.fillText(
-                data.players[playerRole].username,
-                (data.players[playerRole].x < (canvas.width / 2)) ? data.players[playerRole].x + 50 : data.players[playerRole].x - 125,
-                50
-            );
+            // Draw player paddle
+            ctx.fillStyle = '#242F5C';
+            ctx.fillRect(data.players[playerRole].x, data.players[playerRole].y,
+                        data.players[playerRole].width, data.players[playerRole].height);
         }
 
         if (player2State) {
-            ctx.font = '100px Arial';
-            ctx.fillStyle = 'rgba(0, 0, 0, 0.5)';
-            ctx.fillText(
-                data.players[player2State].score,
-                (data.players[player2State].x < (canvas.width / 2)) ? data.players[player2State].x + 50 : data.players[player2State].x - 125,
-                canvas.height / 2 + 50
-            );
-            ctx.fillRect(data.players[player2State].x, data.players[player2State].y, data.players[player2State].width, data.players[player2State].height);
-            
-            ctx.font = '30px Arial';
-            ctx.fillText(
-                data.players[player2State].username,
-                (data.players[player2State].x < (canvas.width / 2)) ? data.players[player2State].x + 50 : data.players[player2State].x - 125,
-                50
-            );
+            // Draw opponent paddle
+            ctx.fillStyle = '#242F5C';
+            ctx.fillRect(data.players[player2State].x, data.players[player2State].y,
+                        data.players[player2State].width, data.players[player2State].height);
         }
 
+        // Draw ball with shadow
         let ball = null;
         if (match === 'match1') {
             ball = data.matches['ball1'];
@@ -288,48 +325,13 @@ const PingPongGame = ({ roomName, player1, player2, player3, player4, map, isTou
         }
 
         if (ball) {
+            ctx.shadowColor = 'rgba(36, 47, 92, 0.3)';
+            ctx.shadowBlur = 10;
             ctx.beginPath();
             ctx.arc(ball.x, ball.y, ball.radius, 0, Math.PI * 2);
+            ctx.fillStyle = '#242F5C';
             ctx.fill();
-        }
-    };
-
-    const drawNormalGame = (ctx, canvas, data) => {
-        ctx.font = '100px Arial';
-        ctx.fillStyle = 'rgba(0, 0, 0, 0.5)';
-        
-        // Draw scores
-        if (playerRole === 'player1') {
-            ctx.fillText(data.players.player1.score, canvas.width / 2 - 150, canvas.height / 2 + 50);
-            ctx.fillText(data.players.player2.score, canvas.width / 2 + 50, canvas.height / 2 + 50);
-            
-            // Draw paddles
-            ctx.fillRect(data.players.player1.x, data.players.player1.y, data.players.player1.width, data.players.player1.height);
-            ctx.fillRect(data.players.player2.x, data.players.player2.y, data.players.player2.width, data.players.player2.height);
-            
-            // Draw usernames
-            ctx.font = '30px Arial';
-            ctx.fillText(data.players.player1.username, 50, 50);
-            ctx.fillText(data.players.player2.username, canvas.width - 150, 50);
-        } else {
-            ctx.fillText(data.players.player2.score, canvas.width / 2 - 150, canvas.height / 2 + 50);
-            ctx.fillText(data.players.player1.score, canvas.width / 2 + 50, canvas.height / 2 + 50);
-            
-            // Draw paddles
-            ctx.fillRect(data.players.player2.x, data.players.player2.y, data.players.player2.width, data.players.player2.height);
-            ctx.fillRect(data.players.player1.x, data.players.player1.y, data.players.player1.width, data.players.player1.height);
-            
-            // Draw usernames
-            ctx.font = '30px Arial';
-            ctx.fillText(data.players.player2.username, 50, 50);
-            ctx.fillText(data.players.player1.username, canvas.width - 150, 50);
-        }
-
-        // Draw ball
-        if (data.ball) {
-            ctx.beginPath();
-            ctx.arc(data.ball.x, data.ball.y, data.ball.radius, 0, Math.PI * 2);
-            ctx.fill();
+            ctx.shadowBlur = 0;
         }
     };
 
@@ -395,8 +397,44 @@ const PingPongGame = ({ roomName, player1, player2, player3, player4, map, isTou
     }, [socket, direction, playerRole, myUsername, gameStarted]);
 
     return (
-        <div>
-            <canvas ref={canvasRef} id="gameCanvas"></canvas>
+        <div className={`${styles.gameContainer} ${montserrat.className}`}>
+            <canvas ref={canvasRef} className={styles.canvas} />
+            {gameStarted && (
+                <div className={styles.scoreDisplay}>
+                    <div className={styles.playerInfo}>
+                        <div className={styles.playerAvatar}>
+                            <img 
+                                src={`http://127.0.0.1:8000/api${gameData?.players?.player1?.image || '/images/DefaultAvatar.svg'}`}
+                                alt={player1}
+                                width={50}
+                                height={50}
+                            />
+                        </div>
+                        <span className={styles.playerName}>{player1 || 'Player 1'}</span>
+                    </div>
+                    <div className={styles.scoreContainer}>
+                        <span className={styles.score}>{gameData?.players?.player1?.score || 0}</span>
+                        <span className={styles.scoreSeparator}>|</span>
+                        <span className={styles.score}>{gameData?.players?.player2?.score || 0}</span>
+                    </div>
+                    <div className={styles.playerInfo}>
+                        <span className={styles.playerName}>{player2 || 'Player 2'}</span>
+                        <div className={styles.playerAvatar}>
+                            <img 
+                                src={`http://127.0.0.1:8000/api${gameData?.players?.player2?.image || '/images/DefaultAvatar.svg'}`}
+                                alt={player2}
+                                width={50}
+                                height={50}
+                            />
+                        </div>
+                    </div>
+                </div>
+            )}
+            {!gameStarted && (
+                <div className={styles.gameMessage}>
+                    Press Space to Start
+                </div>
+            )}
         </div>
     );
 };

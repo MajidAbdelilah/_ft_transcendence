@@ -37,12 +37,13 @@ export default function GameInvitationHandler() {
         // Properly encode URL parameters - ensure same order as sender
         const params = new URLSearchParams({
           room_name: roomName,
-          player1: data.sender_username,  // sender is always player1
+          player1: data.sender_username,
+          player2: userData.username,  // sender is always player1
           map: data.map
         });
         
         // Create game URL with encoded parameters
-        const gameUrl = `/game/ping-pong?${params.toString()}`;
+        const gameUrl = `/Game/ping-pong?${params.toString()}`;
         console.log('🎮 Redirecting to:', gameUrl);
         
         // Send acceptance after preparing URL

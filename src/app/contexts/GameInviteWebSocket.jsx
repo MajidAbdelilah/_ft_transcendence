@@ -47,13 +47,13 @@ export function GameInviteWebSocketProvider({ children }) {
           // Properly encode URL parameters
           const params = new URLSearchParams({
             room_name: roomName,
-            // player1: data.player1,
+            // player1: data.player1, // sender is always player1
             player1: data.player2,
             map: data.map
           });
           
           // Create game URL with encoded parameters - use same format as GameInvitationHandler
-          const gameUrl = `/game/ping-pong?${params.toString()}`;
+          const gameUrl = `/Game/ping-pong?${params.toString()}`;
           console.log('🎮 Redirecting to:', gameUrl);
           
           // Use replace instead of push to avoid history stacking
