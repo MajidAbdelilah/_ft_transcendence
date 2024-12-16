@@ -1,6 +1,8 @@
 FROM node:18-bullseye
 WORKDIR /app
-COPY . /app/frontend/
+RUN mkdir frontend/
 WORKDIR /app/frontend
-RUN npm install
-CMD ["npm", "run", "dev"]
+COPY . .
+RUN chmod +x /app/frontend/run.sh
+ENTRYPOINT ["/app/frontend/run.sh"]
+# CMD ["npm", "run", "dev"]

@@ -22,6 +22,7 @@ services:
         - db
       ports:
         - 8000:8000
+        # - 443:443
       # env_file:
       #   - ./env/.env: 
       volumes:
@@ -36,6 +37,7 @@ services:
         - backend
       ports:
         - 3000:3000
+        - 443:443
       volumes:
         - ./env/.env:/app/.env
       networks:
