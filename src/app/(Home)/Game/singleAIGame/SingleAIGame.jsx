@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useRef, useState } from 'react';
-import styles from './SingleAIGame.module.css';
+import styles from '../ping-pong/PingPongGame.module.css';
 import { useRouter } from 'next/navigation';
 
 const SingleAIGame = ({ playerData }) => {
@@ -306,13 +306,16 @@ const SingleAIGame = ({ playerData }) => {
   }, []);
 
   return (
-    <div className={styles.container}>
-      <div className={styles.gameContainer}>
-        <h1>Game</h1>
-        <div className={styles.game}>
-          <canvas ref={canvasRef} className={styles.gameCanvas} />
+    <div className={styles.gameContainer}>
+      <canvas ref={canvasRef} className={styles.canvas}></canvas>
+      <div className={styles.scoreDisplay}>
+        <div className={styles.scoreContainer}>
+          <span className={styles.score}>{player1ScoreRef.current}</span>
+          <span className={styles.scoreSeparator}>:</span>
+          <span className={styles.score}>{player2ScoreRef.current}</span>
         </div>
       </div>
+      <div className={styles.gameMessage}>Welcome to Single AI Game!</div>
     </div>
   );
 };
