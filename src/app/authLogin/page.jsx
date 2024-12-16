@@ -23,11 +23,14 @@ function auth2faPage() {
   };
 
   useEffect(() => {
-    
-    sendCode()
 
+    const codeSentFlag = localStorage.getItem('codeSent');
 
-  }, [] );
+    if (!codeSentFlag) {
+      sendCode();
+      localStorage.setItem('codeSent', 'true');
+    }
+  }, []);
 
 
 

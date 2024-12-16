@@ -1,17 +1,20 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import Navbar from "./../Navbar";
 import Sidebar from "./../sidebar.tsx";
-import { UserProvider } from '../contexts/UserContext';
+import { UserProvider, useUser } from '../contexts/UserContext';
 import { WebSocketProvider } from '../contexts/WebSocketProvider';
 import { GameInviteWebSocketProvider } from '../contexts/GameInviteWebSocket';
 import { useRouter } from 'next/navigation';
 import DashProvider from './Dashboard/Dashcontext';
 import GameInvitationHandler from './Game/GameInvitationHandler';
 
-function RootLayout({ children }) {
+function RootLayoutContent({ children }) {
   const [isMobile, setIsMobile] = useState(false); 
+  const router = useRouter();
+  const { userData } = useUser();
+  const previousPathRef = useRef(null);
 
   useEffect(() => {
     const handleResize = () => {
@@ -25,32 +28,47 @@ function RootLayout({ children }) {
     };
   }, []);
 
+  const checkUserData = () => {
+    console.log("dkhaaaaal", userData);
+    if (userData && userData.is_2fa === true) {
+      if (userData.redirect_to === false) {
+        console.log("dkhaaaaal33333");
+        router.replace("/authLogin");
+      }
+    }
+  };
 
+  useEffect(() => {
+    if (router && router.pathname !== previousPathRef.current) {
+      console.log("dkhaaaaal22222");
+      checkUserData();
+    }
+    previousPathRef.current = router.pathname;
+  }, [router, router?.pathname]);
 
-  // useEffect(() => {
-  //  if(userData._2fa_enable == true){
-  //     if(userData.redirect_to == true)
-  //       router.replace("/Dashboard");
-  //     else
-  //       router.replace("/authLogin");
-  //  }
-  // }, []);
+ 
 
+  return (
+    <div className="flex flex-col h-screen">
+      <Navbar />
+      <GameInvitationHandler />
+      <div className="flex flex-1 overflow-y-auto flex-wrap">
+        <Sidebar />
+        <div className={`flex-1 flex flex-wrap items-center justify-center ${isMobile ? '' : 'ml-64'}`}>
+          {children}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function RootLayout({ children }) {
   return (
     <UserProvider>
       <WebSocketProvider>
         <GameInviteWebSocketProvider>
           <DashProvider>
-            <div className="flex flex-col h-screen">
-              <Navbar />
-              <GameInvitationHandler />
-              <div className="flex flex-1 overflow-y-auto flex-wrap">
-                <Sidebar />
-                <div className={`flex-1 flex flex-wrap items-center justify-center ${isMobile ? '' : 'ml-64'}`}>
-                  {children}
-                </div>
-              </div>
-            </div>
+            <RootLayoutContent>{children}</RootLayoutContent>
           </DashProvider>
         </GameInviteWebSocketProvider>
       </WebSocketProvider>
