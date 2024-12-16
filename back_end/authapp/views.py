@@ -52,6 +52,8 @@ class Logout_view(APIView):
         resp = Response()
         token = request.COOKIES.get('access_token')
         if token is not None :
+            user.redirect_to = False
+            user.save()
             resp.delete_cookie('access_token')
             resp.data = {
                 "data":None,

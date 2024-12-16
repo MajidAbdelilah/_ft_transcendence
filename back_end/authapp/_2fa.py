@@ -36,9 +36,8 @@ class CodeVerification(APIView):
         if user._2fa_code == request.data.get('code') and len(request.data.get('code')) == 6:
             if user.is_2fa == False :
                 user.is_2fa = True
-                user.save()
-            if user.redirect_to == False:
                 user.redirect_to = True
+                user.save()
             user._2fa_code = ""
             user.save()
             return Response({"message":"2fa is done"})
@@ -53,6 +52,7 @@ class _2fa_verification(APIView):
         user = request.user
         if user._2fa_code == request.data.get('code') and len(request.data.get('code')) == 6:
             user._2fa_code = ""
+            user.redirect_to = True
             user.save()
             userserializer = UserSerializer(user)
             return Response({"message":"2fa is done", "data": userserializer.data})
