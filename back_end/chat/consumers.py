@@ -1,6 +1,3 @@
-
-
-
 import json
 from asgiref.sync import async_to_sync
 from channels.generic.websocket import WebsocketConsumer
@@ -89,28 +86,7 @@ class ChatConsumer(WebsocketConsumer):
                 "chat_id": chat_id
             }
         )
-        notification = Notification.objects.create(
-            user=receiver_obj,
-            title = "New message !",
-            message = f"A new message from {send_obj.username}",
-            image_url=sender_obj.image_url,
-            link=f"/chat/{chat_id}",
-            is_chat_notif=True,
-            action_by = sender_obj.username,
-        )
-        async_to_sync(self.channel_layer.group_send)(
-                 f"user_{receiver_obj.id}",
-                 {
-                    "type": "send_notification",
-                    "message": message,
-                    "send": send,
-                    "receive": receive,
-                    "timestamp": timestamp,
-                    "chat_id": chat_id,
-                    "notif": notification.id,
-                 },
-             )
-    
+
     def chat_message(self, event):
         print(f"[CHAT MESSAGE] Broadcast received in channel: {self.channel_name}")
         print(f"[CHAT MESSAGE] Event details: {event}")

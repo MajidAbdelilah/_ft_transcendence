@@ -643,19 +643,19 @@ class FriendRequestConsumer(AsyncWebsocketConsumer):
                 'status': 'error',
                 'message': str(e)
             }))
-        async def friends_accept(self, event):
-            """
-            Handler for friends_accept messages from channel layer
-            """
-            print("Handling friends_accept message:", event)  # Debug log
-            await self.send(text_data=json.dumps({
-                'type': 'friends_accept',
-                'freindship_id': event['freindship_id'],
-                'user': event['user'],
-                'user_from': event['user_from'],
-                'user_to': event['user_to'],
-                'user_is_logged_in': event['user_is_logged_in']
-            }))
+    async def friends_accept(self, event):
+        """
+        Handler for friends_accept messages from channel layer
+        """
+        print("Handling friends_accept message:", event)  # Debug log
+        await self.send(text_data=json.dumps({
+            'type': 'friends_accept',
+            'freindship_id': event['freindship_id'],
+            'user': event['user'],
+            'user_from': event['user_from'],
+            'user_to': event['user_to'],
+            'user_is_logged_in': event['user_is_logged_in']
+        }))
 
     async def friend_rejected(self, event):
         """
