@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Ping Pong Tournament</title>
+</head>
+<body>
+    <div>
+        <label for="username">username</label>
+        <input type="text" id="username" placeholder="Enter username">
+        <label for="roomName">Room Name:</label>
+        <input type="text" id="roomName" placeholder="Enter room name">
+        <label for="tournamentRoomName">Tournament Room Name:</label>
+        <input type="text" id="tournamentRoomName" placeholder="Enter tournament room name">
+        <button onclick="initializeWebSocket()">Start Game</button>
+        </div>
+    <div id="tournamentList"></div>
+    <canvas id="gameCanvas"></canvas>
+
+    <script>
+        let socket;
+        let player = '';
+        let player2 = '';
+        let gameStarted = true;
+        let match = '';
+        let username = '';
+        let direction = null;
+
+        // Initialize WebSocket for PingPong game
+        function initializeWebSocket() {
+            username = document.getElementById('username').value;
+            const roomName = document.getElementById('roomName').value;
+            const tournamentRoomName = document.getElementById('tournamentRoomName').value;
+            const url = tournamentRoomName ? 
+                `ws://127.0.0.1:8000/ws/tournament/${roomName}/${tournamentRoomName}/` : 
+                `ws://127.0.0.1:8000/ws/tournament/${roomName}/`;
+
+            socket = new WebSocket(url);
+            
+            console.log('Username:', username);
+            console.log('Room Name:', roomName);
+            console.log('Tournament Room Name:', tournamentRoomName);
+            console.log("player", player);
+            socket.onopen = function() {
+                socket.send(JSON.stringify({
+                    'player': player,
+                    'direction': direction,
+                    'username': username,
+                    'gameStarted': gameStarted
+                }));
+            };
+            socket.onmessage = function(e) {
+                const data = JSON.parse(e.data);
+                // console.log('Players:', data.players);
+                if(data.type === 'BRACKET_UPDATE')
+                {
+                    console.log('Received:', data);
+                    return;
+                }
+                
+                if (data.is_tournament) {
+                    
+                    // Determine player's assigned role and match
+                    if (data.players.player1.username === username) {
+                        player = 'player1';
+                        match = data.players.player1.current_match;
+                    } else if (data.players.player2.username === username) {
+                        player = 'player2';
+                        match = data.players.player2.current_match;
+                    } else if (data.players.player3.username === username) {
+                        player = 'player3';
+                        match = data.players.player3.current_match;
+                    } else if (data.players.player4.username === username) {
+                        player = 'player4';
+                        match = data.players.player4.current_match;
+                    }
+                    if(match)
+                    {
+                        if (!data.matches[match]['game_start']) {
+                            console.log('Waiting for other player to be ready...');
+                            // Optionally, display a message on the canvas
+                            updateWaitingScreen();
+                            return;
+                        }
+                    }    
+
+                    // Find the opponent in the same match
+                    player2 = null;
+                    for (let p in data.players) {
+                        if (data.players[p].current_match === match && p !== player) {
+                            player2 = p;
+                            break;
+                        }
+                    }
+
+                    // Check if the current match has ended
+                    if(match)
+                    {
+                        if (data.matches[match]['winner'] && gameStarted) {
+                            console.log('Match ended');
+                            if (data.matches[match]['winner'] === username) {
+                                // alert('You won the match!');
+                            } else {
+                                // alert('You lost the match.');
+                                window.location.reload();
+                                socket.close();
+                            }
+                            init();
+                            return;
+                        }
+                    }
+                } else {
+                    // Non-tournament mode
+                    if (data.start_game === false) {
+                        //console.log('Game not started');
+                        // reload the page
+                        window.location.reload();
+                        socket.close();
+                        init();
+                        return;
+                    }
+                }
+
+                updateGame(data);
+            };
+
+            socket.onclose = function(e) {
+                console.log('WebSocket closed');
+            };
+        }
+        function updateWaitingScreen() {
+            const canvas = document.getElementById('gameCanvas');
+            const ctx = canvas.getContext('2d');
+            canvas.width = 800; // Replace with your canvas width
+            canvas.height = 600; // Replace with your canvas height
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.font = '28px Arial';
+            ctx.fillStyle = 'black';
+            ctx.textAlign = 'center';
+            ctx.fillText('Waiting for other player to be ready... press space to be ready', canvas.width / 2, canvas.height / 2);
+        }
+        // Update game state
+        function updateGame(data) {
+            const canvas = document.getElementById('gameCanvas');
+            const ctx = canvas.getContext('2d');
+            canvas.width = data.width;
+            canvas.height = data.height;
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            if (!gameStarted) {
+                // Display message to start the game
+                ctx.font = '30px Arial';
+                ctx.fillStyle = 'rgba(0, 0, 0, 0.5)';
+                ctx.fillText('Press Space to Start', canvas.width / 2 - 150, canvas.height / 2 + 50);
+                return;
+            }
+
+            if (data.is_tournament) {
+                // Draw players and ball for the tournament match
+               
+                
+                if (player) {
+                    ctx.font = '100px Arial';
+                    ctx.fillStyle = 'rgba(0, 0, 0, 0.5)';
+                    ctx.fillText(data.players[player]. score, (data.players[player].x < (canvas.width / 2)) ? data.players[player].x + 50 : data.players[player].x - 125 , canvas.height / 2 + 50);
+                    ctx.fillRect(data.players[player].x, data.players[player].y, data.players[player].width, data.players[player].height);
+                    // display username
+                    ctx.font = '30px Arial';
+                    ctx.fillText(data.players[player].username, (data.players[player].x < (canvas.width / 2)) ? data.players[player].x + 50 : data.players[player].x - 125, 50);
+                }
+                if (player2) {
+                    ctx.font = '100px Arial';
+                    ctx.fillStyle = 'rgba(0, 0, 0, 0.5)';
+                    ctx.fillText(data.players[player2].score, (data.players[player2].x < (canvas.width / 2)) ? data.players[player2].x + 50 : data.players[player2].x - 125, canvas.height / 2 + 50);
+                    ctx.fillRect(data.players[player2].x, data.players[player2].y, data.players[player2].width, data.players[player2].height);
+                    // display username
+                    ctx.font = '30px Arial';
+                    ctx.fillText(data.players[player2].username, (data.players[player2].x < (canvas.width / 2)) ? data.players[player2].x + 50 : data.players[player2].x - 125, 50);
+                }
+
+                // Draw the ball for the current match
+                let ball = null;
+                if (match === 'match1') {
+                    ball = data.matches['ball1'];
+                } else if (match === 'match2') {
+                    ball = data.matches['ball2'];
+                } else if (match === 'final') {
+                    ball = data.matches['ball_final'];
+                }
+
+                if (ball) {
+                    ctx.beginPath();
+                    ctx.arc(ball.x, ball.y, ball.radius, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+            } else {
+                // Draw players and ball for standard match
+                ctx.font = '100px Arial';
+                ctx.fillStyle = 'rgba(0, 0, 0, 0.5)';
+                ctx.fillText(data.players.player1.score, canvas.width / 2 - 150, canvas.height / 2 + 50);
+                ctx.fillText(data.players.player2.score, canvas.width / 2 + 50, canvas.height / 2 + 50);
+                ctx.font = '30px Arial';
+                ctx.fillStyle = 'rgba(0, 0, 0, 0.5)';
+                ctx.fillText(data.players.player1.username, canvas.width / 2 - 150, 50);
+                ctx.fillText(data.players.player2.username, canvas.width / 2 + 50, 50);
+                ctx.fillRect(data.players.player1.x, data.players.player1.y, data.players.player1.width, data.players.player1.height);
+                ctx.fillRect(data.players.player2.x, data.players.player2.y, data.players.player2.width, data.players.player2.height);
+                ctx.beginPath();
+                ctx.arc(data.ball.x, data.ball.y, data.ball.radius, 0, Math.PI * 2);
+                ctx.fill();
+            }
+        }
+        
+        // Handle key events to control paddles
+        document.addEventListener('keydown', function(event) {
+            let direction = null;
+            if(!socket || socket.readyState !== WebSocket.OPEN)
+            {
+                return;
+            }
+            if (!gameStarted && event.key === ' ') {
+                gameStarted = true;
+
+                // Notify the server that the player is ready
+                socket.send(JSON.stringify({
+                    'player': player,
+                    'direction': direction,
+                    'username': username,
+                    'gameStarted': gameStarted
+                }));
+            }
+
+            if (event.key === 'ArrowUp') {
+                direction = 'up';
+            } else if (event.key === 'ArrowDown') {
+                direction = 'down';
+            }
+
+            if (direction && gameStarted) {
+                socket.send(JSON.stringify({
+                    'player': player,
+                    'direction': direction,
+                    'username': username,
+                    'gameStarted': gameStarted
+                }));
+            }
+        });
+
+        document.addEventListener('keyup', function(event) {
+            console.log('Key up:', event.key);
+            if ((event.key === 'ArrowUp' || event.key === 'ArrowDown') && gameStarted) {
+                socket.send(JSON.stringify({
+                    'player': player,
+                    'direction': null,
+                    'username': username,
+                    'gameStarted': gameStarted
+                }));
+            }
+        });
+
+        // Reset variables on game end
+        function init() {
+            socket = null;
+            player = '';
+            player2 = '';
+            gameStarted = false;
+            match = '';
+        }
+    </script>
+</body>
+</html>
