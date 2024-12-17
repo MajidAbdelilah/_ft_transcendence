@@ -8,6 +8,10 @@ import { LuUserX } from "react-icons/lu";
 import axios from "axios";
 import { useRouter } from 'next/navigation';
 import toast, { Toaster } from 'react-hot-toast';
+import React, { useState, useEffect } from 'react';
+
+
+
 // import { DashContext } from "../../Dashboard/Dashcontext";
 // import { useContext } from "react";
 // -- colors -----------------------------------------------------co
@@ -106,8 +110,49 @@ function Part1({loggedInUser, user, isSelf}) {
   );
 }
 
+
+
+        
 function Part2({loggedInUser, user, isSelf}) {
+  const [xp, setXp] = useState(0);
+  const [level, setLevel] = useState(1);
+  // const [progress, setProgress] = useState(0);
   
+  const calculateLevel = (xp) => {
+    if(xp > 1900) return 20;
+    return Math.floor(xp / 100) + 1;
+  };
+
+  const calculateProgress = (level) => {
+
+    return (level / 20 ) * 100;  ; 
+  };
+
+  useEffect( () => {
+    const fetchXp = async () => {
+      try {
+        //fetching the user's xp should be here 
+        // const response = await axios.get(
+        //   `http://127.0.0.1:8002/game/matches/${user.username}`
+        // );
+
+
+        const fetchedXp = 200;
+        setXp(fetchedXp);
+        const userLevel = calculateLevel(fetchedXp);
+        setLevel(userLevel);
+
+        // const progressInLevel = (level / 20 ) * 100;  
+        // setProgress(progressInLevel);
+
+      } catch (error) {
+        console.error("Error fetching level:", error);
+      }
+    };
+    fetchXp();
+  }, []);
+
+  const progress = calculateProgress(level);
   return (
       <div className="part2 w-2/3 p-4 flex flex-col items-end ml-auto   ">
 
@@ -116,27 +161,28 @@ function Part2({loggedInUser, user, isSelf}) {
       className={`blockUser text-[#242F5C] text-3xl ${isSelf === true ? "invisible" : "visible"} cursor-pointer`} />
 
       <div className="level flex flex-col items-start w-full mb-4">
-        <span className=" text-[#242F5C] font-semibold text-xs ">Level {user.level}</span>
+        <span className=" text-[#242F5C] font-semibold text-xs ">Level {level}</span>
 
         
         <div className="relative w-full h-3 bg-gray-300 rounded-full mt-1 ">
           
           <div
-            className="absolute top-0 left-0 h-3 bg-[#8988DE] rounded-full "
-            style={{ width: `${user.level * 20}%` }} 
-          ></div>
+            className="absolute top-0 left-0 h-3 bg-[#8988DE] rounded-full  "
+            style={{ width: `${progress}%` }}
+            // style={{ width: '50%' }}
+          >  </div>
         </div>
 
         
         <div className="flex justify-between w-full mt-1 text-[#242F5C] text-xs ">
           <span >Next level</span>
-          <span >Level {user.level + 1}</span>
+          {level === 20 ? 'You reached the max level!' : `Level ${level + 1}`}
         </div>
 
 
       </div>
       <button className="gameStats bg-[#242F5C] p-1  px-2 text-[#F4F4FF] text-xs rounded-full font-semibold">
-          Level  {user.level}
+       Xp :  {xp}
       </button>
     </div>
   )
