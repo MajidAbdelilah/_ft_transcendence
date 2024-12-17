@@ -116,8 +116,12 @@ const PingPongGame = ({ roomName, player1, player2, player3, player4, map, isTou
                     console.log('Received bracket update:', data);
                     return;
                 }
+                if(!data.player1)
+                {
+                    return;
+                }
                 
-                if (data.is_tournament) {
+                if (isTournament) {
                     handleTournamentData(data);
                 } else {
                     handleNormalGameData(data);
@@ -244,7 +248,9 @@ const PingPongGame = ({ roomName, player1, player2, player3, player4, map, isTou
             return;
         }
 
-        if (data.is_tournament) {
+            console.log("------------------------------------", isTournament);
+        if (isTournament) {
+            
             drawTournamentGame(ctx, canvas, data);
         } else {
             drawNormalGame(ctx, canvas, data);

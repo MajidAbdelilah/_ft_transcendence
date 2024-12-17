@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from 'react';
 import styles from '../ping-pong/PingPongGame.module.css';
 import { useRouter } from 'next/navigation';
+import customAxios from '../../../customAxios';
 
 const SingleAIGame = ({ playerData }) => {
   const router = useRouter();
@@ -219,7 +220,7 @@ const SingleAIGame = ({ playerData }) => {
         sendMatchData(player1ScoreRef.current, player2ScoreRef.current, "Player1");
         setTimeout(() => {
           router.push('/Dashboard');
-        }, 1500);
+        }, 1700);
         return;
       }
       initGame();
@@ -269,9 +270,31 @@ const SingleAIGame = ({ playerData }) => {
     }
   };
 
-  const sendMatchData = (p1Score, p2Score, winner) => {
-    // Implement your match data sending logic here
-    console.log('Match data:', { player1: player1Name, p1Score, p2Score, winner });
+  const sendMatchData = (player1_score, player2_score, winner) => {
+    // Determine the actual winner based on username
+    let actualWinner;
+    if (winner === "Player1") {
+        actualWinner = playerData?.username;
+    } else {
+        actualWinner = "AI Bot";
+    }
+
+    const data = {
+        player1: playerData?.username,
+        player2: "AI Bot",
+        player1_score: player1_score,
+        player2_score: player2_score,
+        winner: actualWinner
+    };
+    console.log('Sending data:', data);
+    
+    customAxios.post('http://127.0.0.1:8000/game/matches/', data)
+        .then(response => {
+            console.log('Success:', response.data);
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
   };
 
   useEffect(() => {
@@ -321,13 +344,13 @@ const SingleAIGame = ({ playerData }) => {
   return (
     <div className={styles.gameContainer}>
       <canvas ref={canvasRef} className={styles.canvas}></canvas>
-      <div className={styles.scoreDisplay}>
+      {/* <div className={styles.scoreDisplay}>
         <div className={styles.scoreContainer}>
           <span className={styles.score}>{player1ScoreRef.current}</span>
           <span className={styles.scoreSeparator}>:</span>
           <span className={styles.score}>{player2ScoreRef.current}</span>
         </div>
-      </div>
+      </div> */}
       <div className={styles.gameMessage}>Welcome to Single AI Game!</div>
     </div>
   );

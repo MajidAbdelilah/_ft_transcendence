@@ -13,16 +13,30 @@ function MatchHistory() {
   const DashData = useContext(DashContext);
   const [matches, setMatches] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
-  const { userData} = useUser();
-  
+  const { userData } = useUser();
 
   useEffect(() => {
-    const fetchMatches = async () => {
+    const fetchAllMatches = async () => {
       try {
         setIsLoading(true);
-        const response = await axios.get(`http://127.0.0.1:8000/api/fetch_history/${userData.username}/`);
-        setMatches(response.data);
-        console.log(response.data);
+        
+        // Fetch from both APIs in parallel
+        const [normalMatchesResponse, aiMatchesResponse] = await Promise.all([
+          axios.get(`http://127.0.0.1:8000/game/fetch_history/${userData.username}/`),
+          axios.get(`http://127.0.0.1:8000/game/matches/${userData.username}/`)
+        ]);
+
+        // Combine both results
+        const normalMatches = normalMatchesResponse.data;
+        const aiMatches = aiMatchesResponse.data;
+
+        // Merge and sort by date (newest first)
+        const allMatches = [...normalMatches, ...aiMatches].sort((a, b) => 
+          new Date(b.date_time || b.date) - new Date(a.date_time || a.date)
+        );
+
+        setMatches(allMatches);
+        console.log("Combined Match History:", allMatches);
       } catch (error) {
         console.error('Error fetching match history:', error);
       } finally {
@@ -30,8 +44,8 @@ function MatchHistory() {
       }
     };
 
-    fetchMatches();
-  }, []);
+    fetchAllMatches();
+  }, [userData.username]);
 
   return (
     <div
@@ -58,27 +72,21 @@ function MatchHistory() {
                 {!DashData.isMobile ? (
                   <tr className="text-center font-semibold text-xs sm:text-sm md:text-base lg:text-lg text-[#4E5981]">
                     <th className="font-extrabold py-2 sm:py-3 md:py-4">
-                      Avatar
-                    </th>
-                    <th className="font-extrabold py-2 sm:py-3 md:py-4">
-                      Name
+                      Opponent
                     </th>
                     <th className="font-extrabold py-2 sm:py-3 md:py-4">
                       Score
                     </th>
                     <th className="font-extrabold py-2 sm:py-3 md:py-4">
-                      Win/Loss
+                      Winner
                     </th>
-                    <th className="font-extrabold py-2 sm:py-3 md:py-4">Map</th>
                     <th className="font-extrabold py-2 sm:py-3 md:py-4">Date</th>
                   </tr>
                 ) : (
                   <tr className="text-center font-semibold text-xs sm:text-sm md:text-base lg:text-lg text-[#4E5981]">
-                    <th className="font-extrabold py-2 sm:py-3 md:py-4">A</th>
-                    <th className="font-extrabold py-2 sm:py-3 md:py-4">N</th>
+                    <th className="font-extrabold py-2 sm:py-3 md:py-4">O</th>
                     <th className="font-extrabold py-2 sm:py-3 md:py-4">S</th>
-                    <th className="font-extrabold py-2 sm:py-3 md:py-4">W/L</th>
-                    <th className="font-extrabold py-2 sm:py-3 md:py-4">Map</th>
+                    <th className="font-extrabold py-2 sm:py-3 md:py-4">W</th>
                     <th className="font-extrabold py-2 sm:py-3 md:py-4">D</th>
                   </tr>
                 )}
@@ -112,23 +120,22 @@ function MatchHistory() {
                       key={index}
                       className="text-center font-semibold text-xs sm:text-sm md:text-base lg:text-lg text-[#4E5981]"
                     >
-                      <td className="flex items-center justify-center py-2 sm:py-3 md:py-4">
-                        <div className="w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 lg:w-[70px] lg:h-[70px] overflow-hidden rounded-full outline outline-2 outline-offset-2 outline-[#242F5C]">
-                          <Image
-                            src={match.avatarUrl || "/images/avatar1.webp"}
-                            alt="avatar"
-                            width={64}
-                            height={64}
-                            className="w-full h-full object-cover"
-                            priority
-                          />
-                        </div>
+                      <td className="font-normal py-2 sm:py-3 md:py-4">
+                        {match.player1 ? (match.player1 === userData.username ? match.player2 : match.player1) : (match.player1_username === userData.username ? match.player2_username : match.player1_username)}
                       </td>
-                      <td className="font-normal py-2 sm:py-3 md:py-4">{match.playerName}</td>
-                      <td className="font-normal py-2 sm:py-3 md:py-4">{match.score}</td>
-                      <td className="font-normal py-2 sm:py-3 md:py-4">{match.result}</td>
-                      <td className="font-normal py-2 sm:py-3 md:py-4">{match.map}</td>
-                      <td className="font-normal py-2 sm:py-3 md:py-4">{match.date}</td>
+                      <td className="font-normal py-2 sm:py-3 md:py-4">
+                        {match.player1 ? (match.player1 === userData.username ? match.player2_score : match.player1_score) : (match.player1_username === userData.username ? match.player2_score : match.player1_score)}
+                      </td>
+                      <td className="font-normal py-2 sm:py-3 md:py-4">
+                        {match.player1 ? (match.winner === "player1" ? match.player1 : match.player2) : (match.winner === "player1" ? match.player1_username : match.player2_username)}
+                        </td>
+                      <td className="font-normal py-2 sm:py-3 md:py-4">
+                        {new Date(match.date_time || match.date).toLocaleDateString('en-US', {
+                            year: 'numeric',
+                            month: '2-digit',
+                            day: '2-digit'
+                        })}
+                        </td>
                     </tr>
                   ))
                 )}
