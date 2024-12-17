@@ -22,7 +22,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/', include('authapp.urls')),
     path('oauth/', include('_42provider.urls')),
-    path('api/', include('double_game.urls')),
+    path('game/', include('double_game.urls')),
     path('chat/', include('chat.urls')),
     path('friend/', include('friend.urls')),
     path('game/', include('turn.urls')),
