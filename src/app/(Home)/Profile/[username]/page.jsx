@@ -224,7 +224,7 @@ export default function Profile() {
           {/* <LeaderBoard first={user3} second={user2} third={user3} /> */}
         </div>
         
-        {/* <MatchHistory /> */}
+        <MatchHistory />
       </div>
   );
 }
