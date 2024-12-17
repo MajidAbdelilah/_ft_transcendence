@@ -132,9 +132,13 @@ function Part2({loggedInUser, user, isSelf}) {
     const fetchXp = async () => {
       try {
         //fetching the user's xp should be here 
-        // const response = await axios.get(
-        //   `http://127.0.0.1:8002/game/matches/${user.username}`
-        // );
+        const response = await axios.get(
+          `http://127.0.0.1:8000/game/matches/${user.username}`
+        );
+
+        console.log("Response::::::::  ", response);
+
+
 
 
         const fetchedXp = 200;
