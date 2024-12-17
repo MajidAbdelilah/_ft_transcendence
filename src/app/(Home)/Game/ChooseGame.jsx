@@ -81,7 +81,7 @@ function MainComponent() {
         // Redirect to game when match is ready with 4 players
         const params = new URLSearchParams({
           'turn-room-name': bracketData.room_name,
-          player1: bracketData.player1,
+          player1: userData.username,
           player2: bracketData.player2,
           player3: bracketData.player3,
           player4: bracketData.player4,

@@ -11,8 +11,8 @@ const montserrat = Montserrat({
 const PingPongGame = ({ roomName, player1, player2, player3, player4, map, isTournament }) => {
     const router = useRouter();
     const [socket, setSocket] = useState(null);
-    const [playerRole, setPlayerRole] = useState(null);  // Will store 'player1', 'player2', etc.
-    const [player2State, setPlayer2State] = useState('');
+    const playerRoleRef = useRef(null);  // Will store 'player1', 'player2', etc.
+    const player2StateRef = useRef('');  // Will store 'player1', 'player2', etc.
     const [gameStarted, setGameStarted] = useState(true);
     const [match, setMatch] = useState('');
     const [myUsername, setMyUsername] = useState('');
@@ -22,20 +22,16 @@ const PingPongGame = ({ roomName, player1, player2, player3, player4, map, isTou
     const canvasRef = useRef(null);
     const wsRef = useRef(null);
     const cleanupRef = useRef(false);
+    const i_lost = useRef(false);
 
     // Effect to determine player role based on username
     useEffect(() => {
-        setMyUsername(player1);  // This player's username is always player1 prop
-
-        // Always set as player1 since this instance represents player1
-        setPlayerRole(null);
-
-        console.log('Player role determined:', {
-            myUsername: player1,
-            playerRole: 'player1',
-            allPlayers: { player1, player2, player3, player4 }
-        });
-    }, [player1]);
+        if (isTournament) {
+            setMyUsername(player1);  // Set my username from props for tournament
+        } else {
+            setMyUsername(player1);  // Normal game remains unchanged
+        }
+    }, [player1, isTournament]);
 
     const handleGameEnd = () => {
         console.log('Game ended, cleaning up...');
@@ -80,7 +76,8 @@ const PingPongGame = ({ roomName, player1, player2, player3, player4, map, isTou
             console.log('Initializing WebSocket with:', { 
                 url, 
                 username: myUsername,
-                playerRole: playerRole
+                playerRole: playerRoleRef.current,
+                isTournament
             });
 
             const ws = new WebSocket(url);
@@ -94,13 +91,13 @@ const PingPongGame = ({ roomName, player1, player2, player3, player4, map, isTou
                 }
 
                 console.log('WebSocket Connected. Sending initial data:', {
-                    playerRole: playerRole,
+                    playerRole: playerRoleRef.current,
                     username: myUsername,
                     gameStarted: gameStarted
                 });
 
                 ws.send(JSON.stringify({
-                    'player': playerRole,
+                    'player': playerRoleRef.current,
                     'direction': direction,
                     'username': myUsername,
                     'gameStarted': gameStarted
@@ -111,7 +108,10 @@ const PingPongGame = ({ roomName, player1, player2, player3, player4, map, isTou
                 if (isRedirecting) return;
                 
                 const data = JSON.parse(e.data);
-                
+                if(i_lost.current === true) {
+                    updateWaitingScreen();
+                    return;
+                }
                 if(data.type === 'BRACKET_UPDATE') {
                     console.log('Received bracket update:', data);
                     return;
@@ -149,31 +149,93 @@ const PingPongGame = ({ roomName, player1, player2, player3, player4, map, isTou
         connectWebSocket();
 
         // Cleanup function
-        return () => {
-            console.log('Cleaning up game WebSocket connection');
-            cleanupRef.current = true;  
-            if (wsRef.current) {
-                wsRef.current.close();
-                wsRef.current = null;
-            }
-        };
-    }, [roomName, myUsername, playerRole, isTournament, isRedirecting]);
+        // return () => {
+        //     console.log('Cleaning up game WebSocket connection');
+        //     cleanupRef.current = true;  
+        //     if (wsRef.current) {
+        //         wsRef.current.close();
+        //         wsRef.current = null;
+        //     }
+        // };
+    }, [roomName, myUsername, isTournament, isRedirecting]);
 
     const handleTournamentData = (data) => {
         let currentMatch = '';
+        console.log('Tournament data received:', {
+            myUsername,
+            players: data.players,
+            currentPlayerRole: playerRoleRef.current,
+            isTournament
+        });
 
-        // Find the current player's match based on their username
-        if (data.players.player1.username === myUsername) {
-            currentMatch = data.players.player1.current_match;
-        } else if (data.players.player2.username === myUsername) {
-            currentMatch = data.players.player2.current_match;
-        } else if (data.players.player3?.username === myUsername) {
-            currentMatch = data.players.player3.current_match;
-        } else if (data.players.player4?.username === myUsername) {
-            currentMatch = data.players.player4.current_match;
+        console.log('Checking username matches:', {
+            myUsername,
+            player1Username: data.players.player1.username,
+            player2Username: data.players.player2.username,
+            player3Username: data.players.player3?.username,
+            player4Username: data.players.player4?.username
+        });
+
+        // Find which player we are based on username
+        console.log('Starting player search for username:', myUsername);
+        let foundMatch = false;
+        for (const [role, player] of Object.entries(data.players)) {
+            console.log(`Checking role ${role}:`, {
+                playerUsername: player.username,
+                matches: player.username === myUsername
+            });
+            if (player.username === myUsername) {
+                foundMatch = true;
+                playerRoleRef.current = role;
+                currentMatch = player.current_match;
+                console.log('Found match!', {
+                    role,
+                    currentMatch,
+                    player
+                });
+
+                // Set opponent based on match
+                if (currentMatch === 'match1') {
+                    player2StateRef.current = role === 'player1' ? 'player2' : 'player1';
+                    console.log('Match1: Set opponent to', player2StateRef.current);
+                } else if (currentMatch === 'match2') {
+                    player2StateRef.current = role === 'player3' ? 'player4' : 'player3';
+                    console.log('Match2: Set opponent to', player2StateRef.current);
+                } else if (currentMatch === 'final') {
+                    console.log('Final match state:', {
+                        match1Winner: data.matches.match1.winner,
+                        match2Winner: data.matches.match2.winner,
+                        player3Username: data.players.player3.username,
+                        player4Username: data.players.player4.username
+                    });
+                    // In final, opponent is determined by previous match winners
+                    if (data.matches.match1.winner === myUsername) {
+                        player2StateRef.current = data.matches.match2.winner === data.players.player3.username ? 'player3' : 'player4';
+                    } else {
+                        player2StateRef.current = data.matches.match1.winner === data.players.player1.username ? 'player1' : 'player2';
+                    }
+                    console.log('Final: Set opponent to', player2StateRef.current);
+                } else {
+                    console.log('Warning: Unknown match type:', currentMatch);
+                }
+                break;
+            }
+        }
+
+        if (!foundMatch) {
+            console.error('No matching username found in players!', {
+                myUsername,
+                availablePlayers: data.players
+            });
         }
 
         setMatch(currentMatch);
+
+        console.log('Final state:', {
+            playerRole: playerRoleRef.current,
+            opponent: player2StateRef.current,
+            currentMatch
+        });
 
         if (currentMatch) {
             if (!data.matches[currentMatch]['game_start']) {
@@ -184,25 +246,20 @@ const PingPongGame = ({ roomName, player1, player2, player3, player4, map, isTou
 
             if (data.matches[currentMatch]['winner'] && gameStarted) {
                 console.log('Match ended');
+                
                 if (data.matches[currentMatch]['winner'] === myUsername) {
                     console.log('You won!');
-                } else {
+                    // handleGameEnd();
+                    i_lost.current = false;
+
+                } else if (data.matches[currentMatch]['winner'] && data.matches[currentMatch]['winner'] !== myUsername) {
                     console.log('You lost!');
+                    i_lost.current = true;
+                    // handleGameEnd();
                 }
-                handleGameEnd();
                 return;
             }
         }
-
-        // Find opponent in the same match
-        let opponent = null;
-        for (let p in data.players) {
-            if (data.players[p].current_match === currentMatch && data.players[p].username !== myUsername) {
-                opponent = p;
-                break;
-            }
-        }
-        setPlayer2State(opponent);
     };
 
     const handleNormalGameData = (data) => {
@@ -224,6 +281,7 @@ const PingPongGame = ({ roomName, player1, player2, player3, player4, map, isTou
         ctx.fillStyle = 'black';
         ctx.textAlign = 'center';
         ctx.fillText('Waiting for other player to be ready... press space to be ready', canvas.width / 2, canvas.height / 2);
+        ctx.fill();
     };
 
     const updateGame = (data) => {
@@ -246,7 +304,7 @@ const PingPongGame = ({ roomName, player1, player2, player3, player4, map, isTou
 
         if (data.is_tournament) {
             drawTournamentGame(ctx, canvas, data);
-        } else {
+        } else if(data.players && !data.players.player4){
             drawNormalGame(ctx, canvas, data);
         }
     };
@@ -306,7 +364,7 @@ const PingPongGame = ({ roomName, player1, player2, player3, player4, map, isTou
             ctx.strokeStyle = '#242F5C';  // Dark blue center line
             ctx.fillStyle = '#242F5C';    // Dark blue elements
         }
-        
+
         // Draw center line
         ctx.setLineDash([10, 10]);
         ctx.lineWidth = 2;
@@ -316,16 +374,50 @@ const PingPongGame = ({ roomName, player1, player2, player3, player4, map, isTou
         ctx.stroke();
         ctx.setLineDash([]);
 
-        if (playerRole) {
+        if (playerRoleRef.current) {
             // Draw player paddle
-            ctx.fillRect(data.players[playerRole].x, data.players[playerRole].y,
-                        data.players[playerRole].width, data.players[playerRole].height);
+            const player = data.players[playerRoleRef.current];
+            ctx.fillRect(player.x, player.y, player.width, player.height);
+
+            // Draw player score and username
+            ctx.font = '100px Arial';
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.5)';
+            ctx.fillText(
+                player.score,
+                (player.x < (canvas.width / 2)) ? player.x + 50 : player.x - 125,
+                canvas.height / 2 + 50
+            );
+            
+            // Display username
+            ctx.font = '30px Arial';
+            ctx.fillText(
+                player.username,
+                (player.x < (canvas.width / 2)) ? player.x + 50 : player.x - 125,
+                50
+            );
         }
 
-        if (player2State) {
+        if (player2StateRef.current) {
             // Draw opponent paddle
-            ctx.fillRect(data.players[player2State].x, data.players[player2State].y,
-                        data.players[player2State].width, data.players[player2State].height);
+            const opponent = data.players[player2StateRef.current];
+            ctx.fillRect(opponent.x, opponent.y, opponent.width, opponent.height);
+
+            // Draw opponent score and username
+            ctx.font = '100px Arial';
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.5)';
+            ctx.fillText(
+                opponent.score,
+                (opponent.x < (canvas.width / 2)) ? opponent.x + 50 : opponent.x - 125,
+                canvas.height / 2 + 50
+            );
+
+            // Display username
+            ctx.font = '30px Arial';
+            ctx.fillText(
+                opponent.username,
+                (opponent.x < (canvas.width / 2)) ? opponent.x + 50 : opponent.x - 125,
+                50
+            );
         }
 
         // Draw ball with shadow
@@ -352,8 +444,8 @@ const PingPongGame = ({ roomName, player1, player2, player3, player4, map, isTou
 
     const init = () => {
         setGameStarted(true);
-        setPlayerRole('');
-        setPlayer2State('');
+        playerRoleRef.current = '';
+        player2StateRef.current = '';
         setMatch('');
         setDirection(null);
     };
@@ -379,8 +471,9 @@ const PingPongGame = ({ roomName, player1, player2, player3, player4, map, isTou
 
             if (newDirection !== direction) {
                 setDirection(newDirection);
+                console.log("playerRef", playerRoleRef.current);
                 socket.send(JSON.stringify({
-                    'player': playerRole,
+                    'player': playerRoleRef.current,
                     'direction': newDirection,
                     'username': myUsername,
                     'gameStarted': gameStarted
@@ -394,7 +487,7 @@ const PingPongGame = ({ roomName, player1, player2, player3, player4, map, isTou
             if (event.key === 'ArrowUp' || event.key === 'ArrowDown') {
                 setDirection(null);
                 socket.send(JSON.stringify({
-                    'player': playerRole,
+                    'player': playerRoleRef.current,
                     'direction': null,
                     'username': myUsername,
                     'gameStarted': gameStarted
@@ -409,7 +502,7 @@ const PingPongGame = ({ roomName, player1, player2, player3, player4, map, isTou
             document.removeEventListener('keydown', handleKeyDown);
             document.removeEventListener('keyup', handleKeyUp);
         };
-    }, [socket, direction, playerRole, myUsername, gameStarted]);
+    }, [socket, direction, myUsername, gameStarted]);
 
     return (
         <div className={`${styles.gameContainer} ${montserrat.className}`}>
