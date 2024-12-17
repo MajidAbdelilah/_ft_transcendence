@@ -252,22 +252,29 @@ const PingPongGame = ({ roomName, player1, player2, player3, player4, map, isTou
     };
 
     const drawNormalGame = (ctx, canvas, data) => {
-        // Draw background
-        ctx.fillStyle = '#D8D8F7';
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        // Draw background based on map choice
+        if (map === 'Blue Map') {
+            ctx.fillStyle = '#242F5C';  // Dark blue background
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            ctx.strokeStyle = 'white';  // White center line
+            ctx.fillStyle = 'white';    // White elements
+        } else {
+            ctx.fillStyle = '#E1E1FF';  // Light purple background
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            ctx.strokeStyle = '#242F5C';  // Dark blue center line
+            ctx.fillStyle = '#242F5C';    // Dark blue elements
+        }
         
         // Draw center line
         ctx.setLineDash([10, 10]);
         ctx.lineWidth = 2;
-        ctx.strokeStyle = '#242F5C';
         ctx.beginPath();
         ctx.moveTo(canvas.width / 2, 0);
         ctx.lineTo(canvas.width / 2, canvas.height);
         ctx.stroke();
         ctx.setLineDash([]);
 
-        // Draw paddles
-        ctx.fillStyle = '#242F5C';
+        // Draw paddles (using current fillStyle)
         // Player 1 paddle
         ctx.fillRect(data.players.player1.x, data.players.player1.y, 
                     data.players.player1.width, data.players.player1.height);
@@ -276,24 +283,33 @@ const PingPongGame = ({ roomName, player1, player2, player3, player4, map, isTou
                     data.players.player2.width, data.players.player2.height);
 
         // Draw ball with shadow
-        ctx.shadowColor = 'rgba(36, 47, 92, 0.3)';
+        ctx.shadowColor = map === 'Blue Map' ? 
+            'rgba(255, 255, 255, 0.3)' : 
+            'rgba(36, 47, 92, 0.3)';
         ctx.shadowBlur = 10;
         ctx.beginPath();
         ctx.arc(data.ball.x, data.ball.y, data.ball.radius, 0, Math.PI * 2);
-        ctx.fillStyle = '#242F5C';
         ctx.fill();
         ctx.shadowBlur = 0;
     };
 
     const drawTournamentGame = (ctx, canvas, data) => {
-        // Draw background
-        ctx.fillStyle = '#D8D8F7';
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        // Draw background based on map choice
+        if (map === 'Blue Map') {
+            ctx.fillStyle = '#242F5C';  // Dark blue background
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            ctx.strokeStyle = 'white';  // White center line
+            ctx.fillStyle = 'white';    // White elements
+        } else {
+            ctx.fillStyle = '#E1E1FF';  // Light purple background
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            ctx.strokeStyle = '#242F5C';  // Dark blue center line
+            ctx.fillStyle = '#242F5C';    // Dark blue elements
+        }
         
         // Draw center line
         ctx.setLineDash([10, 10]);
         ctx.lineWidth = 2;
-        ctx.strokeStyle = '#242F5C';
         ctx.beginPath();
         ctx.moveTo(canvas.width / 2, 0);
         ctx.lineTo(canvas.width / 2, canvas.height);
@@ -302,14 +318,12 @@ const PingPongGame = ({ roomName, player1, player2, player3, player4, map, isTou
 
         if (playerRole) {
             // Draw player paddle
-            ctx.fillStyle = '#242F5C';
             ctx.fillRect(data.players[playerRole].x, data.players[playerRole].y,
                         data.players[playerRole].width, data.players[playerRole].height);
         }
 
         if (player2State) {
             // Draw opponent paddle
-            ctx.fillStyle = '#242F5C';
             ctx.fillRect(data.players[player2State].x, data.players[player2State].y,
                         data.players[player2State].width, data.players[player2State].height);
         }
@@ -325,11 +339,12 @@ const PingPongGame = ({ roomName, player1, player2, player3, player4, map, isTou
         }
 
         if (ball) {
-            ctx.shadowColor = 'rgba(36, 47, 92, 0.3)';
+            ctx.shadowColor = map === 'Blue Map' ? 
+                'rgba(255, 255, 255, 0.3)' : 
+                'rgba(36, 47, 92, 0.3)';
             ctx.shadowBlur = 10;
             ctx.beginPath();
             ctx.arc(ball.x, ball.y, ball.radius, 0, Math.PI * 2);
-            ctx.fillStyle = '#242F5C';
             ctx.fill();
             ctx.shadowBlur = 0;
         }

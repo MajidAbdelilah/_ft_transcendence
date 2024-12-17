@@ -12,6 +12,7 @@ const SingleAIGame = ({ playerData }) => {
   const player2ScoreRef = useRef(0);
   const requestRef = useRef();
   const keyStateRef = useRef({});
+
   const gameStateRef = useRef({
     player1Pos: { x: 0, y: 0 },
     player2Pos: { x: 0, y: 0 },
@@ -27,16 +28,31 @@ const SingleAIGame = ({ playerData }) => {
   // Game constants
   const CANVAS_DIM = { width: 1200, height: 800 };
   const PLAYERS_DIM = { width: 10, height: 100 };
-  const BALL_RADIUS = 5;
+  const BALL_RADIUS = 10;
   const PLAYER_SPEED = 10;
   const BALL_SPEED = { x: 5, y: 5 };
+
+
 
   const render = (ctx) => {
     const state = gameStateRef.current;
     
-    // Clear and set background
+    // Add console.log to debug
+
+    
+    // Clear and set background based on map preference
     ctx.clearRect(0, 0, CANVAS_DIM.width, CANVAS_DIM.height);
-    ctx.fillStyle = "black";
+    
+    // Check player data for map preference
+    if (playerData?.map === 'Blue Map') {
+        ctx.fillStyle = "#242F5C";  // Blue background
+        ctx.fillRect(0, 0, CANVAS_DIM.width, CANVAS_DIM.height);
+        ctx.fillStyle = "white";  // Set elements to white for blue background
+    } else {
+        ctx.fillStyle = "#E1E1FF";  // Light purple background for White Map
+        ctx.fillRect(0, 0, CANVAS_DIM.width, CANVAS_DIM.height);
+        ctx.fillStyle = "black";  // Keep elements black for white background
+    }
     
     // Draw center line
     ctx.setLineDash([5, 15]);
@@ -48,7 +64,6 @@ const SingleAIGame = ({ playerData }) => {
 
     // Set up text properties
     ctx.textAlign = "center";
-    ctx.fillStyle = "black";
     ctx.textBaseline = "middle";
     
     // Draw player names
@@ -59,12 +74,10 @@ const SingleAIGame = ({ playerData }) => {
     
     // Draw scores
     ctx.font = "bold 40px Arial";
-    ctx.fillStyle = "#000";
     ctx.fillText(player1ScoreRef.current.toString(), CANVAS_DIM.width / 4, 70);
     ctx.fillText(player2ScoreRef.current.toString(), (CANVAS_DIM.width / 4) * 3, 70);
     ctx.stroke();    
     // Draw paddles
-    ctx.fillStyle = "black";
     ctx.fillRect(
       state.player1Pos.x,
       state.player1Pos.y,
