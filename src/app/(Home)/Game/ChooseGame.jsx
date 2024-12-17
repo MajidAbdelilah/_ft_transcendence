@@ -80,14 +80,14 @@ function MainComponent() {
         console.log("fuck");
         // Redirect to game when match is ready with 4 players
         const params = new URLSearchParams({
-          room_name: bracketData.room_name,
+          'turn-room-name': bracketData.room_name,
           player1: bracketData.player1,
           player2: bracketData.player2,
           player3: bracketData.player3,
           player4: bracketData.player4,
           map: bracketData.map,
         });
-        const gameUrl = `/front/turn.html?${params.toString()}`;
+        const gameUrl = `/Game/ping-pong?${params.toString()}`;
         console.log('🎮 Redirecting to tournament game:', gameUrl);
         router.push(gameUrl);
       } else {
@@ -164,19 +164,12 @@ function MainComponent() {
     if (isMode === 'Friends' && selectedMap) {
       setShowFriendsPopup(true);
     } else if (isMode === 'Bot' && selectedMap) {
-      const gameData = {
-        type: 'bot_game_start',
-        data: {
-          map: selectedMap,
-          player: {
-            username: userData.username,
-            image: userData.image_field
-          }
-        }
-      };
-      console.log("Bot game data :",gameData);
-      send(gameData);
-      // router.push(`/Game/play?map=${selectedMap}&mode=bot`);
+      const username = userData?.username;
+      if (!username) {
+        toast.error('User data not available');
+        return;
+      }
+      router.push(`/Game/singleAIGame?map=${selectedMap}&username=${username}`);
     }
   };
 

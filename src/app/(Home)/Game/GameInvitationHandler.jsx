@@ -34,29 +34,29 @@ export default function GameInvitationHandler() {
         // Generate a unique room name using friendship_id
         const roomName = `game_${data.friendship_id}`;
         
-        // Properly encode URL parameters
+        // Properly encode URL parameters - ensure same order as sender
         const params = new URLSearchParams({
           room_name: roomName,
           player1: data.sender_username,
-          player2: userData.username,
+          player2: userData.username,  // sender is always player1
           map: data.map
         });
         
         // Create game URL with encoded parameters
-        const gameUrl = `/front/turn.html?${params.toString()}`;
+        const gameUrl = `/Game/ping-pong?${params.toString()}`;
         console.log('🎮 Redirecting to:', gameUrl);
         
         // Send acceptance after preparing URL
         send({
           type: 'accept_invitation',
-          player1: data.sender_username,
-          player2: userData.username,
+          player1: data.sender_username,  // sender is always player1
+          player2: userData.username,     // receiver is always player2
           map: data.map,
           friendship_id: data.friendship_id
         });
         
-        // Redirect receiver
-        router.push(gameUrl);
+        // Use replace instead of push to avoid history stacking
+        router.replace(gameUrl);
       } else {
         send({
           type: 'decline_invitation',

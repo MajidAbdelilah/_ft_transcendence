@@ -27,7 +27,7 @@ export function GameInviteWebSocketProvider({ children }) {
       const ws = new WebSocket('ws://127.0.0.1:8000/ws/game/invite/');
       
       ws.onopen = () => {
-        console.log('🎮 Game invitation WebSocket connected');
+        // console.log('🎮 Game invitation WebSocket connected');
       };
 
       ws.onmessage = (event) => {
@@ -47,17 +47,17 @@ export function GameInviteWebSocketProvider({ children }) {
           // Properly encode URL parameters
           const params = new URLSearchParams({
             room_name: roomName,
-            player1: data.player1,
-            player2: data.player2,
+            // player1: data.player1, // sender is always player1
+            player1: data.player2,
             map: data.map
           });
           
           // Create game URL with encoded parameters - use same format as GameInvitationHandler
-          const gameUrl = `/front/turn.html?${params.toString()}`;
+          const gameUrl = `/Game/ping-pong?${params.toString()}`;
           console.log('🎮 Redirecting to:', gameUrl);
           
-          // Redirect sender
-          router.push(gameUrl);
+          // Use replace instead of push to avoid history stacking
+          router.replace(gameUrl);
         }
       };
 
