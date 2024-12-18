@@ -367,7 +367,7 @@ class PingPongConsumer(AsyncWebsocketConsumer):
             num_players = sum(1 for player in self.room_var[self.room_name]['players'].values() if player.get('full'))
             if num_players == 4:
                 await self.send_gamestart()
-                print("turn_is_full: ", turn_is_full)
+                # print("turn_is_full: ", turn_is_full)
             self.send_bracket_update()
         
 
