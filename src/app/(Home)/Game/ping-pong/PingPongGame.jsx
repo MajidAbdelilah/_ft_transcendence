@@ -116,6 +116,11 @@ const PingPongGame = ({ roomName, player1, player2, player3, player4, map, isTou
                     console.log('Received bracket update:', data);
                     return;
                 }
+                if(data.type === 'gamestart') {
+                    console.log('Received gamestart:', data);
+                    return;
+                }
+                
                 
                 if (data.is_tournament) {
                     handleTournamentData(data);
@@ -193,7 +198,7 @@ const PingPongGame = ({ roomName, player1, player2, player3, player4, map, isTou
                     currentMatch,
                     player
                 });
-
+                print("role: ", role);
                 // Set opponent based on match
                 if (currentMatch === 'match1') {
                     player2StateRef.current = role === 'player1' ? 'player2' : 'player1';
@@ -202,26 +207,27 @@ const PingPongGame = ({ roomName, player1, player2, player3, player4, map, isTou
                     player2StateRef.current = role === 'player3' ? 'player4' : 'player3';
                     console.log('Match2: Set opponent to', player2StateRef.current);
                 } else if (currentMatch === 'final') {
-                    console.log('Final match state:', {
-                        match1Winner: data.matches.match1.winner,
-                        match2Winner: data.matches.match2.winner,
-                        player3Username: data.players.player3.username,
-                        player4Username: data.players.player4.username
-                    });
-                    // In final, opponent is determined by previous match winners
-                    if (data.matches.match1.winner === myUsername) {
-                        player2StateRef.current = data.matches.match2.winner === data.players.player3.username ? 'player3' : 'player4';
-                    } else {
-                        player2StateRef.current = data.matches.match1.winner === data.players.player1.username ? 'player1' : 'player2';
-                    }
+                    player2StateRef.current = role === 'player1' ? 'player2' : 'player1';
                     console.log('Final: Set opponent to', player2StateRef.current);
+
                 } else {
                     console.log('Warning: Unknown match type:', currentMatch);
+                }
+                if(data.matches[currentMatch].winner) {
+                    console.log('Match ended');
+                    if (data.matches[currentMatch].winner === myUsername) {
+                        console.log('You won!');
+                        i_lost.current = false;
+                    } else {
+                        console.log('You lost!');
+                        i_lost.current = true;
+                    }
+                    return;
                 }
                 break;
             }
         }
-
+        
         if (!foundMatch) {
             console.error('No matching username found in players!', {
                 myUsername,
@@ -255,6 +261,7 @@ const PingPongGame = ({ roomName, player1, player2, player3, player4, map, isTou
                 } else if (data.matches[currentMatch]['winner'] && data.matches[currentMatch]['winner'] !== myUsername) {
                     console.log('You lost!');
                     i_lost.current = true;
+                    // setGameStarted(false);
                     // handleGameEnd();
                 }
                 return;
@@ -419,14 +426,15 @@ const PingPongGame = ({ roomName, player1, player2, player3, player4, map, isTou
                 50
             );
         }
-
+        const currentMatch = data.players[playerRoleRef.current].current_match;
         // Draw ball with shadow
         let ball = null;
-        if (match === 'match1') {
+        console.log("match: ", match);
+        if (currentMatch === 'match1') {
             ball = data.matches['ball1'];
-        } else if (match === 'match2') {
+        } else if (currentMatch === 'match2') {
             ball = data.matches['ball2'];
-        } else if (match === 'final') {
+        } else if (currentMatch === 'final') {
             ball = data.matches['ball_final'];
         }
 
@@ -463,7 +471,7 @@ const PingPongGame = ({ roomName, player1, player2, player3, player4, map, isTou
                     newDirection = 'down';
                     break;
                 case ' ':
-                    if (!gameStarted) {
+                    if (!gameStarted && !i_lost.current) {
                         setGameStarted(true);
                     }
                     break;
