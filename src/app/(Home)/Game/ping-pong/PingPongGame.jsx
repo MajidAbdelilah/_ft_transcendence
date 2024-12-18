@@ -127,7 +127,14 @@ const PingPongGame = ({ roomName, player1, player2, player3, player4, map, isTou
                 } else {
                     handleNormalGameData(data);
                 }
-
+                const currentMatch = data.players[playerRoleRef.current].current_match;
+                if (currentMatch) {
+                    if (!data.matches[currentMatch]['game_start']) {
+                        console.log('Waiting for other player to be ready...');
+                        updateWaitingScreen();
+                        return;
+                    }
+                }
                 updateGame(data);
             };
 
@@ -198,37 +205,73 @@ const PingPongGame = ({ roomName, player1, player2, player3, player4, map, isTou
                     currentMatch,
                     player
                 });
-                print("role: ", role);
+                // print("role: ", role);
                 // Set opponent based on match
                 if (currentMatch === 'match1') {
                     player2StateRef.current = role === 'player1' ? 'player2' : 'player1';
                     console.log('Match1: Set opponent to', player2StateRef.current);
+                    if(data.matches[currentMatch].winner) {
+                        console.log('Match ended');
+                        if (data.matches[currentMatch].winner === playerRoleRef.current) {
+                            console.log('You won!');
+                            i_lost.current = false;
+                        } else if(data.matches[currentMatch].game_start === false) {
+                            console.log('You lost!');
+                            // i_lost.current = true;
+                            // setGameStarted(false);
+                            handleGameEnd();
+                            console.log('winner: ', data.matches[currentMatch].winner);
+
+                            return;
+                        }
+                    }
                 } else if (currentMatch === 'match2') {
                     player2StateRef.current = role === 'player3' ? 'player4' : 'player3';
                     console.log('Match2: Set opponent to', player2StateRef.current);
+                    if(data.matches[currentMatch].winner) {
+                        console.log('Match ended');
+                        if (data.matches[currentMatch].winner === playerRoleRef.current) {
+                            console.log('You won!');
+                            i_lost.current = false;
+                        } else  if (data.matches[currentMatch].game_start === false) {
+                            console.log('You lost!');
+                            // i_lost.current = true;
+                            // setGameStarted(false);
+                            // updateWaitingScreen();
+                            console.log('winner: ', data.matches[currentMatch].winner);
+                            handleGameEnd();
+                            return;
+                        }
+                    }
                 } else if (currentMatch === 'final') {
-                    player2StateRef.current = role === 'player1' ? 'player2' : 'player1';
+                    const match = (data.matches[currentMatch]) 
+                    if(match['p1_username'] === myUsername) {
+                        player2StateRef.current = match['player2'];
+                    } else if(match['p2_username'] === myUsername) {
+                        player2StateRef.current = match['player1'];
+                    }
                     console.log('Final: Set opponent to', player2StateRef.current);
-
                 } else {
                     console.log('Warning: Unknown match type:', currentMatch);
                 }
-                if(data.matches[currentMatch].winner) {
-                    console.log('Match ended');
-                    if (data.matches[currentMatch].winner === myUsername) {
-                        console.log('You won!');
-                        i_lost.current = false;
-                    } else {
-                        console.log('You lost!');
-                        i_lost.current = true;
-                    }
-                    return;
-                }
+                
+                // if(data.matches[currentMatch].winner) {
+                //     console.log('Match ended');
+                //     if (data.matches[currentMatch].winner === myUsername) {
+                //         console.log('You won!');
+                //         i_lost.current = false;
+                //     } else {
+                //         console.log('You lost!');
+                //         i_lost.current = true;
+                //     }
+                //     return;
+                // }
                 break;
             }
         }
         
         if (!foundMatch) {
+            handleGameEnd();
             console.error('No matching username found in players!', {
                 myUsername,
                 availablePlayers: data.players
@@ -243,30 +286,25 @@ const PingPongGame = ({ roomName, player1, player2, player3, player4, map, isTou
             currentMatch
         });
 
-        if (currentMatch) {
-            if (!data.matches[currentMatch]['game_start']) {
-                console.log('Waiting for other player to be ready...');
-                updateWaitingScreen();
-                return;
-            }
+       
 
-            if (data.matches[currentMatch]['winner'] && gameStarted) {
-                console.log('Match ended');
+            // if (data.matches[currentMatch]['winner'] && gameStarted) {
+            //     console.log('Match ended');
                 
-                if (data.matches[currentMatch]['winner'] === myUsername) {
-                    console.log('You won!');
-                    // handleGameEnd();
-                    i_lost.current = false;
+            //     // if (data.matches[currentMatch]['winner'] === myUsername) {
+            //     //     console.log('You won!');
+            //     //     // handleGameEnd();
+            //     //     i_lost.current = false;
 
-                } else if (data.matches[currentMatch]['winner'] && data.matches[currentMatch]['winner'] !== myUsername) {
-                    console.log('You lost!');
-                    i_lost.current = true;
-                    // setGameStarted(false);
-                    // handleGameEnd();
-                }
-                return;
-            }
-        }
+            //     // } else if (data.matches[currentMatch]['winner'] && data.matches[currentMatch]['winner'] !== myUsername) {
+            //     //     console.log('You lost!');
+            //     //     i_lost.current = true;
+            //     //     // setGameStarted(false);
+            //     //     // handleGameEnd();
+            //     // }
+            //     // return;
+            // }
+        
     };
 
     const handleNormalGameData = (data) => {
@@ -470,13 +508,14 @@ const PingPongGame = ({ roomName, player1, player2, player3, player4, map, isTou
                 case 'ArrowDown':
                     newDirection = 'down';
                     break;
-                case ' ':
-                    if (!gameStarted && !i_lost.current) {
-                        setGameStarted(true);
-                    }
-                    break;
+                // case ' ':
+                //     if (!gameStarted && !i_lost.current) {
+                //         setGameStarted(true);
+                //     }
+                //     break;
             }
 
+            
             if (newDirection !== direction) {
                 setDirection(newDirection);
                 console.log("playerRef", playerRoleRef.current);
