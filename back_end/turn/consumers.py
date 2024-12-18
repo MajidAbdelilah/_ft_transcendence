@@ -211,29 +211,29 @@ class PingPongConsumer(AsyncWebsocketConsumer):
         
         print("username: ", self.username)
         print("room_var: ", self.room_var)
-        
-        if(self.room_var[self.room_name]['is_tournament']):
-            for player_key, player_data in self.room_var[self.room_name]['players'].items():
-                print("here")
-                if(player_data['username'] == self.username):
-                    player_data['username'] = ''
-                    player_data['full'] = False
-                    player_data['direction'] = None
-                    player_data['game_start'] = False
-                    player_data['score'] = 0
-                    player_data['mapType'] = ''
-                    break
-            room_is_empty = True
-            for(player_key, player_data) in self.room_var[self.room_name]['players'].items():
-                if(player_data['full']):
-                    room_is_empty = False
-                    break
-            if(room_is_empty):
+        if self.room_name in self.room_var:
+            if(self.room_var[self.room_name]['is_tournament']):
+                for player_key, player_data in self.room_var[self.room_name]['players'].items():
+                    print("here")
+                    if(player_data['username'] == self.username):
+                        player_data['username'] = ''
+                        player_data['full'] = False
+                        player_data['direction'] = None
+                        player_data['game_start'] = False
+                        player_data['score'] = 0
+                        player_data['mapType'] = ''
+                        break
+                room_is_empty = True
+                for(player_key, player_data) in self.room_var[self.room_name]['players'].items():
+                    if(player_data['full']):
+                        room_is_empty = False
+                        break
+                if(room_is_empty):
+                    del self.room_var[self.room_name]
+                    print("Tournament room deleted")
+            elif(self.username in self.room_var[self.room_name]['players']):
                 del self.room_var[self.room_name]
-                print("Tournament room deleted")
-        elif(self.username in self.room_var[self.room_name]['players']):
-            del self.room_var[self.room_name]
-            print("Room deleted")
+                print("Room deleted")
         await self.delete_active_tournament()
 
 
