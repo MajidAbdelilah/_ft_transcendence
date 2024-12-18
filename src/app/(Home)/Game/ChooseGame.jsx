@@ -203,9 +203,11 @@ function MainComponent() {
                   <Image 
                     src="/images/WhiteMap.svg" 
                     alt="WhiteMap" 
-                    width={500} 
-                    height={500} 
-                    className="w-full max-w-[250px] md:max-w-[400px] lg:max-w-[500px] cursor-pointer transition-all duration-300 ease-in-out hover:scale-105"
+                    width={0}
+                    height={0}
+                    sizes="100vw"
+                    style={{ width: '100%', height: 'auto' }}
+                    className="max-w-[250px] md:max-w-[400px] lg:max-w-[500px] cursor-pointer transition-all duration-300 ease-in-out hover:scale-105"
                     priority
                     onClick={() => setSelectedMap('White Map')}
                   />
@@ -224,9 +226,11 @@ function MainComponent() {
                   <Image 
                     src="/images/BlueMap.svg" 
                     alt="BlueMap" 
-                    width={500} 
-                    height={500} 
-                    className="w-full max-w-[250px] md:max-w-[400px] lg:max-w-[500px] cursor-pointer transition-all duration-300 ease-in-out hover:scale-105"
+                    width={0}
+                    height={0}
+                    sizes="100vw"
+                    style={{ width: '100%', height: 'auto' }}
+                    className="max-w-[250px] md:max-w-[400px] lg:max-w-[500px] cursor-pointer transition-all duration-300 ease-in-out hover:scale-105"
                     priority
                     onClick={() => setSelectedMap('Blue Map')}
                   />

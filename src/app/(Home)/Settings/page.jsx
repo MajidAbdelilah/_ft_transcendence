@@ -53,7 +53,7 @@ function Settings() {
       >
         <div className="w-[70%] xl:w-[70%] lg:w-[70%]  md:w-[70%] h-full mt-2 md:mt-2 lg:mt-5 flex flex-col items-center space-y-16 relative">
           <div className="flex flex-row items-center justify-arround space-x-4">
-            <Image src="/images/settings.svg" alt="Settings" width={80} height={80} className="w-20 h-20 " />
+            <Image src="/images/settings.svg" alt="Settings" width={80} height={80} priority className="w-20 h-20 " />
             {isIcon ? ''
               :
               <h1 className="text-3xl lg:text-3xl xl:text-5xl md:text-3xl  font-extrabold content-center tracking-wide text-[#242F5C]">

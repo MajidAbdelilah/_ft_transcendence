@@ -1,5 +1,3 @@
-
-
 import Image from 'next/image';
 import React, { useState } from 'react';
 import { validate } from './validate'; 
@@ -171,7 +169,7 @@ export default function UpdateProfile({setIsProfile})
               value={formData.usernameSt}
               onChange={handleOnChange}
               name="usernameSt" 
-
+              autoComplete="username"
             />
             {errors.usernameSt && <p className="text-sm text-red-500">{errors.usernameSt}</p>}
 
@@ -185,6 +183,7 @@ export default function UpdateProfile({setIsProfile})
               value={formData.currentPasswordSt} 
               onChange={handleOnChange}
               name="currentPasswordSt"
+              autoComplete="current-password"
             />
             {errors.currentPasswordSt && <p className="text-sm text-red-500">{errors.currentPasswordSt}</p>}
 
@@ -198,6 +197,7 @@ export default function UpdateProfile({setIsProfile})
               value={formData.newPasswordSt}
               onChange={handleOnChange}
               name="newPasswordSt"
+              autoComplete="new-password"
             />
             {errors.newPasswordSt && <p className="text-sm text-red-500">{errors.newPasswordSt}</p>}
 
@@ -227,5 +227,3 @@ export default function UpdateProfile({setIsProfile})
     </div>
   </div>);
 }
-
-

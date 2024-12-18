@@ -6,6 +6,7 @@ interface WebSocketContextType {
     removeHandler: (handler: (data: any) => void) => void;
     send: (message: any) => void;
     isConnected: () => boolean;
+    disconnect: () => void;
 }
 
 const WebSocketContext = createContext<WebSocketContextType>({
@@ -13,6 +14,7 @@ const WebSocketContext = createContext<WebSocketContextType>({
     removeHandler: () => {},
     send: () => {},
     isConnected: () => false,
+    disconnect: () => {},
 });
 
 export function WebSocketProvider({ children }: { children: React.ReactNode }) {
@@ -32,6 +34,7 @@ export function WebSocketProvider({ children }: { children: React.ReactNode }) {
         removeHandler: websocketService.removeHandler,
         send: websocketService.send,
         isConnected: websocketService.isConnected,
+        disconnect: websocketService.disconnect,
     };
 
     return (

@@ -201,6 +201,7 @@ function Signup_page() {
               type="text"
               id="username"
               name="username"
+              autoComplete="username"
               value={formik.values.username}
               onChange={formik.handleChange}
               className={`${formik.errors.username && formik.touched.username ? 'border-red-500' : ''} bg-[#F8FBFF] border mb-[5px] text-gray-900 text-sm rounded-[10px] focus:ring-blue-500 focus:border-blue-500 block w-full p-3.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500`}
@@ -218,6 +219,7 @@ function Signup_page() {
               type="email"
               id="email"
               name="email"
+              autoComplete="email"
               value={formik.values.email}
               onChange={formik.handleChange}
               className={`${formik.errors.email && formik.touched.email ? 'border-red-500' : ''} bg-[#F8FBFF] border mt-[5px] text-gray-900 text-sm rounded-[10px] focus:ring-blue-500 focus:border-blue-500 block w-full p-3.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500`}
@@ -235,6 +237,7 @@ function Signup_page() {
               type="password"
               id="password"
               name="password"
+              autoComplete="new-password"
               value={formik.values.password}
               onChange={formik.handleChange}
               className={`${formik.errors.password && formik.touched.password ? 'border-red-500' : ''} bg-[#F8FBFF] border mt-[5px] text-gray-900 text-sm rounded-[10px] focus:ring-blue-500 mb-5 focus:border-blue-500 block w-full p-3.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500`}
@@ -253,6 +256,7 @@ function Signup_page() {
               type="password"
               id="confirmPassword"
               name="confirmPassword"
+              autoComplete="new-password"
               value={formik.values.confirmPassword}
               onChange={formik.handleChange}
               className={`${formik.errors.confirmPassword && formik.touched.confirmPassword ? 'border-red-500' : ''} bg-[#F8FBFF] border mt-[5px] text-gray-900 text-sm rounded-[10px] focus:ring-blue-500 mb-5 focus:border-blue-500 block w-full p-3.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500`}
