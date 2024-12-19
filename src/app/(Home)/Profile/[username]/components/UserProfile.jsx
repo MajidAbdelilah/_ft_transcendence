@@ -149,10 +149,10 @@ function Part2({loggedInUser, user, isSelf}) {
         }, 0);
         setXp(totalXp);
 
-        console.log("Total XP::::::::::::", totalXp);
+        // console.log("Total XP::::::::::::", totalXp);
 
 
-        const userLevel = calculateLevel(fetchedXp);
+        const userLevel = calculateLevel(totalXp);
         setLevel(userLevel);
 
         // const progressInLevel = (level / 20 ) * 100;  

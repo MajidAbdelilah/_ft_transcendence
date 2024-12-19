@@ -382,7 +382,7 @@ useEffect(() => {
   }
   
   if (loggedInUser === null) return (<div> Loading...</div>);
-
+  console.log("loggedInUser ========= ", loggedInUser);
   return (
 
         <WebSocketProvider>
@@ -402,7 +402,7 @@ useEffect(() => {
             >
               <div className="friendsBox  p-2 rounded-tl-xl rounded-bl-xl  border-r-2  border-[#C6C6E1]  flex-col flex-grow overflow-y-auto custom-scrollbar  h-4/5 lg:h-full ">
               
-                <ProfileInfo avatar={loggedInUser.avatar} name={loggedInUser.username} status={loggedInUser.status}/>
+                <ProfileInfo avatar={loggedInUser.avatar} name={loggedInUser.username} status={loggedInUser.id}/>
 
                 <ConversationsHeader />
 

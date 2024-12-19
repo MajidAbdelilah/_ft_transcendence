@@ -22,7 +22,8 @@ import { useGameInviteWebSocket } from '../../../contexts/GameInviteWebSocket';
           // />
 
 
-
+          // src={friend.user.image_field ? `http://127.0.0.1:8000/api${friend.user.image_field}`  : "/images/DefaultAvatar.svg"}
+                    
 import { useUser } from '../../../contexts/UserContext';
 
 export function HisProfile ({path, name, status}) {
@@ -41,7 +42,7 @@ export function HisProfile ({path, name, status}) {
             <img
               id="avatarButton"
               className=" rounded-full left-0 top-0 w-[60px] h-[60px] "
-              src={path ? path : "/images/Default_profile.png"}
+              src={path ? `http://127.0.0.1:8000/api${path}` : "/images/DefaultAvatar.svg"}
               alt="User dropdown"
               width={60}
               height={60}
@@ -104,10 +105,12 @@ export function PlayWithOption ({onClick}) {
     );
   }
 
+
   export function FriendChatInfo({ loggedInUser, friend, ...rest }) {
     
     const router = useRouter();
     const { send } = useGameInviteWebSocket();
+    // console.log("friend :::::::::: ", friend);
 
   
     return (
@@ -123,7 +126,7 @@ export function PlayWithOption ({onClick}) {
 
         {/* hisProfile -------------------------------------------------------------- */}
         {rest.selectedFriend !== null ? (
-          < HisProfile path={friend.profile_photo} name={friend.username} status={friend.is_online} />
+          < HisProfile path={friend.image_field} name={friend.username} status={friend.is_on} />
 
         ) : (
           < PleaseSelectAConversation/>
