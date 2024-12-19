@@ -142,14 +142,9 @@ const TournamentBracket = ({ tournamentData }) => {
       return null;
     }
 
-    const finalMatch = tournamentData.matches.final;
-    const winnerName = finalMatch.winner === 'player1' 
-      ? finalMatch.player1 
-      : finalMatch.winner === 'player2' 
-        ? finalMatch.player2 
-        : null;
+    if(tournamentData.matches.final.winner === userData.username)
+      return userData.username;
 
-    return winnerName === userData.username ? winnerName : null;
   }, [tournamentData?.matches?.final?.winner, userData?.username]);
 
   // Show popup only once when there's a winner
@@ -190,40 +185,7 @@ const TournamentBracket = ({ tournamentData }) => {
   // Helper function to check if a player is the winner
   const isPlayerWinner = (match, playerName) => {
     if (!match || !match.winner) return false;
-
-    // For finals with empty player strings, use the winner from semifinals
-    if (match.winner === "player1" && match.player1 === "") {
-      const semifinalsMatch1Winner = tournamentData?.matches?.semifinals?.match1?.winner;
-      if (semifinalsMatch1Winner === "player1") {
-        return playerName === tournamentData.matches.semifinals.match1.player1;
-      } else if (semifinalsMatch1Winner === "player2") {
-        return playerName === tournamentData.matches.semifinals.match1.player2;
-      }
-    }
-    if (match.winner === "player2" && match.player2 === "") {
-      const semifinalsMatch2Winner = tournamentData?.matches?.semifinals?.match2?.winner;
-      if (semifinalsMatch2Winner === "player1") {
-        return playerName === tournamentData.matches.semifinals.match2.player1;
-      } else if (semifinalsMatch2Winner === "player2") {
-        return playerName === tournamentData.matches.semifinals.match2.player2;
-      } else if (semifinalsMatch2Winner === "player3") {
-        return playerName === tournamentData.matches.semifinals.match2.player1;
-      }
-    }
-    
-    // Handle different winner formats
-    if (typeof match.winner === 'object') {
-      return match.winner.username === playerName?.username;
-    }
-    
-    // If winner is a player position reference
-    if (match.winner === "player1") return playerName === match.player1 || (typeof match.player1 === 'object' && match.player1?.username === playerName?.username);
-    if (match.winner === "player2") return playerName === match.player2 || (typeof match.player2 === 'object' && match.player2?.username === playerName?.username);
-    if (match.winner === "player3") {
-      // For semifinals match2, player3 indicates player1 won
-      return playerName === match.player1 || (typeof match.player1 === 'object' && match.player1?.username === playerName?.username);
-    }
-    
+    if(match.winner === playerName) return true;
     return false;
   };
 
