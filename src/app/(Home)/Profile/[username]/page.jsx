@@ -2,7 +2,7 @@
 
 
 
-import MatchHistory from "../../Dashboard/MatchHistory";
+import MatchHistory from "./CustomMatchHistory";
 import { DashContext } from "../../Dashboard/Dashcontext";
 import { useContext } from "react"; // Import DashProvider
 
@@ -224,7 +224,7 @@ export default function Profile() {
           {/* <LeaderBoard first={user3} second={user2} third={user3} /> */}
         </div>
         
-        <MatchHistory />
+        {userSearchedFor && <MatchHistory user={userSearchedFor} />}
       </div>
   );
 }
