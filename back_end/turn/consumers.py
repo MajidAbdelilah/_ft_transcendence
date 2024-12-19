@@ -58,20 +58,21 @@ class PingPongConsumer(AsyncWebsocketConsumer):
     async def update_bracket(self):
         matches = self.room_var[self.room_name]['matches']
         bracket = self.room_var[self.room_name]['bracket']
+        players = self.room_var[self.room_name]['players']
         if matches['match1']['winner']:
-            bracket['semifinals']['match1']['winner'] = matches['match1']['winner']
+            bracket['semifinals']['match1']['winner'] = players[matches['match1']['winner']]['username']
         if matches['match1']['p1_username']:
             bracket['semifinals']['match1']['player1'] = matches['match1']['p1_username']
         if matches['match1']['p2_username']:
             bracket['semifinals']['match1']['player2'] = matches['match1']['p2_username']
         if matches['match2']['winner']:
-            bracket['semifinals']['match2']['winner'] = matches['match2']['winner']
+            bracket['semifinals']['match2']['winner'] =  players[matches['match2']['winner']]['username']  
         if matches['match2']['p1_username']:
             bracket['semifinals']['match2']['player1'] = matches['match2']['p1_username']
         if matches['match2']['p2_username']:
             bracket['semifinals']['match2']['player2'] = matches['match2']['p2_username']
         if matches['final']['winner']:
-            bracket['final']['winner'] = matches['final']['winner']
+            bracket['final']['winner'] = players[matches['final']['winner']]['username']
         if matches['final']['p1_username']:
             bracket['final']['player1'] = matches['final']['p1_username']
         if matches['final']['p2_username']:
@@ -221,7 +222,7 @@ class PingPongConsumer(AsyncWebsocketConsumer):
                 await self.save_active_tournament()
                 await self.send_bracket_update()
                 asyncio.create_task(self.game_loop())
-            await self.send_bracket_update()
+            # await self.send_bracket_update()
 
     async def disconnect(self, close_code):
         await self.channel_layer.group_discard(
@@ -394,13 +395,13 @@ class PingPongConsumer(AsyncWebsocketConsumer):
             if num_players == 4:
                 await self.send_gamestart()
                 # print("turn_is_full: ", turn_is_full)
-            self.send_bracket_update()
+            # self.send_bracket_update()
         
 
 
     async def game_loop(self):
         while True:
-            try:
+            # try:
                 if self.room_name not in self.room_var:
                     print(f"Room {self.room_name} no longer exists")
                     break
@@ -438,7 +439,8 @@ class PingPongConsumer(AsyncWebsocketConsumer):
                     # Check if all matches have ended
                     if(self.room_var[self.room_name]['end_tournament']):
                         await self.disconnect(1000)
-                        del self.room_var[self.room_name]
+                        if(self.room_name in self.room_var):
+                            del self.room_var[self.room_name]
                         print("tournament room deleted")
                         break
                     else:
@@ -479,9 +481,9 @@ class PingPongConsumer(AsyncWebsocketConsumer):
                 # await self.send_bracket_update()
 
                 await asyncio.sleep(1/60)
-            except Exception as e:
-                print(f"Error in game loop: {e}")
-                break
+            # except Exception as e:
+            #     print(f"Error in game loop: {e}")
+            #     break
 
     async def game_update(self, event):
         if self.room_name not in self.room_var:
@@ -641,6 +643,7 @@ class PingPongConsumer(AsyncWebsocketConsumer):
             await self.end_match(player)
 
     async def end_tournament(self, winner):
+        await self.send_bracket_update()
         self.room_var[self.room_name]['players']['player1']['score'] = 0
         self.room_var[self.room_name]['players']['player2']['score'] = 0
         self.room_var[self.room_name]['players']['player3']['score'] = 0
@@ -687,7 +690,6 @@ class PingPongConsumer(AsyncWebsocketConsumer):
                     'is_tournament': self.room_var[self.room_name]['is_tournament']
                 }
             )
-        await self.send_bracket_update()
         await self.delete_active_tournament()
         print("Tournament ended")
         
@@ -715,6 +717,7 @@ class PingPongConsumer(AsyncWebsocketConsumer):
             self.room_var[self.room_name]['matches']['final']['p1_score'] = players[matches['final']['player1']]['score']
             self.room_var[self.room_name]['matches']['final']['p2_score'] = players[matches['final']['player2']]['score']
         
+
         match = self.room_var[self.room_name]['matches'][current_match];
         print(match, current_match, winner)
         await self.save_match_data(players[match['player1']]['username'], 
