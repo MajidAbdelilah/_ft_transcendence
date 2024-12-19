@@ -84,7 +84,7 @@ export async function blockService(friend) {
         
         if (respond.status === 200 && respond.data?.success) {
             toast.success(respond.data.success); 
-            setTimeout(() => {window.location.reload();}, 800);
+            setTimeout(() => {window.location.reload();}, 2000);
 
         } else {
             toast.error('Blocking user failed'); 

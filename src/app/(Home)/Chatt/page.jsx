@@ -352,10 +352,11 @@ useEffect(() => {
             [...conversation]
               .reverse()
               .map((message, index) =>
-                message.sender === friend.user.username ? (
-                  <FriendMsgBox key={index} time={message.message_date} msg={message.message_content} />
-                ) : (
+                message.receiver === friend.user.username ? (
                   <MyMsgBox key={index} time={message.message_date} msg={message.message_content} />
+                ) : (
+                  <FriendMsgBox key={index} time={message.message_date} msg={message.message_content} />
+                  
                 )
               )
           ) : (
@@ -382,7 +383,7 @@ useEffect(() => {
   }
   
   if (loggedInUser === null) return (<div> Loading...</div>);
-  console.log("loggedInUser ========= ", loggedInUser);
+  // console.log("loggedInUser ========= ", loggedInUser);
   return (
 
         <WebSocketProvider>
