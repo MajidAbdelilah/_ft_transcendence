@@ -37,7 +37,7 @@ function MatchHistory({user}) {
         );
 
         setMatches(allMatches);
-        console.log("Combined Match History:", allMatches);
+        // console.log("Combined Match History:", allMatches);
       } catch (error) {
         console.error('Error fetching match history:', error);
       } finally {

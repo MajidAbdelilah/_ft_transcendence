@@ -131,18 +131,27 @@ function Part2({loggedInUser, user, isSelf}) {
   useEffect( () => {
     const fetchXp = async () => {
       try {
-        //fetching the user's xp should be here 
-        const response = await axios.get(
-          `http://127.0.0.1:8000/game/matches/${user.username}`
-        );
+        const [normalMatchesResponse, aiMatchesResponse] = await Promise.all([
+          axios.get(`http://127.0.0.1:8000/game/fetch_history/${user.username}/`),
+          axios.get(`http://127.0.0.1:8000/game/matches/${user.username}/`)
+        ]);
 
-        console.log("Response::::::::  ", response);
+        const normalMatches = normalMatchesResponse.data || [];
+        const aiMatches = aiMatchesResponse.data || [];
+        const allMatches = [...normalMatches, ...aiMatches];
+  
+        // console.log("======:", allMatches);
+        const totalXp = allMatches.reduce((acc, match) => {
+          if (match.winner === user.username) {
+            return acc + 50; 
+          }
+          return acc + 15; 
+        }, 0);
+        setXp(totalXp);
+
+        console.log("Total XP::::::::::::", totalXp);
 
 
-
-
-        const fetchedXp = 200;
-        setXp(fetchedXp);
         const userLevel = calculateLevel(fetchedXp);
         setLevel(userLevel);
 

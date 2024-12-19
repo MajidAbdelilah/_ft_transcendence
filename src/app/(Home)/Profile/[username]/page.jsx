@@ -205,6 +205,7 @@ export default function Profile() {
           <h1 className="text-3xl font-extrabold text-[#242F5C] mb-4">Oops!</h1>
           <p className="text-lg text-[#242F5C] mb-6">
             We couldn't find the user you're looking for. Please double-check the username or try again.
+            
           </p>
         </div>
     );
