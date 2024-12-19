@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import styles from './PingPongGame.module.css';
 import { Montserrat } from 'next/font/google';
 
@@ -23,6 +23,7 @@ const PingPongGame = ({ roomName, player1, player2, player3, player4, map, isTou
     const wsRef = useRef(null);
     const cleanupRef = useRef(false);
     const i_lost = useRef(false);
+    const searchParams = useSearchParams();
 
     // Effect to determine player role based on username
     useEffect(() => {
@@ -34,26 +35,10 @@ const PingPongGame = ({ roomName, player1, player2, player3, player4, map, isTou
     }, [player1, isTournament]);
 
     const handleGameEnd = () => {
-        console.log('Game ended, cleaning up...');
+        console.log('Game ended, redirecting...');
         setIsRedirecting(true);
-        setGameStarted(false);  
-        cleanupRef.current = true;  
-        
-        // Close WebSocket if it's open
-        if (wsRef.current) {
-            try {
-                wsRef.current.close(1000, 'Game ended');  
-                console.log('WebSocket closed successfully');
-            } catch (error) {
-                console.error('Error closing WebSocket:', error);
-            }
-            wsRef.current = null;
-            setSocket(null);  
-        }
-        
-        // Redirect after a short delay
         setTimeout(() => {
-            router.replace('/Dashboard');
+            router.push(`/Game?showTournament=true&tournamentRoom=${roomName}`);
         }, 500);
     };
 
@@ -113,11 +98,11 @@ const PingPongGame = ({ roomName, player1, player2, player3, player4, map, isTou
                     return;
                 }
                 if(data.type === 'BRACKET_UPDATE') {
-                    console.log('Received bracket update:', data);
+                    // console.log('Received bracket update:', data);
                     return;
                 }
                 if(data.type === 'gamestart') {
-                    console.log('Received gamestart:', data);
+                    // console.log('Received gamestart:', data);
                     return;
                 }
                 
@@ -130,7 +115,7 @@ const PingPongGame = ({ roomName, player1, player2, player3, player4, map, isTou
                 const currentMatch = data.players[playerRoleRef.current].current_match;
                 if (currentMatch) {
                     if (!data.matches[currentMatch]['game_start']) {
-                        console.log('Waiting for other player to be ready...');
+                        // console.log('Waiting for other player to be ready...');
                         updateWaitingScreen();
                         return;
                     }
@@ -173,72 +158,72 @@ const PingPongGame = ({ roomName, player1, player2, player3, player4, map, isTou
 
     const handleTournamentData = (data) => {
         let currentMatch = '';
-        console.log('Tournament data received:', {
-            myUsername,
-            players: data.players,
-            currentPlayerRole: playerRoleRef.current,
-            isTournament
-        });
+        // console.log('Tournament data received:', {
+        //     myUsername,
+        //     players: data.players,
+        //     currentPlayerRole: playerRoleRef.current,
+        //     isTournament
+        // });
 
-        console.log('Checking username matches:', {
-            myUsername,
-            player1Username: data.players.player1.username,
-            player2Username: data.players.player2.username,
-            player3Username: data.players.player3?.username,
-            player4Username: data.players.player4?.username
-        });
+        // console.log('Checking username matches:', {
+        //     myUsername,
+        //     player1Username: data.players.player1.username,
+        //     player2Username: data.players.player2.username,
+        //     player3Username: data.players.player3?.username,
+        //     player4Username: data.players.player4?.username
+        // });
 
         // Find which player we are based on username
-        console.log('Starting player search for username:', myUsername);
+        // console.log('Starting player search for username:', myUsername);
         let foundMatch = false;
         for (const [role, player] of Object.entries(data.players)) {
-            console.log(`Checking role ${role}:`, {
-                playerUsername: player.username,
-                matches: player.username === myUsername
-            });
+            // console.log(`Checking role ${role}:`, {
+            //     playerUsername: player.username,
+            //     matches: player.username === myUsername
+            // });
             if (player.username === myUsername) {
                 foundMatch = true;
                 playerRoleRef.current = role;
                 currentMatch = player.current_match;
-                console.log('Found match!', {
-                    role,
-                    currentMatch,
-                    player
-                });
+                // console.log('Found match!', {
+                //     role,
+                //     currentMatch,
+                //     player
+                // });
                 // print("role: ", role);
                 // Set opponent based on match
                 if (currentMatch === 'match1') {
                     player2StateRef.current = role === 'player1' ? 'player2' : 'player1';
-                    console.log('Match1: Set opponent to', player2StateRef.current);
+                    // console.log('Match1: Set opponent to', player2StateRef.current);
                     if(data.matches[currentMatch].winner) {
-                        console.log('Match ended');
+                        // console.log('Match ended');
                         if (data.matches[currentMatch].winner === playerRoleRef.current) {
-                            console.log('You won!');
+                            // console.log('You won!');
                             i_lost.current = false;
-                        } else if(data.matches[currentMatch].game_start === false) {
-                            console.log('You lost!');
+                        } else if (data.matches[currentMatch].game_start === false) {
+                            // console.log('You lost!');
                             // i_lost.current = true;
                             // setGameStarted(false);
                             handleGameEnd();
-                            console.log('winner: ', data.matches[currentMatch].winner);
+                            // console.log('winner: ', data.matches[currentMatch].winner);
 
                             return;
                         }
                     }
                 } else if (currentMatch === 'match2') {
                     player2StateRef.current = role === 'player3' ? 'player4' : 'player3';
-                    console.log('Match2: Set opponent to', player2StateRef.current);
+                    // console.log('Match2: Set opponent to', player2StateRef.current);
                     if(data.matches[currentMatch].winner) {
-                        console.log('Match ended');
+                        // console.log('Match ended');
                         if (data.matches[currentMatch].winner === playerRoleRef.current) {
-                            console.log('You won!');
+                            // console.log('You won!');
                             i_lost.current = false;
                         } else  if (data.matches[currentMatch].game_start === false) {
-                            console.log('You lost!');
+                            // console.log('You lost!');
                             // i_lost.current = true;
                             // setGameStarted(false);
                             // updateWaitingScreen();
-                            console.log('winner: ', data.matches[currentMatch].winner);
+                            // console.log('winner: ', data.matches[currentMatch].winner);
                             handleGameEnd();
                             return;
                         }
@@ -250,9 +235,9 @@ const PingPongGame = ({ roomName, player1, player2, player3, player4, map, isTou
                     } else if(match['p2_username'] === myUsername) {
                         player2StateRef.current = match['player1'];
                     }
-                    console.log('Final: Set opponent to', player2StateRef.current);
+                    // console.log('Final: Set opponent to', player2StateRef.current);
                 } else {
-                    console.log('Warning: Unknown match type:', currentMatch);
+                    // console.log('Warning: Unknown match type:', currentMatch);
                 }
                 
                 // if(data.matches[currentMatch].winner) {
@@ -272,10 +257,10 @@ const PingPongGame = ({ roomName, player1, player2, player3, player4, map, isTou
         
         if (!foundMatch) {
             handleGameEnd();
-            console.error('No matching username found in players!', {
-                myUsername,
-                availablePlayers: data.players
-            });
+            // console.error('No matching username found in players!', {
+            //     myUsername,
+            //     availablePlayers: data.players
+            // });
         }
 
         setMatch(currentMatch);
@@ -467,7 +452,8 @@ const PingPongGame = ({ roomName, player1, player2, player3, player4, map, isTou
         const currentMatch = data.players[playerRoleRef.current].current_match;
         // Draw ball with shadow
         let ball = null;
-        console.log("match: ", match);
+        // console.log("match: ", match);
+
         if (currentMatch === 'match1') {
             ball = data.matches['ball1'];
         } else if (currentMatch === 'match2') {
@@ -518,7 +504,7 @@ const PingPongGame = ({ roomName, player1, player2, player3, player4, map, isTou
             
             if (newDirection !== direction) {
                 setDirection(newDirection);
-                console.log("playerRef", playerRoleRef.current);
+                // console.log("playerRef", playerRoleRef.current);
                 socket.send(JSON.stringify({
                     'player': playerRoleRef.current,
                     'direction': newDirection,
