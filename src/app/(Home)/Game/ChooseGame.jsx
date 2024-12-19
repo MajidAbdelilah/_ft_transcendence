@@ -103,11 +103,11 @@ function MainComponent() {
       return;
     }
 
-    console.log('🎮 Fetching tournament data for tournament ID:', tournamentId);
+    // console.log('🎮 Fetching tournament data for tournament ID:', tournamentId);
 
     const setupListener = async () => {
       const cleanup = await gameService.setupBracketListener(tournamentId, (bracketData) => {
-        console.log('Raw bracket data received:', bracketData);
+        // console.log('Raw bracket data received:', bracketData);
         
         if (bracketData.type === 'gamestart') {
           const params = new URLSearchParams({
@@ -122,7 +122,7 @@ function MainComponent() {
           console.log('🎮 Redirecting to tournament game:', gameUrl);
           router.push(gameUrl);
         } else if (bracketData.type === 'BRACKET_UPDATE') {
-          console.log('Updating tournament data:', bracketData);
+          // console.log('Updating tournament data:', bracketData);
           setTournamentData(bracketData);
         }
       });

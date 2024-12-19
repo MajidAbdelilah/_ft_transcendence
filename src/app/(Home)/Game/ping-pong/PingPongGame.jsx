@@ -15,7 +15,7 @@ const PingPongGame = ({ roomName, player1, player2, player3, player4, map, isTou
     const player2StateRef = useRef('');  // Will store 'player1', 'player2', etc.
     const [gameStarted, setGameStarted] = useState(true);
     const [match, setMatch] = useState('');
-    const [myUsername, setMyUsername] = useState('');
+    const [myUsername, setMyUsername] = useState(player1 || '');  // Initialize with player1
     const [direction, setDirection] = useState(null);
     const [isRedirecting, setIsRedirecting] = useState(false);
     const [gameData, setGameData] = useState({ players: { player1: { score: 0 }, player2: { score: 0 } } });
@@ -25,21 +25,24 @@ const PingPongGame = ({ roomName, player1, player2, player3, player4, map, isTou
     const i_lost = useRef(false);
     const searchParams = useSearchParams();
 
-    // Effect to determine player role based on username
+    // Effect to update username if player1 prop changes
     useEffect(() => {
-        if (isTournament) {
-            setMyUsername(player1);  // Set my username from props for tournament
-        } else {
-            setMyUsername(player1);  // Normal game remains unchanged
+        if (player1 && myUsername !== player1) {
+            setMyUsername(player1);
         }
-    }, [player1, isTournament]);
+    }, [player1, myUsername]);
 
     const handleGameEnd = () => {
-        console.log('Game ended, redirecting...');
+        if (isRedirecting) return;
         setIsRedirecting(true);
-        setTimeout(() => {
-            router.push(`/Game?showTournament=true&tournamentRoom=${roomName}`);
-        }, 500);
+        
+        // Use requestAnimationFrame to ensure we're not updating state too quickly
+        requestAnimationFrame(() => {
+            if (!cleanupRef.current) {
+                // Use replace instead of push to avoid history stack issues
+                router.replace(`/Game?showTournament=true&tournamentRoom=${roomName}`);
+            }
+        });
     };
 
     // Separate effect for WebSocket connection
@@ -265,11 +268,11 @@ const PingPongGame = ({ roomName, player1, player2, player3, player4, map, isTou
 
         setMatch(currentMatch);
 
-        console.log('Final state:', {
-            playerRole: playerRoleRef.current,
-            opponent: player2StateRef.current,
-            currentMatch
-        });
+        // console.log('Final state:', {
+        //     playerRole: playerRoleRef.current,
+        //     opponent: player2StateRef.current,
+        //     currentMatch
+        // });
 
        
 
