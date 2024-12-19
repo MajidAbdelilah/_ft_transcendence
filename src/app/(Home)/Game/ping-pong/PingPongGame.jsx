@@ -44,7 +44,16 @@ const PingPongGame = ({ roomName, player1, player2, player3, player4, map, isTou
             }
         });
     };
-
+    const handleGameEnd_normal = () => {
+        if (isRedirecting) return;
+        setIsRedirecting(true);
+        requestAnimationFrame(() => {
+            if (!cleanupRef.current) {
+                router.push(`/Game`);
+            }
+        }
+        );
+    };
     // Separate effect for WebSocket connection
     useEffect(() => {
         if (!roomName || !myUsername || isRedirecting || cleanupRef.current) {
@@ -101,7 +110,7 @@ const PingPongGame = ({ roomName, player1, player2, player3, player4, map, isTou
                     return;
                 }
                 if(data.type === 'BRACKET_UPDATE') {
-                    // console.log('Received bracket update:', data);
+                    console.log('Received bracket update:', data);
                     return;
                 }
                 if(data.type === 'gamestart') {
@@ -115,14 +124,7 @@ const PingPongGame = ({ roomName, player1, player2, player3, player4, map, isTou
                 } else {
                     handleNormalGameData(data);
                 }
-                const currentMatch = data.players[playerRoleRef.current].current_match;
-                if (currentMatch) {
-                    if (!data.matches[currentMatch]['game_start']) {
-                        // console.log('Waiting for other player to be ready...');
-                        updateWaitingScreen();
-                        return;
-                    }
-                }
+                
                 updateGame(data);
             };
 
@@ -298,7 +300,7 @@ const PingPongGame = ({ roomName, player1, player2, player3, player4, map, isTou
     const handleNormalGameData = (data) => {
         if (data.start_game === false) {
             console.log('Game ended');
-            handleGameEnd();
+            handleGameEnd_normal();
         }
     };
 

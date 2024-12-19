@@ -122,7 +122,7 @@ function MainComponent() {
           console.log('🎮 Redirecting to tournament game:', gameUrl);
           router.push(gameUrl);
         } else if (bracketData.type === 'BRACKET_UPDATE') {
-          // console.log('Updating tournament data:', bracketData);
+          console.log('Updating tournament data:', bracketData);
           setTournamentData(bracketData);
         }
       });
