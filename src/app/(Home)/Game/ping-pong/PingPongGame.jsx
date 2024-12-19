@@ -379,11 +379,35 @@ const PingPongGame = ({ roomName, player1, player2, player3, player4, map, isTou
         ctx.shadowColor = map === 'Blue Map' ? 
             'rgba(255, 255, 255, 0.3)' : 
             'rgba(36, 47, 92, 0.3)';
-        ctx.shadowBlur = 10;
+        // ctx.shadowBlur = 10;
         ctx.beginPath();
         ctx.arc(data.ball.x, data.ball.y, data.ball.radius, 0, Math.PI * 2);
+        
+        // draw usernames
+        ctx.font = '30px Arial';
+
+        //set ... dots for long usernames
+        if(data.players.player1.username.length > 10) {
+            ctx.fillText(data.players.player1.username.substring(0, 10) + '...', 50, 50);
+        }
+        else {
+            ctx.fillText(data.players.player1.username, 50, 50);
+        }
+        if(data.players.player2.username.length > 10) {
+            ctx.fillText(data.players.player2.username.substring(0, 10) + '...', canvas.width - 300, 50);
+        }
+        else {
+            ctx.fillText(data.players.player2.username, canvas.width - 300, 50);
+        }
+        // Draw scores
+        ctx.font = '70px Arial';
+        //set color to  #F4F4FF
+        // ctx.fillStyle = '#F4F4FF';
+        ctx.fillText(data.players.player1.score, canvas.width / 2 - 100, 100);
+        ctx.fillText(data.players.player2.score, canvas.width / 2 + 50, 100);
+        
         ctx.fill();
-        ctx.shadowBlur = 0;
+        // ctx.shadowBlur = 0;
     };
 
     const drawTournamentGame = (ctx, canvas, data) => {
@@ -545,7 +569,7 @@ const PingPongGame = ({ roomName, player1, player2, player3, player4, map, isTou
     return (
         <div className={`${styles.gameContainer} ${montserrat.className}`}>
             <canvas ref={canvasRef} className={styles.canvas} />
-            {gameStarted && (
+            {/* {gameStarted && (
                 <div className={styles.scoreDisplay}>
                     <div className={styles.playerInfo}>
                         <div className={styles.playerAvatar}>
@@ -575,12 +599,12 @@ const PingPongGame = ({ roomName, player1, player2, player3, player4, map, isTou
                         </div>
                     </div>
                 </div>
-            )}
-            {!gameStarted && (
+            )} */}
+            {/* {!gameStarted && (
                 <div className={styles.gameMessage}>
                     Press Space to Start
                 </div>
-            )}
+            )} */}
         </div>
     );
 };
