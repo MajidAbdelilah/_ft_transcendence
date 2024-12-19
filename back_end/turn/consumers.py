@@ -41,7 +41,7 @@ class PingPongConsumer(AsyncWebsocketConsumer):
         }
         channel_layer = get_channel_layer()
         # send to self player first with type gamestart
-        await self.send(text_data=json.dumps(gamestart_data))
+        # await self.send(text_data=json.dumps(gamestart_data))
         await channel_layer.group_send(
             self.tournament_group_name,
             {
@@ -49,35 +49,42 @@ class PingPongConsumer(AsyncWebsocketConsumer):
                 "message": gamestart_data
             }
         )
+        self.gamestart_sent = True
 
     async def gamestart(self, event):
         message = event['message']
         await self.send(text_data=json.dumps(message))
 
+    async def update_bracket(self):
+        matches = self.room_var[self.room_name]['matches']
+        bracket = self.room_var[self.room_name]['bracket']
+        if matches['match1']['winner']:
+            bracket['semifinals']['match1']['winner'] = matches['match1']['winner']
+        if matches['match1']['p1_username']:
+            bracket['semifinals']['match1']['player1'] = matches['match1']['p1_username']
+        if matches['match1']['p2_username']:
+            bracket['semifinals']['match1']['player2'] = matches['match1']['p2_username']
+        if matches['match2']['winner']:
+            bracket['semifinals']['match2']['winner'] = matches['match2']['winner']
+        if matches['match2']['p1_username']:
+            bracket['semifinals']['match2']['player1'] = matches['match2']['p1_username']
+        if matches['match2']['p2_username']:
+            bracket['semifinals']['match2']['player2'] = matches['match2']['p2_username']
+        if matches['final']['winner']:
+            bracket['final']['winner'] = matches['final']['winner']
+        if matches['final']['p1_username']:
+            bracket['final']['player1'] = matches['final']['p1_username']
+        if matches['final']['p2_username']:
+            bracket['final']['player2'] = matches['final']['p2_username']
+        self.room_var[self.room_name]['bracket'] = bracket
+        # await self.send_bracket_update()
 
     async def send_bracket_update(self):
+        await self.update_bracket()
         bracket_update = {
             "type": "BRACKET_UPDATE",
             "tournamentId": self.room_name,
-            "matches": {
-                "semifinals": {
-                    "match1": {
-                        "player1": self.room_var[self.room_name]['matches']['match1']['p1_username'],
-                        "player2": self.room_var[self.room_name]['matches']['match1']['p2_username'],
-                        "winner": self.room_var[self.room_name]['matches']['match1']['winner']
-                    },
-                    "match2": {
-                        "player1": self.room_var[self.room_name]['matches']['match2']['p1_username'],
-                        "player2": self.room_var[self.room_name]['matches']['match2']['p2_username'],
-                        "winner": self.room_var[self.room_name]['matches']['match2']['winner']
-                    }
-                },
-                "final": {
-                    "player1": self.room_var[self.room_name]['matches']['final']['p1_username'],
-                    "player2": self.room_var[self.room_name]['matches']['final']['p2_username'],
-                    "winner": self.room_var[self.room_name]['matches']['final']['winner']
-                }
-            }
+            'matches': self.room_var[self.room_name]["bracket"],
         }
         # print("Sending bracket update")
 
@@ -127,7 +134,7 @@ class PingPongConsumer(AsyncWebsocketConsumer):
         self.tournament_room_name = self.scope['url_route']['kwargs'].get('tournament_room_name', None)
         self.tournament_group_name = f'tournament_{self.tournament_room_name}' if self.tournament_room_name else None
         self.username = ''
-
+        self.gamestart_sent = False
         for room_name in self.room_var:
             if(self.room_var[room_name].get('is_tournament', False)):
                 num_players = sum(1 for player in self.room_var[room_name]['players'].values() if player.get('full'))
@@ -191,6 +198,25 @@ class PingPongConsumer(AsyncWebsocketConsumer):
                     },
                 'is_tournament': True,
                 'end_tournament': False
+                }
+                self.room_var[self.room_name]["bracket"] = {
+                    "semifinals": {
+                        "match1": {
+                            "player1": None,
+                            "player2": None,
+                            "winner": None
+                        },
+                        "match2": {
+                            "player1": None,
+                            "player2": None,
+                            "winner": None
+                        }
+                    },
+                    "final": {
+                        "player1": None,
+                        "player2": None,
+                        "winner": None
+                    }
                 }
                 await self.save_active_tournament()
                 await self.send_bracket_update()
@@ -361,7 +387,7 @@ class PingPongConsumer(AsyncWebsocketConsumer):
                     match_players = [p for p, pdata in players.items()]
                     if all(players[p].get('game_start') for p in match_players):
                         self.room_var[self.room_name]['matches'][current_match]['game_start'] = True
-        if(self.room_var[self.room_name]['is_tournament']):
+        if(self.room_var[self.room_name]['is_tournament'] and not self.gamestart_sent):
             await self.save_active_tournament()
             # if number of players are 4, send gamestart to all players
             num_players = sum(1 for player in self.room_var[self.room_name]['players'].values() if player.get('full'))
