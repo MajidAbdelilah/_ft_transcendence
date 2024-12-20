@@ -28,8 +28,18 @@ from django.conf import settings
 from datetime import datetime, timezone
 from friend.models import Friendship
 from django.db.models import Case, When, F, IntegerField
+from friend.models import Friendship
+from  . import views
+
   
-    
+def getbot(username):
+    try:
+        bot = User.objects.get(username=username)
+    except User.DoesNotExist:
+        bot = None
+    except Exception as e:
+        bot = None
+    return bot
 class Register_view(APIView):
     permission_classes = [AllowAny]
     def post(self, request):
@@ -37,6 +47,27 @@ class Register_view(APIView):
         if serializer.is_valid():
             serializer.save()
             response_data = {"data": serializer.data, "message": "User added successfully!"}
+            bot = getbot('bot')
+            if not bot:
+                bot = UserSerializer(data={"username": "bot", "email": "bot1234@gmail.com", "password": "bot12345" })
+                try:
+                    if bot.is_valid():
+                        bot.save()
+                        bot = getbot('bot')
+                        user_id = User.objects.get(id=serializer.data['id'])
+                        bot_id = User.objects.get(id=bot.id)
+                        friendbot= Friendship.objects.create(user_from=user_id , user_to=bot_id,is_accepted=True ,u_one_is_blocked_u_two=False, u_two_is_blocked_u_one=False)
+                        friendbot.save()
+                except Exception as e:
+                    print("bot error", e)
+            else:
+                try:
+                    user_id = User.objects.get(id=serializer.data['id'])
+                    bot_id = User.objects.get(id=bot.id)
+                    friendbot= Friendship.objects.create(user_from=user_id , user_to=bot_id,is_accepted=True ,u_one_is_blocked_u_two=False, u_two_is_blocked_u_one=False)
+                    friendbot.save()
+                except Exception as e:
+                    print("bot error", e)
             return Response(response_data, status=status.HTTP_201_CREATED)
         else:
             response_data = {"data": None, "message": serializer.errors}
