@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import styles from './PingPongGame.module.css';
 import { Montserrat } from 'next/font/google';
+import customAxios from '../../../customAxios';
 
 const montserrat = Montserrat({
   subsets: ['latin'],
@@ -24,6 +25,8 @@ const PingPongGame = ({ roomName, player1, player2, player3, player4, map, isTou
     const cleanupRef = useRef(false);
     const i_lost = useRef(false);
     const searchParams = useSearchParams();
+    const chat_bot_message_already_sent = useRef(false);
+    const finalStartedRef = useRef(false);
 
     // Effect to update username if player1 prop changes
     useEffect(() => {
@@ -137,6 +140,33 @@ const PingPongGame = ({ roomName, player1, player2, player3, player4, map, isTou
         connectWebSocket();
 
     }, [roomName, myUsername, isTournament, isRedirecting]);
+    // create a function send_chat_bot to send this data 
+    // {
+    // “send”:”bot",
+    // “receive”:”a10",
+    // “message”:”HELLO",
+    // “timestamp”:””,
+    // “chat_id”:”1”
+    // }
+    // send this data to http://127.0.0.1:8000/friend/sendchat/
+    // and get the response
+    async function send_chat_bot (data)  {
+        if(chat_bot_message_already_sent.current === true) {
+            return;
+        }
+        console.log(chat_bot_message_already_sent.current);
+        chat_bot_message_already_sent.current = true;
+        const response = await customAxios.post('http://127.0.0.1:8000/friend/sendchat/', {
+            
+                send: 'bot',
+                receive: data.players[playerRoleRef.current].username,
+                message: "you will play against " + data.players[player2StateRef.current].username,
+                timestamp: '',
+                chat_id: 'id: ' + Math.random()
+        })
+        console.log(response);
+    
+    };
 
     const handleTournamentData = (data) => {
         let currentMatch = '';
@@ -150,11 +180,11 @@ const PingPongGame = ({ roomName, player1, player2, player3, player4, map, isTou
 
                 if (currentMatch === 'match1') {
                     player2StateRef.current = role === 'player1' ? 'player2' : 'player1';
-
+                    send_chat_bot(data);
                     if(data.matches[currentMatch].winner) {
 
                         if (data.matches[currentMatch].winner === playerRoleRef.current) {
-
+                            // chat_bot_message_already_sent.current = false;
                             i_lost.current = false;
                         } else if (data.matches[currentMatch].game_start === false) {
 
@@ -166,10 +196,11 @@ const PingPongGame = ({ roomName, player1, player2, player3, player4, map, isTou
                     }
                 } else if (currentMatch === 'match2') {
                     player2StateRef.current = role === 'player3' ? 'player4' : 'player3';
+                    send_chat_bot(data);
                     if(data.matches[currentMatch].winner) {
 
                         if (data.matches[currentMatch].winner === playerRoleRef.current) {
-
+                            // chat_bot_message_already_sent.current = false;
                             i_lost.current = false;
                         } else  if (data.matches[currentMatch].game_start === false) {
                             handleGameEnd();
@@ -183,6 +214,12 @@ const PingPongGame = ({ roomName, player1, player2, player3, player4, map, isTou
                     } else if(match['p2_username'] === myUsername) {
                         player2StateRef.current = match['player1'];
                     }
+                    if(finalStartedRef.current === false) {
+                        chat_bot_message_already_sent.current = false;
+                    }
+                    finalStartedRef.current = true;
+                    send_chat_bot(data);
+
                 } else {
                 }
                 break;
