@@ -8,7 +8,7 @@ import toast, { Toaster } from 'react-hot-toast';
 
 import { sendCode, handleVerify } from '../(Home)/Settings/onClickFunc';
 
-function auth2faPage() {
+function Auth2faPage() {
 
   const router = useRouter();
   const [code, setCode] = useState("");
@@ -96,4 +96,4 @@ function auth2faPage() {
   );
 }
 
-export default auth2faPage;
+export default Auth2faPage;

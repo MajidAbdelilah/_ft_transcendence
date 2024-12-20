@@ -12,8 +12,8 @@ import { useUser } from "../../contexts/UserContext";
 
 // -- components -----------------------------------------------------
 
-import Sidebar from "../../sidebar";
-import Navbar from "../../Navbar";
+// import Sidebar from "../../sidebar";
+// import Navbar from "../../Navbar";
 
 import ProfileInfo from "./components/ProfileInfo";
 
