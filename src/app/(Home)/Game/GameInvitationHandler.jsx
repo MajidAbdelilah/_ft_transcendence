@@ -37,8 +37,7 @@ export default function GameInvitationHandler() {
         // Properly encode URL parameters - ensure same order as sender
         const params = new URLSearchParams({
           room_name: roomName,
-          player1: data.sender_username,
-          player2: userData.username,  // sender is always player1
+          player1: userData.username,  // sender is always player1
           map: data.map
         });
         

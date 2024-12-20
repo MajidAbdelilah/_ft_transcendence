@@ -48,7 +48,7 @@ export function GameInviteWebSocketProvider({ children }) {
           const params = new URLSearchParams({
             room_name: roomName,
             // player1: data.player1, // sender is always player1
-            player1: data.player2,
+            player1: userData.username, // sender is always player1
             map: data.map
           });
           

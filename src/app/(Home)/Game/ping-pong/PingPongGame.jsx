@@ -304,6 +304,7 @@ const PingPongGame = ({ roomName, player1, player2, player3, player4, map, isTou
             console.log('Game ended');
             handleGameEnd_normal();
         }
+        
     };
 
     const updateWaitingScreen = () => {
@@ -386,27 +387,23 @@ const PingPongGame = ({ roomName, player1, player2, player3, player4, map, isTou
         ctx.arc(data.ball.x, data.ball.y, data.ball.radius, 0, Math.PI * 2);
         
         // draw usernames
-        ctx.font = '30px Arial';
-
-        //set ... dots for long usernames
-        if(data.players.player1.username.length > 10) {
-            ctx.fillText(data.players.player1.username.substring(0, 10) + '...', 50, 50);
+        if(data.players.player1.x < (canvas.width / 2)) {
+            ctx.font = '30px Arial';
+            ctx.fillText(data.players.player1.username, data.players.player1.x + 300, 50);
+            ctx.fillText(data.players.player2.username, data.players.player2.x - 300, 50);
+            // draw scores
+            ctx.font = '80px Arial';
+            ctx.fillText(data.players.player1.score, canvas.width / 2 + 50, canvas.height / 2 + 50);
+            ctx.fillText(data.players.player2.score, canvas.width / 2 - 100, canvas.height / 2 + 50);
+        }else {
+            ctx.font = '30px Arial';
+            ctx.fillText(data.players.player1.username, data.players.player1.x - 300, 50);
+            ctx.fillText(data.players.player2.username, data.players.player2.x + 300, 50);
+            // draw scores
+            ctx.font = '80px Arial';
+            ctx.fillText(data.players.player1.score, canvas.width / 2 - 50, canvas.height / 2 + 50);
+            ctx.fillText(data.players.player2.score, canvas.width / 2 + 100, canvas.height / 2 + 50);
         }
-        else {
-            ctx.fillText(data.players.player1.username, 50, 50);
-        }
-        if(data.players.player2.username.length > 10) {
-            ctx.fillText(data.players.player2.username.substring(0, 10) + '...', canvas.width - 300, 50);
-        }
-        else {
-            ctx.fillText(data.players.player2.username, canvas.width - 300, 50);
-        }
-        // Draw scores
-        ctx.font = '70px Arial';
-        //set color to  #F4F4FF
-        // ctx.fillStyle = '#F4F4FF';
-        ctx.fillText(data.players.player1.score, canvas.width / 2 - 100, 100);
-        ctx.fillText(data.players.player2.score, canvas.width / 2 + 50, 100);
         
         ctx.fill();
         // ctx.shadowBlur = 0;
@@ -535,7 +532,8 @@ const PingPongGame = ({ roomName, player1, player2, player3, player4, map, isTou
             
             if (newDirection !== direction) {
                 setDirection(newDirection);
-                // console.log("playerRef", playerRoleRef.current);
+                // console.log("player1Ref", playerRoleRef.current);
+                // console.log("player2Ref", player2StateRef.current);
                 socket.send(JSON.stringify({
                     'player': playerRoleRef.current,
                     'direction': newDirection,
