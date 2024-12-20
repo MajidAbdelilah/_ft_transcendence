@@ -29,7 +29,6 @@ export default function GameInvitationHandler() {
 
     const handleInvitationResponse = (accepted, data) => {
       if (accepted) {
-        console.log('🎮 Accepting invitation with data:', data);
         
         // Generate a unique room name using friendship_id
         const roomName = `game_${data.friendship_id}`;
@@ -43,7 +42,6 @@ export default function GameInvitationHandler() {
         
         // Create game URL with encoded parameters
         const gameUrl = `/Game/ping-pong?${params.toString()}`;
-        console.log('🎮 Redirecting to:', gameUrl);
         
         // Send acceptance after preparing URL
         send({
@@ -66,9 +64,7 @@ export default function GameInvitationHandler() {
     };
 
     const handleGameInvitation = (event) => {
-      console.log("🎮 Received game invitation event:", event);
       const data = event.detail;
-      console.log("🎮 Invitation data:", data);
       
       const inviteKey = `${data.sender_username}-${data.friendship_id}`;
       

@@ -40,7 +40,6 @@ const PingPongGame = ({ roomName, player1, player2, player3, player4, map, isTou
         requestAnimationFrame(() => {
             if (!cleanupRef.current) {
                 // Use replace instead of push to avoid history stack issues
-                console.log("Redirecting to Game page with query params");
                 router.replace(`/Game?showTournament=true&tournamentRoom=${roomName}`);
                 cleanupRef.current = true;
             }
@@ -64,7 +63,6 @@ const PingPongGame = ({ roomName, player1, player2, player3, player4, map, isTou
 
         const connectWebSocket = () => {
             if (wsRef.current?.readyState === WebSocket.OPEN) {
-                console.log('WebSocket already connected');
                 return;
             }
 
@@ -72,12 +70,6 @@ const PingPongGame = ({ roomName, player1, player2, player3, player4, map, isTou
                 `ws://127.0.0.1:8000/ws/tournament/${roomName}/${roomName}/` : 
                 `ws://127.0.0.1:8000/ws/tournament/${roomName}/`;
 
-            console.log('Initializing WebSocket with:', { 
-                url, 
-                username: myUsername,
-                playerRole: playerRoleRef.current,
-                isTournament
-            });
 
             const ws = new WebSocket(url);
             wsRef.current = ws;
@@ -88,12 +80,6 @@ const PingPongGame = ({ roomName, player1, player2, player3, player4, map, isTou
                     ws.close();
                     return;
                 }
-
-                console.log('WebSocket Connected. Sending initial data:', {
-                    playerRole: playerRoleRef.current,
-                    username: myUsername,
-                    gameStarted: gameStarted
-                });
 
                 ws.send(JSON.stringify({
                     'player': playerRoleRef.current,
@@ -112,11 +98,9 @@ const PingPongGame = ({ roomName, player1, player2, player3, player4, map, isTou
                     return;
                 }
                 if(data.type === 'BRACKET_UPDATE') {
-                    console.log('Received bracket update:', data);
                     return;
                 }
                 if(data.type === 'gamestart') {
-                    // console.log('Received gamestart:', data);
                     return;
                 }
                 
@@ -152,85 +136,42 @@ const PingPongGame = ({ roomName, player1, player2, player3, player4, map, isTou
         // Initial connection
         connectWebSocket();
 
-        // Cleanup function
-        // return () => {
-        //     console.log('Cleaning up game WebSocket connection');
-        //     cleanupRef.current = true;  
-        //     if (wsRef.current) {
-        //         wsRef.current.close();
-        //         wsRef.current = null;
-        //     }
-        // };
     }, [roomName, myUsername, isTournament, isRedirecting]);
 
     const handleTournamentData = (data) => {
         let currentMatch = '';
-        // console.log('Tournament data received:', {
-        //     myUsername,
-        //     players: data.players,
-        //     currentPlayerRole: playerRoleRef.current,
-        //     isTournament
-        // });
-
-        // console.log('Checking username matches:', {
-        //     myUsername,
-        //     player1Username: data.players.player1.username,
-        //     player2Username: data.players.player2.username,
-        //     player3Username: data.players.player3?.username,
-        //     player4Username: data.players.player4?.username
-        // });
-
-        // Find which player we are based on username
-        // console.log('Starting player search for username:', myUsername);
         let foundMatch = false;
         for (const [role, player] of Object.entries(data.players)) {
-            // console.log(`Checking role ${role}:`, {
-            //     playerUsername: player.username,
-            //     matches: player.username === myUsername
-            // });
+
             if (player.username === myUsername) {
                 foundMatch = true;
                 playerRoleRef.current = role;
                 currentMatch = player.current_match;
-                // console.log('Found match!', {
-                //     role,
-                //     currentMatch,
-                //     player
-                // });
-                // print("role: ", role);
-                // Set opponent based on match
+
                 if (currentMatch === 'match1') {
                     player2StateRef.current = role === 'player1' ? 'player2' : 'player1';
-                    // console.log('Match1: Set opponent to', player2StateRef.current);
+
                     if(data.matches[currentMatch].winner) {
-                        // console.log('Match ended');
+
                         if (data.matches[currentMatch].winner === playerRoleRef.current) {
-                            // console.log('You won!');
+
                             i_lost.current = false;
                         } else if (data.matches[currentMatch].game_start === false) {
-                            // console.log('You lost!');
-                            // i_lost.current = true;
-                            // setGameStarted(false);
+
                             handleGameEnd();
-                            // console.log('winner: ', data.matches[currentMatch].winner);
+
 
                             return;
                         }
                     }
                 } else if (currentMatch === 'match2') {
                     player2StateRef.current = role === 'player3' ? 'player4' : 'player3';
-                    // console.log('Match2: Set opponent to', player2StateRef.current);
                     if(data.matches[currentMatch].winner) {
-                        // console.log('Match ended');
+
                         if (data.matches[currentMatch].winner === playerRoleRef.current) {
-                            // console.log('You won!');
+
                             i_lost.current = false;
                         } else  if (data.matches[currentMatch].game_start === false) {
-                            // console.log('You lost!');
-                            // i_lost.current = true;
-                            // setGameStarted(false);
-                            // updateWaitingScreen();
-                            // console.log('winner: ', data.matches[currentMatch].winner);
                             handleGameEnd();
                             return;
                         }
@@ -242,66 +183,21 @@ const PingPongGame = ({ roomName, player1, player2, player3, player4, map, isTou
                     } else if(match['p2_username'] === myUsername) {
                         player2StateRef.current = match['player1'];
                     }
-                    // console.log('Final: Set opponent to', player2StateRef.current);
                 } else {
-                    // console.log('Warning: Unknown match type:', currentMatch);
                 }
-                
-                // if(data.matches[currentMatch].winner) {
-                //     console.log('Match ended');
-                //     if (data.matches[currentMatch].winner === myUsername) {
-                //         console.log('You won!');
-                //         i_lost.current = false;
-                //     } else {
-                //         console.log('You lost!');
-                //         i_lost.current = true;
-                //     }
-                //     return;
-                // }
                 break;
             }
         }
         
         if (!foundMatch) {
             handleGameEnd();
-            // console.error('No matching username found in players!', {
-            //     myUsername,
-            //     availablePlayers: data.players
-            // });
         }
 
         setMatch(currentMatch);
-
-        // console.log('Final state:', {
-        //     playerRole: playerRoleRef.current,
-        //     opponent: player2StateRef.current,
-        //     currentMatch
-        // });
-
-       
-
-            // if (data.matches[currentMatch]['winner'] && gameStarted) {
-            //     console.log('Match ended');
-                
-            //     // if (data.matches[currentMatch]['winner'] === myUsername) {
-            //     //     console.log('You won!');
-            //     //     // handleGameEnd();
-            //     //     i_lost.current = false;
-
-            //     // } else if (data.matches[currentMatch]['winner'] && data.matches[currentMatch]['winner'] !== myUsername) {
-            //     //     console.log('You lost!');
-            //     //     i_lost.current = true;
-            //     //     // setGameStarted(false);
-            //     //     // handleGameEnd();
-            //     // }
-            //     // return;
-            // }
-        
     };
 
     const handleNormalGameData = (data) => {
         if (data.start_game === false) {
-            console.log('Game ended');
             handleGameEnd_normal();
         }
         
@@ -382,7 +278,7 @@ const PingPongGame = ({ roomName, player1, player2, player3, player4, map, isTou
         ctx.shadowColor = map === 'Blue Map' ? 
             'rgba(255, 255, 255, 0.3)' : 
             'rgba(36, 47, 92, 0.3)';
-        // ctx.shadowBlur = 10;
+
         ctx.beginPath();
         ctx.arc(data.ball.x, data.ball.y, data.ball.radius, 0, Math.PI * 2);
         
@@ -406,7 +302,7 @@ const PingPongGame = ({ roomName, player1, player2, player3, player4, map, isTou
         }
         
         ctx.fill();
-        // ctx.shadowBlur = 0;
+
     };
 
     const drawTournamentGame = (ctx, canvas, data) => {
@@ -478,9 +374,8 @@ const PingPongGame = ({ roomName, player1, player2, player3, player4, map, isTou
             );
         }
         const currentMatch = data.players[playerRoleRef.current].current_match;
-        // Draw ball with shadow
+
         let ball = null;
-        // console.log("match: ", match);
 
         if (currentMatch === 'match1') {
             ball = data.matches['ball1'];
@@ -491,9 +386,10 @@ const PingPongGame = ({ roomName, player1, player2, player3, player4, map, isTou
         }
 
         if (ball) {
+            // set fill color to blue on white map
             ctx.shadowColor = map === 'Blue Map' ? 
                 'rgba(255, 255, 255, 0.3)' : 
-                'rgba(36, 47, 92, 0.3)';
+                'rgba(0, 0, 255, 0.5)';
             ctx.shadowBlur = 10;
             ctx.beginPath();
             ctx.arc(ball.x, ball.y, ball.radius, 0, Math.PI * 2);
@@ -522,18 +418,11 @@ const PingPongGame = ({ roomName, player1, player2, player3, player4, map, isTou
                 case 'ArrowDown':
                     newDirection = 'down';
                     break;
-                // case ' ':
-                //     if (!gameStarted && !i_lost.current) {
-                //         setGameStarted(true);
-                //     }
-                //     break;
             }
 
             
             if (newDirection !== direction) {
                 setDirection(newDirection);
-                // console.log("player1Ref", playerRoleRef.current);
-                // console.log("player2Ref", player2StateRef.current);
                 socket.send(JSON.stringify({
                     'player': playerRoleRef.current,
                     'direction': newDirection,
@@ -569,42 +458,6 @@ const PingPongGame = ({ roomName, player1, player2, player3, player4, map, isTou
     return (
         <div className={`${styles.gameContainer} ${montserrat.className}`}>
             <canvas ref={canvasRef} className={styles.canvas} />
-            {/* {gameStarted && (
-                <div className={styles.scoreDisplay}>
-                    <div className={styles.playerInfo}>
-                        <div className={styles.playerAvatar}>
-                            <img 
-                                src={`http://127.0.0.1:8000/api${gameData?.players?.player1?.image || '/images/DefaultAvatar.svg'}`}
-                                alt={player1}
-                                width={50}
-                                height={50}
-                            />
-                        </div>
-                        <span className={styles.playerName}>{player1 || 'Player 1'}</span>
-                    </div>
-                    <div className={styles.scoreContainer}>
-                        <span className={styles.score}>{gameData?.players?.player1?.score || 0}</span>
-                        <span className={styles.scoreSeparator}>|</span>
-                        <span className={styles.score}>{gameData?.players?.player2?.score || 0}</span>
-                    </div>
-                    <div className={styles.playerInfo}>
-                        <span className={styles.playerName}>{player2 || 'Player 2'}</span>
-                        <div className={styles.playerAvatar}>
-                            <img 
-                                src={`http://127.0.0.1:8000/api${gameData?.players?.player2?.image || '/images/DefaultAvatar.svg'}`}
-                                alt={player2}
-                                width={50}
-                                height={50}
-                            />
-                        </div>
-                    </div>
-                </div>
-            )} */}
-            {/* {!gameStarted && (
-                <div className={styles.gameMessage}>
-                    Press Space to Start
-                </div>
-            )} */}
         </div>
     );
 };

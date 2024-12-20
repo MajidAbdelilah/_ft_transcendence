@@ -51,7 +51,6 @@ const NotificationItem = ({ notification, onClick }) => {
     ? formatDistanceToNow(new Date(notification.timestamp), { addSuffix: true })
     : '';
 
-  console.log('Notification data:', notification);  
 
   return (
     <div 
