@@ -119,7 +119,7 @@ export default function FriendsList({ friends = [] }: FriendsListProps) {
           <IconUserExclamation size={50} color="#242F5C" />
           <h3 className="text-[#242F5C] text-lg font-bold mb-2">No Friends Yet</h3>
           <p className="text-[#7C829D] text-sm text-center">
-            You don't have any friends in your list yet.<br/>
+            You don&apos;t have any friends in your list yet.<br/>
             Start by accepting friend requests or adding new friends!
           </p>
         </div>
