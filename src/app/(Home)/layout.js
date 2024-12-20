@@ -61,7 +61,6 @@ function RootLayoutContent({ children }) {
     </div>
   );
 }
-
 function RootLayout({ children }) {
   return (
     <UserProvider>

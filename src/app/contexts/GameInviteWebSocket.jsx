@@ -70,8 +70,8 @@ export function GameInviteWebSocketProvider({ children }) {
       };
 
       ws.onerror = (error) => {
-        console.error('🎮 Game invitation WebSocket error:', error);
-        toast.error('Connection error. Trying to reconnect...');
+        // console.error('🎮 Game invitation WebSocket error:', error);
+        // toast.error('Connection error. Trying to reconnect...');
       };
 
       wsRef.current = ws;
@@ -91,7 +91,7 @@ export function GameInviteWebSocketProvider({ children }) {
     if (wsRef.current?.readyState === WebSocket.OPEN) {
       wsRef.current.send(JSON.stringify(message));
     } else {
-      toast.error('WebSocket connection not ready. Please try again.');
+      // toast.error('WebSocket connection not ready. Please try again.');
     }
   };
 
