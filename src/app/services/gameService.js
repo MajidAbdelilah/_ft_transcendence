@@ -3,6 +3,9 @@ import customAxios from '../customAxios';
 // WebSocket connection for bracket updates
 let ws = null;
 
+// Cache for tournament data
+let lastKnownTournamentData = null;
+
 const initializeBracketWebSocket = () => {
   if (!ws || ws.readyState === WebSocket.CLOSED) {
     ws = new WebSocket(`ws://127.0.0.1:8000/ws/tournament/tour/PLAY/`);
@@ -25,7 +28,9 @@ const initializeBracketWebSocket = () => {
     const originalOnMessage = ws.onmessage;
     ws.onmessage = (event) => {
       const data = JSON.parse(event.data);
-      console.log('Received tournament data:', data);
+      // console.log('Received tournament data:', data);
+      setTimeout(1000)
+
       if (originalOnMessage) originalOnMessage(event);
     };
 
@@ -118,27 +123,74 @@ export const gameService = {
   },
 
   // Setup WebSocket listener for bracket updates
-  setupBracketListener: (tournamentId, onUpdate) => {
-    if (!ws || ws.readyState !== WebSocket.OPEN) {
-      console.error('No active WebSocket connection');
-      return;
-    }
+  setupBracketListener: async (tournamentId, onUpdate) => {
+    try {
+      const socket = await gameService.initializeBracketWebSocket();
 
-    // Create handler for all tournament updates
-    const bracketHandler = (event) => {
-      const data = JSON.parse(event.data);
-      onUpdate(data);
-    };
+      const messageHandler = (event) => {
+        const data = JSON.parse(event.data);
+        if (data.type === 'BRACKET_UPDATE' && data.tournamentId === tournamentId) {
+          // Update finals players based on semifinal winners
+          if (data.matches && data.matches.semifinals && data.matches.final) {
+            const semifinals = data.matches.semifinals;
+            
+            // Set player1 in finals based on match1 winner
+            if (semifinals.match1 && semifinals.match1.winner === 'player1') {
+              data.matches.final.player1 = semifinals.match1.player1;
+            } else if (semifinals.match1 && semifinals.match1.winner === 'player2') {
+              data.matches.final.player1 = semifinals.match1.player2;
+            }
 
-    // Add the handler to WebSocket
-    ws.addEventListener('message', bracketHandler);
+            // Set player2 in finals based on match2 winner
+            if (semifinals.match2 && semifinals.match2.winner === 'player1') {
+              data.matches.final.player2 = semifinals.match2.player1;
+            } else if (semifinals.match2 && semifinals.match2.winner === 'player2') {
+              data.matches.final.player2 = semifinals.match2.player2;
+            } else if (semifinals.match2 && semifinals.match2.winner === 'player3') {
+              data.matches.final.player2 = semifinals.match2.player1;
+            }
+          }
 
-    // Return cleanup function
-    return () => {
-      if (ws && ws.readyState === WebSocket.OPEN) {
-        ws.removeEventListener('message', bracketHandler);
+          // Preserve winner information from previous state if needed
+          if (lastKnownTournamentData && lastKnownTournamentData.matches) {
+            if (data.matches.final && lastKnownTournamentData.matches.final) {
+              if (!data.matches.final.winner && lastKnownTournamentData.matches.final.winner) {
+                data.matches.final.winner = lastKnownTournamentData.matches.final.winner;
+              }
+            }
+            if (data.matches.semifinals && lastKnownTournamentData.matches.semifinals) {
+              ['match1', 'match2'].forEach(match => {
+                if (data.matches.semifinals[match] && 
+                    lastKnownTournamentData.matches.semifinals[match] &&
+                    !data.matches.semifinals[match].winner && 
+                    lastKnownTournamentData.matches.semifinals[match].winner) {
+                  data.matches.semifinals[match].winner = lastKnownTournamentData.matches.semifinals[match].winner;
+                }
+              });
+            }
+          }
+          
+          lastKnownTournamentData = data;
+          onUpdate(data);
+        } else {
+          onUpdate(data);
+        }
+      };
+
+      socket.addEventListener('message', messageHandler);
+
+      // If we have cached data, immediately send it
+      if (lastKnownTournamentData && lastKnownTournamentData.tournamentId === tournamentId) {
+        console.log('Sending cached data:', lastKnownTournamentData);
+        onUpdate(lastKnownTournamentData);
       }
-    };
+
+      return () => {
+        socket.removeEventListener('message', messageHandler);
+      };
+    } catch (error) {
+      console.error('Error setting up bracket listener:', error);
+    }
   },
 
   // Get WebSocket instance

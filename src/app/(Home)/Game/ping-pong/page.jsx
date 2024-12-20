@@ -6,23 +6,19 @@ import PingPongGame from './PingPongGame';
 export default function PingPongGamePage() {
   const searchParams = useSearchParams();
   
-  // Check if it's a tournament game (4 players)
-  const isTournament = searchParams.has('player3') && searchParams.has('player4');
+  // Check if it's a tournament game
+  const isTournament = searchParams.has('turn-room-name');
   
   const roomName = isTournament ? searchParams.get('turn-room-name') : searchParams.get('room_name');
-  const player1 = searchParams.get('player1');
-  const player2 = searchParams.get('player2');
-  const player3 = isTournament ? searchParams.get('player3') : null;
-  const player4 = isTournament ? searchParams.get('player4') : null;
+  const player1 = searchParams.get('player1'); // This will be the username in tournament mode
+  const player2 = !isTournament ? searchParams.get('player2') : null; // Only used in normal game
   const map = searchParams.get('map');
 
   // Log the props being passed to PingPongGame
-  console.log('PingPongGamePage props:', {
+  console.log('----------------------+++++++++++++++++++++++++++++++PingPongGamePage props:', {
     roomName,
     player1,
     player2,
-    player3,
-    player4,
     map,
     isTournament
   });
@@ -38,8 +34,6 @@ export default function PingPongGamePage() {
       roomName={roomName}
       player1={player1}
       player2={player2}
-      player3={player3}
-      player4={player4}
       map={map}
       isTournament={isTournament}
     />

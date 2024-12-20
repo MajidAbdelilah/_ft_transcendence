@@ -12,6 +12,7 @@ import { Loader2 } from 'lucide-react'
 import { useWebSocket } from '../../contexts/WebSocketProvider';
 import {IconForbid2} from '@tabler/icons-react'
 import {IconUserExclamation} from '@tabler/icons-react'
+import LoadingSpinner from './components/LoadingSpinner'
 
 const montserrat = Montserrat({
   subsets: ["latin"],
@@ -370,11 +371,5 @@ export default function Friends() {
         </div>
       </div>
     </div>
-  )
-}
-
-export function LoadingSpinner() {
-  return (
-      <Loader2 className="w-8 h-8 text-[#242F5C]" />
   )
 }

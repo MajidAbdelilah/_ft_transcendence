@@ -265,9 +265,6 @@ function Navbar() {
           case 'friends_block_error':
             // These are status messages, we can ignore them
             break;
-
-          default:
-            console.log('Unhandled WebSocket message type:', data.type);
         }
       } catch (error) {
         console.error('Error handling notification:', error);
@@ -331,13 +328,14 @@ function Navbar() {
         <div className="relative">
           <input
             type="text"
+            id="search"
+            name="search"
+            autoComplete="off"
             placeholder="Search..."
             className="sm:py-3 shadow-sm shadow-[#BCBCC9] sm:w-[280px] py-[8px] w-[200px]  pl-[2.5rem] rounded-full bg-[#D7D7EA] text-[#242F5C] focus:outline-none focus:ring-2 focus:ring-[#3CDCDE5]"
             onChange={handleChange}
             onBlur={handleBlur}
             ref={inputRef}
-            
-            
           />
           <IoIosSearch
             className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400 "

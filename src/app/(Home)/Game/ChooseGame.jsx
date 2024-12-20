@@ -27,7 +27,29 @@ function MainComponent() {
   const [isSearching, setIsSearching] = useState(false);
   const [tournamentCreator, setTournamentCreator] = useState(null);
   const [tournamentId, setTournamentId] = useState(null);
-  const [tournamentData, setTournamentData] = useState(null);
+  const [tournamentData, setTournamentData] = useState({
+    type: 'BRACKET_UPDATE',
+    tournamentId: null,
+    matches: {
+      semifinals: {
+        match1: {
+          player1: null,
+          player2: null,
+          winner: null
+        },
+        match2: {
+          player1: null,
+          player2: null,
+          winner: null
+        }
+      },
+      final: {
+        player1: null,
+        player2: null,
+        winner: null
+      }
+    }
+  });
   const [showFriendsPopup, setShowFriendsPopup] = useState(false);
   const [friends, setFriends] = useState([]);
   const [error, setError] = useState(null);
@@ -65,41 +87,55 @@ function MainComponent() {
   }, [userData]);
 
   useEffect(() => {
-    console.log('🎮 freak');
+    const searchParams = new URLSearchParams(window.location.search);
+    const showTournamentParam = searchParams.get('showTournament');
+    const tournamentRoomParam = searchParams.get('tournamentRoom');
+    
+    if (showTournamentParam === 'true' && tournamentRoomParam) {
+      setShowTournament(true);
+      // Set the tournament ID from the room name
+      setTournamentId(tournamentRoomParam);
+    }
+  }, []);
+
+  useEffect(() => {
     if (!tournamentId) {
       return;
     }
 
-    console.log('🎮 Fetching tournament data for tournament ID:', tournamentId);
+    // console.log('🎮 Fetching tournament data for tournament ID:', tournamentId);
 
-    const cleanup = gameService.setupBracketListener(tournamentId, (bracketData) => {
-      console.log('Received tournament data:', bracketData);
-      console.log("bracketData.type",bracketData.type);  
-      console.log("fuck");    
-      if (bracketData.type === 'gamestart') {
-        console.log("fuck");
-        // Redirect to game when match is ready with 4 players
-        const params = new URLSearchParams({
-          'turn-room-name': bracketData.room_name,
-          player1: bracketData.player1,
-          player2: bracketData.player2,
-          player3: bracketData.player3,
-          player4: bracketData.player4,
-          map: bracketData.map,
-        });
-        const gameUrl = `/Game/ping-pong?${params.toString()}`;
-        console.log('🎮 Redirecting to tournament game:', gameUrl);
-        router.push(gameUrl);
-      } else {
-        setTournamentData(prevData => ({
-          ...prevData,
-          matches: bracketData
-        }));
-      }
-    });
+    const setupListener = async () => {
+      const cleanup = await gameService.setupBracketListener(tournamentId, (bracketData) => {
+        // console.log('Raw bracket data received:', bracketData);
+        
+        if (bracketData.type === 'gamestart') {
+          const params = new URLSearchParams({
+            'turn-room-name': bracketData.room_name,
+            player1: userData.username,
+            player2: bracketData.player2,
+            player3: bracketData.player3,
+            player4: bracketData.player4,
+            map: bracketData.map,
+          });
+          const gameUrl = `/Game/ping-pong?${params.toString()}`;
+          console.log('🎮 Redirecting to tournament game:', gameUrl);
+          router.push(gameUrl);
+        } else if (bracketData.type === 'BRACKET_UPDATE') {
+          console.log('Updating tournament data:', bracketData);
+          setTournamentData(bracketData);
+        }
+      });
+
+      return cleanup;
+    };
+
+    setupListener();
 
     return () => {
-      cleanup();
+      setupListener().then(cleanup => {
+        if (cleanup) cleanup();
+      });
     };
   }, [tournamentId, router]);
 
@@ -186,6 +222,11 @@ function MainComponent() {
     }
   };
 
+  const handleCloseTournament = () => {
+    setShowTournament(false);
+    window.location.href = '/Game';
+  };
+
   return (
     <div className="relative w-full h-full">
       <div className={`flex-1 w-full h-full overflow-y-auto flex flex-wrap items-center justify-center p-4`}>
@@ -203,9 +244,11 @@ function MainComponent() {
                   <Image 
                     src="/images/WhiteMap.svg" 
                     alt="WhiteMap" 
-                    width={500} 
-                    height={500} 
-                    className="w-full max-w-[250px] md:max-w-[400px] lg:max-w-[500px] cursor-pointer transition-all duration-300 ease-in-out hover:scale-105"
+                    width={0}
+                    height={0}
+                    sizes="100vw"
+                    style={{ width: '100%', height: 'auto' }}
+                    className="max-w-[250px] md:max-w-[400px] lg:max-w-[500px] cursor-pointer transition-all duration-300 ease-in-out hover:scale-105"
                     priority
                     onClick={() => setSelectedMap('White Map')}
                   />
@@ -224,9 +267,11 @@ function MainComponent() {
                   <Image 
                     src="/images/BlueMap.svg" 
                     alt="BlueMap" 
-                    width={500} 
-                    height={500} 
-                    className="w-full max-w-[250px] md:max-w-[400px] lg:max-w-[500px] cursor-pointer transition-all duration-300 ease-in-out hover:scale-105"
+                    width={0}
+                    height={0}
+                    sizes="100vw"
+                    style={{ width: '100%', height: 'auto' }}
+                    className="max-w-[250px] md:max-w-[400px] lg:max-w-[500px] cursor-pointer transition-all duration-300 ease-in-out hover:scale-105"
                     priority
                     onClick={() => setSelectedMap('Blue Map')}
                   />
@@ -444,7 +489,7 @@ function MainComponent() {
               <div className="flex justify-between items-center mb-6">
                 <h2 className="text-xl md:text-2xl font-extrabold text-[#242F5C]">Tournament</h2>
                 <button
-                  onClick={() => setShowTournament(false)}
+                  onClick={handleCloseTournament}
                   className="w-8 h-8 rounded-full flex items-center justify-center hover:bg-[#242F5C] hover:text-white transition-all duration-300"
                 >
                   <X size={20} />

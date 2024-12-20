@@ -183,7 +183,9 @@ function LoginPage() {
             </label>
             <input
               type="email"
+              name="email"
               id="email"
+              autoComplete="email"
               className={`${
                 formik.errors.email && formik.touched.email
                   ? "border-red-500"
@@ -205,7 +207,9 @@ function LoginPage() {
             </label>
             <input
               type="password"
+              name="password"
               id="password"
+              autoComplete="current-password"
               className={`${
                 formik.errors.password && formik.touched.password
                   ? "border-red-500"
