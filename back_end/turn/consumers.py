@@ -174,7 +174,7 @@ class PingPongConsumer(AsyncWebsocketConsumer):
                     'player1': {'y': self.height/2 - 25, 'height': 100, 'x': 0, 'width': 10, 'direction': None, 'score': 0, 'full': False, 'username': '', 'game_start': False, 'current_match': 'match1', 'mapType': ''},
                     'player2': {'y': self.height/2 - 25, 'height': 100, 'x': self.width - 10, 'width': 10, 'direction': None, 'score': 0, 'full': False, 'username': '', 'game_start': False, 'current_match': 'match1', 'mapType': ''},
                 },
-                'ball': {'x': self.width / 2, 'y': self.height / 2, 'radius': 5, 'vx': 5, 'vy': 5},
+                'ball': {'x': self.width / 2, 'y': self.height / 2, 'radius': 10, 'vx': 5, 'vy': 5},
                 'game_start': True,
                 'is_tournament': False
             }
@@ -191,11 +191,11 @@ class PingPongConsumer(AsyncWebsocketConsumer):
                     },
                     'matches': {
                         'match1': {'player1': None, 'p1_username': None, 'p1_score': 0, 'player2': None, 'p2_username': None, 'p2_score': 0, 'winner': None, 'game_start': False},
-                        'ball1': {'x': self.width / 2, 'y': self.height / 2, 'radius': 5, 'vx': 5, 'vy': 5},
+                        'ball1': {'x': self.width / 2, 'y': self.height / 2, 'radius': 10, 'vx': 5, 'vy': 5},
                         'match2': {'player1': None, 'p1_username': None, 'p1_score': 0, 'player2': None, 'p2_username': None, 'p2_score': 0, 'winner': None, 'game_start': False},
-                        'ball2': {'x': self.width / 2, 'y': self.height / 2, 'radius': 5, 'vx': 5, 'vy': 5},
+                        'ball2': {'x': self.width / 2, 'y': self.height / 2, 'radius': 10, 'vx': 5, 'vy': 5},
                         'final': {'player1': None, 'p1_username': None, 'p1_score': 0, 'player2': None, 'p2_username': None, 'p2_score': 0, 'winner': None, 'game_start': False},
-                        'ball_final': {'x': self.width / 2, 'y': self.height / 2, 'radius': 5, 'vx': 5, 'vy': 5},
+                        'ball_final': {'x': self.width / 2, 'y': self.height / 2, 'radius': 10, 'vx': 5, 'vy': 5},
                     },
                 'is_tournament': True,
                 'end_tournament': False
@@ -764,7 +764,7 @@ class PingPongConsumer(AsyncWebsocketConsumer):
         self.room_var[self.room_name]['matches']['final']['p1_username'] = self.room_var[self.room_name]['players'][self.room_var[self.room_name]['matches']['final']['player1']]['username']
         self.room_var[self.room_name]['matches']['final']['p2_username'] = self.room_var[self.room_name]['players'][self.room_var[self.room_name]['matches']['final']['player2']]['username']
         self.room_var[self.room_name]['matches']['final']['winner'] = None
-        self.room_var[self.room_name]['matches']['ball_final'] = {'x': self.width / 2, 'y': self.height / 2, 'radius': 5, 'vx': 5, 'vy': 5}
+        self.room_var[self.room_name]['matches']['ball_final'] = {'x': self.width / 2, 'y': self.height / 2, 'radius': 10, 'vx': 5, 'vy': 5}
         # reset the scores of the players
         self.room_var[self.room_name]['players']['player1']['score'] = 0
         self.room_var[self.room_name]['players']['player2']['score'] = 0
