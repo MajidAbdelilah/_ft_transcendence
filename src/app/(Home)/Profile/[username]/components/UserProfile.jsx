@@ -167,7 +167,7 @@ function Part2({loggedInUser, user, isSelf}) {
 
   const progress = calculateProgress(level);
   return (
-      <div className="part2 w-2/3 p-4 flex flex-col items-end ml-auto   ">
+      <div className="part2 w-2/3 p-4 flex flex-col items-end ml-auto   overflow-hidden">
 
       <LuUserX  
       onClick={() => handleBlockUser(loggedInUser, user)}

@@ -303,7 +303,7 @@ useEffect(() => {
     if (friend === null) {
       let noFriendYet = { avatar: "", name: "", status: "" };
       return (
-        <div className="messagesBox w-full h-full lg:w-3/5 p-2 h-full rounded-tr-xl rounded-br-xl  flex flex-col ">
+        <div className="messagesBox w-full h-full lg:w-3/5 p-2  rounded-tr-xl rounded-br-xl  flex flex-col ">
           <FriendChatInfo
             loggedInUser={loggedInUser}
             friend={noFriendYet}
