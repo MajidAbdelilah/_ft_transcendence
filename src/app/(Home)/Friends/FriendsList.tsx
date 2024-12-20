@@ -108,7 +108,6 @@ export default function FriendsList({ friends = [] }: FriendsListProps) {
         receiver_username: friendUsername,
         timestamp: new Date().toISOString()
       };
-      console.log('📤 Sending invitation message:', message);
       sendGame(message);
       toast.success(`Invitation sent to ${friendUsername}!`);
     };

@@ -32,14 +32,11 @@ export function GameInviteWebSocketProvider({ children }) {
 
       ws.onmessage = (event) => {
         const data = JSON.parse(event.data);
-        console.log('🎮 Received game invite message:', data);
-
         if (data.type === 'game_invitation_received') {
           const customEvent = new CustomEvent(data.type, { detail: data });
           window.dispatchEvent(customEvent);
         } 
         else if (data.type === 'invitation_accepted') {
-          console.log('🎮 Redirecting to game with data:', data);
           
           // Generate a unique room name using friendship_id
           const roomName = `game_${data.friendship_id}`;
@@ -48,13 +45,12 @@ export function GameInviteWebSocketProvider({ children }) {
           const params = new URLSearchParams({
             room_name: roomName,
             // player1: data.player1, // sender is always player1
-            player1: data.player2,
+            player1: userData.username, // sender is always player1
             map: data.map
           });
           
           // Create game URL with encoded parameters - use same format as GameInvitationHandler
           const gameUrl = `/Game/ping-pong?${params.toString()}`;
-          console.log('🎮 Redirecting to:', gameUrl);
           
           // Use replace instead of push to avoid history stacking
           router.replace(gameUrl);
@@ -62,7 +58,7 @@ export function GameInviteWebSocketProvider({ children }) {
       };
 
       ws.onclose = (e) => {
-        console.log('🎮 Game invitation WebSocket disconnected:', e.reason);
+        // console.log('🎮 Game invitation WebSocket disconnected:', e.reason);
         // Attempt to reconnect after a delay, unless it was intentionally closed
         if (userData) {
           setTimeout(connectWebSocket, 3000);

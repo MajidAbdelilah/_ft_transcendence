@@ -32,7 +32,6 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
         const response = await customAxios.get(
           "http://127.0.0.1:8000/api/user/"
         );
-        console.log(response.data.user);
         if (response.status === 200)
         {
             setIsLoading(false);

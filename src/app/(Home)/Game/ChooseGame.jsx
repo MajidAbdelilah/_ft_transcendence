@@ -62,7 +62,6 @@ function MainComponent() {
       try {
         const response = await customAxios.get('http://127.0.0.1:8000/friend/friends');
         if (response.data) {
-          console.log(response.data);
           setFriends(response.data);
           setError(null);
         }
@@ -103,11 +102,9 @@ function MainComponent() {
       return;
     }
 
-    // console.log('🎮 Fetching tournament data for tournament ID:', tournamentId);
 
     const setupListener = async () => {
       const cleanup = await gameService.setupBracketListener(tournamentId, (bracketData) => {
-        // console.log('Raw bracket data received:', bracketData);
         
         if (bracketData.type === 'gamestart') {
           const params = new URLSearchParams({
@@ -119,10 +116,8 @@ function MainComponent() {
             map: bracketData.map,
           });
           const gameUrl = `/Game/ping-pong?${params.toString()}`;
-          console.log('🎮 Redirecting to tournament game:', gameUrl);
           router.push(gameUrl);
         } else if (bracketData.type === 'BRACKET_UPDATE') {
-          console.log('Updating tournament data:', bracketData);
           setTournamentData(bracketData);
         }
       });
@@ -140,7 +135,6 @@ function MainComponent() {
   }, [tournamentId, router]);
 
   const handleInviteFriend = (friendshipId, friendUsername) => {
-    console.log('🎮 Attempting to send game invitation to:', friendUsername);
     if (selectedMap) {
       const message = {
         type: 'game_invitation',
@@ -151,7 +145,6 @@ function MainComponent() {
         receiver_username: friendUsername,
         timestamp: new Date().toISOString()
       };
-      console.log('📤 Sending invitation message:', message);
       send(message);
       toast.success(`Invitation sent to ${friendUsername}!`);
       setShowFriendsPopup(false);
@@ -170,7 +163,6 @@ function MainComponent() {
     setIsJoining(true);
     try {
       const result = await gameService.joinTournament(userData, selectedMap);
-      console.log('🎮 Join tournament result:');
       if (result.success) {
         setHasJoinedTournament(true);
         setTournamentId(result.tournamentId);

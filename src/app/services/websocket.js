@@ -28,13 +28,6 @@ const connectWebSocket = () => {
             if (keepAliveInterval) {
                 clearInterval(keepAliveInterval);
             }
-            
-            // Send a ping every 30 seconds to keep the connection alive
-            keepAliveInterval = setInterval(() => {
-                if (ws && ws.readyState === WebSocket.OPEN) {
-                    ws.send(JSON.stringify({ type: 'ping' }));
-                }
-            }, 30000);
         };
 
         ws.onmessage = (event) => {

@@ -18,7 +18,6 @@ const initializeBracketWebSocket = () => {
 
     const originalOnOpen = ws.onopen;
     ws.onopen = (event) => {
-      console.log('Bracket WebSocket Connected');
       clearTimeout(timeout);
       if (originalOnOpen) originalOnOpen(event);
       resolve(ws);
@@ -87,9 +86,7 @@ export const gameService = {
           // Set up one-time message handler for join response
           const handleJoinResponse = (event) => {
             const response = JSON.parse(event.data);
-            console.log('Received response:', response);
             if (response.type === 'join_tournament_response') {
-              console.log('Received join tournament response:');
               socket.removeEventListener('message', handleJoinResponse);
               if (response.success) {
                 resolve({
@@ -181,7 +178,6 @@ export const gameService = {
 
       // If we have cached data, immediately send it
       if (lastKnownTournamentData && lastKnownTournamentData.tournamentId === tournamentId) {
-        console.log('Sending cached data:', lastKnownTournamentData);
         onUpdate(lastKnownTournamentData);
       }
 
