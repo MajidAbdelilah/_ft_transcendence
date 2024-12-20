@@ -40,7 +40,9 @@ const PingPongGame = ({ roomName, player1, player2, player3, player4, map, isTou
         requestAnimationFrame(() => {
             if (!cleanupRef.current) {
                 // Use replace instead of push to avoid history stack issues
+                console.log("Redirecting to Game page with query params");
                 router.replace(`/Game?showTournament=true&tournamentRoom=${roomName}`);
+                cleanupRef.current = true;
             }
         });
     };
