@@ -204,7 +204,7 @@ export default function Profile() {
         <div className="text-center p-8 rounded-xl shadow-xl bg-[#F4F4FF] border border-[#C0C7E0] max-w-md mx-4">
           <h1 className="text-3xl font-extrabold text-[#242F5C] mb-4">Oops!</h1>
           <p className="text-lg text-[#242F5C] mb-6">
-            We couldn't find the user you're looking for. Please double-check the username or try again.
+          We couldn&apos;t find the user you&apos;re looking for. Please double-check the username or try again.
             
           </p>
         </div>

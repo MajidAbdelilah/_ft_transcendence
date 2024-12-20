@@ -2,7 +2,7 @@
 import Image from "next/image";
 
 import { useUser } from '../../../contexts/UserContext';
-// import { Skeleton}  from "../../../../compo/ui/Skeleton";
+import { Skeleton}  from "../compo/ui/Skeleton";
 
 
 export default function ProfileInfo({ avatar, name, status }) {

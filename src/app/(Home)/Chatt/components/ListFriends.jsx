@@ -2,7 +2,7 @@
 import { useState, useEffect} from "react";
 import Image from "next/image";
 import customAxios from "../../../customAxios"
-
+import { Skeleton}  from "../compo/ui/Skeleton";
 
 import { useUser } from '../../../contexts/UserContext';
 
