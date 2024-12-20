@@ -416,7 +416,7 @@ const PingPongGame = ({ roomName, player1, player2, player3, player4, map, isTou
             ctx.fillStyle = '#242F5C';  // Dark blue background
             ctx.fillRect(0, 0, canvas.width, canvas.height);
             ctx.strokeStyle = 'white';  // White center line
-            ctx.fillStyle = 'white';    // White elements
+            ctx.fillStyle = 'white';    // White elements for paddles, ball, and text
         } else {
             ctx.fillStyle = '#E1E1FF';  // Light purple background
             ctx.fillRect(0, 0, canvas.width, canvas.height);
@@ -440,7 +440,7 @@ const PingPongGame = ({ roomName, player1, player2, player3, player4, map, isTou
 
             // Draw player score and username
             ctx.font = '100px Arial';
-            ctx.fillStyle = 'rgba(0, 0, 0, 0.5)';
+            ctx.fillStyle = map === 'Blue Map' ? 'white' : 'rgba(0, 0, 0, 0.5)';
             ctx.fillText(
                 player.score,
                 (player.x < (canvas.width / 2)) ? player.x + 50 : player.x - 125,
@@ -463,7 +463,7 @@ const PingPongGame = ({ roomName, player1, player2, player3, player4, map, isTou
 
             // Draw opponent score and username
             ctx.font = '100px Arial';
-            ctx.fillStyle = 'rgba(0, 0, 0, 0.5)';
+            ctx.fillStyle = map === 'Blue Map' ? 'white' : 'rgba(0, 0, 0, 0.5)';
             ctx.fillText(
                 opponent.score,
                 (opponent.x < (canvas.width / 2)) ? opponent.x + 50 : opponent.x - 125,
