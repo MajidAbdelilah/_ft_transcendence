@@ -3,6 +3,8 @@ from asgiref.sync import async_to_sync
 from channels.generic.websocket import WebsocketConsumer
 from authapp.models import User
 from .models import Messages
+# from .models import Notification
+from friend.models import Notification
 
 class ChatConsumer(WebsocketConsumer):
     def connect(self):
@@ -55,6 +57,10 @@ class ChatConsumer(WebsocketConsumer):
             user_one=send_obj, user_two=receive_obj,
             message_content=message, message_date=timestamp
         )
+        # notification = Notification.objects.create(
+        #     user=receive_obj, message=f"New message from {send_obj.username}"
+        #     message
+        # )
         # Add the receiver to the group (Sender's group)
         receiver_group = f"chat_{receive_obj.id}"  # Receiver's group based on their user ID
         async_to_sync(self.channel_layer.group_add)(

@@ -7,9 +7,10 @@ from .views import (FriendsView,
                     BlockFriendshipView,
                     UnblockFriendshipView,
                     BlockedFriendsView,
+                    sendchat,
                   #   NotificationsView,
                   #   NotificationDetailView,
-                    FriendsRequestsView
+                    FriendsRequestsView,
 
                    )
 
@@ -26,4 +27,5 @@ urlpatterns = [
    # path('notifications/', NotificationsView.as_view(), name="notifications"),
    # path('notification-delete/<int:notification_id>', NotificationDetailView.as_view(), name='notification-delete'),
    path('friend-request/', FriendsRequestsView.as_view(), name='friend-request'),
+   path('sendchat/', sendchat.as_view(), name='sendchat'),
 ]

@@ -30,16 +30,11 @@ def get_user_from_jwt_token(token_key):
         if not token_key:
             print("No token provided")
             return AnonymousUser()
-            
-        print(f"Attempting to decode token: {token_key[:50]}...")
         payload = jwt.decode(token_key, settings.SECRET_KEY, algorithms=["HS256"])
         user_id = payload.get('user_id')
-        print(f"Found user_id in token: {user_id}")
         user = User.objects.get(id=user_id)
-        print(f"Found user: {user}")
         return user
     except (jwt.ExpiredSignatureError, jwt.InvalidTokenError, User.DoesNotExist) as e:
-        print(f"Error authenticating token: {str(e)}")
         return AnonymousUser()
 
 class JWTAuthMiddleware(BaseMiddleware):

@@ -21,8 +21,50 @@ from channels.layers import get_channel_layer
 from asgiref.sync import async_to_sync
 from django.contrib.auth.models import AnonymousUser
 from django.conf import settings
+from chat.models import Messages
 
 
+class sendchat(APIView):
+    def post(self, request):
+        # Extract data from the request
+        chat_id = request.data.get("chat_id")
+        message = request.data.get("message")
+        send = request.data.get("send")
+        receive = request.data.get("receive")
+        timestamp = request.data.get("timestamp")
+        
+        print("chat_id",chat_id), print("message",message), print("send",send), print("receive",receive), print("timestamp",timestamp)
+        # Validate the input (add proper validation as needed)
+        if not (chat_id and message and send and receive and timestamp):
+            return Response({"error": "All fields are required"})
+
+        # Send the event to the WebSocket
+        channel_layer = get_channel_layer()
+        receiver_group = f"chat_{receive}"  # Group name for the receiver
+
+        async_to_sync(channel_layer.group_send)(
+            receiver_group,  # Send to the receiver's group
+            {
+                "type": "chat_message",  # This matches the method in the consumer
+                "chat_id": chat_id,
+                "message": message,
+                "send": send,
+                "receive": receive,
+                "timestamp": timestamp,
+            }
+        )
+        # chat_id = event['chat_id']
+        # message = event['message']
+        # send = event['send']
+        # receive = event['receive']
+        # timestamp = event['timestamp']
+        # Save the message to the database
+        Messages.objects.create(
+            user_one=User.objects.get(username=send), user_two=User.objects.get(username=receive),
+            message_content=message, message_date=timestamp
+        )
+
+        return Response({"success": "Message sent"})
 class FriendsView(APIView):
     # authentication_classes = [JWTAuthentication]
     permission_classes = [IsAuthenticated]
