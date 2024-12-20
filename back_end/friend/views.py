@@ -35,7 +35,7 @@ class sendchat(APIView):
         
         print("chat_id",chat_id), print("message",message), print("send",send), print("receive",receive), print("timestamp",timestamp)
         # Validate the input (add proper validation as needed)
-        if not (chat_id and message and send and receive and timestamp):
+        if not (chat_id and message and send and receive):
             return Response({"error": "All fields are required"})
 
         # Send the event to the WebSocket
