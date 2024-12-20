@@ -12,7 +12,7 @@ function TwoFA({setIs2FA}) {
   
 
   const LoggedInUser = useUser();
-  console.log("LoggedInUser", LoggedInUser.userData);
+  // console.log("LoggedInUser", LoggedInUser.userData);
 
 
   //-------------------------------------------------------------------------------------

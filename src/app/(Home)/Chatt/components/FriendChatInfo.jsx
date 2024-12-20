@@ -105,7 +105,12 @@ export function PlayWithOption ({onClick}) {
     );
   }
 
-
+//   {
+//     "id": 26,
+//     "username": "bot",
+//     "is_on": 0,
+//     "image_field": "/images/images/profilepng.png"
+// }
   export function FriendChatInfo({ loggedInUser, friend, ...rest }) {
     
     const router = useRouter();
@@ -135,7 +140,7 @@ export function PlayWithOption ({onClick}) {
 
         {/* dropDownIcon  -------------------------------------------------------------- */}
         {/*  if the user selected already a friend, and the friend is not the tournament robot , then show the drop down icon */}
-        {rest.selectedFriend && friend.name !== "tournament" && (
+        {rest.selectedFriend && friend.username !== "bot" && (
           <FaAngleDown
             className="dropDownIcon text-4xl ml-auto mr-8  text-[#242F5C] cursor-pointer"
             onClick={rest.switchDropDownState}

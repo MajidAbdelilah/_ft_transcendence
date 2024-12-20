@@ -8,13 +8,12 @@ let keepAliveInterval = null;
 let isIntentionalDisconnect = false;
 
 
-
 const connectWebSocket = () => {
     if (ws) {
         ws.close();
     }
 
-    if (isIntentionalDisconnect) {
+    if (isIntentionalDisconnect ) {
         return;
     }
 

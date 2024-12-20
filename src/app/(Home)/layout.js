@@ -33,7 +33,7 @@ function RootLayoutContent({ children }) {
     if (userData && userData.is_2fa === true) {
       if (userData.redirect_to === false) {
         // console.log("dkhaaaaal33333");
-        router.replace("/authLogin");
+        setTimeout(() => { router.replace("/authLogin"); }, 3000);
       }
     }
   };

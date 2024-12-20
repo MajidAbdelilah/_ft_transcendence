@@ -377,7 +377,9 @@ useEffect(() => {
 
 
         {/*  SendMsgBox ---------------------------------------------------------------------------------------*/}
+        {friend.user.username !== "bot" && (
         <SendMsgBox loggedInUser={loggedInUser} friend={friend.user} />
+        )}
       </div>
     );
   }

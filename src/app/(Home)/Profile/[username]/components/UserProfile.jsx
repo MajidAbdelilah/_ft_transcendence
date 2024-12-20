@@ -100,8 +100,8 @@ function Part1({loggedInUser, user, isSelf}) {
       <div className="mt-12 text-sm md:text-md lg:text-lg xl:text-xl font-bold text-[#242F5C]">
         {user.username}
       </div>
-      <span className="text-xs   mt-1 text-[#8988DE] font-semibold">{user.is_on ? "Online" : "Offline"}</span>
-      <div className={`flex flex-row mt-2 text-[#242F5C] ${isSelf === true ? "invisible" : "visible"}`}>
+      <span className="text-xs   mt-1 text-[#8988DE] font-semibold">{user.is_on  ? "Online" : "Offline"}</span>
+      <div className={`flex flex-row mt-2 text-[#242F5C] ${(isSelf === true || user.username === "bot") ? "invisible" : "visible"}`}>
         <BsChatLeftText className="textUser mr-1 text-lg lg:text-xl cursor-pointer" onClick={() => handleTextUser(router)}/>
         <MdOutlinePersonAddAlt className="addFriend ml-1 text-xl lg:text-2xl cursor-pointer" onClick={() => handleAddFriend(loggedInUser, user)}/>
       </div>
@@ -171,7 +171,7 @@ function Part2({loggedInUser, user, isSelf}) {
 
       <LuUserX  
       onClick={() => handleBlockUser(loggedInUser, user)}
-      className={`blockUser text-[#242F5C] text-3xl ${isSelf === true ? "invisible" : "visible"} cursor-pointer`} />
+      className={`blockUser text-[#242F5C] text-3xl ${(isSelf === true || user.username === "bot")? "invisible" : "visible"} cursor-pointer`} />
 
       <div className="level flex flex-col items-start w-full mb-4">
         <span className=" text-[#242F5C] font-semibold text-xs ">Level {level}</span>
