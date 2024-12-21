@@ -137,7 +137,7 @@ class PingPongConsumer(AsyncWebsocketConsumer):
         self.username = ''
         self.gamestart_sent = False
         for room_name in self.room_var:
-            if(self.room_var[room_name].get('is_tournament', False)):
+            if(self.room_var[room_name].get('is_tournament', False) and self.tournament_room_name != None):
                 num_players = sum(1 for player in self.room_var[room_name]['players'].values() if player.get('full'))
                 if num_players < 4:
                     self.room_name = room_name
@@ -452,6 +452,7 @@ class PingPongConsumer(AsyncWebsocketConsumer):
                         await self.disconnect(1000)
                         del self.room_var[self.room_name]
                         break
+                    print('1')
                     players = self.room_var[self.room_name]['players']
                     if not players['player1']['game_start'] or not players['player2']['game_start']:
                         await asyncio.sleep(1/60)
