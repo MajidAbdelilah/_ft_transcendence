@@ -1,12 +1,13 @@
 import customAxios from '../customAxios';
 
-// WebSocket connection for bracket updates
 let ws = null;
+let reconnectInterval = 5000; // Reconnect every 5 seconds
 
 // Cache for tournament data
 let lastKnownTournamentData = null;
 
 const initializeBracketWebSocket = () => {
+  console.log('Initializing Bracket WebSocket...');
   if (!ws || ws.readyState === WebSocket.CLOSED) {
     ws = new WebSocket(`ws://127.0.0.1:8000/ws/tournament/tour/PLAY/`);
   }
@@ -18,6 +19,7 @@ const initializeBracketWebSocket = () => {
 
     const originalOnOpen = ws.onopen;
     ws.onopen = (event) => {
+      console.log('Bracket WebSocket connected');
       clearTimeout(timeout);
       if (originalOnOpen) originalOnOpen(event);
       resolve(ws);
@@ -27,7 +29,7 @@ const initializeBracketWebSocket = () => {
     const originalOnMessage = ws.onmessage;
     ws.onmessage = (event) => {
       const data = JSON.parse(event.data);
-      setTimeout(1000)
+      setTimeout(1000);
 
       if (originalOnMessage) originalOnMessage(event);
     };
@@ -36,9 +38,11 @@ const initializeBracketWebSocket = () => {
       console.error('Bracket WebSocket Error:', error);
       clearTimeout(timeout);
       reject(error);
+      reconnectWebSocket();
     };
 
     ws.onclose = () => {
+      reconnectWebSocket();
     };
 
     // If already open, resolve immediately
@@ -49,12 +53,26 @@ const initializeBracketWebSocket = () => {
   });
 };
 
+const reconnectWebSocket = () => {
+  console.log(`Attempting to reconnect in ${reconnectInterval / 1000} seconds...`);
+  setTimeout(() => {
+    initializeBracketWebSocket()
+      .then(() => {
+        console.log('Reconnected to WebSocket');
+      })
+      .catch((error) => {
+        console.error('Failed to reconnect to WebSocket:', error);
+        reconnectWebSocket();
+      });
+  }, reconnectInterval);
+};
+
 export const gameService = {
   // Initialize WebSocket connection
   initializeBracketWebSocket,
 
   // Join tournament via WebSocket
-  joinTournament: async (userData, mapType) => {
+  joinTournament: async (userData, mapType, alias) => {
     try {
       // Ensure WebSocket is connected
       const socket = await gameService.initializeBracketWebSocket();
@@ -67,7 +85,8 @@ export const gameService = {
             data: {
               userId: userData.id,
               username: userData.username,
-              mapType
+              mapType,
+              alias
             }
           }));
 
@@ -77,7 +96,8 @@ export const gameService = {
             data: {
               userId: userData.id,
               username: userData.username,
-              mapType
+              mapType,
+              alias
             }
           }));
 
@@ -125,6 +145,7 @@ export const gameService = {
       const messageHandler = (event) => {
         const data = JSON.parse(event.data);
         if (data.type === 'BRACKET_UPDATE' && data.tournamentId === tournamentId) {
+          console.log('Bracket update:', data);
           // Update finals players based on semifinal winners
           if (data.matches && data.matches.semifinals && data.matches.final) {
             const semifinals = data.matches.semifinals;

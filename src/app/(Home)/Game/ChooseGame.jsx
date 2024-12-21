@@ -27,28 +27,40 @@ function MainComponent() {
   const [isSearching, setIsSearching] = useState(false);
   const [tournamentCreator, setTournamentCreator] = useState(null);
   const [tournamentId, setTournamentId] = useState(null);
+  const [showAliasPopup, setShowAliasPopup] = useState(false);
+  const [alias, setAlias] = useState(''); // State variable for alias
+
   const [tournamentData, setTournamentData] = useState({
     type: 'BRACKET_UPDATE',
     tournamentId: null,
     matches: {
       semifinals: {
-        match1: {
-          player1: null,
-          player2: null,
-          winner: null
-        },
-        match2: {
-          player1: null,
-          player2: null,
-          winner: null
-        }
+          match1: {
+              p1: null,
+              p1_alias: null,
+              p2: null,
+              p2_alias: null,
+              winner: null,
+              winner_alias: null
+          },
+          match2: {
+              p1: null,
+              p1_alias: null,
+              p2: null,
+              p2_alias: null,
+              winner: null,
+              winner_alias: null
+          }
       },
       final: {
-        player1: null,
-        player2: null,
-        winner: null
+          p1: null,
+          p1_alias: null,
+          p2: null,
+          p2_alias: null,
+          winner: null,
+          winner_alias: null
       }
-    }
+  }
   });
   const [showFriendsPopup, setShowFriendsPopup] = useState(false);
   const [friends, setFriends] = useState([]);
@@ -105,6 +117,19 @@ function MainComponent() {
 
     const setupListener = async () => {
       const cleanup = await gameService.setupBracketListener(tournamentId, (bracketData) => {
+        let wich_map = ''
+          if(bracketData.player1 === userData.username){
+            wich_map = bracketData.map1
+          }
+          if(bracketData.player2 === userData.username){
+            wich_map = bracketData.map2
+          }
+          if(bracketData.player3 === userData.username){
+            wich_map = bracketData.map3
+          }
+          if(bracketData.player4 === userData.username){
+            wich_map = bracketData.map4
+          }
         
         if (bracketData.type === 'gamestart') {
           const params = new URLSearchParams({
@@ -113,11 +138,12 @@ function MainComponent() {
             player2: bracketData.player2,
             player3: bracketData.player3,
             player4: bracketData.player4,
-            map: bracketData.map,
+            map: wich_map,
           });
           const gameUrl = `/Game/ping-pong?${params.toString()}`;
           router.push(gameUrl);
         } else if (bracketData.type === 'BRACKET_UPDATE') {
+          console.log('Bracket update:', bracketData);
           setTournamentData(bracketData);
         }
       });
@@ -159,14 +185,25 @@ function MainComponent() {
       toast.error('Please select a map first!');
       return;
     }
+
+    if (!alias) {
+      toast.error('Please enter an alias name');
+      return;
+    }
+    else
+    { 
+      setShowAliasPopup(false);
+      console.log(alias)
+    }
     
     setIsJoining(true);
     try {
-      const result = await gameService.joinTournament(userData, selectedMap);
+      const result = await gameService.joinTournament(userData, selectedMap, alias);
       if (result.success) {
         setHasJoinedTournament(true);
         setTournamentId(result.tournamentId);
         toast.success('Successfully joined tournament queue!');
+        // show A popup to let the user enter his alias name
       } else {
         if (result.error === 'already in tournament') {
           setHasJoinedTournament(true);
@@ -215,9 +252,15 @@ function MainComponent() {
   };
 
   const handleCloseTournament = () => {
+    console.log('Closing tournament');
     setShowTournament(false);
     window.location.href = '/Game';
   };
+
+  const handleAlias = () => {
+    setShowAliasPopup(true);
+  }
+
 
   return (
     <div className="relative w-full h-full">
@@ -329,7 +372,7 @@ function MainComponent() {
               </button>
               <button 
                 className="w-full md:w-[300px] mx-auto py-3 md:py-4 bg-[#242F5C] rounded-xl md:rounded-full cursor-pointer font-bold md:font-extrabold text-base md:text-lg text-white shadow-md hover:shadow-lg flex items-center justify-center gap-2 transition-all duration-300 hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
-                onClick={() => handleJoinTournament()}
+                onClick={() => handleAlias()}
                 disabled={isJoining || hasJoinedTournament || !selectedMap || isMode === 'Friends' || isMode === 'Bot'}
               >
                 <img 
@@ -340,6 +383,44 @@ function MainComponent() {
                 {isJoining ? 'Joining...' : hasJoinedTournament ? 'Already in Tournament' : 'Join Tournament'}
               </button>
             </div>
+            {showAliasPopup && (
+                //make a popup to let the user enter his alias name
+                <div className="fixed inset-0 z-50">
+                  <div className="fixed inset-0 backdrop-blur-md bg-[#F4F4FF]/30" />
+                  <div className="relative h-full flex items-center justify-center">
+                    <motion.div 
+                      initial={{ scale: 0.9, opacity: 0 }}
+                      animate={{ scale: 1, opacity: 1 }}
+                      exit={{ scale: 0.9, opacity: 0 }}
+                      className="bg-[#F4F4FF] rounded-3xl p-4 md:p-8 w-[95%] md:w-[90%] max-w-[500px] max-h-[90vh] md:max-h-[80vh] shadow-lg border border-[#BCBCC9] m-4 overflow-hidden"
+                    >
+                      <div className="flex justify-between items-center mb-6">
+                        <h2 className="text-xl md:text-2xl font-extrabold text-[#242F5C]">Enter Alias Name</h2>
+                      </div>
+                      <div className="mb-6">
+                        <div className="flex items-center gap-3 bg-white rounded-xl p-3 shadow-sm">
+                       
+                          <input 
+                            type="text" 
+                            placeholder="Enter your alias name" 
+                            className="w-full px-3 py-2 rounded-xl font-semibold text-[#242F5C] bg-transparent border-none focus:outline-none"
+                            onChange={(e) => setAlias(e.target.value)}
+                          />
+                        </div>
+                      </div>
+                      <div className="flex justify-end">
+                        <button
+                          onClick={() => handleJoinTournament()}
+                          
+                          className="px-5 py-2 rounded-xl font-semibold transition-all cursor-pointer ease-in-out duration-300 bg-[#242F5C] text-white hover:bg-[#1a2340] hover:scale-105"
+                        >
+                          Submit
+                        </button>
+                      </div>
+                    </motion.div>
+                  </div>
+                </div>
+              )}
           </div>
         </motion.div>
       </div>
