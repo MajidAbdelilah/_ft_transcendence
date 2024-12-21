@@ -6,6 +6,7 @@ RUN openssl req -x509 -nodes -days 365 -newkey rsa:2048 \
     -keyout /app/nginx.key -out /app/nginx.crt \
     -subj "/C=US/ST=State/L=City/O=Organization/OU=Department/CN=127.0.0.1"
 COPY default.conf /etc/nginx/nginx.conf
+RUN mkdir -p /var/www/frontend/
 RUN cp /app/nginx.key /etc/nginx/
 RUN cp /app/nginx.crt /etc/nginx/
 RUN chmod 600 /etc/nginx/nginx.key /etc/nginx/nginx.crt
