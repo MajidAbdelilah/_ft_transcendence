@@ -75,10 +75,7 @@ export default function Friends() {
           customAxios.get('http://127.0.0.1:8000/friend/friend-request'),
           customAxios.get('http://127.0.0.1:8000/friend/blocked-friends'),
         ]);
-        console.log("friendsList:",friendsList.data);
-        console.log("FriendRes:",FriendRes.data);
-        console.log("blockedRes:",blockedRes.data);
-        setFriendsData(friendsList.data)
+        setFriendsData(friendsList.data.filter(user => user.user.username !== 'bot'))
         setFriendRequestsData(FriendRes.data)
         setBlockedFriendsData(blockedRes.data)
       } catch (error) {
@@ -98,11 +95,9 @@ export default function Friends() {
       try {
         switch (data.type) {
           case 'user_status':
-            console.log('Received user_status update:', data);
             setFriendsData(prev => {
               const updatedFriends = prev.map(friend => {
                 if (friend.user.id === data.id) {
-                  console.log(`Updating status for friend ${friend.user.username} to ${data.is_on ? 'online' : 'offline'}`);
                   return {
                     ...friend,
                     user: {
@@ -113,7 +108,6 @@ export default function Friends() {
                 }
                 return friend;
               });
-              console.log('Updated friends data:', updatedFriends);
               return updatedFriends;
             });
             break;
@@ -121,12 +115,13 @@ export default function Friends() {
           case 'friends_list_update':
             if (data.action === 'add') {
               // Add new friend to friends list
-              setFriendsData(prev => [...prev, data.friend]);
+              if (data.friend.user.username !== 'bot') {
+                setFriendsData(prev => [...prev, data.friend]);
+              }
               // Remove from friend requests if it exists
               setFriendRequestsData(prev => prev.filter(req => req.freindship_id !== data.friend.freindship_id));
             } else if (data.action === 'block') {
               // We've been blocked by someone
-              console.log('Blocked by user:', data);
               const friendshipId = data.friend.freindship_id;
               // Remove from friends list
               setFriendsData(prev => 
@@ -144,7 +139,6 @@ export default function Friends() {
 
           // case 'friends-add':
           case 'friends_add':
-            console.log('Friend request received:', data);
             setFriendRequestsCount(prev => prev + 1);
             // Add the new friend request to the list
             setFriendRequestsData(prev => [...prev, {
@@ -155,12 +149,10 @@ export default function Friends() {
             break;
 
           case 'friend_request_sent':
-            console.log('Friend request sent:', data);
             // Don't increment the count for sent requests
             break;
 
           case 'friends_accept':
-            console.log('Friend request accepted:', data);
             // Update friend request count and data
             setFriendRequestsCount(prev => Math.max(0, prev - 1));
             setFriendRequestsData(prev => 
@@ -170,7 +162,6 @@ export default function Friends() {
 
           case 'friend-rejected':
           case 'friend_rejected':
-            console.log('Friend request rejected:', data);
             // Update friend request count and data
             setFriendRequestsCount(prev => Math.max(0, prev - 1));
             setFriendRequestsData(prev => 
@@ -181,7 +172,6 @@ export default function Friends() {
             break;
 
           case 'friends_remove_success':
-            console.log('Friend request removed successfully:', data);
             // Update friend request data
             setFriendRequestsData(prev => 
               prev.filter(req => 
@@ -191,7 +181,6 @@ export default function Friends() {
             break;
 
           case 'friends_block_success':
-            console.log('Friend blocked successfully:', data);
             // Remove from friends list since is_accepted is set to false
             setFriendsData(prev => 
               prev.filter(friend => 
@@ -216,7 +205,6 @@ export default function Friends() {
             break;
 
           case 'friends_unblock_success':
-            console.log('Friend unblocked successfully:', data);
             // Remove from blocked list
             const unblockedUser = blockedFriendsData.find(blocked => 
               blocked.freindship_id === data.freindship_id
@@ -228,19 +216,21 @@ export default function Friends() {
             );
             // Add to friends list matching the block response structure
             if (unblockedUser && unblockedUser.user) {
-              setFriendsData(prev => [...prev, {
-                freindship_id: data.freindship_id,
-                user: {
-                  id: unblockedUser.user.id,
-                  username: unblockedUser.user.username,
-                  is_on: unblockedUser.user.is_on,
-                  image_field : unblockedUser.user.image_field,
-                },
-                is_accepted: true,
-                user_from: data.user_from,
-                user_to: data.user_to,
-                user_is_logged_in: unblockedUser.user.is_on
-              }]);
+              if (unblockedUser.user.username !== 'bot') {
+                setFriendsData(prev => [...prev, {
+                  freindship_id: data.freindship_id,
+                  user: {
+                    id: unblockedUser.user.id,
+                    username: unblockedUser.user.username,
+                    is_on: unblockedUser.user.is_on,
+                    image_field : unblockedUser.user.image_field,
+                  },
+                  is_accepted: true,
+                  user_from: data.user_from,
+                  user_to: data.user_to,
+                  user_is_logged_in: unblockedUser.user.is_on
+                }]);
+              }
             }
             break;
 

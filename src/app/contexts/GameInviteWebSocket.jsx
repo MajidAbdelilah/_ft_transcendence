@@ -27,7 +27,6 @@ export function GameInviteWebSocketProvider({ children }) {
       const ws = new WebSocket('ws://127.0.0.1:8000/ws/game/invite/');
       
       ws.onopen = () => {
-        // console.log('🎮 Game invitation WebSocket connected');
       };
 
       ws.onmessage = (event) => {
@@ -58,8 +57,6 @@ export function GameInviteWebSocketProvider({ children }) {
       };
 
       ws.onclose = (e) => {
-        // console.log('🎮 Game invitation WebSocket disconnected:', e.reason);
-        // Attempt to reconnect after a delay, unless it was intentionally closed
         if (userData) {
           setTimeout(connectWebSocket, 3000);
         }

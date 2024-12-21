@@ -36,10 +36,6 @@ export default function BlockedFriends({ blockedFriend }: BlockedFriendProps) {
 
   const handleUnblock = async () => {
     try {
-      console.log("Sending friend unblock request:", {
-        freindship_id: blockedFriend.freindship_id,
-        user: blockedFriend.user
-      });
       send({
         type: 'friends-unblock',
         freindship_id: blockedFriend.freindship_id,
@@ -47,10 +43,6 @@ export default function BlockedFriends({ blockedFriend }: BlockedFriendProps) {
         user_from: blockedFriend.user_from,
         user_to: blockedFriend.user_to,
         user_is_logged_in: blockedFriend.user_is_logged_in
-      });
-      console.log("Friend unblock message sent:", {
-        freindship_id: blockedFriend.freindship_id,
-        user: blockedFriend.user
       });
     } catch (error) {
       console.error('Error unblocking friend:', error)

@@ -27,7 +27,6 @@ const initializeBracketWebSocket = () => {
     const originalOnMessage = ws.onmessage;
     ws.onmessage = (event) => {
       const data = JSON.parse(event.data);
-      // console.log('Received tournament data:', data);
       setTimeout(1000)
 
       if (originalOnMessage) originalOnMessage(event);
@@ -40,7 +39,6 @@ const initializeBracketWebSocket = () => {
     };
 
     ws.onclose = () => {
-      console.log('Bracket WebSocket connection closed');
     };
 
     // If already open, resolve immediately

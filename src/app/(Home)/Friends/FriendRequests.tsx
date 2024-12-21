@@ -42,10 +42,7 @@ export default function FriendRequests({ request }: FriendRequestProps) {
     setError(null);
     setIsLoading(prev => ({ ...prev, accept: true }));
     try {
-      console.log("Sending friend accept request:", {
-        freindship_id: request.freindship_id,
-        user: request.user
-      });
+
       send({
         type: 'friend-accept',
         freindship_id: request.freindship_id,
@@ -53,10 +50,6 @@ export default function FriendRequests({ request }: FriendRequestProps) {
         user_from: request.user_from,
         user_to: request.user_to,
         user_is_logged_in: request.user_is_logged_in
-      });
-      console.log("Friend request accept message sent:", {
-        freindship_id: request.freindship_id,
-        user: request.user
       });
     } catch (error) {
       console.error('Error accepting friend request:', error)
@@ -71,10 +64,7 @@ export default function FriendRequests({ request }: FriendRequestProps) {
     setError(null);
     setIsLoading(prev => ({ ...prev, reject: true }));
     try {
-      console.log("Sending friend reject request:", {
-        freindship_id: request.freindship_id,
-        user: request.user
-      });
+
       send({
         type: 'friends-reject',
         freindship_id: request.freindship_id,
@@ -82,10 +72,6 @@ export default function FriendRequests({ request }: FriendRequestProps) {
         user_from: request.user_from,
         user_to: request.user_to,
         user_is_logged_in: request.user_is_logged_in
-      });
-      console.log("Friend request reject message sent:", {
-        freindship_id: request.freindship_id,
-        user: request.user
       });
     } catch (error) {
       console.error('Error rejecting friend request:', error)

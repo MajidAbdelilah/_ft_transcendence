@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import styles from './PingPongGame.module.css';
 import { Montserrat } from 'next/font/google';
+import customAxios from '../../../customAxios';
 
 const montserrat = Montserrat({
   subsets: ['latin'],
@@ -24,6 +25,8 @@ const PingPongGame = ({ roomName, player1, player2, player3, player4, map, isTou
     const cleanupRef = useRef(false);
     const i_lost = useRef(false);
     const searchParams = useSearchParams();
+    const chat_bot_message_already_sent = useRef(false);
+    const finalStartedRef = useRef(false);
 
     // Effect to update username if player1 prop changes
     useEffect(() => {
@@ -115,7 +118,6 @@ const PingPongGame = ({ roomName, player1, player2, player3, player4, map, isTou
             };
 
             ws.onclose = (e) => {
-                console.log('Game WebSocket closed:', e.reason);
                 wsRef.current = null;
                 setSocket(null);
                 
@@ -138,6 +140,22 @@ const PingPongGame = ({ roomName, player1, player2, player3, player4, map, isTou
 
     }, [roomName, myUsername, isTournament, isRedirecting]);
 
+    async function send_chat_bot (data)  {
+        if(chat_bot_message_already_sent.current === true) {
+            return;
+        }
+        chat_bot_message_already_sent.current = true;
+        const response = await customAxios.post('http://127.0.0.1:8000/friend/sendchat/', {
+            
+                send: 'bot',
+                receive: data.players[playerRoleRef.current].username,
+                message: "you will play against " + data.players[player2StateRef.current].username,
+                timestamp: '',
+                chat_id: 'id: ' + Math.random()
+        })
+    
+    };
+
     const handleTournamentData = (data) => {
         let currentMatch = '';
         let foundMatch = false;
@@ -150,11 +168,11 @@ const PingPongGame = ({ roomName, player1, player2, player3, player4, map, isTou
 
                 if (currentMatch === 'match1') {
                     player2StateRef.current = role === 'player1' ? 'player2' : 'player1';
-
+                    send_chat_bot(data);
                     if(data.matches[currentMatch].winner) {
 
                         if (data.matches[currentMatch].winner === playerRoleRef.current) {
-
+                            // chat_bot_message_already_sent.current = false;
                             i_lost.current = false;
                         } else if (data.matches[currentMatch].game_start === false) {
 
@@ -166,10 +184,11 @@ const PingPongGame = ({ roomName, player1, player2, player3, player4, map, isTou
                     }
                 } else if (currentMatch === 'match2') {
                     player2StateRef.current = role === 'player3' ? 'player4' : 'player3';
+                    send_chat_bot(data);
                     if(data.matches[currentMatch].winner) {
 
                         if (data.matches[currentMatch].winner === playerRoleRef.current) {
-
+                            // chat_bot_message_already_sent.current = false;
                             i_lost.current = false;
                         } else  if (data.matches[currentMatch].game_start === false) {
                             handleGameEnd();
@@ -183,6 +202,12 @@ const PingPongGame = ({ roomName, player1, player2, player3, player4, map, isTou
                     } else if(match['p2_username'] === myUsername) {
                         player2StateRef.current = match['player1'];
                     }
+                    if(finalStartedRef.current === false) {
+                        chat_bot_message_already_sent.current = false;
+                    }
+                    finalStartedRef.current = true;
+                    send_chat_bot(data);
+
                 } else {
                 }
                 break;
@@ -214,7 +239,7 @@ const PingPongGame = ({ roomName, player1, player2, player3, player4, map, isTou
         ctx.font = '28px Arial';
         ctx.fillStyle = 'black';
         ctx.textAlign = 'center';
-        ctx.fillText('Waiting for other player to be ready... press space to be ready', canvas.width / 2, canvas.height / 2);
+        ctx.fillText('Waiting for other player to be ready...', canvas.width / 2, canvas.height / 2);
         ctx.fill();
     };
 
@@ -238,6 +263,11 @@ const PingPongGame = ({ roomName, player1, player2, player3, player4, map, isTou
 
         if (data.is_tournament) {
             drawTournamentGame(ctx, canvas, data);
+            const currentMatch = data.players[playerRoleRef.current].current_match;
+
+            if(data.matches[currentMatch].game_start === false) {
+                updateWaitingScreen();
+            }
         } else if(data.players && !data.players.player4){
             drawNormalGame(ctx, canvas, data);
         }
@@ -289,16 +319,16 @@ const PingPongGame = ({ roomName, player1, player2, player3, player4, map, isTou
             ctx.fillText(data.players.player2.username, data.players.player2.x - 300, 50);
             // draw scores
             ctx.font = '80px Arial';
-            ctx.fillText(data.players.player1.score, canvas.width / 2 + 50, canvas.height / 2 + 50);
-            ctx.fillText(data.players.player2.score, canvas.width / 2 - 100, canvas.height / 2 + 50);
+            ctx.fillText(data.players.player1.score, canvas.width / 2 - 100, 100);
+            ctx.fillText(data.players.player2.score, canvas.width / 2 + 50, 100);
         }else {
             ctx.font = '30px Arial';
             ctx.fillText(data.players.player1.username, data.players.player1.x - 300, 50);
             ctx.fillText(data.players.player2.username, data.players.player2.x + 300, 50);
             // draw scores
             ctx.font = '80px Arial';
-            ctx.fillText(data.players.player1.score, canvas.width / 2 - 50, canvas.height / 2 + 50);
-            ctx.fillText(data.players.player2.score, canvas.width / 2 + 100, canvas.height / 2 + 50);
+            ctx.fillText(data.players.player1.score, canvas.width / 2 + 100, 100);
+            ctx.fillText(data.players.player2.score, canvas.width / 2 - 50, 100);
         }
         
         ctx.fill();
@@ -458,6 +488,7 @@ const PingPongGame = ({ roomName, player1, player2, player3, player4, map, isTou
     return (
         <div className={`${styles.gameContainer} ${montserrat.className}`}>
             <canvas ref={canvasRef} className={styles.canvas} />
+            <div className={styles.gameMessage}>press "Up" or "Down" buttons to play</div>
         </div>
     );
 };

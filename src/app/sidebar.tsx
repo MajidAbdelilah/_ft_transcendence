@@ -25,7 +25,6 @@ export default function Sidebar() {
   const [avatarLoading, setAvatarLoading] = useState(true);
   const [isLoggingOut, setIsLoggingOut] = useState(false);
 
-  // console.log("userData:", userData.image_field);
 
 
   const sideRef = useClickAway<HTMLDivElement>(() => {
