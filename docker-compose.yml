@@ -23,7 +23,7 @@ services:
       - 8000:8000
     volumes:
       - ./env/.env:/app/.env
-      # - backend_v:/app/backend/
+      - backend_v:/app/backend
     networks:
       - nat
 
@@ -88,10 +88,10 @@ volumes:
       type: 'none'
       o: 'bind'
       device: '${PWD}/frontend'
-  # backend_v:
-  #   driver: local
-  #   driver_opts:
-  #     type: 'none'
-  #     o: 'bind'
-  #     device: '${PWD}/backend'
+  backend_v:
+    driver: local
+    driver_opts:
+      type: 'none'
+      o: 'bind'
+      device: '${PWD}/backend/back_end'
 

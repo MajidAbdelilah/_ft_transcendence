@@ -39,20 +39,20 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/deploym
 
 #location endpoint :
 
-http://127.0.0.1:8000/chat/messages --> get data
+https://127.0.0.1/api/chat/messages --> get data
 
-ws://127.0.0.1:8000/ws/chat/<room_id>/--> websocket chat
+wss://127.0.0.1/api/wss/chat/<room_id>/--> websocket chat
 
-http://127.0.0.1:8000/friend/friends --> get data
+https://127.0.0.1/api/friend/friends --> get data
 
-http://127.0.0.1:8000/friend/friends-accept ---> accept friend
+https://127.0.0.1/api/friend/friends-accept ---> accept friend
 
-http://127.0.0.1:8000/friend/friends-add --> add friend 
+https://127.0.0.1/api/friend/friends-add --> add friend 
 
-http://127.0.0.1:8000/friend/friends-block --> block friend 
+https://127.0.0.1/api/friend/friends-block --> block friend 
 
-http://127.0.0.1:8000/friend/blocked-friends --> get data 
+https://127.0.0.1/api/friend/blocked-friends --> get data 
 
-http://127.0.0.1:8000/friend/friends-remove ->remove friend 
+https://127.0.0.1/api/friend/friends-remove ->remove friend 
 
-http://127.0.0.1:8000/friend/notifications --->get notification 
+https://127.0.0.1/api/friend/notifications --->get notification 

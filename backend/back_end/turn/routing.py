@@ -5,8 +5,8 @@ from django.urls import path
 from turn import consumers
 
 websocket_urlpatterns = [
-    path("ws/tournament/<str:room_name>/", consumers.PingPongConsumer.as_asgi()),
-    path("ws/tournament/<str:room_name>/<str:tournament_room_name>/", consumers.PingPongConsumer.as_asgi()),
+    path("wss/tournament/<str:room_name>/", consumers.PingPongConsumer.as_asgi()),
+    path("wss/tournament/<str:room_name>/<str:tournament_room_name>/", consumers.PingPongConsumer.as_asgi()),
 ]
 
 application = ProtocolTypeRouter({

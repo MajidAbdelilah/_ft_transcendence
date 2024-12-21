@@ -8,7 +8,7 @@ The game invitation system allows users to send and receive game invitations in 
 ### 1. WebSocket Connection
 - Each user maintains a WebSocket connection to receive real-time updates
 - Connection is established when user logs in
-- Connection URL: `ws://127.0.0.1:8000/ws/user_data/`
+- Connection URL: `wss://127.0.0.1/api/wss/user_data/`
 
 ### 2. Data Structures
 

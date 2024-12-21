@@ -21,7 +21,7 @@ export async function blockService(friend) {
     try {
         // console.log("friend------", friend);
         const respond = await axios.post(
-            "http://127.0.0.1:8000/friend/friends-remove/",
+            "https://127.0.0.1/api/friend/friends-remove/",
             { username: friend.username },
             { withCredentials: true, headers: {} }
         );

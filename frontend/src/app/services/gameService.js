@@ -8,7 +8,7 @@ let lastKnownTournamentData = null;
 
 const initializeBracketWebSocket = () => {
   if (!ws || ws.readyState === WebSocket.CLOSED) {
-    ws = new WebSocket(`ws://127.0.0.1:8000/ws/tournament/tour/PLAY/`);
+    ws = new WebSocket(`wss://127.0.0.1/api/wss/tournament/tour/PLAY/`);
   }
 
   return new Promise((resolve, reject) => {

@@ -76,7 +76,7 @@ function LoginPage() {
 
   function handle42API(e) {
     const clientCode ="u-s4t2ud-8857b50966dae8833218606e75e75e8bd7b86783dd338bf3fdca4a0a8ded6349";
-    const redirectUrl = "http://127.0.0.1:8000/oauth/user_data";
+    const redirectUrl = "https://127.0.0.1/api/oauth/user_data";
     window.location.href = `https://api.intra.42.fr/oauth/authorize?client_id=${clientCode}&redirect_uri=${redirectUrl}/&response_type=code&scope=public%20projects&prompt=consent`;
   }
 
@@ -94,7 +94,7 @@ function LoginPage() {
       try {
         setIsLoading(true);
         const response = await customAxios.get(
-          "http://127.0.0.1:8000/api/user_logged_in/",
+          "https://127.0.0.1/api/api/user_logged_in/",
           {
             withCredentials: true,
           }

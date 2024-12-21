@@ -183,15 +183,15 @@ AUTH_USER_MODEL = 'authapp.User'
 #cors header settings
 CORS_ALLOW_CREDENTIALS = True
 CORS_ALLOWED_ORIGINS = [
-    "http://127.0.0.1:3000",
-    "http://127.0.0.1:8001",
-    "http://127.0.0.1:8002",
+    "https://127.0.0.1",
+    # "http://127.0.0.1:8001",
+    # "http://127.0.0.1:8002",
 
 ]
 
 
 CSRF_TRUSTED_ORIGINS = [
-    'http://127.0.0.1:8000',
+    'https://127.0.0.1/api',
     'http://localhost:8000',
     # Add other trusted origins here
     "http://127.0.0.1:8001",
@@ -270,3 +270,7 @@ os.environ['OAUTHLIB_INSECURE_TRANSPORT'] = '1'
 #Media
 MEDIA_URL = '/images/'
 MEDIA_ROOT = os.path.join(BASE_DIR,"images/")
+
+CHANNEL_SETTINGS = {
+    'BACKEND_URL': 'wss://0.0.0.0',
+}

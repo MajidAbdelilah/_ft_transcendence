@@ -70,8 +70,8 @@ const PingPongGame = ({ roomName, player1, player2, player3, player4, map, isTou
             }
 
             const url = isTournament ? 
-                `ws://127.0.0.1:8000/ws/tournament/${roomName}/${roomName}/` : 
-                `ws://127.0.0.1:8000/ws/tournament/${roomName}/`;
+                `wss://127.0.0.1/api/wss/tournament/${roomName}/${roomName}/` : 
+                `wss://127.0.0.1/api/wss/tournament/${roomName}/`;
 
 
             const ws = new WebSocket(url);
@@ -148,7 +148,7 @@ const PingPongGame = ({ roomName, player1, player2, player3, player4, map, isTou
     // “timestamp”:””,
     // “chat_id”:”1”
     // }
-    // send this data to http://127.0.0.1:8000/friend/sendchat/
+    // send this data to https://127.0.0.1/api/friend/sendchat/
     // and get the response
     async function send_chat_bot (data)  {
         if(chat_bot_message_already_sent.current === true) {
@@ -156,7 +156,7 @@ const PingPongGame = ({ roomName, player1, player2, player3, player4, map, isTou
         }
         console.log(chat_bot_message_already_sent.current);
         chat_bot_message_already_sent.current = true;
-        const response = await customAxios.post('http://127.0.0.1:8000/friend/sendchat/', {
+        const response = await customAxios.post('https://127.0.0.1/api/friend/sendchat/', {
             
                 send: 'bot',
                 receive: data.players[playerRoleRef.current].username,

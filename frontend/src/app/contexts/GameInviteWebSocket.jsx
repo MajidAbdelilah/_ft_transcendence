@@ -24,7 +24,7 @@ export function GameInviteWebSocketProvider({ children }) {
         wsRef.current.close();
       }
 
-      const ws = new WebSocket('ws://127.0.0.1:8000/ws/game/invite/');
+      const ws = new WebSocket('wss://127.0.0.1/api/wss/game/invite/');
       
       ws.onopen = () => {
         // console.log('🎮 Game invitation WebSocket connected');

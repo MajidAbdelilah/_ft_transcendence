@@ -1,4 +1,7 @@
 #!/bin/bash
+rm -rf node_modules
+rm package-lock.json
+npm cache clean --force
 npm install
 # apt-get update && apt-get install -y nginx openssl curl systemctl\
 #     && rm -rf /var/lib/apt/lists/*

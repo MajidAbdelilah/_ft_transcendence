@@ -60,7 +60,7 @@ function MainComponent() {
   useEffect(() => {
     const fetchFriends = async () => {
       try {
-        const response = await customAxios.get('http://127.0.0.1:8000/friend/friends');
+        const response = await customAxios.get('https://127.0.0.1/api/friend/friends');
         if (response.data) {
           setFriends(response.data);
           setError(null);
@@ -415,7 +415,7 @@ function MainComponent() {
                       <div className="flex items-center gap-4">
                         <div className="relative">
                           <img
-                            src={friend.user.image_field ? `http://127.0.0.1:8000/api${friend.user.image_field}` : "/images/Default_profile.png"}
+                            src={friend.user.image_field ? `https://127.0.0.1/api/api${friend.user.image_field}` : "/images/Default_profile.png"}
                             alt={friend.user.username}
                             width={60}
                             height={60}

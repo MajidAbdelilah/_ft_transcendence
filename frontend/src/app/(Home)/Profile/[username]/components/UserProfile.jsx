@@ -28,7 +28,7 @@ const handleTextUser = (router) => {
 const handleAddFriend = async (loggedInUser, user) => {
   try {
     const respond = await axios.post(
-      "http://127.0.0.1:8000/friend/friends-add/", 
+      "https://127.0.0.1/api/friend/friends-add/", 
       { username: user.username },
       { withCredentials: true, headers: {} }
     );
@@ -51,7 +51,7 @@ const handleAddFriend = async (loggedInUser, user) => {
 const handleBlockUser = async (loggedInUser, user) => {
   try {
     const respond = await axios.post(
-      "http://127.0.0.1:8000/friend/friends-remove/",
+      "https://127.0.0.1/api/friend/friends-remove/",
       { username: user.username },
       { withCredentials: true, headers: {} }
     );
@@ -94,7 +94,7 @@ function Part1({loggedInUser, user, isSelf}) {
 
     <div className="flex flex-col items-center">
         <img
-        src={user.image_field ? `http://127.0.0.1:8000/api/${user.image_field}` : "/images/Default_profile.png"}// image_feiled
+        src={user.image_field ? `https://127.0.0.1/api/api/${user.image_field}` : "/images/Default_profile.png"}// image_feiled
             width={60}
             height={60}
         

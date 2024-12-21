@@ -73,7 +73,7 @@ export default function Chat() {
 
 
  
-  // re comment those stuff in useeffect search for http://127.0.0.1:8000/api/user/
+  // re comment those stuff in useeffect search for https://127.0.0.1/api/api/user/
 
   // for testing perpse :
 

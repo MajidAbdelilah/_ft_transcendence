@@ -30,7 +30,7 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
     const fetchUserData = async () => {
       try {
         const response = await customAxios.get(
-          "http://127.0.0.1:8000/api/user/"
+          "https://127.0.0.1/api/api/user/"
         );
         if (response.status === 200)
         {

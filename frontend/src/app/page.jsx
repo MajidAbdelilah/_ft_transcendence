@@ -43,7 +43,7 @@ export default function LandingPage() {
       try {
         setIsLoading(true);
         const response = await customAxios.get(
-          "http://127.0.0.1:8000/api/user_logged_in/",
+          "https://127.0.0.1/api/api/user_logged_in/",
           {
             withCredentials: true,
           }

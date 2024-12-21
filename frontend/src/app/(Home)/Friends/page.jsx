@@ -71,9 +71,9 @@ export default function Friends() {
     const fetchData = async () => {
       try {
         const [friendsList, FriendRes , blockedRes] = await Promise.all([
-          customAxios.get('http://127.0.0.1:8000/friend/friends'),
-          customAxios.get('http://127.0.0.1:8000/friend/friend-request'),
-          customAxios.get('http://127.0.0.1:8000/friend/blocked-friends'),
+          customAxios.get('https://127.0.0.1/api/friend/friends'),
+          customAxios.get('https://127.0.0.1/api/friend/friend-request'),
+          customAxios.get('https://127.0.0.1/api/friend/blocked-friends'),
         ]);
         console.log("friendsList:",friendsList.data);
         console.log("FriendRes:",FriendRes.data);
