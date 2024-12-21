@@ -501,7 +501,7 @@ const PingPongGame = ({ roomName, player1, player2, player3, player4, map, isTou
     return (
         <div className={`${styles.gameContainer} ${montserrat.className}`}>
             <canvas ref={canvasRef} className={styles.canvas} />
-            <div className={styles.gameMessage}>press "Up" or "Down" buttons to play</div>
+            {/* <div className={styles.gameMessage}>press "Up" or "Down" buttons to play</div> */}
         </div>
     );
 };
