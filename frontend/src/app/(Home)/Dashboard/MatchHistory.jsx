@@ -19,7 +19,6 @@ function MatchHistory() {
     const fetchAllMatches = async () => {
       try {
         if (!userData || !userData.username) {
-          console.log('No user data available');
           setIsLoading(false);
           return;
         }
@@ -27,7 +26,7 @@ function MatchHistory() {
         setIsLoading(true);
         
         // Fetch from both APIs in parallel
-        const [normalMatchesResponse, aiMatchesResponse] = await Promise.all([
+        const [aiMatchesResponse, normalMatchesResponse] = await Promise.all([
           axios.get(`https://127.0.0.1/api/game/fetch_history/${userData.username}/`),
           axios.get(`https://127.0.0.1/api/game/matches/${userData.username}/`)
         ]);
@@ -35,6 +34,7 @@ function MatchHistory() {
         // Combine both results
         const normalMatches = normalMatchesResponse.data;
         const aiMatches = aiMatchesResponse.data;
+
 
         // Merge and sort by date (newest first)
         const allMatches = [...normalMatches, ...aiMatches].sort((a, b) => 
@@ -136,7 +136,7 @@ function MatchHistory() {
                           {match.player1 ? (match.player1 === userData.username ? match.player2_score : match.player1_score) : (match.player1_username === userData.username ? match.player2_score : match.player1_score)}
                         </td>
                         <td className="font-normal py-2 sm:py-3 md:py-4">
-                          {match.player1 ? (match.winner === "player1" ? match.player1 : match.player2) : (match.winner === "player1" ? match.player1_username : match.player2_username)}
+                          {match.winner !== "player1" && match.winner !== "player2" ? match.winner : (match.player1 ? (match.winner === "player1" ? match.player1 : match.player2) : (match.winner === "player1"  ? match.player1_username : match.player2_username))}
                           </td>
                         <td className="font-normal py-2 sm:py-3 md:py-4">
                           {new Date(match.date_time || match.date).toLocaleDateString('en-US', {

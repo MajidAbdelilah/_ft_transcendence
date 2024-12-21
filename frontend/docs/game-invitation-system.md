@@ -40,7 +40,7 @@ The game invitation system allows users to send and receive game invitations in 
 
 ### 1. WebSocket Connection Handler
 ```python
-@websocket_route('/ws/user_data/')
+@websocket_route('/wss/user_data/')
 async def handle_websocket(websocket):
     try:
         # Authenticate user

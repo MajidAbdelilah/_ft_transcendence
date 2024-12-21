@@ -7,12 +7,13 @@ const RECONNECT_INTERVAL = 3000;
 let keepAliveInterval = null;
 let isIntentionalDisconnect = false;
 
+
 const connectWebSocket = () => {
     if (ws) {
         ws.close();
     }
 
-    if (isIntentionalDisconnect) {
+    if (isIntentionalDisconnect ) {
         return;
     }
 
@@ -64,9 +65,9 @@ const connectWebSocket = () => {
             }
         };
 
-        ws.onerror = (error) => {
-            console.error('WebSocket error:', error);
-        };
+        // ws.onerror = (error) => {
+        //     console.error('WebSocket error:', error);
+        // };
     } catch (error) {
         console.error('Error creating WebSocket connection:', error);
     }

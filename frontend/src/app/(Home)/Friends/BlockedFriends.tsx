@@ -2,10 +2,10 @@
 
 import Image from "next/image"
 import { Montserrat } from "next/font/google"
-import { useState, useEffect } from "react";
+import { useState, useEffect } from "react"
 import customAxios from '../../customAxios'
 import { useWebSocket } from '../../contexts/WebSocketProvider';
-import {IconUserCancel} from '@tabler/icons-react';
+import {IconUserCancel} from '@tabler/icons-react'
 import { useUser } from '../../contexts/UserContext';
 
 const montserrat = Montserrat({
@@ -36,10 +36,6 @@ export default function BlockedFriends({ blockedFriend }: BlockedFriendProps) {
 
   const handleUnblock = async () => {
     try {
-      console.log("Sending friend unblock request:", {
-        freindship_id: blockedFriend.freindship_id,
-        user: blockedFriend.user
-      });
       send({
         type: 'friends-unblock',
         freindship_id: blockedFriend.freindship_id,
@@ -47,10 +43,6 @@ export default function BlockedFriends({ blockedFriend }: BlockedFriendProps) {
         user_from: blockedFriend.user_from,
         user_to: blockedFriend.user_to,
         user_is_logged_in: blockedFriend.user_is_logged_in
-      });
-      console.log("Friend unblock message sent:", {
-        freindship_id: blockedFriend.freindship_id,
-        user: blockedFriend.user
       });
     } catch (error) {
       console.error('Error unblocking friend:', error)
@@ -77,7 +69,7 @@ export default function BlockedFriends({ blockedFriend }: BlockedFriendProps) {
       <div className="flex items-center h-full p-2">
         <div className="relative w-16 h-16 md:w-20 md:h-20 lg:w-15 lg:h-15">
           <img
-            src={blockedFriend.user.image_field ? `https://127.0.0.1/api/${blockedFriend.user.image_field}` : "/images/DefaultAvatar.svg"}
+            src={blockedFriend.user.image_field ? `https://127.0.0.1/api/api${blockedFriend.user.image_field}` : "/images/DefaultAvatar.svg"}
             alt={`${blockedFriend.user.username}'s profile`} 
             className="w-full h-full rounded-full object-cover border-2 border-[#BCBCC9]"
           />

@@ -40,7 +40,6 @@ export default async function handleVerification(code, router, setError)  {
         }
 
     } catch (error) {
-        console.log('Post request failed .......');
         console.log(result);
     }
 

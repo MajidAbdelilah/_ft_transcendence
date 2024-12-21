@@ -90,7 +90,6 @@ function Signup_page() {
         const response = await authService.signup(FinalValues.username, FinalValues.email, FinalValues.password);
         if(!response.data.data){
           const errorMsg = response.data.message;
-          console.log(errorMsg);
          
           toast.error(
             errorMsg['username']?.[0] ||

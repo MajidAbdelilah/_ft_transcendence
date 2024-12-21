@@ -15,7 +15,6 @@ export function WebSocketProvider({ children }) {
     const newSocket = new WebSocket(`wss://127.0.0.1/api/wss/chat/${userId}/`);
     
     newSocket.onopen = () => {
-      console.log('WebSocket connected ---');
     };
 
     newSocket.onmessage = (event) => {
@@ -26,7 +25,6 @@ export function WebSocketProvider({ children }) {
     };
 
     newSocket.onclose = () => {
-      console.log('WebSocket disconnected---');
     };
 
     setSocket(newSocket);

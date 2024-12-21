@@ -184,6 +184,8 @@ AUTH_USER_MODEL = 'authapp.User'
 CORS_ALLOW_CREDENTIALS = True
 CORS_ALLOWED_ORIGINS = [
     "https://127.0.0.1",
+    "http://127.0.0.1",
+    "http://127.0.0.1:3000",
     # "http://127.0.0.1:8001",
     # "http://127.0.0.1:8002",
 

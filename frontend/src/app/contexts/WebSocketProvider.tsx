@@ -24,7 +24,7 @@ export function WebSocketProvider({ children }: { children: React.ReactNode }) {
 
         // Properly disconnect when component unmounts
         return () => {
-            console.log('WebSocket Provider unmounting - disconnecting WebSocket');
+            // console.log('WebSocket Provider unmounting - disconnecting WebSocket');
             websocketService.disconnect();
         };
     }, []);

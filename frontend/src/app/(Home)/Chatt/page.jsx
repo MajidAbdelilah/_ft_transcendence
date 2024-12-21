@@ -12,8 +12,8 @@ import { useUser } from "../../contexts/UserContext";
 
 // -- components -----------------------------------------------------
 
-import Sidebar from "../../sidebar";
-import Navbar from "../../Navbar";
+// import Sidebar from "../../sidebar";
+// import Navbar from "../../Navbar";
 
 import ProfileInfo from "./components/ProfileInfo";
 
@@ -66,37 +66,7 @@ let tournament = {
 export default function Chat() {
 
 
-  // LoggedInUser -----------------------------------------------------------------------------------------
   const LoggedInUser = useUser();
-  // console.log("LoggedInUser-------------- :", LoggedInUser.userData);
-
-
-
- 
-  // re comment those stuff in useeffect search for https://127.0.0.1/api/api/user/
-
-  // for testing perpse :
-
-  // const LoggedInUser = {
-  //   userData: {
-  //     username: "userNameLoading",
-  //     id: 10,
-  //     name: "nameLoading",
-  //     avatar: "/images/avatarprofile.svg",
-  //     status: "Online",
-  //     level: 1,
-  //     score: "",
-  //     result: "",
-  //     map: "",
-  //   }
-  // };
-  // console.log("LoggedInUser", LoggedInUser.userData);
-  // if (LoggedInUser.userData === null) return (<div>LoggedInUser Loading...</div>);
-
-// LoggedInUser -----------------------------------------------------------------------------------------
-  
-
-
 
   let [loggedInUser, setLoggedInUser] = useState(
     {
@@ -109,6 +79,7 @@ export default function Chat() {
       score: "",
       result: "",
       map: "",
+      image_fieled: "",
     }
   );
 
@@ -121,6 +92,7 @@ export default function Chat() {
         username: LoggedInUser.userData.username || 'Loading',   
         id: LoggedInUser.userData.id || 0,        
         name: LoggedInUser.userData.username || 'Loading', 
+        image_fieled : LoggedInUser.userData.image_field,
         avatar: "/images/avatarprofile.svg", 
         status: 'Loading', 
         level: 0,
@@ -129,16 +101,13 @@ export default function Chat() {
         map: "",
       };
   
-      // Update the state with the filled user data
       setLoggedInUser(filledUser);
-      // console.log("loggedInUser", filledUser);
-      // console.log("loggedInUser ============= ", filledUser);
+
 
     }
   }, [LoggedInUser.userData]); 
 
 
-//  -----------------------------------------------------------------------------------------
 
 const [selectedFriend, setSelectedFriend] = useState(null);
 const getSelectedFriend = (friend) => {
@@ -149,9 +118,7 @@ const getSelectedFriend = (friend) => {
 
 
 
-// -----------------------------------------------------------------------------------------
 
-  // const [selectedConversation, setSelectedConversation] = useState(null);
   
   
 
@@ -205,7 +172,6 @@ const getSelectedFriend = (friend) => {
 
 
 
-// #########################################################################
 
   function MessagesBox({ friend }) {
     const conversationContainer = useRef(null);
@@ -221,67 +187,66 @@ const getSelectedFriend = (friend) => {
       const loadConversation = async () => 
         {
           if(friend === null) return;
+
+
+          // const conversation = await fetchOldConversation(loggedInUser, friend.user);
           const conversation = await fetchOldConversation(loggedInUser, friend.user);
+          
           setConversation(conversation);
+          
+
+
+          
+          
         };
         loadConversation();
-    }, [loggedInUser, friend]);
-
-    //  -----  impliment the logic of reciving a message using websocket  -------------------------------------------------------
-
-    // i supose to get the message weeither i am a sender or reciver , and insert it inside conversation , and map function should simply desplay it to the user 
+    }, [selectedFriend, conversation]);
 
 
-    const { connect, messages } = useWebSocket();
+    
 
-    // Connect to WebSocket when component mounts or user changes
+   
+    const { connect, messages, isConnected } = useWebSocket();
+
 
       useEffect(() => {
-        
-        if (loggedInUser &&  loggedInUser.id !== 0) {
-          // console.log("triggered ----", loggedInUser.id);
+        if (loggedInUser && loggedInUser.id !== 0 && !isConnected) {
           connect(loggedInUser.id);
-          console.log("id ;  ----", loggedInUser.id);
         }
-        }, []);
+      }, [loggedInUser, connect, isConnected]);
 
 
 
 
 
+useEffect(() => {
+  if (friend && loggedInUser ) {
+    const latestMessage = messages; // Get the last message received
 
-      useEffect(() => {
-        console.log("Incoming messages -----------------", messages);
-        if (friend && loggedInUser && messages.length > 0) {
-          // Directly access the single message
-          if (
-            (messages[0].send === loggedInUser.username && messages[0].receive === friend.user.username) ||
-            (messages[0].send === friend.user.username && messages[0].receive === loggedInUser.username) ) 
-            {
-              let newMessage = {
-                // messages_id: ??, 
-                chat_id: messages[0].chat_id,
-                sender: messages[0].send,
-                receiver: messages[0].receive,
-                message_content: messages[0].message,
-                message_date: messages[0].timestamp,
-                // user_one: ??,
-                // user_two: ??,
-            };
-            
-            const lastMessage = conversation[0]; // The last inserted message in the conversation
-            const isSameMessage = lastMessage && 
-              lastMessage.message_date === newMessage.message_date &&
-              lastMessage.message_content === newMessage.message_content;
-            // Update the conversation state
-            if (!isSameMessage) {setConversation((prev) => [newMessage, ...prev]);}
-            // setConversation((prev) => [...latestMessages, ...prev]);
-          }
+    if (
+      (latestMessage.send === loggedInUser.username && latestMessage.receive === friend.user.username) ||
+      (latestMessage.send === friend.user.username && latestMessage.receive === loggedInUser.username)
+    ) {
+      const newMessage = {
+        chat_id: latestMessage.chat_id,
+        sender: latestMessage.send,
+        receiver: latestMessage.receive,
+        message_content: latestMessage.message,
+        message_date: latestMessage.timestamp,
+      };
 
+      setConversation((prev) => {
+        const lastMessage = prev[0]; // Check for duplication
+        const isSameMessage =
+          lastMessage &&
+          lastMessage.message_date === newMessage.message_date &&
+          lastMessage.message_content === newMessage.message_content;
 
-        }
-
-      }, [messages]);
+        return isSameMessage ? prev : [newMessage, ...prev];
+      });
+    }
+  }
+}, [messages]);
 
 
 
@@ -296,7 +261,7 @@ const getSelectedFriend = (friend) => {
     if (friend === null) {
       let noFriendYet = { avatar: "", name: "", status: "" };
       return (
-        <div className="messagesBox w-full h-full lg:w-3/5 p-2 h-full rounded-tr-xl rounded-br-xl  flex flex-col ">
+        <div className="messagesBox w-full h-full lg:w-3/5 p-2  rounded-tr-xl rounded-br-xl  flex flex-col ">
           <FriendChatInfo
             loggedInUser={loggedInUser}
             friend={noFriendYet}
@@ -310,9 +275,7 @@ const getSelectedFriend = (friend) => {
         </div>
       );
     }
-    // console.log("friend", friend);
     return (
-      // console.log(conversation),
       <div className="messagesBox w-full lg:w-3/5 p-2 h-full rounded-tr-xl rounded-br-xl flex flex-col ">
         {/* FriendChatInfo ---------------------------------------------------------------------------------------*/}
         <FriendChatInfo
@@ -330,29 +293,19 @@ const getSelectedFriend = (friend) => {
         
         <div className="Conversation  flex flex-col flex-grow overflow-y-auto custom-scrollbar break-words p-2 scroll-smooth" ref={conversationContainer}>
         
-          {/* {Array.isArray(conversation) && conversation.length > 0 ? (
-            conversation.map((message, index) =>
-              message.sender === friend.user.username ? (
-                <FriendMsgBox key={index} time={message.message_date} msg={message.message_content} />
-              ) : (
-                <MyMsgBox key={index} time={message.message_date} msg={message.message_content} />
-              )
-            )
-          ) : (
-            <p className="text-center text-gray-500">Loading...</p>
-          )} */}
           {Array.isArray(conversation) && conversation.length > 0 ? (
             [...conversation]
               .reverse()
               .map((message, index) =>
-                message.sender === friend.user.username ? (
-                  <FriendMsgBox key={index} time={message.message_date} msg={message.message_content} />
-                ) : (
+                message.receiver === friend.user.username ? (
                   <MyMsgBox key={index} time={message.message_date} msg={message.message_content} />
+                ) : (
+                  <FriendMsgBox key={index} time={message.message_date} msg={message.message_content} />
+                  
                 )
               )
           ) : (
-            <p className="text-center text-gray-500">Loading...</p>
+            <p className="text-center text-gray-500">Loading ...</p>
           )}
 
           {conversation && conversation.length > 0 && (
@@ -369,13 +322,14 @@ const getSelectedFriend = (friend) => {
 
 
         {/*  SendMsgBox ---------------------------------------------------------------------------------------*/}
+        {friend.user.username !== "bot" && (
         <SendMsgBox loggedInUser={loggedInUser} friend={friend.user} />
+        )}
       </div>
     );
   }
   
   if (loggedInUser === null) return (<div> Loading...</div>);
-
   return (
 
         <WebSocketProvider>
@@ -395,35 +349,16 @@ const getSelectedFriend = (friend) => {
             >
               <div className="friendsBox  p-2 rounded-tl-xl rounded-bl-xl  border-r-2  border-[#C6C6E1]  flex-col flex-grow overflow-y-auto custom-scrollbar  h-4/5 lg:h-full ">
               
-                <ProfileInfo avatar={loggedInUser.avatar} name={loggedInUser.username} status={loggedInUser.status}/>
+                <ProfileInfo avatar={loggedInUser.avatar} name={loggedInUser.username} status={loggedInUser.id}/>
 
                 <ConversationsHeader />
 
                 <div className="MessagesList flex flex-col">
-
-
-
-
-                {/* <i should fetch and list friends here ></> */}
                 <ListFriends getSelectedFriend={getSelectedFriend} switchChatState={switchChatState} />
-
-
-                  
                 </div>
               </div>
             </div>
-            {/* <i should show the converation with the friend here  */}
-            {/* we need to log the selected friend first to make siure we managed to get  */}
-            {/* <ConversationSec selectedFriend={selectedFriend} /> */}
-            {/* <ConversationSec selectedFriend={selectedFriend} /> */}
             <MessagesBox friend={selectedFriend} />
-
-
-
-
-
-
-
              </div>
         </div>
         </WebSocketProvider>

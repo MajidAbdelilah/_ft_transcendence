@@ -118,7 +118,6 @@ const PingPongGame = ({ roomName, player1, player2, player3, player4, map, isTou
             };
 
             ws.onclose = (e) => {
-                console.log('Game WebSocket closed:', e.reason);
                 wsRef.current = null;
                 setSocket(null);
                 
@@ -140,21 +139,11 @@ const PingPongGame = ({ roomName, player1, player2, player3, player4, map, isTou
         connectWebSocket();
 
     }, [roomName, myUsername, isTournament, isRedirecting]);
-    // create a function send_chat_bot to send this data 
-    // {
-    // “send”:”bot",
-    // “receive”:”a10",
-    // “message”:”HELLO",
-    // “timestamp”:””,
-    // “chat_id”:”1”
-    // }
-    // send this data to https://127.0.0.1/api/friend/sendchat/
-    // and get the response
+
     async function send_chat_bot (data)  {
         if(chat_bot_message_already_sent.current === true) {
             return;
         }
-        console.log(chat_bot_message_already_sent.current);
         chat_bot_message_already_sent.current = true;
         const response = await customAxios.post('https://127.0.0.1/api/friend/sendchat/', {
             
@@ -164,7 +153,6 @@ const PingPongGame = ({ roomName, player1, player2, player3, player4, map, isTou
                 timestamp: '',
                 chat_id: 'id: ' + Math.random()
         })
-        console.log(response);
     
     };
 
@@ -251,7 +239,7 @@ const PingPongGame = ({ roomName, player1, player2, player3, player4, map, isTou
         ctx.font = '28px Arial';
         ctx.fillStyle = 'black';
         ctx.textAlign = 'center';
-        ctx.fillText('Waiting for other player to be ready... press space to be ready', canvas.width / 2, canvas.height / 2);
+        ctx.fillText('Waiting for other player to be ready...', canvas.width / 2, canvas.height / 3);
         ctx.fill();
     };
 
@@ -275,6 +263,11 @@ const PingPongGame = ({ roomName, player1, player2, player3, player4, map, isTou
 
         if (data.is_tournament) {
             drawTournamentGame(ctx, canvas, data);
+            const currentMatch = data.players[playerRoleRef.current].current_match;
+
+            if(data.matches[currentMatch].game_start === false) {
+                updateWaitingScreen();
+            }
         } else if(data.players && !data.players.player4){
             drawNormalGame(ctx, canvas, data);
         }
@@ -326,16 +319,16 @@ const PingPongGame = ({ roomName, player1, player2, player3, player4, map, isTou
             ctx.fillText(data.players.player2.username, data.players.player2.x - 300, 50);
             // draw scores
             ctx.font = '80px Arial';
-            ctx.fillText(data.players.player1.score, canvas.width / 2 + 50, canvas.height / 2 + 50);
-            ctx.fillText(data.players.player2.score, canvas.width / 2 - 100, canvas.height / 2 + 50);
+            ctx.fillText(data.players.player1.score, canvas.width / 2 - 100, 100);
+            ctx.fillText(data.players.player2.score, canvas.width / 2 + 50, 100);
         }else {
             ctx.font = '30px Arial';
             ctx.fillText(data.players.player1.username, data.players.player1.x - 300, 50);
             ctx.fillText(data.players.player2.username, data.players.player2.x + 300, 50);
             // draw scores
             ctx.font = '80px Arial';
-            ctx.fillText(data.players.player1.score, canvas.width / 2 - 50, canvas.height / 2 + 50);
-            ctx.fillText(data.players.player2.score, canvas.width / 2 + 100, canvas.height / 2 + 50);
+            ctx.fillText(data.players.player1.score, canvas.width / 2 + 100, 100);
+            ctx.fillText(data.players.player2.score, canvas.width / 2 - 50, 100);
         }
         
         ctx.fill();
@@ -495,6 +488,7 @@ const PingPongGame = ({ roomName, player1, player2, player3, player4, map, isTou
     return (
         <div className={`${styles.gameContainer} ${montserrat.className}`}>
             <canvas ref={canvasRef} className={styles.canvas} />
+            <div className={styles.gameMessage}>press "Up" or "Down" buttons to play</div>
         </div>
     );
 };

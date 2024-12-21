@@ -8,6 +8,10 @@ import { LuUserX } from "react-icons/lu";
 import axios from "axios";
 import { useRouter } from 'next/navigation';
 import toast, { Toaster } from 'react-hot-toast';
+import React, { useState, useEffect } from 'react';
+
+
+
 // import { DashContext } from "../../Dashboard/Dashcontext";
 // import { useContext } from "react";
 // -- colors -----------------------------------------------------co
@@ -33,7 +37,7 @@ const handleAddFriend = async (loggedInUser, user) => {
       { withCredentials: true, headers: {} }
     );
 
-    console.log("Response:", respond);
+    // console.log("Response:", respond);
 
     // Check if the response contains a success message
     if (respond.status === 200 && respond.data?.success) {
@@ -56,7 +60,7 @@ const handleBlockUser = async (loggedInUser, user) => {
       { withCredentials: true, headers: {} }
     );
 
-    console.log("respond : ---------------", respond);
+    // console.log("respond : ---------------", respond);
 
     // Check if the response contains a success message
     if (respond.status === 200 && respond.data?.success) {
@@ -71,30 +75,17 @@ const handleBlockUser = async (loggedInUser, user) => {
 };
 
 
-
-
-              // <img
-              // id="avatarButton"
-              // className=" rounded-full left-0 top-0 w-[60px] h-[60px] "
-              // src={path ? path : "/images/Default_profile.png"}
-              // alt="User dropdown"
-              // width={60}
-              // height={60}
-              // /> 
-
-
-
 function Part1({loggedInUser, user, isSelf}) {
 
   const router = useRouter();
-  console.log(user.image_field);
   return (
     <div className="part1 relative w-1/3 p-2 rounded-l-2xl bg-[#F4F4FF] border-[#BCBCC9] border-r-2 min-w-32 ">
 
 
     <div className="flex flex-col items-center">
         <img
-        src={user.image_field ? `https://127.0.0.1/api/api/${user.image_field}` : "/images/Default_profile.png"}// image_feiled
+            src={user?.image_field? `https://127.0.0.1/api/api/images/${user.image_field}` : "/images/DefaultAvatar.svg"} // image_feiled
+            alt="ProfileImage"
             width={60}
             height={60}
         
@@ -105,8 +96,8 @@ function Part1({loggedInUser, user, isSelf}) {
       <div className="mt-12 text-sm md:text-md lg:text-lg xl:text-xl font-bold text-[#242F5C]">
         {user.username}
       </div>
-      <span className="text-xs   mt-1 text-[#8988DE]">{user.state}</span>
-      <div className={`flex flex-row mt-2 text-[#242F5C] ${isSelf === true ? "invisible" : "visible"}`}>
+      <span className="text-xs   mt-1 text-[#8988DE] font-semibold">{user.is_on  ? "Online" : "Offline"}</span>
+      <div className={`flex flex-row mt-2 text-[#242F5C] ${(isSelf === true || user.username === "bot") ? "invisible" : "visible"}`}>
         <BsChatLeftText className="textUser mr-1 text-lg lg:text-xl cursor-pointer" onClick={() => handleTextUser(router)}/>
         <MdOutlinePersonAddAlt className="addFriend ml-1 text-xl lg:text-2xl cursor-pointer" onClick={() => handleAddFriend(loggedInUser, user)}/>
       </div>
@@ -115,47 +106,91 @@ function Part1({loggedInUser, user, isSelf}) {
   );
 }
 
+       
 function Part2({loggedInUser, user, isSelf}) {
+  const [xp, setXp] = useState(0);
+  const [level, setLevel] = useState(1);
   
+  const calculateLevel = (xp) => {
+    if(xp > 1900) return 20;
+    return Math.floor(xp / 100) + 1;
+  };
+
+  const calculateProgress = (level) => {
+
+    return (level / 20 ) * 100;  ; 
+  };
+
+  useEffect( () => {
+    const fetchXp = async () => {
+      try {
+        const [normalMatchesResponse, aiMatchesResponse] = await Promise.all([
+          axios.get(`https://127.0.0.1/api/game/fetch_history/${user.username}/`),
+          axios.get(`https://127.0.0.1/api/game/matches/${user.username}/`)
+        ]);
+
+        const normalMatches = normalMatchesResponse.data || [];
+        const aiMatches = aiMatchesResponse.data || [];
+        const allMatches = [...normalMatches, ...aiMatches];
+  
+        const totalXp = allMatches.reduce((acc, match) => {
+          if (match.winner === user.username) {
+            return acc + 50; 
+          }
+          return acc + 15; 
+        }, 0);
+        setXp(totalXp);
+
+
+
+        const userLevel = calculateLevel(totalXp);
+        setLevel(userLevel);
+
+      } catch (error) {
+        console.error("Error fetching level:", error);
+      }
+    };
+    fetchXp();
+  }, []);
+
+  const progress = calculateProgress(level);
   return (
-      <div className="part2 w-2/3 p-4 flex flex-col items-end ml-auto   ">
+      <div className="part2 w-2/3 p-4 flex flex-col items-end ml-auto   overflow-hidden">
 
       <LuUserX  
       onClick={() => handleBlockUser(loggedInUser, user)}
-      className={`blockUser text-[#242F5C] text-3xl ${isSelf === true ? "invisible" : "visible"} cursor-pointer`} />
+      className={`blockUser text-[#242F5C] text-3xl ${(isSelf === true || user.username === "bot")? "invisible" : "visible"} cursor-pointer`} />
 
       <div className="level flex flex-col items-start w-full mb-4">
-        <span className=" text-[#242F5C] font-semibold text-xs ">Level {user.level}</span>
+        <span className=" text-[#242F5C] font-semibold text-xs ">Level {level}</span>
 
         
         <div className="relative w-full h-3 bg-gray-300 rounded-full mt-1 ">
           
           <div
-            className="absolute top-0 left-0 h-3 bg-[#8988DE] rounded-full "
-            style={{ width: `${user.level * 20}%` }} 
-          ></div>
+            className="absolute top-0 left-0 h-3 bg-[#8988DE] rounded-full  "
+            style={{ width: `${progress}%` }}
+            // style={{ width: '50%' }}
+          >  </div>
         </div>
 
         
         <div className="flex justify-between w-full mt-1 text-[#242F5C] text-xs ">
           <span >Next level</span>
-          <span >Level {user.level + 1}</span>
+          {level === 20 ? 'You reached the max level!' : `Level ${level + 1}`}
         </div>
 
 
       </div>
       <button className="gameStats bg-[#242F5C] p-1  px-2 text-[#F4F4FF] text-xs rounded-full font-semibold">
-          Level  {user.level}
+       Xp :  {xp}
       </button>
     </div>
   )
 }
 
-
 export default function UserProfile({loggedInUser, user, isSelf}) {
-      // console.log("LoggedInUser: -------------", loggedInUser);
-      // console.log("User: -------------", user);
-      // console.log("IsSelf: -------------", isSelf);
+
 
 
 

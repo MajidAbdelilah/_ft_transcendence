@@ -142,7 +142,7 @@ class AddFriendshipViewTest(APITestCase):
         # Connect to websocket
         communicator = WebsocketCommunicator(
             application=back_end,  # You need to import your ASGI application
-            path=f'/ws/notifications/{self.user2.id}/'
+            path=f'/wss/notifications/{self.user2.id}/'
         )
         connected, _ = await communicator.connect()
         self.assertTrue(connected)

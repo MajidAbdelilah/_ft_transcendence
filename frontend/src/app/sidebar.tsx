@@ -7,7 +7,7 @@ import { useClickAway } from "@uidotdev/usehooks";
 import { motion } from "framer-motion";
 import Image from "next/image";
 import { useUser } from './contexts/UserContext';
-import { Skeleton}  from "/app/frontend/src/compo/ui/skeleton.jsx";
+import { Skeleton}  from "../compo/ui/Skeleton";
 import authService from "./authService";
 import { FaBarsStaggered } from "react-icons/fa6";
 
@@ -25,7 +25,6 @@ export default function Sidebar() {
   const [avatarLoading, setAvatarLoading] = useState(true);
   const [isLoggingOut, setIsLoggingOut] = useState(false);
 
-  // console.log("userData:", userData.image_field);
 
 
   const sideRef = useClickAway<HTMLDivElement>(() => {

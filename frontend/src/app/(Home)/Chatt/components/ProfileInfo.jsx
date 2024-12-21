@@ -2,7 +2,7 @@
 import Image from "next/image";
 
 import { useUser } from '../../../contexts/UserContext';
-// import { Skeleton}  from "../../../../compo/ui/Skeleton";
+import { Skeleton}  from "../../../../compo/ui/Skeleton";
 
 
 export default function ProfileInfo({ avatar, name, status }) {
@@ -38,7 +38,7 @@ export default function ProfileInfo({ avatar, name, status }) {
           <h3 className="text-lg xl:text-xl 2xl:text-3xl top-0 left-0 text-[#242F5C] ">
             {name}
           </h3>
-          <p className="text-sm text-[#302FA5] left">{status}</p>
+          <p className="text-sm text-[#302FA5] left">User ID : {status}</p>
         </div>
       </div>
     );

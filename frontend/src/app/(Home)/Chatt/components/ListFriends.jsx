@@ -2,7 +2,7 @@
 import { useState, useEffect} from "react";
 import Image from "next/image";
 import customAxios from "../../../customAxios"
-
+import { Skeleton}  from "../../../../compo/ui/Skeleton";
 
 import { useUser } from '../../../contexts/UserContext';
 
@@ -17,9 +17,7 @@ export default function ListFriends({ getSelectedFriend, switchChatState }) {
     useEffect(() => {
         const fetchFriends = async () => {
         try {
-            // console.log()
             const response = await customAxios.get("https://127.0.0.1/api/friend/friends",);
-            console.log("======", response.data);
             setFriendsList(response.data); // Assuming the API returns { friends: [...] }
         } catch (error) {
             console.error("Error fetching friends data:", error);
@@ -37,26 +35,20 @@ export default function ListFriends({ getSelectedFriend, switchChatState }) {
 
 
 
+
+
     return (
         <div className="friendsList">
 
         {friendsList && friendsList.map((friend) => (
+
             <div 
             key={friend.user.id} 
             className="friendInfo my-2 px-1 w-full flex flex-row items-center overflow-hidden cursor-pointer" 
             onClick={() =>{ getSelectedFriend(friend); switchChatState()}} >
             
             
-                {/* <Image 
-                    src={friend.user.profile_photo === undefined || friend.user.profile_photo === null || friend.user.profile_photo === "" || friend.user.profile_photo === "/images/%7B%7D" 
-                        ? "/images/avatarprofile.svg" 
-                        : friend.user.profile_photo}
-                    alt="/images/avatarprofile.svg"
-                    width={45}
-                    height={45}
-                    className="rounded-full left-0 top-0 w-[45px] h-[45px]"
 
-                /> */}
                 {isLoading ? (
                     <>
                     <Skeleton className="sm:w-10 sm:h-10 w-8 h-8 rounded-full bg-[#d1daff]" />
@@ -65,8 +57,8 @@ export default function ListFriends({ getSelectedFriend, switchChatState }) {
                     <img
                     id="avatarButton"
                     className="rounded-full left-0 top-0 w-[45px] h-[45px]"
-                    src={friend.image_field ? friend.image_field  : "/images/Default_profile.png"}
-                    alt="User dropdown"
+                    src={friend.user.image_field ? `https://127.0.0.1/api/api${friend.user.image_field}`  : "/images/DefaultAvatar.svg"}
+                    alt="profileImage"
                     width={45}
                     height={45}
                     /> 

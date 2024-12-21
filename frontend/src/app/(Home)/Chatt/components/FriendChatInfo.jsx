@@ -9,20 +9,7 @@ import { FaAngleDown } from "react-icons/fa";
 import Link from 'next/link';
 import { useRouter } from "next/navigation";
 import { blockService, playWithService, profileService } from './services';
-
-
-          // <Image
-          //   src={path === undefined || path === null || path === "" || path === "/images/%7B%7D" 
-          //     ? "/images/avatarprofile.svg" 
-          //     : path}
-          //   alt="avatarprofile"
-          //   width={60}
-          //   height={60}
-          //   className=" rounded-full left-0 top-0 w-[60px] h-[60px] "
-          // />
-
-
-
+import { useGameInviteWebSocket } from '../../../contexts/GameInviteWebSocket';                  
 import { useUser } from '../../../contexts/UserContext';
 
 export function HisProfile ({path, name, status}) {
@@ -41,7 +28,7 @@ export function HisProfile ({path, name, status}) {
             <img
               id="avatarButton"
               className=" rounded-full left-0 top-0 w-[60px] h-[60px] "
-              src={path ? path : "/images/Default_profile.png"}
+              src={path ? `https://127.0.0.1/api/api${path}` : "/images/DefaultAvatar.svg"}
               alt="User dropdown"
               width={60}
               height={60}
@@ -104,13 +91,15 @@ export function PlayWithOption ({onClick}) {
     );
   }
 
+
   export function FriendChatInfo({ loggedInUser, friend, ...rest }) {
     
     const router = useRouter();
-    
+    const { send } = useGameInviteWebSocket();
 
   
     return (
+      
       <div className="friendChatInfo p-5 flex items-center border-b-2 mb-4 border-[#9191D6] border-opacity-30 ">
         {/* ChatListIcon  -------------------------------------------------------------- */}
 
@@ -122,7 +111,7 @@ export function PlayWithOption ({onClick}) {
 
         {/* hisProfile -------------------------------------------------------------- */}
         {rest.selectedFriend !== null ? (
-          < HisProfile path={friend.profile_photo} name={friend.username} status={friend.is_online} />
+          < HisProfile path={friend.image_field} name={friend.username} status={friend.is_on} />
 
         ) : (
           < PleaseSelectAConversation/>
@@ -131,7 +120,7 @@ export function PlayWithOption ({onClick}) {
 
         {/* dropDownIcon  -------------------------------------------------------------- */}
         {/*  if the user selected already a friend, and the friend is not the tournament robot , then show the drop down icon */}
-        {rest.selectedFriend && friend.name !== "tournament" && (
+        {rest.selectedFriend && friend.username !== "bot" && (
           <FaAngleDown
             className="dropDownIcon text-4xl ml-auto mr-8  text-[#242F5C] cursor-pointer"
             onClick={rest.switchDropDownState}
@@ -145,7 +134,7 @@ export function PlayWithOption ({onClick}) {
           >
             <ProfileOption onClick={() => {profileService(friend, router); rest.setIconState({ dropDownState: false })} }/>
 
-            <PlayWithOption onClick={() => {playWithService(friend); rest.setIconState({dropDownState: false });}}/>
+            <PlayWithOption onClick={() => {playWithService(friend, loggedInUser, send); rest.setIconState({dropDownState: false });}}/>
             <BlockOption onClick={() => {blockService(friend); rest.setIconState({dropDownState: false });}}/>
 
 

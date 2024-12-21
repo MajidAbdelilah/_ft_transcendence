@@ -9,12 +9,10 @@ export const sendCode = async() =>
       try {
         
         const result = await Services.sendCodeService();
-        console.log("--- sendCode has been called : ", result);
 
 
           if(result.statusText === 'OK') {
             const successMsg = 'Email sent successfully!';
-            console.log(successMsg);
             toast.success(successMsg);//
             return;
           }
@@ -30,7 +28,6 @@ export const sendCode = async() =>
         console.log("sendCode http request failed; ", error);
       }
       setError('');
-      // console.log("sending email is commented ....");
     }
 
 export    const handleVerify = async(code, setError) => {
@@ -48,15 +45,14 @@ export    const handleVerify = async(code, setError) => {
 
         try {
             const result = await Services.handleVerifyService(code);
-            // console.log("--- handleVerify has been called : ", result);
 
             
-                // console.log('-----------------------------------------------');
                 const successMsg = result.data.message;
                 if(successMsg === '2fa is done') {
 
                   toast.success('Operation done successfuly!');
-                  window.location.reload();
+                  // setRefreshKey(prev => prev + 1);
+                  setTimeout(() => { window.location.reload(); }, 1000);
                 }
 
                 else {

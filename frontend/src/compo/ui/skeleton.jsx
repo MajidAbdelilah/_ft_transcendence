@@ -1,4 +1,4 @@
-import { cn } from "/app/frontend/src/lib/utils";
+import { cn } from "/src/lib/utils";
 function Skeleton({
   className,
   ...props

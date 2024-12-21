@@ -23,7 +23,7 @@ const SingleAIGame = ({ playerData }) => {
     botBallPos: { x: 0, y: 0 },
     botBallDirection: { x: 0, y: 0 },
     runAgain: true,
-    randomBoolean: Math.random() < 0.5
+    randomBoolean: Math.random() < 0.4
   });
 
   // Game constants
@@ -38,7 +38,6 @@ const SingleAIGame = ({ playerData }) => {
   const render = (ctx) => {
     const state = gameStateRef.current;
     
-    // Add console.log to debug
 
     
     // Clear and set background based on map preference
@@ -138,14 +137,11 @@ const SingleAIGame = ({ playerData }) => {
 
   const goal = () => {
     const state = gameStateRef.current;
-    // console.log("Ball position:", state.ballPos);
     
     if (state.ballPos.x - BALL_RADIUS <= 0) {
-      console.log("Goal detected - Player 2 scores!");
       return 2;
     }
     if (state.ballPos.x + BALL_RADIUS >= CANVAS_DIM.width) {
-      console.log("Goal detected - Player 1 scores!");
       return 1;
     }
     return 0;
@@ -158,7 +154,6 @@ const SingleAIGame = ({ playerData }) => {
     {
         state.botBallDirection = state.ballDirection;
         state.botBallPos = state.ballPos;
-        console.log("run again", state.runAgain);
         state.runAgain = false;
     }
     if(state.botBallDirection.x === 1){
@@ -286,14 +281,13 @@ const SingleAIGame = ({ playerData }) => {
         player2_score: player2_score,
         winner: actualWinner
     };
-    console.log('Sending data:', data);
     
     customAxios.post('https://127.0.0.1/api/game/matches/', data)
         .then(response => {
-            console.log('Success:', response.data);
+            // console.log('Success:', response.data);
         })
         .catch(error => {
-            console.error('Error:', error);
+            // console.error('Error:', error);
         });
   };
 
@@ -302,7 +296,7 @@ const SingleAIGame = ({ playerData }) => {
       gameStateRef.current.runAgain = true;
     }, 1000);
     return () => clearInterval(interval);
-  }, []);
+  });
 
   useEffect(() => {
     if (canvasRef.current) {
@@ -351,7 +345,7 @@ const SingleAIGame = ({ playerData }) => {
           <span className={styles.score}>{player2ScoreRef.current}</span>
         </div>
       </div> */}
-      <div className={styles.gameMessage}>Welcome to Single AI Game!</div>
+      <div className={styles.gameMessage}>press "w" or "s" to play</div>
     </div>
   );
 };

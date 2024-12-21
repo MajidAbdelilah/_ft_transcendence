@@ -16,7 +16,7 @@ import { useUser } from './contexts/UserContext';
 import  useSearch from './contexts/SearchContext';
 
 
-import { Skeleton}  from "/app/frontend/src/compo/ui/skeleton.jsx";
+import { Skeleton}  from "../compo/ui/Skeleton";
 import NotificationDropdown from './components/NotificationDropdown';
 
 const logout = async ({ setUserData }) => {

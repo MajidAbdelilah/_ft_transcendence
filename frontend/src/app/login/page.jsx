@@ -55,7 +55,6 @@ function LoginPage() {
       const response = await authService.login(values.email, values.password);
       if (!response.data.data) {
         const errorMsg = response.data.message;
-        console.log(errorMsg);
         toast.error(errorMsg || "Something Went Wrong!");
       } else {
         if (response.data.data.tokens.access) {
@@ -100,6 +99,10 @@ function LoginPage() {
           }
         );
         if (response.data.date) {
+          if(response.data.data.user.is_2fa){ 
+            router.replace("/authLogin");
+          }
+          else
           router.replace("/Dashboard");
         } else {
           setIsLoading(false);

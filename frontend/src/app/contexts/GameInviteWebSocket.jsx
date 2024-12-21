@@ -27,7 +27,6 @@ export function GameInviteWebSocketProvider({ children }) {
       const ws = new WebSocket('wss://127.0.0.1/api/wss/game/invite/');
       
       ws.onopen = () => {
-        // console.log('🎮 Game invitation WebSocket connected');
       };
 
       ws.onmessage = (event) => {
@@ -58,16 +57,14 @@ export function GameInviteWebSocketProvider({ children }) {
       };
 
       ws.onclose = (e) => {
-        // console.log('🎮 Game invitation WebSocket disconnected:', e.reason);
-        // Attempt to reconnect after a delay, unless it was intentionally closed
         if (userData) {
           setTimeout(connectWebSocket, 3000);
         }
       };
 
       ws.onerror = (error) => {
-        console.error('🎮 Game invitation WebSocket error:', error);
-        toast.error('Connection error. Trying to reconnect...');
+        // console.error('🎮 Game invitation WebSocket error:', error);
+        // toast.error('Connection error. Trying to reconnect...');
       };
 
       wsRef.current = ws;
@@ -87,7 +84,7 @@ export function GameInviteWebSocketProvider({ children }) {
     if (wsRef.current?.readyState === WebSocket.OPEN) {
       wsRef.current.send(JSON.stringify(message));
     } else {
-      toast.error('WebSocket connection not ready. Please try again.');
+      // toast.error('WebSocket connection not ready. Please try again.');
     }
   };
 

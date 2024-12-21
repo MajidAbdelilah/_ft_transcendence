@@ -2,7 +2,7 @@
 
 
 
-import MatchHistory from "../../Dashboard/MatchHistory";
+import MatchHistory from "./CustomMatchHistory";
 import { DashContext } from "../../Dashboard/Dashcontext";
 import { useContext } from "react"; // Import DashProvider
 
@@ -108,10 +108,8 @@ export default function Profile() {
         map: "",
       };
   
-      // Update the state with the filled user data
       setLoggedInUser(filledUser);
-      // console.log("filledUser", filledUser);
-      // console.log("loggedInUser ============= ", loggedInUser);
+
 
     }
   }, []); 
@@ -134,15 +132,12 @@ export default function Profile() {
     {
       try 
       {
-        // console.log("searchedText : -----------------", searchedText);
       
         const response = await axios.get('https://127.0.0.1/api/api/users/', {   withCredentials: true, headers: {} });
         const usersArray = Object.values(response.data);
-        // console.log("usersArray : -----------------", usersArray);
-        // console.log("searchedText : -----------------", searchedText);
+
 
         const user = usersArray.find( (u) => u.username === searchedText );
-        console.log("user : -----------------", user);
         if(user )
         {
           setUserSearchedFor(user);
@@ -204,7 +199,8 @@ export default function Profile() {
         <div className="text-center p-8 rounded-xl shadow-xl bg-[#F4F4FF] border border-[#C0C7E0] max-w-md mx-4">
           <h1 className="text-3xl font-extrabold text-[#242F5C] mb-4">Oops!</h1>
           <p className="text-lg text-[#242F5C] mb-6">
-            We couldn't find the user you're looking for. Please double-check the username or try again.
+          We couldn&apos;t find the user you&apos;re looking for. Please double-check the username or try again.
+            
           </p>
         </div>
     );
@@ -224,7 +220,7 @@ export default function Profile() {
           {/* <LeaderBoard first={user3} second={user2} third={user3} /> */}
         </div>
         
-        {/* <MatchHistory /> */}
+        {userSearchedFor && <MatchHistory user={userSearchedFor} />}
       </div>
   );
 }
