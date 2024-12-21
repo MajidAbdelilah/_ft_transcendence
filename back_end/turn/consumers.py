@@ -29,7 +29,12 @@ class PingPongConsumer(AsyncWebsocketConsumer):
         player2 = players['player2']['username']
         player3 = players['player3']['username']
         player4 = players['player4']['username']
-        map = players['player1']['mapType']
+        players['player1']['game_start'] = True
+        players['player2']['game_start'] = True
+        players['player3']['game_start'] = True
+        players['player4']['game_start'] = True
+        self.room_var[self.room_name]['players'] = players
+        
         gamestart_data = {
             "type": "gamestart",
             "room_name": self.room_name,
@@ -37,7 +42,10 @@ class PingPongConsumer(AsyncWebsocketConsumer):
             "player2": player2,
             "player3": player3,
             "player4": player4,
-            "map": map
+            "map1": players['player1']['mapType'],
+            "map2": players['player2']['mapType'],
+            "map3": players['player3']['mapType'],
+            "map4": players['player4']['mapType'],
         }
         channel_layer = get_channel_layer()
         # send to self player first with type gamestart
@@ -60,23 +68,45 @@ class PingPongConsumer(AsyncWebsocketConsumer):
         bracket = self.room_var[self.room_name]['bracket']
         players = self.room_var[self.room_name]['players']
         if matches['match1']['winner']:
+            bracket['semifinals']['match1']['winner_alias'] = players[matches['match1']['winner']]['alias']
             bracket['semifinals']['match1']['winner'] = players[matches['match1']['winner']]['username']
         if matches['match1']['p1_username']:
-            bracket['semifinals']['match1']['player1'] = matches['match1']['p1_username']
+            bracket['semifinals']['match1']['p1'] = matches['match1']['p1_username']
+            for(player_key, player_data) in players.items():
+                if(player_data['username'] == matches['match1']['p1_username']):
+                    bracket['semifinals']['match1']['p1_alias'] = player_data['alias']
         if matches['match1']['p2_username']:
-            bracket['semifinals']['match1']['player2'] = matches['match1']['p2_username']
+            bracket['semifinals']['match1']['p2'] = matches['match1']['p2_username']
+            for(player_key, player_data) in players.items():
+                if(player_data['username'] == matches['match1']['p2_username']):
+                    bracket['semifinals']['match1']['p2_alias'] = player_data['alias']
         if matches['match2']['winner']:
-            bracket['semifinals']['match2']['winner'] =  players[matches['match2']['winner']]['username']  
+            bracket['semifinals']['match2']['winner'] = players[matches['match2']['winner']]['username']
+            bracket['semifinals']['match2']['winner_alias'] =  players[matches['match2']['winner']]['alias']  
         if matches['match2']['p1_username']:
-            bracket['semifinals']['match2']['player1'] = matches['match2']['p1_username']
+            bracket['semifinals']['match2']['p1'] = matches['match2']['p1_username']
+            for(player_key, player_data) in players.items():
+                if(player_data['username'] == matches['match2']['p1_username']):
+                    bracket['semifinals']['match2']['p1_alias'] = player_data['alias']
         if matches['match2']['p2_username']:
-            bracket['semifinals']['match2']['player2'] = matches['match2']['p2_username']
+            bracket['semifinals']['match2']['p2'] = matches['match2']['p2_username']
+            for(player_key, player_data) in players.items():
+                if(player_data['username'] == matches['match2']['p2_username']):
+                    bracket['semifinals']['match2']['p2_alias'] = player_data['alias']
         if matches['final']['winner']:
             bracket['final']['winner'] = players[matches['final']['winner']]['username']
+            bracket['final']['winner_alias'] = players[matches['final']['winner']]['alias']
         if matches['final']['p1_username']:
-            bracket['final']['player1'] = matches['final']['p1_username']
+            bracket['final']['p1'] = matches['final']['p1_username']
+            for(player_key, player_data) in players.items():
+                if(player_data['username'] == matches['final']['p1_username']):
+                    bracket['final']['p1_alias'] = player_data['alias']
         if matches['final']['p2_username']:
-            bracket['final']['player2'] = matches['final']['p2_username']
+            bracket['final']['p2'] = matches['final']['p2_username']
+            for(player_key, player_data) in players.items():
+                if(player_data['username'] == matches['final']['p2_username']):
+                    bracket['final']['p2_alias'] = player_data['alias']
+
         self.room_var[self.room_name]['bracket'] = bracket
         # await self.send_bracket_update()
 
@@ -184,10 +214,10 @@ class PingPongConsumer(AsyncWebsocketConsumer):
             if self.room_name not in self.room_var:
                 self.room_var[self.room_name] = {
                     'players': {
-                        'player1': {'y': self.height/2 - 25, 'height': 100, 'x': 0, 'width': 10, 'direction': None, 'score': 0, 'full': False, 'username': '', 'game_start': False, 'current_match': 'match1', 'mapType': ''},
-                        'player2': {'y': self.height/2 - 25, 'height': 100, 'x': self.width - 10, 'width': 10, 'direction': None, 'score': 0, 'full': False, 'username': '', 'game_start': False, 'current_match': 'match1', 'mapType': ''},
-                        'player3': {'y': self.height/2 - 25, 'height': 100, 'x': 0, 'width': 10, 'direction': None, 'score': 0, 'full': False, 'username': '', 'game_start': False, 'current_match': 'match2', 'mapType': ''},
-                        'player4': {'y': self.height/2 - 25, 'height': 100, 'x': self.width - 10, 'width': 10, 'direction': None, 'score': 0, 'full': False, 'username': '', 'game_start': False, 'current_match': 'match2', 'mapType': ''},
+                        'player1': {'y': self.height/2 - 25, 'height': 100, 'x': 0, 'width': 10, 'direction': None, 'score': 0, 'full': False, 'username': '', 'game_start': False, 'current_match': 'match1', 'mapType': '', 'alias': ''},
+                        'player2': {'y': self.height/2 - 25, 'height': 100, 'x': self.width - 10, 'width': 10, 'direction': None, 'score': 0, 'full': False, 'username': '', 'game_start': False, 'current_match': 'match1', 'mapType': '', 'alias': ''},
+                        'player3': {'y': self.height/2 - 25, 'height': 100, 'x': 0, 'width': 10, 'direction': None, 'score': 0, 'full': False, 'username': '', 'game_start': False, 'current_match': 'match2', 'mapType': '', 'alias': ''},
+                        'player4': {'y': self.height/2 - 25, 'height': 100, 'x': self.width - 10, 'width': 10, 'direction': None, 'score': 0, 'full': False, 'username': '', 'game_start': False, 'current_match': 'match2', 'mapType': '', 'alias': ''},
                     },
                     'matches': {
                         'match1': {'player1': None, 'p1_username': None, 'p1_score': 0, 'player2': None, 'p2_username': None, 'p2_score': 0, 'winner': None, 'game_start': False},
@@ -203,20 +233,29 @@ class PingPongConsumer(AsyncWebsocketConsumer):
                 self.room_var[self.room_name]["bracket"] = {
                     "semifinals": {
                         "match1": {
-                            "player1": None,
-                            "player2": None,
-                            "winner": None
+                            "p1": None,
+                            "p1_alias": None,
+                            "p2": None,
+                            "p2_alias": None,
+                            "winner": None,
+                            "winner_alias": None
                         },
                         "match2": {
-                            "player1": None,
-                            "player2": None,
-                            "winner": None
+                            "p1": None,
+                            "p1_alias": None,
+                            "p2": None,
+                            "p2_alias": None,
+                            "winner": None,
+                            "winner_alias": None
                         }
                     },
                     "final": {
-                        "player1": None,
-                        "player2": None,
-                        "winner": None
+                        "p1": None,
+                        "p1_alias": None,
+                        "p2": None,
+                        "p2_alias": None,
+                        "winner": None,
+                        "winner_alias": None
                     }
                 }
                 await self.save_active_tournament()
@@ -242,7 +281,7 @@ class PingPongConsumer(AsyncWebsocketConsumer):
             if(self.room_var[self.room_name]['is_tournament']):
                 for player_key, player_data in self.room_var[self.room_name]['players'].items():
                     print("here")
-                    if(player_data['username'] == self.username):
+                    if(player_data['username'] == self.username and not self.room_var[self.room_name]['matches'][player_data['current_match']]['game_start']):
                         player_data['username'] = ''
                         player_data['full'] = False
                         player_data['direction'] = None
@@ -315,6 +354,8 @@ class PingPongConsumer(AsyncWebsocketConsumer):
         return None
     # data is like this   data:  {'type': 'join_tournament', 'data': {'userId': 4, 'username': 'amajid1', 'mapType': 'White Map'}}
     async def assign_player_tournament_data(self, data):
+        if(self.room_name not in self.room_var):
+            return None
         players = self.room_var[self.room_name]['players']
         print("player: ", data['username'])
         for player_key, player_data in players.items():
@@ -341,6 +382,7 @@ class PingPongConsumer(AsyncWebsocketConsumer):
                 player_data['username'] = data['username']
                 player_data['full'] = True
                 player_data['mapType'] = data['mapType']
+                player_data['alias'] = data['alias']
                 self.username = data['username']
                 print("player_key: ", player_key)
                 print("match: ", match, match_name)
@@ -349,12 +391,13 @@ class PingPongConsumer(AsyncWebsocketConsumer):
         return None
 
     async def receive(self, text_data):
+        if(self.room_name not in self.room_var):
+            return
         data = json.loads(text_data)
         direction = data.get('direction')
         username = data.get('username')
         player = data.get('player')
         print("data: ", data)
-
         if("type" in data and data["type"] == "join_tournament"):
             player = await self.assign_player_tournament_data(data['data'])
             # send this data back to the user
