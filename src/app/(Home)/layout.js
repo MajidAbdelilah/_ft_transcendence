@@ -30,10 +30,13 @@ function RootLayoutContent({ children }) {
 
   const checkUserData = () => {
     // console.log("dkhaaaaal", userData);
+    // console.log("userData  ::::::::::",userData);
     if (userData && userData.is_2fa === true) {
       if (userData.redirect_to === false) {
         // console.log("dkhaaaaal33333");
-        setTimeout(() => { router.replace("/authLogin"); }, 3000);
+        setTimeout(() => { router.replace("/authLogin"); }, 1000);
+        
+        // router.replace("/authLogin");
       }
     }
   };

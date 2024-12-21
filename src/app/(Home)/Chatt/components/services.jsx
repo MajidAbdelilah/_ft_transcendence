@@ -44,7 +44,7 @@ export async function playWithService(friend, loggedInUser, send)
 
 
 
-        console.log('🎮 Attempting to send game invitation to:', friend.username);
+        // console.log('🎮 Attempting to send game invitation to:', friend.username);
 
           const message = {
             type: 'game_invitation',
@@ -57,7 +57,7 @@ export async function playWithService(friend, loggedInUser, send)
             timestamp: new Date().toISOString()
           };
 
-          console.log('📤 Sending invitation message:', message);
+        //   console.log('📤 Sending invitation message:', message);
           send(message);
           toast.success(`Invitation sent to ${friend.username}!`);
 
@@ -91,7 +91,7 @@ export async function blockService(friend) {
         }
         } catch (error) {
         console.error(error);
-        toast.error('An error occurred while blocking the user');
+        toast.error('An error occurred while blocking this user');
         }
 
 

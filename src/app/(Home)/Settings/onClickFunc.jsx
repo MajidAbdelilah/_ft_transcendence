@@ -9,12 +9,12 @@ export const sendCode = async() =>
       try {
         
         const result = await Services.sendCodeService();
-        console.log("--- sendCode has been called : ", result);
+        // console.log("--- sendCode has been called : ", result);
 
 
           if(result.statusText === 'OK') {
             const successMsg = 'Email sent successfully!';
-            console.log(successMsg);
+            // console.log(successMsg);
             toast.success(successMsg);//
             return;
           }

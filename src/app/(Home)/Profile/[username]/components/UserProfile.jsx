@@ -37,7 +37,7 @@ const handleAddFriend = async (loggedInUser, user) => {
       { withCredentials: true, headers: {} }
     );
 
-    console.log("Response:", respond);
+    // console.log("Response:", respond);
 
     // Check if the response contains a success message
     if (respond.status === 200 && respond.data?.success) {
@@ -60,7 +60,7 @@ const handleBlockUser = async (loggedInUser, user) => {
       { withCredentials: true, headers: {} }
     );
 
-    console.log("respond : ---------------", respond);
+    // console.log("respond : ---------------", respond);
 
     // Check if the response contains a success message
     if (respond.status === 200 && respond.data?.success) {
@@ -73,9 +73,6 @@ const handleBlockUser = async (loggedInUser, user) => {
     toast.error('An error occurred while blocking the user');
   }
 };
-
-
-
 
 
 function Part1({loggedInUser, user, isSelf}) {
@@ -110,9 +107,7 @@ function Part1({loggedInUser, user, isSelf}) {
   );
 }
 
-
-
-        
+       
 function Part2({loggedInUser, user, isSelf}) {
   const [xp, setXp] = useState(0);
   const [level, setLevel] = useState(1);
@@ -200,7 +195,6 @@ function Part2({loggedInUser, user, isSelf}) {
     </div>
   )
 }
-
 
 export default function UserProfile({loggedInUser, user, isSelf}) {
       // console.log("LoggedInUser: -------------", loggedInUser);
