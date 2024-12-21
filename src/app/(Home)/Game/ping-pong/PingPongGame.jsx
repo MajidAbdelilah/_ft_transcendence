@@ -239,7 +239,7 @@ const PingPongGame = ({ roomName, player1, player2, player3, player4, map, isTou
         ctx.font = '28px Arial';
         ctx.fillStyle = 'black';
         ctx.textAlign = 'center';
-        ctx.fillText('Waiting for other player to be ready...', canvas.width / 2, canvas.height / 2);
+        ctx.fillText('Waiting for other player to be ready...', canvas.width / 2, canvas.height / 3);
         ctx.fill();
     };
 
