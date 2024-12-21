@@ -239,7 +239,7 @@ const PingPongGame = ({ roomName, player1, player2, player3, player4, map, isTou
         ctx.font = '28px Arial';
         ctx.fillStyle = 'black';
         ctx.textAlign = 'center';
-        ctx.fillText('Waiting for other player to be ready... press space to be ready', canvas.width / 2, canvas.height / 2);
+        ctx.fillText('Waiting for other player to be ready...', canvas.width / 2, canvas.height / 2);
         ctx.fill();
     };
 
@@ -263,6 +263,11 @@ const PingPongGame = ({ roomName, player1, player2, player3, player4, map, isTou
 
         if (data.is_tournament) {
             drawTournamentGame(ctx, canvas, data);
+            const currentMatch = data.players[playerRoleRef.current].current_match;
+
+            if(data.matches[currentMatch].game_start === false) {
+                updateWaitingScreen();
+            }
         } else if(data.players && !data.players.player4){
             drawNormalGame(ctx, canvas, data);
         }
@@ -314,16 +319,16 @@ const PingPongGame = ({ roomName, player1, player2, player3, player4, map, isTou
             ctx.fillText(data.players.player2.username, data.players.player2.x - 300, 50);
             // draw scores
             ctx.font = '80px Arial';
-            ctx.fillText(data.players.player1.score, canvas.width / 2 + 50, canvas.height / 2 + 50);
-            ctx.fillText(data.players.player2.score, canvas.width / 2 - 100, canvas.height / 2 + 50);
+            ctx.fillText(data.players.player1.score, canvas.width / 2 - 100, 100);
+            ctx.fillText(data.players.player2.score, canvas.width / 2 + 50, 100);
         }else {
             ctx.font = '30px Arial';
             ctx.fillText(data.players.player1.username, data.players.player1.x - 300, 50);
             ctx.fillText(data.players.player2.username, data.players.player2.x + 300, 50);
             // draw scores
             ctx.font = '80px Arial';
-            ctx.fillText(data.players.player1.score, canvas.width / 2 - 50, canvas.height / 2 + 50);
-            ctx.fillText(data.players.player2.score, canvas.width / 2 + 100, canvas.height / 2 + 50);
+            ctx.fillText(data.players.player1.score, canvas.width / 2 + 100, 100);
+            ctx.fillText(data.players.player2.score, canvas.width / 2 - 50, 100);
         }
         
         ctx.fill();
@@ -483,6 +488,7 @@ const PingPongGame = ({ roomName, player1, player2, player3, player4, map, isTou
     return (
         <div className={`${styles.gameContainer} ${montserrat.className}`}>
             <canvas ref={canvasRef} className={styles.canvas} />
+            <div className={styles.gameMessage}>press "Up" or "Down" buttons to play</div>
         </div>
     );
 };
