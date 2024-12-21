@@ -10,7 +10,6 @@ import { IconHistory } from "@tabler/icons-react"
 
 
 function MatchHistory({user}) {
-// console.log("user ==== ", user);
   const DashData = useContext(DashContext);
   const [matches, setMatches] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -27,17 +26,15 @@ function MatchHistory({user}) {
           axios.get(`http://127.0.0.1:8000/game/matches/${user.username}/`)
         ]);
 
-        // Combine both results
         const normalMatches = normalMatchesResponse.data;
         const aiMatches = aiMatchesResponse.data;
 
-        // Merge and sort by date (newest first)
+
         const allMatches = [...normalMatches, ...aiMatches].sort((a, b) => 
           new Date(b.date_time || b.date) - new Date(a.date_time || a.date)
         );
 
         setMatches(allMatches);
-        // console.log("Combined Match History:", allMatches);
       } catch (error) {
         console.error('Error fetching match history:', error);
       } finally {

@@ -66,37 +66,7 @@ let tournament = {
 export default function Chat() {
 
 
-  // LoggedInUser -----------------------------------------------------------------------------------------
   const LoggedInUser = useUser();
-  // console.log("LoggedInUser-------------- :", LoggedInUser.userData);
-
-
-
- 
-  // re comment those stuff in useeffect search for http://127.0.0.1:8000/api/user/
-
-  // for testing perpse :
-
-  // const LoggedInUser = {
-  //   userData: {
-  //     username: "userNameLoading",
-  //     id: 10,
-  //     name: "nameLoading",
-  //     avatar: "/images/avatarprofile.svg",
-  //     status: "Online",
-  //     level: 1,
-  //     score: "",
-  //     result: "",
-  //     map: "",
-  //   }
-  // };
-  // console.log("LoggedInUser", LoggedInUser.userData);
-  // if (LoggedInUser.userData === null) return (<div>LoggedInUser Loading...</div>);
-
-// LoggedInUser -----------------------------------------------------------------------------------------
-  
-
-
 
   let [loggedInUser, setLoggedInUser] = useState(
     {
@@ -131,16 +101,13 @@ export default function Chat() {
         map: "",
       };
   
-      // Update the state with the filled user data
       setLoggedInUser(filledUser);
-      // console.log("loggedInUser", filledUser);
-      // console.log("loggedInUser ============= ", filledUser);
+
 
     }
   }, [LoggedInUser.userData]); 
 
 
-//  -----------------------------------------------------------------------------------------
 
 const [selectedFriend, setSelectedFriend] = useState(null);
 const getSelectedFriend = (friend) => {
@@ -151,9 +118,7 @@ const getSelectedFriend = (friend) => {
 
 
 
-// -----------------------------------------------------------------------------------------
 
-  // const [selectedConversation, setSelectedConversation] = useState(null);
   
   
 
@@ -207,7 +172,6 @@ const getSelectedFriend = (friend) => {
 
 
 
-// #########################################################################
 
   function MessagesBox({ friend }) {
     const conversationContainer = useRef(null);
@@ -236,16 +200,12 @@ const getSelectedFriend = (friend) => {
           
         };
         loadConversation();
-    }, [selectedFriend, conversation]);// changes it to frind if that does not work
+    }, [selectedFriend, conversation]);
 
 
     
 
-    //  -----  impliment the logic of reciving a message using websocket  -------------------------------------------------------
-
-    // i supose to get the message weeither i am a sender or reciver , and insert it inside conversation , and map function should simply desplay it to the user 
-
-
+   
     const { connect, messages, isConnected } = useWebSocket();
 
 
@@ -260,9 +220,7 @@ const getSelectedFriend = (friend) => {
 
 
 useEffect(() => {
-  // console.log("Incoming messages -----------------", messages);
   if (friend && loggedInUser ) {
-    // const latestMessage = messages[messages.length - 1]; // Get the last message received
     const latestMessage = messages; // Get the last message received
 
     if (
@@ -317,9 +275,7 @@ useEffect(() => {
         </div>
       );
     }
-    // console.log("friend", friend);
     return (
-      // console.log(conversation),
       <div className="messagesBox w-full lg:w-3/5 p-2 h-full rounded-tr-xl rounded-br-xl flex flex-col ">
         {/* FriendChatInfo ---------------------------------------------------------------------------------------*/}
         <FriendChatInfo
@@ -337,17 +293,6 @@ useEffect(() => {
         
         <div className="Conversation  flex flex-col flex-grow overflow-y-auto custom-scrollbar break-words p-2 scroll-smooth" ref={conversationContainer}>
         
-          {/* {Array.isArray(conversation) && conversation.length > 0 ? (
-            conversation.map((message, index) =>
-              message.sender === friend.user.username ? (
-                <FriendMsgBox key={index} time={message.message_date} msg={message.message_content} />
-              ) : (
-                <MyMsgBox key={index} time={message.message_date} msg={message.message_content} />
-              )
-            )
-          ) : (
-            <p className="text-center text-gray-500">Loading...</p>
-          )} */}
           {Array.isArray(conversation) && conversation.length > 0 ? (
             [...conversation]
               .reverse()
@@ -385,7 +330,6 @@ useEffect(() => {
   }
   
   if (loggedInUser === null) return (<div> Loading...</div>);
-  // console.log("loggedInUser ========= ", loggedInUser);
   return (
 
         <WebSocketProvider>
@@ -410,30 +354,11 @@ useEffect(() => {
                 <ConversationsHeader />
 
                 <div className="MessagesList flex flex-col">
-
-
-
-
-                {/* <i should fetch and list friends here ></> */}
                 <ListFriends getSelectedFriend={getSelectedFriend} switchChatState={switchChatState} />
-
-
-                  
                 </div>
               </div>
             </div>
-            {/* <i should show the converation with the friend here  */}
-            {/* we need to log the selected friend first to make siure we managed to get  */}
-            {/* <ConversationSec selectedFriend={selectedFriend} /> */}
-            {/* <ConversationSec selectedFriend={selectedFriend} /> */}
             <MessagesBox friend={selectedFriend} />
-
-
-
-
-
-
-
              </div>
         </div>
         </WebSocketProvider>

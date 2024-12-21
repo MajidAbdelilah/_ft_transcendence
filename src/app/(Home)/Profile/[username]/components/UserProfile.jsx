@@ -78,7 +78,6 @@ const handleBlockUser = async (loggedInUser, user) => {
 function Part1({loggedInUser, user, isSelf}) {
 
   const router = useRouter();
-  // console.log("user ====> ", user);
   return (
     <div className="part1 relative w-1/3 p-2 rounded-l-2xl bg-[#F4F4FF] border-[#BCBCC9] border-r-2 min-w-32 ">
 
@@ -111,7 +110,6 @@ function Part1({loggedInUser, user, isSelf}) {
 function Part2({loggedInUser, user, isSelf}) {
   const [xp, setXp] = useState(0);
   const [level, setLevel] = useState(1);
-  // const [progress, setProgress] = useState(0);
   
   const calculateLevel = (xp) => {
     if(xp > 1900) return 20;
@@ -135,7 +133,6 @@ function Part2({loggedInUser, user, isSelf}) {
         const aiMatches = aiMatchesResponse.data || [];
         const allMatches = [...normalMatches, ...aiMatches];
   
-        // console.log("======:", allMatches);
         const totalXp = allMatches.reduce((acc, match) => {
           if (match.winner === user.username) {
             return acc + 50; 
@@ -144,14 +141,10 @@ function Part2({loggedInUser, user, isSelf}) {
         }, 0);
         setXp(totalXp);
 
-        // console.log("Total XP::::::::::::", totalXp);
 
 
         const userLevel = calculateLevel(totalXp);
         setLevel(userLevel);
-
-        // const progressInLevel = (level / 20 ) * 100;  
-        // setProgress(progressInLevel);
 
       } catch (error) {
         console.error("Error fetching level:", error);
@@ -197,9 +190,7 @@ function Part2({loggedInUser, user, isSelf}) {
 }
 
 export default function UserProfile({loggedInUser, user, isSelf}) {
-      // console.log("LoggedInUser: -------------", loggedInUser);
-      // console.log("User: -------------", user);
-      // console.log("IsSelf: -------------", isSelf);
+
 
 
 

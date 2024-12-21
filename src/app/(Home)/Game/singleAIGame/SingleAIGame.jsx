@@ -38,7 +38,6 @@ const SingleAIGame = ({ playerData }) => {
   const render = (ctx) => {
     const state = gameStateRef.current;
     
-    // Add console.log to debug
 
     
     // Clear and set background based on map preference
@@ -138,7 +137,6 @@ const SingleAIGame = ({ playerData }) => {
 
   const goal = () => {
     const state = gameStateRef.current;
-    // console.log("Ball position:", state.ballPos);
     
     if (state.ballPos.x - BALL_RADIUS <= 0) {
       return 2;
@@ -156,7 +154,6 @@ const SingleAIGame = ({ playerData }) => {
     {
         state.botBallDirection = state.ballDirection;
         state.botBallPos = state.ballPos;
-        // console.log("run again", state.runAgain);
         state.runAgain = false;
     }
     if(state.botBallDirection.x === 1){
@@ -284,14 +281,13 @@ const SingleAIGame = ({ playerData }) => {
         player2_score: player2_score,
         winner: actualWinner
     };
-    console.log('Sending data:', data);
     
     customAxios.post('http://127.0.0.1:8000/game/matches/', data)
         .then(response => {
-            console.log('Success:', response.data);
+            // console.log('Success:', response.data);
         })
         .catch(error => {
-            console.error('Error:', error);
+            // console.error('Error:', error);
         });
   };
 

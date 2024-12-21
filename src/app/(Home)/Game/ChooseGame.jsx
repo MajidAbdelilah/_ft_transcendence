@@ -62,7 +62,7 @@ function MainComponent() {
       try {
         const response = await customAxios.get('http://127.0.0.1:8000/friend/friends');
         if (response.data) {
-          setFriends(response.data);
+          setFriends(response.data.filter(user => user.user.username !== 'bot'));
           setError(null);
         }
       } catch (error) {

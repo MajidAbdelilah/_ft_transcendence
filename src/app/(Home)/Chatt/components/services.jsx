@@ -37,14 +37,9 @@ export async function profileService(friend, router) {
 
 export async function playWithService(friend, loggedInUser, send)
 {
-    
-    // console.log('loggedInUser called with:--------', loggedInUser);
-    // toast.success('impliment a play with logic!');
 
 
 
-
-        // console.log('🎮 Attempting to send game invitation to:', friend.username);
 
           const message = {
             type: 'game_invitation',
@@ -57,21 +52,14 @@ export async function playWithService(friend, loggedInUser, send)
             timestamp: new Date().toISOString()
           };
 
-        //   console.log('📤 Sending invitation message:', message);
           send(message);
           toast.success(`Invitation sent to ${friend.username}!`);
-
-        // } else {
-        //   console.warn('❌ No map selected when trying to invite friend');
-        //   toast.error('Please select a map first!');
-        // }
 
 }
 export async function blockService(friend) {
 
         
     try {
-        // console.log("friend------", friend);
         const respond = await axios.post(
             "http://127.0.0.1:8000/friend/friends-remove/",
             { username: friend.username },
@@ -79,7 +67,6 @@ export async function blockService(friend) {
         );
 
     
-        // console.log("respond : ---------------", respond);
     
         
         if (respond.status === 200 && respond.data?.success) {

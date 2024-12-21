@@ -17,9 +17,7 @@ export default function ListFriends({ getSelectedFriend, switchChatState }) {
     useEffect(() => {
         const fetchFriends = async () => {
         try {
-            // console.log()
             const response = await customAxios.get("http://127.0.0.1:8000/friend/friends",);
-            // console.log("======", response.data);
             setFriendsList(response.data); // Assuming the API returns { friends: [...] }
         } catch (error) {
             console.error("Error fetching friends data:", error);

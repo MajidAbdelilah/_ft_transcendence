@@ -108,10 +108,8 @@ export default function Profile() {
         map: "",
       };
   
-      // Update the state with the filled user data
       setLoggedInUser(filledUser);
-      // console.log("filledUser", filledUser);
-      // console.log("loggedInUser ============= ", loggedInUser);
+
 
     }
   }, []); 
@@ -134,15 +132,12 @@ export default function Profile() {
     {
       try 
       {
-        // console.log("searchedText : -----------------", searchedText);
       
         const response = await axios.get('http://127.0.0.1:8000/api/users/', {   withCredentials: true, headers: {} });
         const usersArray = Object.values(response.data);
-        // console.log("usersArray : -----------------", usersArray);
-        // console.log("searchedText : -----------------", searchedText);
+
 
         const user = usersArray.find( (u) => u.username === searchedText );
-        // console.log("user : -----------------", user);
         if(user )
         {
           setUserSearchedFor(user);

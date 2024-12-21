@@ -9,21 +9,7 @@ import { FaAngleDown } from "react-icons/fa";
 import Link from 'next/link';
 import { useRouter } from "next/navigation";
 import { blockService, playWithService, profileService } from './services';
-import { useGameInviteWebSocket } from '../../../contexts/GameInviteWebSocket';
-
-          // <Image
-          //   src={path === undefined || path === null || path === "" || path === "/images/%7B%7D" 
-          //     ? "/images/avatarprofile.svg" 
-          //     : path}
-          //   alt="avatarprofile"
-          //   width={60}
-          //   height={60}
-          //   className=" rounded-full left-0 top-0 w-[60px] h-[60px] "
-          // />
-
-
-          // src={friend.user.image_field ? `http://127.0.0.1:8000/api${friend.user.image_field}`  : "/images/DefaultAvatar.svg"}
-                    
+import { useGameInviteWebSocket } from '../../../contexts/GameInviteWebSocket';                  
 import { useUser } from '../../../contexts/UserContext';
 
 export function HisProfile ({path, name, status}) {
@@ -105,17 +91,11 @@ export function PlayWithOption ({onClick}) {
     );
   }
 
-//   {
-//     "id": 26,
-//     "username": "bot",
-//     "is_on": 0,
-//     "image_field": "/images/images/profilepng.png"
-// }
+
   export function FriendChatInfo({ loggedInUser, friend, ...rest }) {
     
     const router = useRouter();
     const { send } = useGameInviteWebSocket();
-    // console.log("friend :::::::::: ", friend);
 
   
     return (
