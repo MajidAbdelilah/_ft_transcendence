@@ -4,7 +4,7 @@ import { useState } from "react";
 import Services from './services';
 import toast, { Toaster } from 'react-hot-toast';
 import { sendCode, handleVerify } from './onClickFunc';
-import { useUser } from "../../UserContext";
+import { useUser } from "../../contexts/UserContext";
 
 
 function TwoFA({setIs2FA}) {

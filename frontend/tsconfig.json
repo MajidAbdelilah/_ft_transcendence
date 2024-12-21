@@ -27,7 +27,7 @@
     ".next/types/**/*.ts",
     "**/*.ts",
     "**/*.tsx"
-, "src/app/Navbar.jsx"  ],
+, "src/app/Navbar.jsx", "src/app/contexts/SearchContext.tsx"  ],
   "exclude": [
     "node_modules"
   ]

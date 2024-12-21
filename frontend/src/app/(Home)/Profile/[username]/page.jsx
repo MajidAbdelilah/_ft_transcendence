@@ -3,7 +3,12 @@
 
 
 import MatchHistory from "../../Dashboard/MatchHistory";
-import DashProvider from "../../Dashboard/Dashcontext";
+import { DashContext } from "../../Dashboard/Dashcontext";
+import { useContext } from "react"; // Import DashProvider
+
+
+
+
 
 import UserProfile from "./components/UserProfile";
 import LeaderBoard from "./components/LeaderBoard";
@@ -18,7 +23,7 @@ const montserrat = Montserrat({
   variable: "--font-montserrat",
 });
 
-import { useUser } from "../../../UserContext";
+import { useUser } from "../../../contexts/UserContext";
 // //data ------------------------------------------
 let user1 = {
   "userName": "john",
@@ -58,24 +63,16 @@ let user3 = {
 
 
 export default function Profile() {
+  // const [isMatchHistoryLoaded, setIsMatchHistoryLoaded] = useState(false);
+
+  // // Use a callback to update the loading state when matches are available
+  // const handleMatchHistoryLoaded = (isLoaded) => {
+  //   setIsMatchHistoryLoaded(isLoaded);
+  // };
+
   // loggedInUser -----------------------------------------------------------------------------------
 
-  // let UserId = 1; // Assume this is the logged-in user's ID
-  // let [loggedInUser, setLoggedInUser] = useState(null);
-  // // if (!loggedInUser) return null;
 
-  // useEffect(() =>  {
-  //   async function fetchLoggedInUser() {
-  //     const response = await axios.get("/profile.json");
-  //     const users = response.data;
-
-  //     // find the loggedInUser
-  //     const usr = users.find((user) => user.userId === UserId);
-  //     // console.log("LoggedInUser : ",usr);
-  //     setLoggedInUser(usr);
-  //   }
-  //   fetchLoggedInUser()
-  // }, [])
 
   
   const LoggedInUser = useUser();
@@ -114,13 +111,12 @@ export default function Profile() {
       // Update the state with the filled user data
       setLoggedInUser(filledUser);
       // console.log("filledUser", filledUser);
-      console.log("loggedInUser ============= ", loggedInUser);
+      // console.log("loggedInUser ============= ", loggedInUser);
 
     }
-  }, [LoggedInUser]); 
+  }, []); 
 
-
-
+ 
 
 
 
@@ -128,36 +124,90 @@ export default function Profile() {
   // searchedText - Searched user from the URL -------------------------------------------------------
   const params = useParams();
   const searchedText = params.username;
+  const DashData = useContext(DashContext);
 
-  const [userSearchedFor, setuserSearchedFor] = useState(null);
 
+  const [userSearchedFor, setUserSearchedFor] = useState(null);
+  const [tracker, setTracker] = useState(false);
   useEffect(() => {
     const fetchuserSearchedFor = async () => 
     {
-      const response = await axios.get("/profile.json");
-      const users = response.data;
+      try 
+      {
+        // console.log("searchedText : -----------------", searchedText);
+      
+        const response = await axios.get('http://127.0.0.1:8000/api/users/', {   withCredentials: true, headers: {} });
+        const usersArray = Object.values(response.data);
+        // console.log("usersArray : -----------------", usersArray);
+        // console.log("searchedText : -----------------", searchedText);
 
-      const usr = users.find((user) => user.userName === searchedText);
-
-      if(usr)
+        const user = usersArray.find( (u) => u.username === searchedText );
+        console.log("user : -----------------", user);
+        if(user )
         {
-          setuserSearchedFor(usr);
-          console.log("LoggedInUser : ",usr);
-
+          setUserSearchedFor(user);
+          
         }
-      else
+        else 
         {
-          console.log("User not found)");
+          setUserSearchedFor(null);
+          setTracker(true)
         }
 
+      } catch (error)
+      {
+        console.error("Error user data in profile page ...", error);
+
+      }
+
+
+      
     };
     fetchuserSearchedFor();
   
   }, [searchedText]);
 
+  useEffect(() => {
+    const handleResize = () => {
+      DashData.setIsMobile(window.innerWidth <= 640);
+    };
 
-  if(loggedInUser === null || userSearchedFor === null) {
+    handleResize();
+    window.addEventListener("resize", handleResize);
+  }, [DashData]);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.scrollY > 0) {
+        DashData.setIsScrolled(true);
+      } else {
+        DashData.setIsScrolled(false);
+      }
+    };
+    window.addEventListener("scroll", handleScroll);
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  });
+
+
+
+
+
+  if(loggedInUser === null) {
     return null;
+  }
+
+  if (userSearchedFor === null && tracker === true) {
+    return (
+
+        <div className="text-center p-8 rounded-xl shadow-xl bg-[#F4F4FF] border border-[#C0C7E0] max-w-md mx-4">
+          <h1 className="text-3xl font-extrabold text-[#242F5C] mb-4">Oops!</h1>
+          <p className="text-lg text-[#242F5C] mb-6">
+            We couldn't find the user you're looking for. Please double-check the username or try again.
+          </p>
+        </div>
+    );
   }
 
   let isSelf = loggedInUser && loggedInUser.userName === searchedText;
@@ -165,18 +215,16 @@ export default function Profile() {
   
    
   return (
-    <DashProvider>
       <div
         className={`flex-1 overflow-y-auto p-4 flex flex-wrap items-center justify-center h-full ${montserrat.variable}`}
       >
         <div className="flex flex-col lg:flex-row w-full  items-center justify-center lg:gap-10 xl:gap-32 2xl:gap-60      lg:mx-10 xl:mx-28 2xl:mx-40">
           {userSearchedFor && (<UserProfile loggedInUser={loggedInUser} user={userSearchedFor} isSelf={isSelf}/>)}
           
-          <LeaderBoard first={user3} second={user2} third={user3} />
+          {/* <LeaderBoard first={user3} second={user2} third={user3} /> */}
         </div>
-
-        <MatchHistory />
+        
+        {/* <MatchHistory /> */}
       </div>
-    </DashProvider>
   );
 }

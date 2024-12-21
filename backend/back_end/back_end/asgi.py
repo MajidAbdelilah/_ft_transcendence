@@ -8,14 +8,17 @@ from django_channels_jwt_auth_middleware.auth import JWTAuthMiddlewareStack
 from django.core.asgi import get_asgi_application
 import  chat.routing 
 import friend.routing
+import double_game.routing
 # from tournament.routing import websocket_urlpatterns
 from friend.routing import websocket_urlpatterns
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import AnonymousUser
 import jwt
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'game.settings')
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'back_end.settings')
 django.setup()
+from back_end.routing import websocket_urlpatterns as game_websocket_urlpatterns
+from turn.routing import websocket_urlpatterns as turn_websocket_urlpatterns
 
 # class UserStatusConsumer(JWTAuthentication):
     
@@ -27,16 +30,11 @@ def get_user_from_jwt_token(token_key):
         if not token_key:
             print("No token provided")
             return AnonymousUser()
-            
-        print(f"Attempting to decode token: {token_key[:50]}...")
         payload = jwt.decode(token_key, settings.SECRET_KEY, algorithms=["HS256"])
         user_id = payload.get('user_id')
-        print(f"Found user_id in token: {user_id}")
         user = User.objects.get(id=user_id)
-        print(f"Found user: {user}")
         return user
     except (jwt.ExpiredSignatureError, jwt.InvalidTokenError, User.DoesNotExist) as e:
-        print(f"Error authenticating token: {str(e)}")
         return AnonymousUser()
 
 class JWTAuthMiddleware(BaseMiddleware):
@@ -84,7 +82,10 @@ application = ProtocolTypeRouter({
         URLRouter(
             websocket_urlpatterns +  # assuming it's a list or iterable
             chat.routing.websocket_urlpatterns +
-            friend.routing.websocket_urlpatterns
+            friend.routing.websocket_urlpatterns +
+            double_game.routing.websocket_urlpatterns +
+            game_websocket_urlpatterns +
+            turn_websocket_urlpatterns
         )
     ),
 })

@@ -3,6 +3,10 @@
 import Image from "next/image"
 import { Montserrat } from "next/font/google"
 import { useState, useEffect } from "react"
+import customAxios from '../../customAxios'
+import { useWebSocket } from '../../contexts/WebSocketProvider';
+import {IconUserCancel} from '@tabler/icons-react'
+import { useUser } from '../../contexts/UserContext';
 
 const montserrat = Montserrat({
   subsets: ['latin'],
@@ -10,20 +14,51 @@ const montserrat = Montserrat({
 })
 
 interface BlockedFriendProps {
-  id: string
-  name: string
-  avatar: string
-  status: 'online' | 'offline'
-  onUnblock: (id: string) => void
+  blockedFriend: {
+    user: {
+      id: number;
+      username: string;
+      is_on: number;
+      image_field: string
+    };
+    freindship_id: number;
+    is_accepted: boolean;
+    user_from: number;
+    user_to: number;
+    user_is_logged_in: number;
+  }
 }
 
-export default function BlockedFriends({ id, name, avatar, status, onUnblock }: BlockedFriendProps) {
-  const [isMobileBL, setIsMobileBL] = useState(false)
+export default function BlockedFriends({ blockedFriend }: BlockedFriendProps) {
   const [isMobile, setIsMobile] = useState(false)
+  const { userData } = useUser();
+  const { send } = useWebSocket();
+
+  const handleUnblock = async () => {
+    try {
+      console.log("Sending friend unblock request:", {
+        freindship_id: blockedFriend.freindship_id,
+        user: blockedFriend.user
+      });
+      send({
+        type: 'friends-unblock',
+        freindship_id: blockedFriend.freindship_id,
+        user: blockedFriend.user,
+        user_from: blockedFriend.user_from,
+        user_to: blockedFriend.user_to,
+        user_is_logged_in: blockedFriend.user_is_logged_in
+      });
+      console.log("Friend unblock message sent:", {
+        freindship_id: blockedFriend.freindship_id,
+        user: blockedFriend.user
+      });
+    } catch (error) {
+      console.error('Error unblocking friend:', error)
+    }
+  }
 
   useEffect(() => {
     const handleResize = () => {
-      setIsMobileBL(window.innerWidth <= 1700)
       setIsMobile(window.innerWidth <= 768)
     }
 
@@ -35,47 +70,32 @@ export default function BlockedFriends({ id, name, avatar, status, onUnblock }: 
   }, [])
 
   return (
-    <div className={`w-full mx-auto h-20 lg:h-[12%] md:h-[20%] mt-2 rounded-xl bg-[#D8D8F7] shadow-md shadow-[#BCBCC9] relative ${isMobile ? '' : 'min-h-[90px]'} ${montserrat.className}`}>
+    <div 
+      key={blockedFriend.freindship_id}
+      className={`w-full mx-auto h-20 lg:h-[12%] md:h-[20%] mt-2 rounded-xl bg-[#D8D8F7] shadow-md shadow-[#BCBCC9] relative ${isMobile ? '' : ' min-h-[90px]'} ${montserrat.className}`}
+    >
       <div className="flex items-center h-full p-2">
-        <div className="flex flex-row items-center justify-center lg:w-[10%] lg:h-[90%] md:w-[10%] md:h-[90%] w-[20%] h-[90%]">
-          <Image priority src={avatar} alt={`${name}'s profile`} width={50} height={50} className="lg:w-[90%] lg:h-[90%] md:w-[80%] md:h-[80%] w-[100%] h-[100%]" />
+        <div className="relative w-16 h-16 md:w-20 md:h-20 lg:w-15 lg:h-15">
+          <img
+            src={blockedFriend.user.image_field ? `http://127.0.0.1:8000/api${blockedFriend.user.image_field}` : "/images/DefaultAvatar.svg"}
+            alt={`${blockedFriend.user.username}'s profile`} 
+            className="w-full h-full rounded-full object-cover border-2 border-[#BCBCC9]"
+          />
         </div>
         <div className="ml-4 flex flex-col justify-center">
-          <h2 className="text-[#242F5C] text-sm lg:text-lg md:text-base font-bold">{name}</h2>
-          <p className={`${status === 'online' ? 'text-green-600' : 'text-gray-500'} lg:text-sm text-xs font-medium`}>
-            {status === 'online' ? 'Online' : 'Offline'}
+          <h2 className="text-[#242F5C] text-sm lg:text-lg md:text-base font-bold">{blockedFriend.user.username}</h2>
+          <p className={`${blockedFriend.user.is_on === 1 ? 'text-green-600' : 'text-gray-500'} lg:text-sm text-xs font-medium`}>
+            {blockedFriend.user.is_on === 1 ? 'Online' : 'Offline'}
           </p>
         </div>
-        {!isMobileBL ? (
-          <div className="flex flex-row items-center justify-end lg:w-[50%] lg:h-[90%] md:w-[10%] md:h-[90%] w-[20%] h-[90%] absolute md:right-10 right-5 top-1 md:gap-5 gap-2">
-            <button
-              onClick={() => onUnblock(id)}
-              className="
-                bottom-2 right-[8%] 
-                md:bottom-[7%] 
-                lg:bottom-[5%] lg:right-[4%]
-                text-base tracking-wide
-                w-[100px] h-[40px]
-                md:w-[100px] md:h-[40px]
-                lg:w-[120px] lg:h-[60%]
-                bg-[#242F5C] rounded-full cursor-pointer overflow-hidden 
-                transition-all duration-500 ease-in-out shadow-md 
-                hover:scale-105 hover:shadow-lg 
-                before:absolute before:top-0 before:-left-full before:w-full before:h-full 
-                before:bg-gradient-to-r before:from-[#242F5C] before:to-[#7C829D] 
-                before:transition-all before:duration-500 before:ease-in-out before:z-[-1] 
-                font-extrabold before:rounded-xl hover:before:left-0 text-[#fff]"
-            >
-              Unblock
-            </button>
-          </div>
-        ) : (
-          <div className="flex flex-row items-center justify-end lg:w-[20%] lg:h-[90%] md:w-[20%] md:h-[90%] w-[20%] h-[90%] absolute md:right-4 right-5 top-1 md:gap-5 gap-5 ">
-            <button onClick={() => onUnblock(id)} aria-label={`Unblock ${name}`}>
-              <Image src="/images/BlockedFriends.svg" alt="Unblock" width={50} height={50} className="lg:w-[40%] lg:h-[40%] md:w-[40%] md:h-[40%] w-[30%] h-[30%] cursor-pointer" />
-            </button>
-          </div>
-        )}
+        <div className="flex flex-row items-center justify-end lg:w-[50%] lg:h-[90%] md:w-[10%] md:h-[90%] w-[20%] h-[90%] absolute md:right-10 right-5 top-1 md:gap-5 gap-2">
+          <button
+            onClick={handleUnblock}
+            className="bg-[#242F5C] rounded-[12px] text-white px-4 py-2 rounded-lg hover:bg-[#1a2340] transition-colors"
+          >
+            Unblock
+          </button>
+        </div>
       </div>
     </div>
   )

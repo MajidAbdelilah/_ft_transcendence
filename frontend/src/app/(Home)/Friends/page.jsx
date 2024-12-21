@@ -1,31 +1,25 @@
 'use client'
 
 import { Montserrat } from "next/font/google"
-import { useState, useEffect } from "react"
+import { useState, useEffect, useContext } from "react"
 import Image from "next/image"
 import FriendsComponent from "./FriendsList"
 import ScrollBlur from "./ScrollBlur"
 import FriendRequests from "./FriendRequests.tsx"
 import BlockedFriends from "./BlockedFriends.tsx"
-import axios from "axios"
+import customAxios from "../../customAxios"
 import { Loader2 } from 'lucide-react'
-
-
-
-
-
-export function LoadingSpinner() {
-  return (
-      <Loader2 className="w-8 h-8 text-[#242F5C]" />
-  )
-}
+import { useWebSocket } from '../../contexts/WebSocketProvider';
+import {IconForbid2} from '@tabler/icons-react'
+import {IconUserExclamation} from '@tabler/icons-react'
+import LoadingSpinner from './components/LoadingSpinner'
 
 const montserrat = Montserrat({
   subsets: ["latin"],
   variable: "--font-montserrat",
 })
 
-function Friends() {
+export default function Friends() {
   const [isMobile, setIsMobile] = useState(false)
   const [activeItem, setActiveItem] = useState("Friends List")
   const [navItems] = useState([
@@ -33,18 +27,12 @@ function Friends() {
     "Friend Requests",
     "Blocked Friends",
   ])
-  const friendsData = [
-    { id: '1', name: 'John Doe', avatar: '/images/avatar2.svg', status: 'online' },
-    { id: '2', name: 'Jane Smith', avatar: '/images/avatar2.svg', status: 'offline' },
-    { id: '2', name: 'Jane Smith', avatar: '/images/avatar2.svg', status: 'offline' },
-
-    // ... more friends
-  ];
-  // const [friendsData, setFriendsData] = useState([])
-  // const [friendRequestsData, setFriendRequestsData] = useState([])
-  // const [blockedFriendsData, setBlockedFriendsData] = useState([])
-  // const [isLoading, setIsLoading] = useState(true)
+  const [friendsData, setFriendsData] = useState([])
+  const [friendRequestsData, setFriendRequestsData] = useState([])  
+  const [blockedFriendsData, setBlockedFriendsData] = useState([])
+  const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState(null)
+  const [friendRequestsCount, setFriendRequestsCount] = useState(0);
 
   const navItemsIcons = [
     {
@@ -65,6 +53,8 @@ function Friends() {
   ]
   const [activeIcon, setActiveIcon] = useState(navItemsIcons[0].activeImg)
 
+  const {addHandler, removeHandler } = useWebSocket();
+
   useEffect(() => {
     const handleResize = () => {
       setIsMobile(window.innerWidth <= 1698)
@@ -77,41 +67,207 @@ function Friends() {
     }
   }, [])
 
-  
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const [friendsList, FriendRes , blockedRes] = await Promise.all([
+          customAxios.get('http://127.0.0.1:8000/friend/friends'),
+          customAxios.get('http://127.0.0.1:8000/friend/friend-request'),
+          customAxios.get('http://127.0.0.1:8000/friend/blocked-friends'),
+        ]);
+        console.log("friendsList:",friendsList.data);
+        console.log("FriendRes:",FriendRes.data);
+        console.log("blockedRes:",blockedRes.data);
+        setFriendsData(friendsList.data)
+        setFriendRequestsData(FriendRes.data)
+        setBlockedFriendsData(blockedRes.data)
+      } catch (error) {
+        console.error('Error fetching data:', error);
+        setError(error.message);
+      } finally {
+        setIsLoading(false);
+      }
+    };
 
-  // useEffect(() => {
-  //   const fetchData = async () => {
-      // setIsLoading(true)
-  //     setError(null)
-  //     try {
-  //       const friendsResponse = await axios('/api/friends')
-  //       const friendRequestsResponse = await axios('/api/friend-requests')
-  //       const blockedFriendsResponse = await axios('/api/blocked-friends')
+    const handleWebSocketMessage = (data) => {
+      if (!data || !data.type) {
+        console.warn('Invalid WebSocket message received:', data);
+        return;
+      }
 
-  //       if (!friendsResponse.ok || !friendRequestsResponse.ok || !blockedFriendsResponse.ok) {
-  //         throw new Error('Failed to fetch data')
-  //       }
+      try {
+        switch (data.type) {
+          case 'user_status':
+            console.log('Received user_status update:', data);
+            setFriendsData(prev => {
+              const updatedFriends = prev.map(friend => {
+                if (friend.user.id === data.id) {
+                  console.log(`Updating status for friend ${friend.user.username} to ${data.is_on ? 'online' : 'offline'}`);
+                  return {
+                    ...friend,
+                    user: {
+                      ...friend.user,
+                      is_on: data.is_on
+                    }
+                  };
+                }
+                return friend;
+              });
+              console.log('Updated friends data:', updatedFriends);
+              return updatedFriends;
+            });
+            break;
 
-  //       const friendsData = await friendsResponse.json()
-  //       const friendRequestsData = await friendRequestsResponse.json()
-  //       const blockedFriendsData = await blockedFriendsResponse.json()
+          case 'friends_list_update':
+            if (data.action === 'add') {
+              // Add new friend to friends list
+              setFriendsData(prev => [...prev, data.friend]);
+              // Remove from friend requests if it exists
+              setFriendRequestsData(prev => prev.filter(req => req.freindship_id !== data.friend.freindship_id));
+            } else if (data.action === 'block') {
+              // We've been blocked by someone
+              console.log('Blocked by user:', data);
+              const friendshipId = data.friend.freindship_id;
+              // Remove from friends list
+              setFriendsData(prev => 
+                prev.filter(friend => friend.freindship_id !== friendshipId)
+              );
+              // Also remove from friend requests if present
+              setFriendRequestsData(prev => 
+                prev.filter(req => req.freindship_id !== friendshipId)
+              );
+            } else if (data.action === 'unblock') {
+              // We've been unblocked by someone
+              // No action needed as we need to send a new friend request
+            }
+            break;
 
-  //       setFriendsData(friendsData)
-  //       setFriendRequestsData(friendRequestsData)
-  //       setBlockedFriendsData(blockedFriendsData)
-  //     } catch (error) {
-  //       setError(error.message)
-  //     } finally {
-  //       setIsLoading(false)
-  //     }
-  //   }
+          // case 'friends-add':
+          case 'friends_add':
+            console.log('Friend request received:', data);
+            setFriendRequestsCount(prev => prev + 1);
+            // Add the new friend request to the list
+            setFriendRequestsData(prev => [...prev, {
+              freindship_id: data.freindship_id,
+              user: data.user,
+              is_accepted: false,
+            }]);
+            break;
 
-  //   fetchData()
-  // }, [])
+          case 'friend_request_sent':
+            console.log('Friend request sent:', data);
+            // Don't increment the count for sent requests
+            break;
 
-  // if (isLoading) {
-  //   return <LoadingSpinner/>
-  // }
+          case 'friends_accept':
+            console.log('Friend request accepted:', data);
+            // Update friend request count and data
+            setFriendRequestsCount(prev => Math.max(0, prev - 1));
+            setFriendRequestsData(prev => 
+              prev.filter(req => req.freindship_id !== data.freindship_id)
+            );
+            break;
+
+          case 'friend-rejected':
+          case 'friend_rejected':
+            console.log('Friend request rejected:', data);
+            // Update friend request count and data
+            setFriendRequestsCount(prev => Math.max(0, prev - 1));
+            setFriendRequestsData(prev => 
+              prev.filter(req => 
+                !(req.user_from === data.user_from && req.user_to === data.user_to)
+              )
+            );
+            break;
+
+          case 'friends_remove_success':
+            console.log('Friend request removed successfully:', data);
+            // Update friend request data
+            setFriendRequestsData(prev => 
+              prev.filter(req => 
+                req.freindship_id !== data.freindship_id
+              )
+            );
+            break;
+
+          case 'friends_block_success':
+            console.log('Friend blocked successfully:', data);
+            // Remove from friends list since is_accepted is set to false
+            setFriendsData(prev => 
+              prev.filter(friend => 
+                friend.freindship_id !== data.freindship_id
+              )
+            );
+            // Add to blocked friends list with correct structure
+            setBlockedFriendsData(prev => [...prev, {
+              freindship_id: data.freindship_id,
+              user: {
+                id: data.user.id,
+                username: data.user.username,
+                is_on: data.user_is_logged_in,
+                image_field: data.user.image_field
+
+              },
+              is_accepted: false,
+              user_from: data.user_from,
+              user_to: data.user_to,
+              user_is_logged_in: data.user_is_logged_in
+            }]);
+            break;
+
+          case 'friends_unblock_success':
+            console.log('Friend unblocked successfully:', data);
+            // Remove from blocked list
+            const unblockedUser = blockedFriendsData.find(blocked => 
+              blocked.freindship_id === data.freindship_id
+            );
+            setBlockedFriendsData(prev => 
+              prev.filter(blocked => 
+                blocked.freindship_id !== data.freindship_id
+              )
+            );
+            // Add to friends list matching the block response structure
+            if (unblockedUser && unblockedUser.user) {
+              setFriendsData(prev => [...prev, {
+                freindship_id: data.freindship_id,
+                user: {
+                  id: unblockedUser.user.id,
+                  username: unblockedUser.user.username,
+                  is_on: unblockedUser.user.is_on,
+                  image_field : unblockedUser.user.image_field,
+                },
+                is_accepted: true,
+                user_from: data.user_from,
+                user_to: data.user_to,
+                user_is_logged_in: unblockedUser.user.is_on
+              }]);
+            }
+            break;
+
+          default:
+            console.warn('Unknown WebSocket message type:', data.type);
+        }
+      } catch (error) {
+        console.error('Error handling WebSocket message:', error);
+      }
+    };
+
+    addHandler(handleWebSocketMessage);
+    fetchData();
+
+    return () => {
+      removeHandler(handleWebSocketMessage);
+    };
+  }, [addHandler, removeHandler])
+
+  useEffect(() => {
+    const pendingRequests = friendRequestsData.filter(request => !request.is_accepted);
+    setFriendRequestsCount(pendingRequests.length);
+  }, [friendRequestsData]);
+
+  if (isLoading) {
+    return <LoadingSpinner/>
+  }
 
   if (error) {
     return <div className="flex items-center justify-center h-full text-red-500">Error: {error}</div>
@@ -129,58 +285,86 @@ function Friends() {
           </h1>
           <hr className="lg:w-[50%] lg:h-[3px] md:w-[40%] md:h-[3px] w-[65%] h-[3px] bg-[#CDCDE5] border-none rounded-full" />
           {!isMobile ? (
-            <div className="flex w-[70%] h-[8%] flex-row justify-between items-center space-y-4 md:space-y-0 md:space-x-4 lg:space-x-8 xl:space-x-12 motion-preset-bounce  ">
+            <div className="flex w-[70%] h-[8%] flex-row justify-between items-center space-y-4 md:space-y-0 md:space-x-4 lg:space-x-8 xl:space-x-12 motion-preset-bounce">
               {navItems.map((item) => (
-                <h1
-                  key={item}
-                  className={`
+                <div key={item} className="relative">
+                  <h1
+                    className={`
                       md:text-sm lg:text-3xl
                       font-extrabold tracking-wide text-center cursor-pointer
                       transition-colors duration-200
                       ${activeItem === item
-                      ? "text-[#242F5C]"
-                      : "text-[#A7ACBE]"
-                    }
+                        ? "text-[#242F5C]"
+                        : "text-[#A7ACBE]"
+                      }
                     `}
-                  onClick={() => setActiveItem(item)}
-                >
-                  {item}
-                </h1>
+                    onClick={() => setActiveItem(item)}
+                  >
+                    {item}
+                  </h1>
+                  {item === "Friend Requests" && friendRequestsCount > 0 && (
+                    <div className="absolute -top-2 -right-2 w-4 h-4 bg-red-500 rounded-full flex items-center justify-center">
+                      <span className="text-white text-xs">{friendRequestsCount}</span>
+                    </div>
+                  )}
+                </div>
               ))}
             </div>
           ) : (
-            <div className="w-full h-[10%] flex flex-row items-center content-center justify-around motion-preset-bounce  ">
+            <div className="w-full h-[10%] flex flex-row items-center content-center justify-around motion-preset-bounce">
               {navItemsIcons.map((item) => (
-                <Image
-                  key={item.name}
-                  src={
-                    activeIcon === item.activeImg
-                      ? item.activeImg
-                      : item.inactiveImg
-                  }
-                  alt={item.name}
-                  width={35}
-                  height={35}
-                  className="cursor-pointer transition-opacity duration-200 hover:opacity-80 w-[35px] h-[35px]"
-                  onClick={() => { setActiveIcon(item.activeImg); setActiveItem(item.name); }}
-                />
+                <div key={item.name} className="relative">
+                  <Image
+                    src={activeIcon === item.activeImg ? item.activeImg : item.inactiveImg}
+                    alt={item.name}
+                    width={35}
+                    height={35}
+                    className="cursor-pointer transition-opacity duration-200 hover:opacity-80 w-[35px] h-[35px]"
+                    onClick={() => { setActiveIcon(item.activeImg); setActiveItem(item.name); }}
+                  />
+                  {item.name === "Friend Requests" && friendRequestsCount > 0 && (
+                    <div className="absolute -top-1 -right-1 w-4 h-4 bg-red-500 rounded-full flex items-center justify-center">
+                      <span className="text-white text-xs">{friendRequestsCount}</span>
+                    </div>
+                  )}
+                </div>
               ))}
             </div>
           )}
-          <div className="w-full h-full flex flex-col space-y-7 overflow-y-auto scrollbar-hide custom-scrollbar motion-preset-expand  ">
+          <div className="w-full h-full flex flex-col  space-y-7 overflow-y-auto scrollbar-hide custom-scrollbar motion-preset-expand  ">
             <ScrollBlur>
               {activeItem === "Friends List" && (
                 <FriendsComponent friends={friendsData} />
               )}
               {activeItem === "Friend Requests" && (
-                friendRequestsData.map((request, index) => (
-                  <FriendRequests key={index} request={request} />
-                ))
+                <div className="flex flex-col gap-4">
+                  {friendRequestsData.length > 0 ? (
+                    friendRequestsData.map((request) => (
+                      <FriendRequests key={request.freindship_id} request={request} />
+                    ))
+                  ) : (
+                    <div className="flex flex-col items-center justify-center h-full gap-2">
+                      <IconUserExclamation className="w-16 h-16" color="#242F5C"  />
+                      <p className="text-[#242F5C] text-lg font-bold">No friend requests</p>
+                      <p className="text-[#7C829D] text-sm text-center">Connect with others by sending a friend request to initiate a conversation</p>
+                    </div>
+                  )}
+                </div>
               )}
               {activeItem === "Blocked Friends" && (
-                blockedFriendsData.map((blockedFriend, index) => (
-                  <BlockedFriends key={index} blockedFriend={blockedFriend} />
-                ))
+                <div className="flex flex-col gap-4">
+                  {blockedFriendsData.length > 0 ? (
+                    blockedFriendsData.map((blocked) => (
+                      <BlockedFriends key={blocked.freindship_id} blockedFriend={blocked} />
+                    ))
+                  ) : (
+                    <div className="flex flex-col items-center justify-center h-full gap-2">
+                      <IconUserExclamation className="w-16 h-16" color="#242F5C"  />
+                      <p className="text-[#242F5C] text-lg font-bold">No blocked users</p>
+                      <p className="text-[#7C829D] text-sm text-center">Your blocked users list is currently empty</p>
+                    </div>
+                  )}
+                </div>
               )}
             </ScrollBlur>
           </div>
@@ -189,5 +373,3 @@ function Friends() {
     </div>
   )
 }
-
-export default Friends

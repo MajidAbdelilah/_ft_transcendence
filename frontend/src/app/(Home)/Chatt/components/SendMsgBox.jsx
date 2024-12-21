@@ -2,43 +2,41 @@
 
 import { RiSendPlaneLine } from "react-icons/ri";
 import { getCurrentTime, createFriendMsgBox, createMyMsgBox } from './peerToPeer';
+import { useWebSocket } from '../WebSocketProvider';
 
 
 
   
   export function SendMsgBox({ loggedInUser, friend}) {
+    // socket ---------------------------------------------------------
   
+    const { send } = useWebSocket();
     const sendMessage = async (e) => {
-
-      if (e.code !== "Enter" && e.type !== "click") return;
-      let inputText = document.getElementsByClassName("msgToSend")[0];
-      if (inputText.value.trim() === "") return ;
-        
-      const messageContent = inputText.value;
-
-
-
-
-
-      //  -----  using websocket  -------------------------------------------------------
-      const message = {
-        message_content: messageContent,
-        message_date: getCurrentTime(),
-        sender: loggedInUser.userId,
-        receiver: friend.userId
-      };
-
-      // Send the message to WebSocket server
-      socket.send(JSON.stringify(message));
-
-
-
-
       
 
-          conv.scrollTop = conv.scrollHeight;
-          inputText.value = ""; // Clear the input
-    }
+
+      if (e.code !== 'Enter' && e.type !== 'click') return;
+  
+      const inputText = document.querySelector('.msgToSend');
+      if (!inputText || inputText.value.trim() === '') return;
+  
+      const messageContent = inputText.value.trim();
+
+      const messageObject = {
+        message: messageContent,
+        send: loggedInUser.username,
+        receive: friend.username,
+        timestamp: new Date().toISOString(),
+        chat_id: loggedInUser.id.toString()
+      };
+  
+      send(messageObject);
+      inputText.value = ''; // Clear input after sending
+
+
+
+    };
+
 
 
 

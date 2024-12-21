@@ -6,7 +6,7 @@ from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 class UserSerializer(serializers.ModelSerializer):
     class Meta :
         model = User
-        fields=['id','username','password', 'email', 'is_2fa', '_2fa_code', 'fullname', 'image_name', 'image_field']
+        fields=['id','username','password', 'email', 'is_2fa', '_2fa_code', 'fullname', 'image_field', 'redirect_to']
         extra_kwargs = {
             'password':{'write_only':True} 
         }
@@ -20,3 +20,6 @@ class UserSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError("Passwords is empty.")
         instance.save()
         return(instance)
+    
+    def get_image_url(self, obj):
+        return obj.image_field.url if obj.image_field else None

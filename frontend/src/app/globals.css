@@ -133,6 +133,22 @@
     }
   }
   
+  @keyframes gradient {
+    0% {
+      transform: translate(0) rotate(0deg);
+    }
+    50% {
+      transform: translate(-10px, 10px) rotate(180deg);
+    }
+    100% {
+      transform: translate(0) rotate(360deg);
+    }
+  }
+
+  .animate-gradient {
+    animation: gradient 8s linear infinite;
+  }
+
   body {
     background-image: url('/images/background.svg');
     background-size: cover;

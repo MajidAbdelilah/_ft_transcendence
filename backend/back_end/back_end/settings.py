@@ -15,7 +15,7 @@ from pathlib import Path
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 #EMAIL
 import certifi, os
 os.environ['SSL_CERT_FILE'] = certifi.where()
@@ -60,7 +60,8 @@ INSTALLED_APPS = [
     'rest_framework_simplejwt',
     'channels_redis',
     'double_game',#needed
-    'channels',#needed
+    'channels',
+    'turn',#needed
 ]
 
 MIDDLEWARE = [
@@ -81,7 +82,10 @@ ROOT_URLCONF = 'back_end.urls'
 
 CHANNEL_LAYERS = {
     'default': {
-        'BACKEND': 'channels.layers.InMemoryChannelLayer',
+        'BACKEND': 'channels_redis.core.RedisChannelLayer',
+        'CONFIG': {
+            "hosts": [('127.0.0.1', 6379)],
+        },
     },
 }
 TEMPLATES = [
@@ -100,6 +104,8 @@ TEMPLATES = [
     },
 ]
 
+
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 ASGI_APPLICATION = 'back_end.asgi.application'
 WSGI_APPLICATION = 'back_end.wsgi.application'
 
@@ -174,8 +180,20 @@ AUTH_USER_MODEL = 'authapp.User'
 CORS_ALLOW_CREDENTIALS = True
 CORS_ALLOWED_ORIGINS = [
     "http://127.0.0.1:3000",
-    "http://localhost:3000",
+    "http://127.0.0.1:8001",
+    "http://127.0.0.1:8002",
+
 ]
+
+
+CSRF_TRUSTED_ORIGINS = [
+    'http://127.0.0.1:8000',
+    'http://localhost:8000',
+    # Add other trusted origins here
+    "http://127.0.0.1:8001",
+    "http://localhost:8001",    
+]
+
 
 CORS_ALLOW_HEADERS = [
     'accept',
@@ -190,17 +208,6 @@ CORS_ALLOW_HEADERS = [
 ]
 
 CORS_EXPOSE_HEADERS = ['content-type', 'x-csrftoken']
-
-CHANNEL_LAYERS = {
-    "default": {
-        "BACKEND": "channels_redis.core.RedisChannelLayer",
-        "CONFIG": {
-            "hosts": [('localhost', 6379)],   # Change localhost to the ip in which you have redis server running on.
-        },
-    },
-}
-
-
 
 
 from datetime import timedelta

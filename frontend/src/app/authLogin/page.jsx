@@ -23,6 +23,7 @@ function auth2faPage() {
   };
 
   useEffect(() => {
+    
     sendCode()
 
 

@@ -6,8 +6,8 @@ import toast from 'react-hot-toast';
 
 export async function profileService(friend, router) {
     
-    router.push(`/Friends`);
-    // router.push(`/Profile/${friend.username}`);
+
+    router.push(`/Profile/${friend.username}`);
 }
 
 export async function playWithService(friend)
@@ -17,28 +17,30 @@ export async function playWithService(friend)
 }
 export async function blockService(friend) {
 
-        // console.log(friend);
         
-
-
     try {
-        const response = await axios.post('http://127.0.0.1:8000/api/block',
-            {username : friend.username},
+        // console.log("friend------", friend);
+        const respond = await axios.post(
+            "http://127.0.0.1:8000/friend/friends-remove/",
+            { username: friend.username },
             { withCredentials: true, headers: {} }
         );
 
-        // if block successded
+    
+        // console.log("respond : ---------------", respond);
+    
         
-        toast.success('Blocked successfully!');
-        // window.location.reload();
+        if (respond.status === 200 && respond.data?.success) {
+            toast.success(respond.data.success); 
+            setTimeout(() => {window.location.reload();}, 800);
 
-        // else
-        toast.success('Something went wrong!');
-        
-
-
-
-    } catch (error) {
+        } else {
+            toast.error('Blocking user failed'); 
+        }
+        } catch (error) {
         console.error(error);
-    }
+        toast.error('An error occurred while blocking the user');
+        }
+
+
 }

@@ -28,10 +28,11 @@ class User(AbstractBaseUser):
     fullname = models.CharField(max_length=40, blank=True)
     email = models.EmailField(unique=True)
     image_name = models.CharField(max_length=50, default= "profilepng.png")
-    image_field = models.ImageField(upload_to='images/', default=None, null=True, blank=True)
+    image_field = models.ImageField(upload_to='images/', default='images/profilepng.png', null=True, blank=True)
     is_2fa = models.BooleanField(default=False)
     _2fa_code =  models.CharField(max_length=6, default="")
     state = models.CharField(max_length=255, default="no state assigned")
+    redirect_to = models.BooleanField(default=False)
     first_name = None
     last_name = None
     date_joined = None
@@ -42,56 +43,3 @@ class User(AbstractBaseUser):
     USERNAME_FIELD ='email'
     # EMAIL_FIELD = 'email'
     objects = UserManager()
-
-
-
-
-# class User(AbstractBaseUser):
-#     id = models.AutoField(primary_key=True)
-#     password = models.CharField()
-#     username = models.CharField(max_length=20, unique=True)
-#     email = models.EmailField(unique=True)
-#     first_name = None
-#     last_name = None
-#     date_joined = None
-#     is_superuser = None
-#     is_staff = None
-#     last_login=None
-#     USERNAME_FIELD ='email'
-#     # EMAIL_FIELD = 'email'
-#     objects = UserManager()
-    
-# class Profile(models.Model):
-#     id = models.AutoField(primary_key=True)
-#     user = models.OneToOneField(User, on_delete=models.CASCADE)
-#     profile_photo = models.ImageField(default= "profilepng.png")
-#     _2fa_enabled = models.BooleanField(default=True)
-#     _2fa_secret =  models.CharField(max_length=6, default="")
-#     last_login =  models.DateTimeField(default=timezone.now)
-
-
-# class RelationShip(models.Model):
-#     id = models.AutoField(primary_key=True)
-#     type = models.CharField(max_length=20 , choices=[('pending', 'Pending'), ('accepted', 'Accepted'), ('friend','friend'), ('blocked', 'blocked')])
-#     created_at = models.DateTimeField(auto_now_add=True)
-#     updated_at = models.DateTimeField(auto_now=True, auto_now_add=False)
-#     source_user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="sender")
-#     target_user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="receiver")
-
-
-# class DirectMessage(models.Model):
-#     id = models.AutoField(primary_key=True)
-#     message_content = models.CharField( max_length=3000)
-#     created_at = models.DateTimeField(auto_now_add=True)
-#     receiver = models.ForeignKey(User, on_delete=models.CASCADE, related_name="Msgreceiver")
-#     sender = models.ForeignKey(User, on_delete=models.CASCADE, related_name="Msgsender")
-    
-    
-# class GameMatch(models.Model):
-#     id = models.AutoField(primary_key=True)
-#     first_player = models.ForeignKey(User, on_delete=models.CASCADE, related_name="first_player")
-#     second_player = models.ForeignKey(User, on_delete=models.CASCADE, related_name="second_player")
-#     winner = models.IntegerField()
-#     duration = models.TimeField()
-#     created_at = models.DateTimeField(auto_now_add=True)
-#     score = models.IntegerField(default=0)

@@ -37,9 +37,21 @@ services:
         - backend
       ports:
         - 3000:3000
-        - 443:443
+        # - 443:443
       volumes:
         - ./env/.env:/app/.env
+        - ./frontend/:/var/www/frontend
+      networks:
+        - nat
+    nginx:
+      build:
+        context: nginx
+        dockerfile: Dockerfile
+      volumes:
+        - ./frontend/:/var/www/frontend
+        - ./backend/back_end/:/var/www/backend/
+      ports:
+        - 443:443
       networks:
         - nat
     admin:

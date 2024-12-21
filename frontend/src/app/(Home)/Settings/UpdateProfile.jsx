@@ -1,5 +1,3 @@
-
-
 import Image from 'next/image';
 import React, { useState } from 'react';
 import { validate } from './validate'; 
@@ -80,29 +78,21 @@ export default function UpdateProfile({setIsProfile})
 
       try {
         const result = await Services.updateProfileService(data);
-        // console.log('--------------------------------------------');
-        // console.log(data);
-        // console.log('--------------------------------------------');
 
-        // console.log(" ------- result : --------");
-        console.log(result);
-
-
-        if(!result.data.data) {
-          const errorMsg = result.data.message;
-          // console.log(errorMsg);
-          toast.error( errorMsg?errorMsg:'Something Went Wrong!');
-          setErrors(errorMsg);
-        }
-        else {
           const successMsg = result.data.message;
-          console.log(successMsg);
-          toast.success(successMsg);
-          window.location.reload();
+        if (successMsg) {
+          toast.success(successMsg); // Display a success toast
+          setTimeout(() => { window.location.reload();}, 1000); 
+        } else {
+          toast.error("Unexpected response format."); // Handle unexpected format
         }
+
+
+
+        
       }
       catch (error) {
-        console.log("### http request failed: ", error);
+        console.log("Updating profile http request failed... ", error);
 
 
       }
@@ -179,7 +169,7 @@ export default function UpdateProfile({setIsProfile})
               value={formData.usernameSt}
               onChange={handleOnChange}
               name="usernameSt" 
-
+              autoComplete="username"
             />
             {errors.usernameSt && <p className="text-sm text-red-500">{errors.usernameSt}</p>}
 
@@ -193,6 +183,7 @@ export default function UpdateProfile({setIsProfile})
               value={formData.currentPasswordSt} 
               onChange={handleOnChange}
               name="currentPasswordSt"
+              autoComplete="current-password"
             />
             {errors.currentPasswordSt && <p className="text-sm text-red-500">{errors.currentPasswordSt}</p>}
 
@@ -206,6 +197,7 @@ export default function UpdateProfile({setIsProfile})
               value={formData.newPasswordSt}
               onChange={handleOnChange}
               name="newPasswordSt"
+              autoComplete="new-password"
             />
             {errors.newPasswordSt && <p className="text-sm text-red-500">{errors.newPasswordSt}</p>}
 
@@ -235,5 +227,3 @@ export default function UpdateProfile({setIsProfile})
     </div>
   </div>);
 }
-
-

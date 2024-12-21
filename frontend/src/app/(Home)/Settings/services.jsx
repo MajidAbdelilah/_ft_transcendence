@@ -52,23 +52,35 @@ const Services = {
 
 
     updateProfileService: async (data) => {
+        const formData = new FormData();
 
+        // Append the other data fields
+        console.log(data)
+        formData.append('username', data.username ?data.username: "");
+        formData.append('current_password', data.current_password ?data.current_password:'');
+        formData.append('new_password', data.new_password ?data.new_password:"");
+        formData.append('profile_photo', data.profile_image ?data.profile_image:{}); 
+
+
+
+        // Log the form data for debugging
+        for (let [key, value] of formData.entries()) {
+            console.log(key, value);
+        }
+
+        // Send the FormData object directly in the request body
         return axios.post('http://127.0.0.1:8000/api/update_user/', 
-        {
-            username: data.username, 
-            current_password: data.current_password, 
-            new_password: data.new_password,
-            profile_photo: data.profile_image
-        },
-        { withCredentials: true, headers: {} });
-        
+            formData,   
+            {   withCredentials: true, headers: {} });
     },
 
     sendCodeService: async () => {
+        
       return axios.get('http://127.0.0.1:8000/api/sendcode/', 
 
-    //   { withCredentials: true, headers: {} }
+      { withCredentials: true, headers: {} }
     );
+    
         // return axiosInstance.post('/api/sendcode/');
 
 

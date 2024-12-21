@@ -11,7 +11,22 @@ import { useRouter } from "next/navigation";
 import { blockService, playWithService, profileService } from './services';
 
 
+          // <Image
+          //   src={path === undefined || path === null || path === "" || path === "/images/%7B%7D" 
+          //     ? "/images/avatarprofile.svg" 
+          //     : path}
+          //   alt="avatarprofile"
+          //   width={60}
+          //   height={60}
+          //   className=" rounded-full left-0 top-0 w-[60px] h-[60px] "
+          // />
+
+
+
+import { useUser } from '../../../contexts/UserContext';
+
 export function HisProfile ({path, name, status}) {
+  const { userData, isLoading, setUserData } = useUser();
     return (
       <div className="hisProfile w-full flex items-center overflow-hidden ">
         {name === "tournament" ? (
@@ -20,15 +35,22 @@ export function HisProfile ({path, name, status}) {
             className="bg-[#EAEAFF] rounded-full text-[#242F5C] left-0 top-0 "
           />
         ) : (
-          <Image
-            src={path === null || path === "" || path === "/images/%7B%7D" 
-              ? "/images/avatarprofile.svg" 
-              : {path}}
-            alt="avatarprofile"
-            width={60}
-            height={60}
-            className=" rounded-full left-0 top-0 w-[60px] h-[60px] "
-          />
+
+
+
+            <img
+              id="avatarButton"
+              className=" rounded-full left-0 top-0 w-[60px] h-[60px] "
+              src={path ? path : "/images/Default_profile.png"}
+              alt="User dropdown"
+              width={60}
+              height={60}
+              /> 
+
+
+
+
+
         )}
 
         <div className=" ml-4 hidden lg:block ">
