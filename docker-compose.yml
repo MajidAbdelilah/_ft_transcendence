@@ -22,7 +22,7 @@ services:
     ports:
       - 8000:8000
     volumes:
-      - ./backend/env/.env:/app/.env
+      - ./env/.env:/app/.env
       # - backend_v:/app/backend/
     networks:
       - nat

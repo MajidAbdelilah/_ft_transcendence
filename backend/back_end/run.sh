@@ -4,7 +4,7 @@
 # echo "127.0.0.1   Pong-Game-1337" >> /etc/hosts
 python3 -m venv ../myenv
 # docker-compose up -d
-touch ../.env
+touch .env
 bash -c "source ../myenv/bin/activate "
 pip install -r /app/backend/requirements.txt
 # systemctl start nginx
