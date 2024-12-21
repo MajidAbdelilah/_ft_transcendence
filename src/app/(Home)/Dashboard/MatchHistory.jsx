@@ -19,7 +19,6 @@ function MatchHistory() {
     const fetchAllMatches = async () => {
       try {
         if (!userData || !userData.username) {
-          console.log('No user data available');
           setIsLoading(false);
           return;
         }

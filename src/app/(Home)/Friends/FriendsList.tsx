@@ -49,10 +49,7 @@ export default function FriendsList({ friends = [] }: FriendsListProps) {
 
   const handleBlock = async (friend: Friend) => {
     try {
-      console.log("Sending friend block request:", {
-        freindship_id: friend.freindship_id,
-        user: friend.user
-      });
+
       send({
         type: 'friends-block',
         freindship_id: friend.freindship_id,
@@ -61,10 +58,7 @@ export default function FriendsList({ friends = [] }: FriendsListProps) {
         user_to: friend.user_to,
         user_is_logged_in: friend.user_is_logged_in
       });
-      console.log("Friend block message sent:", {
-        freindship_id: friend.freindship_id,
-        user: friend.user
-      });
+
     } catch (error) {
       console.error('Error blocking friend:', error);
     }
@@ -95,7 +89,6 @@ export default function FriendsList({ friends = [] }: FriendsListProps) {
   };
 
   const handleGameInvite = (friendshipId: number, friendUsername: string) => {
-    console.log('🎮 Attempting to send game invitation to:', friendUsername);
 
       const message = {
         type: 'game_invitation',

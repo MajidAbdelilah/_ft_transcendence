@@ -118,7 +118,6 @@ const PingPongGame = ({ roomName, player1, player2, player3, player4, map, isTou
             };
 
             ws.onclose = (e) => {
-                console.log('Game WebSocket closed:', e.reason);
                 wsRef.current = null;
                 setSocket(null);
                 
@@ -140,21 +139,11 @@ const PingPongGame = ({ roomName, player1, player2, player3, player4, map, isTou
         connectWebSocket();
 
     }, [roomName, myUsername, isTournament, isRedirecting]);
-    // create a function send_chat_bot to send this data 
-    // {
-    // “send”:”bot",
-    // “receive”:”a10",
-    // “message”:”HELLO",
-    // “timestamp”:””,
-    // “chat_id”:”1”
-    // }
-    // send this data to http://127.0.0.1:8000/friend/sendchat/
-    // and get the response
+
     async function send_chat_bot (data)  {
         if(chat_bot_message_already_sent.current === true) {
             return;
         }
-        console.log(chat_bot_message_already_sent.current);
         chat_bot_message_already_sent.current = true;
         const response = await customAxios.post('http://127.0.0.1:8000/friend/sendchat/', {
             
@@ -164,7 +153,6 @@ const PingPongGame = ({ roomName, player1, player2, player3, player4, map, isTou
                 timestamp: '',
                 chat_id: 'id: ' + Math.random()
         })
-        console.log(response);
     
     };
 

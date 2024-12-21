@@ -69,7 +69,6 @@ export default function GameInvitationHandler() {
       const inviteKey = `${data.sender_username}-${data.friendship_id}`;
       
       if (recentInvitationsRef.current.has(inviteKey)) {
-        console.log('Duplicate invitation detected, skipping:', inviteKey);
         return;
       }
 
