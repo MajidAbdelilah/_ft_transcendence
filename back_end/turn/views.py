@@ -3,6 +3,20 @@
 from django.shortcuts import render
 from django.http import JsonResponse
 from .models import Tournament, Match, ActiveTournament
+import redis
+import json
+
+def get_bracket(request, room_name):
+    r = redis.Redis(host='localhost', port=6379, db=0)
+    bracket = r.get(room_name)
+    if bracket:
+        bracket = bracket.decode('utf-8')
+        # Convert bracket string to a json data
+        json_obkject = json.loads(bracket)
+        return JsonResponse(json_obkject, safe=False)
+    else:
+        return JsonResponse({}, safe=False)
+
 
 def get_tournaments_by_player(request, username): 
     tournaments = Tournament.objects.all()

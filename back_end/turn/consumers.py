@@ -8,7 +8,7 @@ from channels.db import database_sync_to_async
 import random
 import string
 from channels.layers import get_channel_layer
-
+import redis
 
 class PingPongConsumer(AsyncWebsocketConsumer):
     room_var = {}
@@ -67,9 +67,10 @@ class PingPongConsumer(AsyncWebsocketConsumer):
         matches = self.room_var[self.room_name]['matches']
         bracket = self.room_var[self.room_name]['bracket']
         players = self.room_var[self.room_name]['players']
-        if matches['match1']['winner']:
-            bracket['semifinals']['match1']['winner_alias'] = players[matches['match1']['winner']]['alias']
-            bracket['semifinals']['match1']['winner'] = players[matches['match1']['winner']]['username']
+        if(matches['match1']['winner']):
+            if players[matches['match1']['winner']]['alias'] and players[matches['match1']['winner']]['username']:
+                bracket['semifinals']['match1']['winner_alias'] = players[matches['match1']['winner']]['alias']
+                bracket['semifinals']['match1']['winner'] = players[matches['match1']['winner']]['username']
         if matches['match1']['p1_username']:
             bracket['semifinals']['match1']['p1'] = matches['match1']['p1_username']
             for(player_key, player_data) in players.items():
@@ -80,9 +81,11 @@ class PingPongConsumer(AsyncWebsocketConsumer):
             for(player_key, player_data) in players.items():
                 if(player_data['username'] == matches['match1']['p2_username']):
                     bracket['semifinals']['match1']['p2_alias'] = player_data['alias']
-        if matches['match2']['winner']:
-            bracket['semifinals']['match2']['winner'] = players[matches['match2']['winner']]['username']
-            bracket['semifinals']['match2']['winner_alias'] =  players[matches['match2']['winner']]['alias']  
+
+        if(matches['match2']['winner']):
+            if players[matches['match2']['winner']]['username'] and players[matches['match2']['winner']]['alias']:
+                bracket['semifinals']['match2']['winner'] = players[matches['match2']['winner']]['username']
+                bracket['semifinals']['match2']['winner_alias'] =  players[matches['match2']['winner']]['alias']  
         if matches['match2']['p1_username']:
             bracket['semifinals']['match2']['p1'] = matches['match2']['p1_username']
             for(player_key, player_data) in players.items():
@@ -93,9 +96,11 @@ class PingPongConsumer(AsyncWebsocketConsumer):
             for(player_key, player_data) in players.items():
                 if(player_data['username'] == matches['match2']['p2_username']):
                     bracket['semifinals']['match2']['p2_alias'] = player_data['alias']
-        if matches['final']['winner']:
-            bracket['final']['winner'] = players[matches['final']['winner']]['username']
-            bracket['final']['winner_alias'] = players[matches['final']['winner']]['alias']
+
+        if(matches['final']['winner']):
+            if players[matches['final']['winner']]['username'] and players[matches['final']['winner']]['alias']:
+                bracket['final']['winner'] = players[matches['final']['winner']]['username']
+                bracket['final']['winner_alias'] = players[matches['final']['winner']]['alias']
         if matches['final']['p1_username']:
             bracket['final']['p1'] = matches['final']['p1_username']
             for(player_key, player_data) in players.items():
@@ -108,7 +113,15 @@ class PingPongConsumer(AsyncWebsocketConsumer):
                     bracket['final']['p2_alias'] = player_data['alias']
 
         self.room_var[self.room_name]['bracket'] = bracket
-        # await self.send_bracket_update()
+        bracket_update = {
+            "type": "BRACKET_UPDATE",
+            "tournamentId": self.room_name,
+            'matches': bracket,
+        }
+        # save bracket to redis cache for use within the views function:
+        redis_client = redis.Redis(host='localhost', port=6379, db=0)
+        redis_client.set(self.room_name, json.dumps(bracket_update))
+        print("Bracket: ", bracket_update)
 
     async def send_bracket_update(self):
         await self.update_bracket()
