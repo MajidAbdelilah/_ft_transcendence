@@ -131,7 +131,6 @@ const PingPongGame = ({ roomName, player1, player2, player3, player4, map, isTou
             ws.onerror = (error) => {
                 console.error('WebSocket error:', error);
                 if (!isRedirecting) {
-                    console.log('Attempting to reconnect...');
                     handleGameEnd();
                 }
             };
@@ -163,7 +162,6 @@ const PingPongGame = ({ roomName, player1, player2, player3, player4, map, isTou
         let foundMatch = false;
         for (const [role, player] of Object.entries(data.players)) {
             
-            console.log('not Found match:', myUsername, player.username);
             if (player.username === myUsername) {
                 foundMatch = true;
                 playerRoleRef.current = role;
@@ -178,7 +176,6 @@ const PingPongGame = ({ roomName, player1, player2, player3, player4, map, isTou
                             // chat_bot_message_already_sent.current = false;
                             i_lost.current = false;
                         } else if (data.matches[currentMatch].game_start === false) {
-                            console.log('Attempting to reconnect*********************');
 
                             handleGameEnd();
 
@@ -195,7 +192,6 @@ const PingPongGame = ({ roomName, player1, player2, player3, player4, map, isTou
                             // chat_bot_message_already_sent.current = false;
                             i_lost.current = false;
                         } else  if (data.matches[currentMatch].game_start === false) {
-                            console.log('Attempting to reconnect+++++++++++');
                             handleGameEnd();
                             return;
                         }
@@ -220,7 +216,6 @@ const PingPongGame = ({ roomName, player1, player2, player3, player4, map, isTou
         }
         
         if (!foundMatch) {
-            console.log('Attempting to reconnect/////////////');
             handleGameEnd();
         }
 
@@ -501,7 +496,7 @@ const PingPongGame = ({ roomName, player1, player2, player3, player4, map, isTou
     return (
         <div className={`${styles.gameContainer} ${montserrat.className}`}>
             <canvas ref={canvasRef} className={styles.canvas} />
-            {/* <div className={styles.gameMessage}>press "Up" or "Down" buttons to play</div> */}
+            <div className={styles.gameMessage}>press "Up" or "Down" buttons to play</div>
         </div>
     );
 };

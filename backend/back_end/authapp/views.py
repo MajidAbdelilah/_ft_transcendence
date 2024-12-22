@@ -205,7 +205,7 @@ class get_users(APIView):
         all_users = User.objects.values_list('id', flat=True)
         users_blocked = Friendship.objects.filter(
                 ((Q(user_to=request.user, u_one_is_blocked_u_two=True) | Q(user_to=request.user, u_two_is_blocked_u_one=True) )|
-                (Q(user_from=request.user, u_two_is_blocked_u_one=True) | Q(user_to=request.user, u_two_is_blocked_u_one=True))
+                (Q(user_from=request.user, u_two_is_blocked_u_one=True) | Q(user_from=request.user, u_one_is_blocked_u_two=True))
             )).annotate(
                 other_user_id=Case(
                     When(user_to=request.user, then=F('user_from')),
@@ -213,9 +213,6 @@ class get_users(APIView):
                     output_field=IntegerField(),
                 )
             ).values_list('other_user_id', flat=True)
-        bot = getbot('bot')
-        bot_id = User.objects.get(id=bot.id)
-        users_blocked = list(users_blocked).append(bot_id)
         users_non_blocked =[item for item in list(all_users) if item not in list(users_blocked)]
         Users = User.objects.filter(id__in=users_non_blocked).values('username', 'is_on', 'image_field')
         print("TTTTTTTTTTTTTTTT  ", Users)
@@ -277,9 +274,11 @@ class User_is_logged_in(APIView):
     permission_classes = [AllowAny]
     def get(self, request):
         response = Response()
+        response.data = {"data":"","message": "Error"}
         user = request.COOKIES.get(settings.SIMPLE_JWT['AUTH_COOKIE'])
         if user is  None :
-            response.data = {"date":None,"message": "Error"}
+            response.data = {"data":"","message": "Error"}
+            print("***** error : ", response.data)
             return response
         else:
             validated_token = UntypedToken(user)
@@ -287,7 +286,8 @@ class User_is_logged_in(APIView):
                 user_ = User.objects.get(email=request.user)
             if validated_token.payload['user_id'] == user_.id and datetime.fromtimestamp(validated_token.payload['exp'], tz=timezone.utc) > datetime.now(timezone.utc):
                 serializer = UserSerializer(user_)
-                response.data = {"date":serializer.data,"message": "done"}
+                response.data = {"data":serializer.data,"message": "done"}
+                print("-----------  response.data ", response.data)
                 return response
 
 

@@ -1,6 +1,5 @@
 from django.db import models
 
-# Create your models here.
 class Messages(models.Model):
     messages_id = models.AutoField(primary_key=True)
     user_one = models.ForeignKey('authapp.User', models.DO_NOTHING)

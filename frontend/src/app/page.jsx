@@ -48,12 +48,18 @@ export default function LandingPage() {
             withCredentials: true,
           }
         );
-        if (response.data.date) {
-          router.replace("/Dashboard");
+        if (response.data.message === "done") {
+          if(response.data.data.is_2fa){ 
+            router.replace("/authLogin");
+          }
+          else
+            
+            router.replace("/Dashboard");
         } else {
           setIsLoading(false);
         }
       } catch (error) {
+        console.log(response);
         console.log(error.message);
         setIsLoading(false);
       }

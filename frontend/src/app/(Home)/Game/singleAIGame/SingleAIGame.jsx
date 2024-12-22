@@ -345,7 +345,7 @@ const SingleAIGame = ({ playerData }) => {
           <span className={styles.score}>{player2ScoreRef.current}</span>
         </div>
       </div> */}
-      {/* <div className={styles.gameMessage}>press "w" or "s" to play</div> */}
+      <div className={styles.gameMessage}>press "w" or "s" to play</div>
     </div>
   );
 };

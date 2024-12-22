@@ -98,16 +98,31 @@ function MainComponent() {
   }, [userData]);
 
   useEffect(() => {
-    const searchParams = new URLSearchParams(window.location.search);
-    const showTournamentParam = searchParams.get('showTournament');
-    const tournamentRoomParam = searchParams.get('tournamentRoom');
+
+    const searchPar = async () => {
+
     
-    if (showTournamentParam === 'true' && tournamentRoomParam) {
+      const searchParams = new URLSearchParams(window.location.search);
+      const showTournamentParam = searchParams.get('showTournament');
+      const tournamentRoomParam = searchParams.get('tournamentRoom');
+      
+
+      if (showTournamentParam === 'true' && tournamentRoomParam) {
+        const bracketUpdate = await customAxios.get(`https://127.0.0.1/api/game/bracket/${tournamentRoomParam}/`); 
+      if(bracketUpdate.data){
+        setTournamentData(bracketUpdate.data);
+      }
+      else{
+        console.log('No data')
+      }
       setShowTournament(true);
       // Set the tournament ID from the room name
       setTournamentId(tournamentRoomParam);
     }
+  };
+    searchPar();
   }, []);
+
 
   useEffect(() => {
     if (!tournamentId) {
@@ -143,7 +158,9 @@ function MainComponent() {
           const gameUrl = `/Game/ping-pong?${params.toString()}`;
           router.push(gameUrl);
         } else if (bracketData.type === 'BRACKET_UPDATE') {
-          console.log('Bracket update:', bracketData);
+          if(bracketData.matches.semifinals.match1.p1 === null){
+            return;
+          }
           setTournamentData(bracketData);
         }
       });
@@ -193,7 +210,6 @@ function MainComponent() {
     else
     { 
       setShowAliasPopup(false);
-      console.log(alias)
     }
     
     setIsJoining(true);
@@ -252,7 +268,6 @@ function MainComponent() {
   };
 
   const handleCloseTournament = () => {
-    console.log('Closing tournament');
     setShowTournament(false);
     window.location.href = '/Game';
   };

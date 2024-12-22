@@ -3,16 +3,13 @@ from asgiref.sync import async_to_sync
 from channels.generic.websocket import WebsocketConsumer
 from authapp.models import User
 from .models import Messages
-# from .models import Notification
 from friend.models import Notification
 
 class ChatConsumer(WebsocketConsumer):
     def connect(self):
-        # Extract user ID from the WebSocket URL
         self.room_name = self.scope['url_route']['kwargs']['room_name']
-        self.room_group_name = f"chat_{self.room_name}"  # Group for the user's ID
+        self.room_group_name = f"chat_{self.room_name}"
 
-        # Add the user to their own group
         async_to_sync(self.channel_layer.group_add)(
             self.room_group_name,
             self.channel_name
@@ -20,7 +17,6 @@ class ChatConsumer(WebsocketConsumer):
         self.accept()
 
     def disconnect(self, close_code):
-        # Remove the user from their group
         async_to_sync(self.channel_layer.group_discard)(
             self.room_group_name,
             self.channel_name
@@ -35,7 +31,6 @@ class ChatConsumer(WebsocketConsumer):
         timestamp = text_data_json["timestamp"]
 
 
-        # Check sender and receiver
         try:
             receive_obj = User.objects.get(username=receive)
         except User.DoesNotExist:
@@ -51,26 +46,17 @@ class ChatConsumer(WebsocketConsumer):
                 "error": "Message is too long, must be less than 512 characters."
             }))
             return
-
-        # Save the message
         Messages.objects.create(
             user_one=send_obj, user_two=receive_obj,
             message_content=message, message_date=timestamp
         )
-        # notification = Notification.objects.create(
-        #     user=receive_obj, message=f"New message from {send_obj.username}"
-        #     message
-        # )
-        # Add the receiver to the group (Sender's group)
-        receiver_group = f"chat_{receive_obj.id}"  # Receiver's group based on their user ID
+        receiver_group = f"chat_{receive_obj.id}"
         async_to_sync(self.channel_layer.group_add)(
-            receiver_group,  # Add receiver to their group
-            self.channel_name  # Same socket for the sender and receiver
+            receiver_group,
+            self.channel_name 
         )
-
-        # Broadcast the message to the receiver's group (the group they just joined)
         async_to_sync(self.channel_layer.group_send)(
-            receiver_group,  # Broadcast to receiver's group
+            receiver_group,
             {
                 "type": "chat_message",
                 "message": message,
@@ -89,7 +75,6 @@ class ChatConsumer(WebsocketConsumer):
         receive = event["receive"]
         timestamp = event["timestamp"]
 
-        # Send message to the WebSocket
         self.send(text_data=json.dumps({
             "message": message,
             "send": send,
@@ -97,6 +82,3 @@ class ChatConsumer(WebsocketConsumer):
             "timestamp": timestamp,
             "chat_id": chat_id
         }))
-   
-
-    #notify the receiver that the sender about a new message

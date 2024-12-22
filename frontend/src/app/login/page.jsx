@@ -98,16 +98,18 @@ function LoginPage() {
             withCredentials: true,
           }
         );
-        if (response.data.date) {
-          if(response.data.data.user.is_2fa){ 
+        if (response.data.message === "done") {
+          if(response.data.data.is_2fa){ 
             router.replace("/authLogin");
           }
           else
-          router.replace("/Dashboard");
+            
+            router.replace("/Dashboard");
         } else {
           setIsLoading(false);
         }
       } catch (error) {
+        console.log(response);
         console.log(error.message);
         setIsLoading(false);
       }
