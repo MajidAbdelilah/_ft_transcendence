@@ -22,8 +22,8 @@ function MatchHistory({user}) {
         
         // Fetch from both APIs in parallel
         const [normalMatchesResponse, aiMatchesResponse] = await Promise.all([
-          axios.get(`http://127.0.0.1:8000/game/fetch_history/${user.username}/`),
-          axios.get(`http://127.0.0.1:8000/game/matches/${user.username}/`)
+          axios.get(`https://127.0.0.1/api/game/fetch_history/${user.username}/`),
+          axios.get(`https://127.0.0.1/api/game/matches/${user.username}/`)
         ]);
 
         const normalMatches = normalMatchesResponse.data;

@@ -26,7 +26,7 @@ from django.core.files.base import ContentFile
 from authapp.views import _42_generated_password
 from django.core.mail import send_mail
 from rest_framework_simplejwt.tokens import RefreshToken
-
+from friend.models import Friendship
 
 def get_tokens_for_user(user):
     refresh = RefreshToken.for_user(user)
@@ -41,6 +41,15 @@ class login (APIView):
         authorization_url = f"https://api.intra.42.fr/oauth/authorize?client_id={settings.FORTY_TWO_CLIENT_ID}&redirect_uri={settings.FORTY_TWO_REDIRECT_URI}&response_type=code&"f"scope=public projects&"f"prompt=consent"
         return redirect(authorization_url)
 
+def getbot(username):
+    try:
+        bot = User.objects.get(username=username)
+    except User.DoesNotExist:
+        bot = None
+    except Exception as e:
+        bot = None
+    return bot
+
 class callback(APIView):
     permission_classes=[AllowAny]
     def get(self, request):
@@ -48,6 +57,8 @@ class callback(APIView):
         if not code:
             return JsonResponse({'message': 'No code provided', "data":None}, status=400)
         # Exchange code for access token
+        to_page = "https://127.0.0.1/Dashboard"
+        resp = HttpResponseRedirect(to_page)
         token_url = "https://api.intra.42.fr/oauth/token"
         response = requests.post(settings.FORTY_TWO_ACCESS_TOKEN_URL, data={
             'grant_type': 'authorization_code',
@@ -70,9 +81,8 @@ class callback(APIView):
             authenticate(email = existeduser.email, password = existeduser.password)
             data = get_tokens_for_user(existeduser)
             userserialize = UserSerializer(existeduser)
-            to_page = "http://127.0.0.1:3000/Dashboard"
             if existeduser.is_2fa == True and existeduser.redirect_to == False:
-                to_page = "http://127.0.0.1:3000/authLogin"
+                to_page = "https://127.0.0.1/authLogin"
             resp = HttpResponseRedirect(to_page)
             if data["access"] :
                 resp.set_cookie(
@@ -87,11 +97,6 @@ class callback(APIView):
                 resp.data = {"message" : "Login successfully","data":{"user": userserialize.data , "tokens":data }}
             serializer = UserSerializer(instance = existeduser)
             resp.data = {"message": "user exist in database and now he is logged in succefully", "data": serializer.data }
-            # print("***********777777555777****************777777777********")
-            # if existeduser.is_2fa == True and existeduser.redirect_to == False :
-            #     print("***********777777777****************777777777********")
-            #     to_page = "http://127.0.0.1:3000/authLogin"
-            # print("ttt   ", to_page)
             return resp
         else:
             image_response = requests.get(user_data['image']['link'])
@@ -115,6 +120,27 @@ class callback(APIView):
                     path='/',
                     max_age=settings.SIMPLE_JWT['ACCESS_TOKEN_LIFETIME'].total_seconds())
             serializer = UserSerializer(instance=user)
+            bot = getbot('bot')
+            if not bot:
+                bot = UserSerializer(data={"username": "bot", "email": "bot1234@gmail.com", "password": "bot12345" })
+                try:
+                    if bot.is_valid():
+                        bot.save()
+                        bot = getbot('bot')
+                        user_id = User.objects.get(id=serializer.data['id'])
+                        bot_id = User.objects.get(id=bot.id)
+                        friendbot= Friendship.objects.create(user_from=user_id , user_to=bot_id,is_accepted=True ,u_one_is_blocked_u_two=False, u_two_is_blocked_u_one=False)
+                        friendbot.save()
+                except Exception as e:
+                    print("bot error", e)
+            else:
+                try:
+                    user_id = User.objects.get(id=serializer.data['id'])
+                    bot_id = User.objects.get(id=bot.id)
+                    friendbot= Friendship.objects.create(user_from=user_id , user_to=bot_id,is_accepted=True ,u_one_is_blocked_u_two=False, u_two_is_blocked_u_one=False)
+                    friendbot.save()
+                except Exception as e:
+                    print("bot error", e)
             resp.data ={"message": "user added succefully", "data": serializer.data}
             return resp
 

@@ -15,7 +15,7 @@ const useSearch = () => {
         {
           try 
           {
-            const response = await axios.get('http://127.0.0.1:8000/api/users/', {   withCredentials: true, headers: {} });
+            const response = await axios.get('https://127.0.0.1/api/api/users/', {   withCredentials: true, headers: {} });
             
             const usersArray = Object.values(response.data); 
             setFetchedUsers(usersArray);

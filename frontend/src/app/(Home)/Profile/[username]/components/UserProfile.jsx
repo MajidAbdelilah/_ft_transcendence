@@ -84,7 +84,7 @@ function Part1({loggedInUser, user, isSelf}) {
 
     <div className="flex flex-col items-center">
         <img
-            src={user?.image_field? `http://127.0.0.1:8000/api/images/${user.image_field}` : "/images/DefaultAvatar.svg"} // image_feiled
+            src={user?.image_field? `https://127.0.0.1/api/api/images/${user.image_field}` : "/images/DefaultAvatar.svg"} // image_feiled
             alt="ProfileImage"
             width={60}
             height={60}
@@ -125,8 +125,8 @@ function Part2({loggedInUser, user, isSelf}) {
     const fetchXp = async () => {
       try {
         const [normalMatchesResponse, aiMatchesResponse] = await Promise.all([
-          axios.get(`http://127.0.0.1:8000/game/fetch_history/${user.username}/`),
-          axios.get(`http://127.0.0.1:8000/game/matches/${user.username}/`)
+          axios.get(`https://127.0.0.1/api/game/fetch_history/${user.username}/`),
+          axios.get(`https://127.0.0.1/api/game/matches/${user.username}/`)
         ]);
 
         const normalMatches = normalMatchesResponse.data || [];

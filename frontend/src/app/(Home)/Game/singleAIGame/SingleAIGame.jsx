@@ -282,7 +282,7 @@ const SingleAIGame = ({ playerData }) => {
         winner: actualWinner
     };
     
-    customAxios.post('http://127.0.0.1:8000/game/matches/', data)
+    customAxios.post('https://127.0.0.1/api/game/matches/', data)
         .then(response => {
             // console.log('Success:', response.data);
         })

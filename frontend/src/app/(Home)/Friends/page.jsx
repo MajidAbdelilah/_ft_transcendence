@@ -67,14 +67,31 @@ export default function Friends() {
     }
   }, [])
 
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     try {
+  //       const [friendsList, FriendRes , blockedRes] = await Promise.all([
+  //         customAxios.get('https://127.0.0.1/api/friend/friends'),
+  //         customAxios.get('https://127.0.0.1/api/friend/friend-request'),
+  //         customAxios.get('https://127.0.0.1/api/friend/blocked-friends'),
+  //       ]);
+  //       setFriendsData(friendsList.data.filter(user => user.user.username !== 'bot'))
+  //       setFriendRequestsData(FriendRes.data)
+  //       setBlockedFriendsData(blockedRes.data)
+  //     } catch (error) {
+  //       console.error('Error fetching data:', error);
+  //       setError(error.message);
+  //     } finally {
+  //       setIsLoading(false);
+  //     }
+  //   };
+
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const [friendsList, FriendRes , blockedRes] = await Promise.all([
-          customAxios.get('http://127.0.0.1:8000/friend/friends'),
-          customAxios.get('http://127.0.0.1:8000/friend/friend-request'),
-          customAxios.get('http://127.0.0.1:8000/friend/blocked-friends'),
-        ]);
+        const friendsList = await customAxios.get("https://127.0.0.1/api/friend/friends");
+        const FriendRes = await customAxios.get("https://127.0.0.1/api/friend/friend-request/");
+        const blockedRes = await customAxios.get("https://127.0.0.1/api/friend/blocked-friends/");
         setFriendsData(friendsList.data.filter(user => user.user.username !== 'bot'))
         setFriendRequestsData(FriendRes.data)
         setBlockedFriendsData(blockedRes.data)
@@ -85,7 +102,6 @@ export default function Friends() {
         setIsLoading(false);
       }
     };
-
     const handleWebSocketMessage = (data) => {
       if (!data || !data.type) {
         console.warn('Invalid WebSocket message received:', data);

@@ -213,6 +213,9 @@ class get_users(APIView):
                     output_field=IntegerField(),
                 )
             ).values_list('other_user_id', flat=True)
+        bot = getbot('bot')
+        bot_id = User.objects.get(id=bot.id)
+        users_blocked = list(users_blocked).append(bot_id)
         users_non_blocked =[item for item in list(all_users) if item not in list(users_blocked)]
         Users = User.objects.filter(id__in=users_non_blocked).values('username', 'is_on', 'image_field')
         print("TTTTTTTTTTTTTTTT  ", Users)

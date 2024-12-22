@@ -147,7 +147,7 @@ const PingPongGame = ({ roomName, player1, player2, player3, player4, map, isTou
             return;
         }
         chat_bot_message_already_sent.current = true;
-        const response = await customAxios.post('http://127.0.0.1:8000/friend/sendchat/', {
+        const response = await customAxios.post('https://127.0.0.1/api/friend/sendchat/', {
             
                 send: 'bot',
                 receive: data.players[playerRoleRef.current].username,
