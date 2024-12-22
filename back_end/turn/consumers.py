@@ -183,6 +183,7 @@ class PingPongConsumer(AsyncWebsocketConsumer):
         for room_name in self.room_var:
             if(self.room_var[room_name].get('is_tournament', False) and self.tournament_room_name != None):
                 num_players = sum(1 for player in self.room_var[room_name]['players'].values() if player.get('full'))
+                print("number of players: ", num_players)
                 if num_players < 4:
                     self.room_name = room_name
                     self.tournament_room_name = room_name
@@ -412,6 +413,16 @@ class PingPongConsumer(AsyncWebsocketConsumer):
         username = data.get('username')
         player = data.get('player')
         print("data: ", data)
+        for(room_name, room_data) in self.room_var.items():
+            br = False
+            for(player_key, player_data) in room_data['players'].items():
+                if(player_data['username'] == username and self.room_name != room_name):
+                    del self.room_var[self.room_name]
+                    self.room_name = room_name
+                    br = True
+                    break
+            if br:
+                break
         if("type" in data and data["type"] == "join_tournament"):
             player = await self.assign_player_tournament_data(data['data'])
             # send this data back to the user
