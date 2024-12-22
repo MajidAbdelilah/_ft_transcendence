@@ -23,6 +23,7 @@ class PingPongConsumer(AsyncWebsocketConsumer):
     #   player4: 'username4',
     #   map: 'player_uniqe_map'
     # }
+    
     async def send_gamestart(self):
         players = self.room_var[self.room_name]['players']
         player1 = players['player1']['username']
