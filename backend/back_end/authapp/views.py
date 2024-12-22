@@ -111,8 +111,10 @@ class Logout_view(APIView):
             }
             return resp
 
+# @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 class protected_view(APIView):
+    # permission_classes = [IsAuthenticated]
     def get (self, request):
         return Response({"message": "This is a protected view."})
 
@@ -145,6 +147,8 @@ class LoginView(APIView):
                 data = get_tokens_for_user(user)
                 if data["access"] :
                     if user.is_2fa == True:
+                        # response.headers["Location"] = 'http://127.0.0.1:3000/settings'
+                        # response.status_code = status.HTTP_302_FOUND
                         response.data = {"message" : "Login successfully","data":{"user": userserialize.data , "tokens":data }}
                         response.set_cookie(
                             key = settings.SIMPLE_JWT['AUTH_COOKIE'],
@@ -173,6 +177,26 @@ class LoginView(APIView):
             return Response({"message" : "Invalid email or password !", "data": None})
         
 
+# class User_view(APIView):
+#     permission_classes = [IsAuthenticated]
+#     def get(self, request):
+#         token = request.COOKIES.get(settings.SIMPLE_JWT['AUTH_COOKIE'])
+#         secret = settings.SECRET_KEY
+#         print("**"+ secret)
+#         if not token:
+#             raise  AuthenticationFailed('Unauthenticated !')
+#         try:
+#             payload = jwt.decode(token, secret, algorithms=['HS256'])
+#         except jwt.ExpiredSignatureError:
+#             raise AuthenticationFailed('Token has expired!')
+#         except jwt.DecodeError:
+#             raise AuthenticationFailed('Malformed token!')
+#         user = User.objects.filter(id=payload['user_id']).first()
+#         if user is None:
+#             raise AuthenticationFailed('User not found!')
+#         serializer = UserSerializer(user)
+#         return Response(serializer.data, status=status.HTTP_200_OK)
+
 
 
 class get_users(APIView):
@@ -191,9 +215,11 @@ class get_users(APIView):
             ).values_list('other_user_id', flat=True)
         users_non_blocked =[item for item in list(all_users) if item not in list(users_blocked)]
         Users = User.objects.filter(id__in=users_non_blocked).values('username', 'is_on', 'image_field')
+        print("TTTTTTTTTTTTTTTT  ", Users)
         listUsers = {}
         for i in Users:
             listUsers[i['username']] = i
+            print( " i    ---->    ", listUsers[i['username']])
         return Response(listUsers)
     
 
@@ -206,18 +232,22 @@ class Update_user(APIView):
         current_password = request.data['current_password'] if request.data['current_password']!="" else None
         username = request.data['username'] if request.data['username']!="" else None
         profile_photo = request.FILES.get('profile_photo') if request.data['profile_photo']!="" else None
+        print("data ///// :", new_password,current_password, username,profile_photo)
         if user is not None  and current_password is not None and user.check_password(current_password):
             if username is not None : 
                 otheruser =  User.objects.filter(username=username).first()
                 if otheruser is not None and otheruser.email == user.email or otheruser is None:
                     user.username = username
-                    user.save() 
+                    user.save()
+                    print("******* change username *********")       
             if new_password is not None:
                 user.set_password(new_password)
                 user.save()  
+                print("******* change pass *********")     
             if profile_photo is not None:
                 user.image_field  = profile_photo
                 user.save()       
+                print("******* change photo *********")
             user.save()       
             userserialize=UserSerializer(user)
             response.data = {"data" : userserialize.data , "message" : "updated succefully ! "}
@@ -256,3 +286,19 @@ class User_is_logged_in(APIView):
                 serializer = UserSerializer(user_)
                 response.data = {"date":serializer.data,"message": "done"}
                 return response
+
+
+
+# def decode_jwt_token(token):
+#     try:
+#         # Decode the token using UntypedToken
+#         decoded_token = UntypedToken(token)
+#         return {"decoded_token": decoded_token.payload, "message": "Token is valid"}
+#     except InvalidToken as e:
+#         return {"error": "Invalid token", "details": str(e)}
+#     except TokenError as e:
+#         return {"error": "Token error", "details": str(e)}
+
+# # Example usage
+# token = "your.jwt.token"
+# result = decode_jwt_token(token)

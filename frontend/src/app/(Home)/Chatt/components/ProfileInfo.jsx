@@ -27,7 +27,7 @@ export default function ProfileInfo({ avatar, name, status }) {
             <img
               id="avatarButton"
               className="left-0 top-0 w-[60px] h-[60px] rounded-full"
-              src={userData?.image_field ? `https://127.0.0.1/api/api${userData.image_field}` : "/images/Default_profile.png"}
+              src={userData?.image_field ? `http://127.0.0.1:8000/api${userData.image_field}` : "/images/Default_profile.png"}
               alt="User dropdown"
               width={60}
               height={60}

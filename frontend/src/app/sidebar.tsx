@@ -194,7 +194,7 @@ export default function Sidebar() {
                     </div>
                   )}
                   <img
-                    src={userData?.image_field ? `https://127.0.0.1/api/api${userData.image_field}` : "/images/DefaultAvatar.svg"}
+                    src={userData?.image_field ? `http://127.0.0.1:8000/api${userData.image_field}` : "/images/DefaultAvatar.svg"}
                     alt="User avatar"
                     width={50}
                     height={50}

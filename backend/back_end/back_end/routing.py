@@ -6,14 +6,14 @@ from turn import consumers
 
 
 websocket_urlpatterns = [
-    path("wss/tournament/", consumers.PingPongConsumer.as_asgi()),
+    path("ws/tournament/", consumers.PingPongConsumer.as_asgi()),
 ]
 
 application = ProtocolTypeRouter({
     "http": get_asgi_application(),
     "websocket": AuthMiddlewareStack(
         URLRouter([
-            path("wss/tournament/", consumers.PingPongConsumer.as_asgi()),
+            path("ws/tournament/", consumers.PingPongConsumer.as_asgi()),
         ])
     ),
 })

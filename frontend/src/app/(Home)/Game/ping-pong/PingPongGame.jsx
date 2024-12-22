@@ -101,6 +101,7 @@ const PingPongGame = ({ roomName, player1, player2, player3, player4, map, isTou
                     return;
                 }
                 if(data.type === 'BRACKET_UPDATE') {
+                    // console.log(data);
                     return;
                 }
                 if(data.type === 'gamestart') {
@@ -130,6 +131,7 @@ const PingPongGame = ({ roomName, player1, player2, player3, player4, map, isTou
             ws.onerror = (error) => {
                 console.error('WebSocket error:', error);
                 if (!isRedirecting) {
+                    console.log('Attempting to reconnect...');
                     handleGameEnd();
                 }
             };
@@ -145,7 +147,7 @@ const PingPongGame = ({ roomName, player1, player2, player3, player4, map, isTou
             return;
         }
         chat_bot_message_already_sent.current = true;
-        const response = await customAxios.post('https://127.0.0.1/api/friend/sendchat/', {
+        const response = await customAxios.post('http://127.0.0.1:8000/friend/sendchat/', {
             
                 send: 'bot',
                 receive: data.players[playerRoleRef.current].username,
@@ -160,7 +162,8 @@ const PingPongGame = ({ roomName, player1, player2, player3, player4, map, isTou
         let currentMatch = '';
         let foundMatch = false;
         for (const [role, player] of Object.entries(data.players)) {
-
+            
+            console.log('not Found match:', myUsername, player.username);
             if (player.username === myUsername) {
                 foundMatch = true;
                 playerRoleRef.current = role;
@@ -175,6 +178,7 @@ const PingPongGame = ({ roomName, player1, player2, player3, player4, map, isTou
                             // chat_bot_message_already_sent.current = false;
                             i_lost.current = false;
                         } else if (data.matches[currentMatch].game_start === false) {
+                            console.log('Attempting to reconnect*********************');
 
                             handleGameEnd();
 
@@ -191,6 +195,7 @@ const PingPongGame = ({ roomName, player1, player2, player3, player4, map, isTou
                             // chat_bot_message_already_sent.current = false;
                             i_lost.current = false;
                         } else  if (data.matches[currentMatch].game_start === false) {
+                            console.log('Attempting to reconnect+++++++++++');
                             handleGameEnd();
                             return;
                         }
@@ -215,6 +220,7 @@ const PingPongGame = ({ roomName, player1, player2, player3, player4, map, isTou
         }
         
         if (!foundMatch) {
+            console.log('Attempting to reconnect/////////////');
             handleGameEnd();
         }
 
@@ -262,7 +268,11 @@ const PingPongGame = ({ roomName, player1, player2, player3, player4, map, isTou
         }
 
         if (data.is_tournament) {
+            // console.log(data);
             drawTournamentGame(ctx, canvas, data);
+            if(!playerRoleRef.current) {
+                return;
+            }
             const currentMatch = data.players[playerRoleRef.current].current_match;
 
             if(data.matches[currentMatch].game_start === false) {
@@ -363,7 +373,7 @@ const PingPongGame = ({ roomName, player1, player2, player3, player4, map, isTou
             const player = data.players[playerRoleRef.current];
             ctx.fillRect(player.x, player.y, player.width, player.height);
 
-            // Draw player score and username
+            // Draw player score
             ctx.font = '100px Arial';
             ctx.fillStyle = map === 'Blue Map' ? 'white' : 'rgba(0, 0, 0, 0.5)';
             ctx.fillText(
@@ -375,7 +385,7 @@ const PingPongGame = ({ roomName, player1, player2, player3, player4, map, isTou
             // Display username
             ctx.font = '30px Arial';
             ctx.fillText(
-                player.username,
+                player.alias,
                 (player.x < (canvas.width / 2)) ? player.x + 50 : player.x - 125,
                 50
             );
@@ -398,10 +408,13 @@ const PingPongGame = ({ roomName, player1, player2, player3, player4, map, isTou
             // Display username
             ctx.font = '30px Arial';
             ctx.fillText(
-                opponent.username,
+                opponent.alias,
                 (opponent.x < (canvas.width / 2)) ? opponent.x + 50 : opponent.x - 125,
                 50
             );
+        }
+        if(!playerRoleRef.current) {
+            return;
         }
         const currentMatch = data.players[playerRoleRef.current].current_match;
 
@@ -488,7 +501,7 @@ const PingPongGame = ({ roomName, player1, player2, player3, player4, map, isTou
     return (
         <div className={`${styles.gameContainer} ${montserrat.className}`}>
             <canvas ref={canvasRef} className={styles.canvas} />
-            <div className={styles.gameMessage}>press "Up" or "Down" buttons to play</div>
+            {/* <div className={styles.gameMessage}>press "Up" or "Down" buttons to play</div> */}
         </div>
     );
 };

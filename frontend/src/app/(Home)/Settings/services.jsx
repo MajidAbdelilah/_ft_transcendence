@@ -17,7 +17,7 @@ import axios from 'axios';
 
 
 // const axiosInstance = axios.create({
-//   baseURL: 'https://127.0.0.1/api',
+//   baseURL: 'http://127.0.0.1:8000',
 //   withCredentials: true,
 //   headers: {}
 // });
@@ -25,7 +25,7 @@ import axios from 'axios';
   
 //----------------------------
 
-// axios.get('https://127.0.0.1/api/api/getuserinfo/', {
+// axios.get('http://127.0.0.1:8000/api/getuserinfo/', {
 //     headers: {
 //         Authorization: `Bearer ${token}` // Authentication token (if needed)
 //     },
@@ -69,14 +69,14 @@ const Services = {
         // }
 
         // Send the FormData object directly in the request body
-        return axios.post('https://127.0.0.1/api/api/update_user/', 
+        return axios.post('http://127.0.0.1:8000/api/update_user/', 
             formData,   
             {   withCredentials: true, headers: {} });
     },
 
     sendCodeService: async () => {
         
-      return axios.get('https://127.0.0.1/api/api/sendcode/', 
+      return axios.get('http://127.0.0.1:8000/api/sendcode/', 
 
       { withCredentials: true, headers: {} }
     );
@@ -90,7 +90,7 @@ const Services = {
     handleVerifyService: async (code) => {
         // console.log('=== Verifying code :', code);
 
-        return axios.post('https://127.0.0.1/api/api/CodeVerification/', 
+        return axios.post('http://127.0.0.1:8000/api/CodeVerification/', 
             {code : code},
             { withCredentials: true, headers: {} });
         

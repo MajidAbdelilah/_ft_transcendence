@@ -100,7 +100,7 @@ const PlayerCard = ({ player, isWinner }) => {
   
   // Get profile image from userData if username matches
   const playerImage = userData && playerName === userData.username
-    ? `https://127.0.0.1/api/api${userData?.image_field}`
+    ? `http://127.0.0.1:8000/api${userData?.image_field}`
     : "/images/DefaultAvatar.svg";
 
   // Check if player is actually set (not empty string)
@@ -138,14 +138,16 @@ const TournamentBracket = ({ tournamentData }) => {
   
   // Check winner without state updates
   const checkWinner = useCallback(() => {
-    if (!tournamentData?.matches?.final?.winner || !userData?.username) {
+    if (!tournamentData?.matches?.final?.winner_alias || !tournamentData?.matches?.final?.winner || !userData?.username) {
+      console.log("--------", tournamentData.matches.final.winner_alias, tournamentData.matches.final.winner);
+      console.log("here");
       return null;
     }
 
     if(tournamentData.matches.final.winner === userData.username)
-      return userData.username;
+      return tournamentData.matches.final.winner_alias;
 
-  }, [tournamentData?.matches?.final?.winner, userData?.username]);
+  }, [tournamentData?.matches?.final?.winner, tournamentData?.matches?.final?.winner_alias, userData?.username]);
 
   // Show popup only once when there's a winner
   useEffect(() => {
@@ -184,6 +186,7 @@ const TournamentBracket = ({ tournamentData }) => {
 
   // Helper function to check if a player is the winner
   const isPlayerWinner = (match, playerName) => {
+    console.log(match, playerName);
     if (!match || !match.winner) return false;
     if(match.winner === playerName) return true;
     return false;
@@ -204,12 +207,12 @@ const TournamentBracket = ({ tournamentData }) => {
               {semifinals.match1 && (
                 <>
                   <PlayerCard 
-                    player={semifinals.match1.player1}
-                    isWinner={isPlayerWinner(semifinals.match1, semifinals.match1.player1)}
+                    player={semifinals.match1.p1_alias}
+                    isWinner={isPlayerWinner(semifinals.match1, semifinals.match1.p1)}
                   />
                   <PlayerCard 
-                    player={semifinals.match1.player2}
-                    isWinner={isPlayerWinner(semifinals.match1, semifinals.match1.player2)}
+                    player={semifinals.match1.p2_alias}
+                    isWinner={isPlayerWinner(semifinals.match1, semifinals.match1.p2)}
                   />
                 </>
               )}
@@ -220,12 +223,12 @@ const TournamentBracket = ({ tournamentData }) => {
               {semifinals.match2 && (
                 <>
                   <PlayerCard 
-                    player={semifinals.match2.player1}
-                    isWinner={isPlayerWinner(semifinals.match2, semifinals.match2.player1)}
+                    player={semifinals.match2.p1_alias}
+                    isWinner={isPlayerWinner(semifinals.match2, semifinals.match2.p1)}
                   />
                   <PlayerCard 
-                    player={semifinals.match2.player2}
-                    isWinner={isPlayerWinner(semifinals.match2, semifinals.match2.player2)}
+                    player={semifinals.match2.p2_alias}
+                    isWinner={isPlayerWinner(semifinals.match2, semifinals.match2.p2)}
                   />
                 </>
               )}
@@ -237,12 +240,12 @@ const TournamentBracket = ({ tournamentData }) => {
             {final && (
               <>
                 <PlayerCard 
-                  player={final.player1}
-                  isWinner={isPlayerWinner(final, final.player1)}
+                  player={final.p1_alias}
+                  isWinner={isPlayerWinner(final, final.p1)}
                 />
                 <PlayerCard 
-                  player={final.player2}
-                  isWinner={isPlayerWinner(final, final.player2)}
+                  player={final.p2_alias}
+                  isWinner={isPlayerWinner(final, final.p2)}
                 />
               </>
             )}

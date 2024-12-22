@@ -23,7 +23,7 @@ export default async function handleVerification(code, router, setError)  {
 
     try {
 
-        const result = await axios.post('https://127.0.0.1/api/api/user_2fa/',
+        const result = await axios.post('http://127.0.0.1:8000/api/user_2fa/',
         {code : code},
         { withCredentials: true, headers: {} }
     );
