@@ -89,13 +89,15 @@ export default function UpdateProfile({setIsProfile})
             else
             {
               const successMsg = result.data.message;
+              toast.success(successMsg);
+              setTimeout(() => { window.location.reload();}, 1000); 
             }
-        if (successMsg) {
-          toast.success(successMsg); // Display a success toast
-          setTimeout(() => { window.location.reload();}, 1000); 
-        } else {
-          toast.error("Unexpected response format."); // Handle unexpected format
-        }
+        // if (successMsg) {
+        //   toast.success(successMsg); // Display a success toast
+        //   setTimeout(() => { window.location.reload();}, 1000); 
+        // } else {
+        //   toast.error("Unexpected response format."); // Handle unexpected format
+        // }
 
 
 
