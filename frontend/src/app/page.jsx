@@ -59,7 +59,6 @@ export default function LandingPage() {
           setIsLoading(false);
         }
       } catch (error) {
-        console.log(response);
         console.log(error.message);
         setIsLoading(false);
       }

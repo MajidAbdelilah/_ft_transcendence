@@ -139,8 +139,6 @@ const TournamentBracket = ({ tournamentData }) => {
   // Check winner without state updates
   const checkWinner = useCallback(() => {
     if (!tournamentData?.matches?.final?.winner_alias || !tournamentData?.matches?.final?.winner || !userData?.username) {
-      console.log("--------", tournamentData.matches.final.winner_alias, tournamentData.matches.final.winner);
-      console.log("here");
       return null;
     }
 
@@ -186,7 +184,6 @@ const TournamentBracket = ({ tournamentData }) => {
 
   // Helper function to check if a player is the winner
   const isPlayerWinner = (match, playerName) => {
-    console.log(match, playerName);
     if (!match || !match.winner) return false;
     if(match.winner === playerName) return true;
     return false;

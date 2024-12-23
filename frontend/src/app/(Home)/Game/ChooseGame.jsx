@@ -113,7 +113,7 @@ function MainComponent() {
         setTournamentData(bracketUpdate.data);
       }
       else{
-        console.log('No data')
+        
       }
       setShowTournament(true);
       // Set the tournament ID from the room name

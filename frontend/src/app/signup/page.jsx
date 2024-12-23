@@ -135,8 +135,7 @@ function Signup_page() {
         } else {
           setIsLoading(false);
         }
-      } catch (error) {
-        console.log(response);
+      } catch (error) {;
         console.log(error.message);
         setIsLoading(false);
       }

@@ -23,7 +23,6 @@ const PingPongGame = ({ roomName, player1, player2, player3, player4, map, isTou
     const canvasRef = useRef(null);
     const wsRef = useRef(null);
     const cleanupRef = useRef(false);
-    const i_lost = useRef(false);
     const searchParams = useSearchParams();
     const chat_bot_message_already_sent = useRef(false);
     const finalStartedRef = useRef(false);
@@ -96,10 +95,6 @@ const PingPongGame = ({ roomName, player1, player2, player3, player4, map, isTou
                 if (isRedirecting) return;
                 
                 const data = JSON.parse(e.data);
-                if(i_lost.current === true) {
-                    updateWaitingScreen();
-                    return;
-                }
                 if(data.type === 'BRACKET_UPDATE') {
                     // console.log(data);
                     return;
@@ -174,7 +169,6 @@ const PingPongGame = ({ roomName, player1, player2, player3, player4, map, isTou
 
                         if (data.matches[currentMatch].winner === playerRoleRef.current) {
                             // chat_bot_message_already_sent.current = false;
-                            i_lost.current = false;
                         } else if (data.matches[currentMatch].game_start === false) {
 
                             handleGameEnd();
@@ -190,7 +184,6 @@ const PingPongGame = ({ roomName, player1, player2, player3, player4, map, isTou
 
                         if (data.matches[currentMatch].winner === playerRoleRef.current) {
                             // chat_bot_message_already_sent.current = false;
-                            i_lost.current = false;
                         } else  if (data.matches[currentMatch].game_start === false) {
                             handleGameEnd();
                             return;
@@ -208,6 +201,9 @@ const PingPongGame = ({ roomName, player1, player2, player3, player4, map, isTou
                     }
                     finalStartedRef.current = true;
                     send_chat_bot(data);
+                    if(data.matches[currentMatch].winner) {
+                        handleGameEnd();
+                    }
 
                 } else {
                 }
@@ -216,7 +212,6 @@ const PingPongGame = ({ roomName, player1, player2, player3, player4, map, isTou
         }
         
         if (!foundMatch) {
-            handleGameEnd();
         }
 
         setMatch(currentMatch);

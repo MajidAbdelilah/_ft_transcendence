@@ -182,11 +182,12 @@ class PingPongConsumer(AsyncWebsocketConsumer):
         self.gamestart_sent = False
         for room_name in self.room_var:
             if(self.room_var[room_name].get('is_tournament', False) and self.tournament_room_name != None):
-                num_players = sum(1 for player in self.room_var[room_name]['players'].values() if player.get('full'))
+                num_players = sum(1 for player in self.room_var[room_name]['players'].values() if player.get('full') and player.get('username') != '')
                 print("number of players: ", num_players)
                 if num_players < 4:
                     self.room_name = room_name
                     self.tournament_room_name = room_name
+                    break
                     
         if(self.room_name not in self.room_var and self.tournament_room_name):
             self.room_name = self.generate_random_tournament_name()
@@ -711,27 +712,7 @@ class PingPongConsumer(AsyncWebsocketConsumer):
             await self.end_match(player)
 
     async def end_tournament(self, winner):
-        await self.send_bracket_update()
-        self.room_var[self.room_name]['players']['player1']['score'] = 0
-        self.room_var[self.room_name]['players']['player2']['score'] = 0
-        self.room_var[self.room_name]['players']['player3']['score'] = 0
-        self.room_var[self.room_name]['players']['player4']['score'] = 0
-        self.room_var[self.room_name]['players']['player1']['full'] = False
-        self.room_var[self.room_name]['players']['player2']['full'] = False
-        self.room_var[self.room_name]['players']['player3']['full'] = False
-        self.room_var[self.room_name]['players']['player4']['full'] = False
-        self.room_var[self.room_name]['players']['player1']['username'] = ''
-        self.room_var[self.room_name]['players']['player2']['username'] = ''
-        self.room_var[self.room_name]['players']['player3']['username'] = ''
-        self.room_var[self.room_name]['players']['player4']['username'] = ''
-        self.room_var[self.room_name]['players']['player1']['current_match'] = 'match1'
-        self.room_var[self.room_name]['players']['player2']['current_match'] = 'match1'
-        self.room_var[self.room_name]['players']['player3']['current_match'] = 'match2'
-        self.room_var[self.room_name]['players']['player4']['current_match'] = 'match2'
-        self.room_var[self.room_name]['matches']['match1']['game_start'] = False
-        self.room_var[self.room_name]['matches']['match2']['game_start'] = False
-        self.room_var[self.room_name]['matches']['final']['game_start'] = False
-        self.room_var[self.room_name]['end_tournament'] = True
+        print("end_tournament", self.room_var[self.room_name])
         if not self.room_var[self.room_name]['is_tournament']:
             await self.channel_layer.group_send(
                 self.room_group_name,
@@ -758,6 +739,28 @@ class PingPongConsumer(AsyncWebsocketConsumer):
                     'is_tournament': self.room_var[self.room_name]['is_tournament']
                 }
             )
+        await self.send_bracket_update()
+        self.room_var[self.room_name]['players']['player1']['score'] = 0
+        self.room_var[self.room_name]['players']['player2']['score'] = 0
+        self.room_var[self.room_name]['players']['player3']['score'] = 0
+        self.room_var[self.room_name]['players']['player4']['score'] = 0
+        self.room_var[self.room_name]['players']['player1']['full'] = False
+        self.room_var[self.room_name]['players']['player2']['full'] = False
+        self.room_var[self.room_name]['players']['player3']['full'] = False
+        self.room_var[self.room_name]['players']['player4']['full'] = False
+        self.room_var[self.room_name]['players']['player1']['username'] = ''
+        self.room_var[self.room_name]['players']['player2']['username'] = ''
+        self.room_var[self.room_name]['players']['player3']['username'] = ''
+        self.room_var[self.room_name]['players']['player4']['username'] = ''
+        self.room_var[self.room_name]['players']['player1']['current_match'] = 'match1'
+        self.room_var[self.room_name]['players']['player2']['current_match'] = 'match1'
+        self.room_var[self.room_name]['players']['player3']['current_match'] = 'match2'
+        self.room_var[self.room_name]['players']['player4']['current_match'] = 'match2'
+        self.room_var[self.room_name]['matches']['match1']['game_start'] = False
+        self.room_var[self.room_name]['matches']['match2']['game_start'] = False
+        self.room_var[self.room_name]['matches']['final']['game_start'] = False
+        self.room_var[self.room_name]['end_tournament'] = True
+        
         await self.delete_active_tournament()
         print("Tournament ended")
         

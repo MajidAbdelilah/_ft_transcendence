@@ -7,7 +7,6 @@ let reconnectInterval = 5000; // Reconnect every 5 seconds
 let lastKnownTournamentData = null;
 
 const initializeBracketWebSocket = () => {
-  console.log('Initializing Bracket WebSocket...');
   if (!ws || ws.readyState === WebSocket.CLOSED) {
     ws = new WebSocket(`wss://127.0.0.1/api/wss/tournament/tour/PLAY/`);
   }
@@ -19,7 +18,6 @@ const initializeBracketWebSocket = () => {
 
     const originalOnOpen = ws.onopen;
     ws.onopen = (event) => {
-      console.log('Bracket WebSocket connected');
       clearTimeout(timeout);
       if (originalOnOpen) originalOnOpen(event);
       resolve(ws);
@@ -54,11 +52,9 @@ const initializeBracketWebSocket = () => {
 };
 
 const reconnectWebSocket = () => {
-  console.log(`Attempting to reconnect in ${reconnectInterval / 1000} seconds...`);
   setTimeout(() => {
     initializeBracketWebSocket()
       .then(() => {
-        console.log('Reconnected to WebSocket');
       })
       .catch((error) => {
         console.error('Failed to reconnect to WebSocket:', error);
@@ -145,7 +141,6 @@ export const gameService = {
       const messageHandler = (event) => {
         const data = JSON.parse(event.data);
         if (data.type === 'BRACKET_UPDATE' && data.tournamentId === tournamentId) {
-          console.log('Bracket update:', data);
           // Update finals players based on semifinal winners
           if (data.matches && data.matches.semifinals && data.matches.final) {
             const semifinals = data.matches.semifinals;

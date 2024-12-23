@@ -58,7 +58,6 @@ function LoginPage() {
         toast.error(errorMsg || "Something Went Wrong!");
       } else {
         if (response.data.data.tokens.access) {
-          console.log(response.data.data.user.is_2fa);
           if(response.data.data.user.is_2fa){
             router.replace("/authLogin");
             
@@ -109,7 +108,6 @@ function LoginPage() {
           setIsLoading(false);
         }
       } catch (error) {
-        console.log(response);
         console.log(error.message);
         setIsLoading(false);
       }
