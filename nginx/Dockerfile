@@ -4,7 +4,7 @@ RUN apt-get update && apt-get install -y nginx openssl \
     && rm -rf /var/lib/apt/lists/*
 RUN openssl req -x509 -nodes -days 365 -newkey rsa:2048 \
     -keyout /app/nginx.key -out /app/nginx.crt \
-    -subj "/C=US/ST=State/L=City/O=Organization/OU=Department/CN=127.0.0.1"
+    -subj "/C=US/ST=State/L=City/O=Organization/OU=Department/CN=10.12.4.10"
 COPY default.conf /etc/nginx/nginx.conf
 RUN mkdir -p /var/www/frontend/
 # RUN chown -R nginx:nginx /var/www/frontend

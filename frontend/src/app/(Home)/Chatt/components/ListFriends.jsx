@@ -17,7 +17,7 @@ export default function ListFriends({ getSelectedFriend, switchChatState }) {
     useEffect(() => {
         const fetchFriends = async () => {
         try {
-            const response = await customAxios.get("https://127.0.0.1/api/friend/friends",);
+            const response = await customAxios.get("https://10.12.4.10/api/friend/friends",);
             setFriendsList(response.data); // Assuming the API returns { friends: [...] }
         } catch (error) {
             console.error("Error fetching friends data:", error);
@@ -57,7 +57,7 @@ export default function ListFriends({ getSelectedFriend, switchChatState }) {
                     <img
                     id="avatarButton"
                     className="rounded-full left-0 top-0 w-[45px] h-[45px]"
-                    src={friend.user.image_field ? `https://127.0.0.1/api/api${friend.user.image_field}`  : "/images/DefaultAvatar.svg"}
+                    src={friend.user.image_field ? `https://10.12.4.10/api/api${friend.user.image_field}`  : "/images/DefaultAvatar.svg"}
                     alt="profileImage"
                     width={45}
                     height={45}

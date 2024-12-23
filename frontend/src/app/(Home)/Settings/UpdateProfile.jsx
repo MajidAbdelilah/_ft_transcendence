@@ -79,7 +79,17 @@ export default function UpdateProfile({setIsProfile})
       try {
         const result = await Services.updateProfileService(data);
         
-          const successMsg = result.data.message;
+          
+          if(!result.data.data)
+            {
+              const errorMsg = result.data.message;
+              toast.error(errorMsg)
+              // toast.error(errorMsg || "Something Went Wrong!");
+            }
+            else
+            {
+              const successMsg = result.data.message;
+            }
         if (successMsg) {
           toast.success(successMsg); // Display a success toast
           setTimeout(() => { window.location.reload();}, 1000); 

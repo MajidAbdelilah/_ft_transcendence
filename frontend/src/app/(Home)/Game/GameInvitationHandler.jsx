@@ -82,7 +82,7 @@ export default function GameInvitationHandler() {
         detail: {
           id: Date.now(),
           type: 'game_invitation',
-          avatar: data.sender_image ? `https://127.0.0.1/api/api${data.sender_image}` : "/images/DefaultAvatar.svg",
+          avatar: data.sender_image ? `https://10.12.4.10/api/api${data.sender_image}` : "/images/DefaultAvatar.svg",
           message: `${data.sender_username} invited you to play a game`,
           timestamp: data.timestamp || new Date().toISOString(),
           isNew: true,
@@ -100,7 +100,7 @@ export default function GameInvitationHandler() {
                   width={40}
                   height={40}
                   className="h-10 w-10 rounded-full object-cover"
-                  src={data.sender_image ? `https://127.0.0.1/api/api${data.sender_image}` : "/images/DefaultAvatar.svg"}
+                  src={data.sender_image ? `https://10.12.4.10/api/api${data.sender_image}` : "/images/DefaultAvatar.svg"}
                   alt=""
                 />
               </div>

@@ -119,7 +119,7 @@ DATABASES = {
         'NAME': 'transc_db',           # Name of the database
         'USER': 'postgres',            # Your PostgreSQL username
         'PASSWORD': 'password',    # Your PostgreSQL password
-        'HOST': 'db',               # Or '127.0.0.1' for local connections
+        'HOST': 'db',               # Or '10.12.4.10' for local connections
         'PORT': '5432',                    # Default PostgreSQL port
     }
 }
@@ -179,18 +179,18 @@ AUTH_USER_MODEL = 'authapp.User'
 #cors header settings
 CORS_ALLOW_CREDENTIALS = True
 CORS_ALLOWED_ORIGINS = [
-    "http://127.0.0.1:3000",
-    "https://127.0.0.1",
+    "http://10.12.4.10:3000",
+    "https://10.12.4.10",
     
 
 ]
 
 
 CSRF_TRUSTED_ORIGINS = [
-    'https://127.0.0.1/api',
-    'https://127.0.0.1',
+    'https://10.12.4.10/api',
+    'https://10.12.4.10',
     # Add other trusted origins here
-    "http://127.0.0.1:8001",
+    "http://10.12.4.10:8001",
     "http://localhost:8001",    
 ]
 

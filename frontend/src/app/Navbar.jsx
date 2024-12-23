@@ -219,7 +219,7 @@ function Navbar() {
             handleNewNotification({
               id: data.freindship_id,
               type: 'friend_request',
-              avatar: data.user.image_field ? `https://127.0.0.1/api/api${data.user.image_field}` : '/images/Default_profile.png',
+              avatar: data.user.image_field ? `https://10.12.4.10/api/api${data.user.image_field}` : '/images/Default_profile.png',
               message: `${data.user.username} sent you a friend request`,
               timestamp: new Date().toISOString(),
               isNew: true,
@@ -232,7 +232,7 @@ function Navbar() {
             handleNewNotification({
               id: data.freindship_id,
               type: 'friend_request_sent',
-              avatar: data.user.image_field ? `https://127.0.0.1/api/api${data.user.image_field}` : '/images/Default_profile.png',
+              avatar: data.user.image_field ? `https://10.12.4.10/api/api${data.user.image_field}` : '/images/Default_profile.png',
               message: `You sent a friend request to ${data.user.username}`,
               timestamp: new Date().toISOString(),
               isNew: true,
@@ -244,7 +244,7 @@ function Navbar() {
             handleNewNotification({
               id: data.freindship_id,
               type: 'friend_accept',
-              avatar: data.user.image_field ? `https://127.0.0.1/api/api${data.user.image_field}` : '/images/Default_profile.png',
+              avatar: data.user.image_field ? `https://10.12.4.10/api/api${data.user.image_field}` : '/images/Default_profile.png',
               message: `${data.user.username} accepted your friend request`,
               timestamp: new Date().toISOString(),
               isNew: true,
@@ -436,7 +436,7 @@ function Navbar() {
             <img
               id="avatarButton"
               className="sm:w-10 sm:h-10 w-8 h-8 rounded-full bg-[#D7D7EA] cursor-pointer rounded-full"
-              src={userData?.image_field ? `https://127.0.0.1/api/api${userData.image_field}` : "/images/DefaultAvatar.svg"}
+              src={userData?.image_field ? `https://10.12.4.10/api/api${userData.image_field}` : "/images/DefaultAvatar.svg"}
               alt="User dropdown"
               width={100}
               height={100}

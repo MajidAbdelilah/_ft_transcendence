@@ -120,7 +120,7 @@ function Signup_page() {
       try {
         setIsLoading(true);
         const response = await customAxios.get(
-          "https://127.0.0.1/api/api/user_logged_in/",
+          "https://10.12.4.10/api/api/user_logged_in/",
           {
             withCredentials: true,
           }

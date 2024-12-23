@@ -69,8 +69,8 @@ const PingPongGame = ({ roomName, player1, player2, player3, player4, map, isTou
             }
 
             const url = isTournament ? 
-                `wss://127.0.0.1/api/wss/tournament/${roomName}/${roomName}/` : 
-                `wss://127.0.0.1/api/wss/tournament/${roomName}/`;
+                `wss://10.12.4.10/api/wss/tournament/${roomName}/${roomName}/` : 
+                `wss://10.12.4.10/api/wss/tournament/${roomName}/`;
 
 
             const ws = new WebSocket(url);
@@ -141,7 +141,7 @@ const PingPongGame = ({ roomName, player1, player2, player3, player4, map, isTou
             return;
         }
         chat_bot_message_already_sent.current = true;
-        const response = await customAxios.post('https://127.0.0.1/api/friend/sendchat/', {
+        const response = await customAxios.post('https://10.12.4.10/api/friend/sendchat/', {
             
                 send: 'bot',
                 receive: data.players[playerRoleRef.current].username,

@@ -11,11 +11,11 @@ const nextConfig = {
     ];
   },
   images: {
-    domains: ['127.0.0.1', 'localhost'],
+    domains: ['10.12.4.10', 'localhost'],
     remotePatterns: [
       {
         protocol: 'http',
-        hostname: '127.0.0.1',
+        hostname: '10.12.4.10',
         port: '8000',
         pathname: '**',
       }

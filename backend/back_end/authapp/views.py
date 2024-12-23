@@ -147,7 +147,7 @@ class LoginView(APIView):
                 data = get_tokens_for_user(user)
                 if data["access"] :
                     if user.is_2fa == True:
-                        # response.headers["Location"] = 'http://127.0.0.1:3000/settings'
+                        # response.headers["Location"] = 'http://10.12.4.10:3000/settings'
                         # response.status_code = status.HTTP_302_FOUND
                         response.data = {"message" : "Login successfully","data":{"user": userserialize.data , "tokens":data }}
                         response.set_cookie(
@@ -221,40 +221,81 @@ class get_users(APIView):
             listUsers[i['username']] = i
             print( " i    ---->    ", listUsers[i['username']])
         return Response(listUsers)
-    
+
+
 
 class Update_user(APIView):
     permission_classes = [IsAuthenticated]
     def post(self , request):
+        flag = False
         response = Response()
         user = User.objects.get(email=request.user)
         new_password = request.data['new_password'] if request.data['new_password']!="" else None
         current_password = request.data['current_password'] if request.data['current_password']!="" else None
         username = request.data['username'] if request.data['username']!="" else None
         profile_photo = request.FILES.get('profile_photo') if request.data['profile_photo']!="" else None
-        print("data ///// :", new_password,current_password, username,profile_photo)
         if user is not None  and current_password is not None and user.check_password(current_password):
             if username is not None : 
                 otheruser =  User.objects.filter(username=username).first()
                 if otheruser is not None and otheruser.email == user.email or otheruser is None:
                     user.username = username
                     user.save()
-                    print("******* change username *********")       
+                    flag = True
+                    print("** change username **")
             if new_password is not None:
                 user.set_password(new_password)
-                user.save()  
-                print("******* change pass *********")     
+                user.save() 
+                flag = True 
+                print("** change pass **")
             if profile_photo is not None:
                 user.image_field  = profile_photo
-                user.save()       
-                print("******* change photo *********")
-            user.save()       
+                user.save()
+                flag = True
+                print("** change photo **")
+            user.save()
             userserialize=UserSerializer(user)
-            response.data = {"data" : userserialize.data , "message" : "updated succefully ! "}
+            if flag == True:
+                response.data = {"data" : userserialize.data , "message" : "updated succefully ! "}
+            else:
+                response.data = {"data" : None , "message" : "nothing to update ! "}
             return response
         else:
-            response.data = {"data" : None , "message" : "credentiels error"}
+            response.data = {"data" : None , "message" : "Credentiels error"}
             return response
+
+
+# class Update_user(APIView):
+#     permission_classes = [IsAuthenticated]
+#     def post(self , request):
+#         response = Response()
+#         user = User.objects.get(email=request.user)
+#         new_password = request.data['new_password'] if request.data['new_password']!="" else None
+#         current_password = request.data['current_password'] if request.data['current_password']!="" else None
+#         username = request.data['username'] if request.data['username']!="" else None
+#         profile_photo = request.FILES.get('profile_photo') if request.data['profile_photo']!="" else None
+#         print("data ///// :", new_password,current_password, username,profile_photo)
+#         if user is not None  and current_password is not None and user.check_password(current_password):
+#             if username is not None : 
+#                 otheruser =  User.objects.filter(username=username).first()
+#                 if otheruser is not None and otheruser.email == user.email or otheruser is None:
+#                     user.username = username
+#                     user.save()
+#                     print("******* change username *********")       
+#             if new_password is not None:
+#                 user.set_password(new_password)
+#                 user.save()  
+#                 print("******* change pass *********")     
+#             if profile_photo is not None:
+#                 user.image_field  = profile_photo
+#                 user.save()       
+#                 print("******* change photo *********")
+#             user.save()       
+#             userserialize=UserSerializer(user)
+#             response.data = {"data" : userserialize.data , "message" : "updated succefully ! "}
+#             return response
+#         else:
+#             response.data = {"data" : None , "message" : "credentiels error"}
+#             return response
 
 class User_view(APIView):
     permission_classes = [IsAuthenticated]

@@ -5,7 +5,7 @@ import axios, { AxiosResponse, AxiosError } from 'axios';
 
 
 const customAxios = axios.create({
-    baseURL: 'https://127.0.0.1/api',
+    baseURL: 'https://10.12.4.10/api',
     // Optional: Set default headers
     withCredentials: true, 
     headers: {
