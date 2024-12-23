@@ -116,7 +116,7 @@ export default function FriendRequests({ request }: FriendRequestProps) {
           <div className="flex items-center h-full p-2" key={request.user.id}>
             <div className="relative w-16 h-16 md:w-20 md:h-20 lg:w-15 lg:h-15">
               <img
-                src={request.user.image_field ? `https://10.12.4.10/api/api${request.user.image_field}` : "/images/DefaultAvatar.svg"}
+                src={request.user.image_field ? `https://10.13.7.8/api/api${request.user.image_field}` : "/images/DefaultAvatar.svg"}
                 alt={`${request.user.username}'s profile`} 
                 className="w-full h-full rounded-full object-cover border-2 border-[#BCBCC9] cursor-pointer"
                 onClick={() => getProfile(request.user.username)}

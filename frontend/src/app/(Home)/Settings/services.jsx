@@ -17,7 +17,7 @@ import axios from 'axios';
 
 
 // const axiosInstance = axios.create({
-//   baseURL: 'https://10.12.4.10/api',
+//   baseURL: 'https://10.13.7.8/api',
 //   withCredentials: true,
 //   headers: {}
 // });
@@ -25,7 +25,7 @@ import axios from 'axios';
   
 //----------------------------
 
-// axios.get('https://10.12.4.10/api/api/getuserinfo/', {
+// axios.get('https://10.13.7.8/api/api/getuserinfo/', {
 //     headers: {
 //         Authorization: `Bearer ${token}` // Authentication token (if needed)
 //     },
@@ -69,14 +69,14 @@ const Services = {
         // }
 
         // Send the FormData object directly in the request body
-        return axios.post('https://10.12.4.10/api/api/update_user/', 
+        return axios.post('https://10.13.7.8/api/api/update_user/', 
             formData,   
             {   withCredentials: true, headers: {} });
     },
 
     sendCodeService: async () => {
         
-      return axios.get('https://10.12.4.10/api/api/sendcode/', 
+      return axios.get('https://10.13.7.8/api/api/sendcode/', 
 
       { withCredentials: true, headers: {} }
     );
@@ -90,7 +90,7 @@ const Services = {
     handleVerifyService: async (code) => {
         // console.log('=== Verifying code :', code);
 
-        return axios.post('https://10.12.4.10/api/api/CodeVerification/', 
+        return axios.post('https://10.13.7.8/api/api/CodeVerification/', 
             {code : code},
             { withCredentials: true, headers: {} });
         

@@ -57,7 +57,7 @@ class callback(APIView):
         if not code:
             return JsonResponse({'message': 'No code provided', "data":None}, status=400)
         # Exchange code for access token
-        to_page = "https://10.12.4.10/Dashboard"
+        to_page = "https://10.13.7.8/Dashboard"
         resp = HttpResponseRedirect(to_page)
         token_url = "https://api.intra.42.fr/oauth/token"
         response = requests.post(settings.FORTY_TWO_ACCESS_TOKEN_URL, data={
@@ -77,12 +77,17 @@ class callback(APIView):
             return JsonResponse({'message': 'Failed to fetch user info', "data": None}, status=400)
         user_data = user_response.json()
         existeduser = User.objects.filter(email = user_data['email']).first()
+        otheruser = User.objects.filter(username = user_data['login']).first()
+        if otheruser  is not None and otheruser.email != user_data['email']:
+            to_page = "https://10.13.7.8/login"
+            resp = HttpResponseRedirect(to_page)
+            return resp
         if existeduser is not None:
             authenticate(email = existeduser.email, password = existeduser.password)
             data = get_tokens_for_user(existeduser)
             userserialize = UserSerializer(existeduser)
             if existeduser.is_2fa == True and existeduser.redirect_to == False:
-                to_page = "https://10.12.4.10/authLogin"
+                to_page = "https://10.13.7.8/authLogin"
             resp = HttpResponseRedirect(to_page)
             if data["access"] :
                 resp.set_cookie(

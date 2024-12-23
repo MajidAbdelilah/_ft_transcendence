@@ -24,7 +24,7 @@ export function GameInviteWebSocketProvider({ children }) {
         wsRef.current.close();
       }
 
-      const ws = new WebSocket('wss://10.12.4.10/api/wss/game/invite/');
+      const ws = new WebSocket('wss://10.13.7.8/api/wss/game/invite/');
       
       ws.onopen = () => {
       };

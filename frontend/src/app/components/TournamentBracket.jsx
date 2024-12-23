@@ -100,7 +100,7 @@ const PlayerCard = ({ player, isWinner }) => {
   
   // Get profile image from userData if username matches
   const playerImage = userData && playerName === userData.username
-    ? `https://10.12.4.10/api/api${userData?.image_field}`
+    ? `https://10.13.7.8/api/api${userData?.image_field}`
     : "/images/DefaultAvatar.svg";
 
   // Check if player is actually set (not empty string)

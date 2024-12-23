@@ -12,7 +12,7 @@ export function WebSocketProvider({ children }) {
 
     // Create new WebSocket connection
 
-    const newSocket = new WebSocket(`wss://10.12.4.10/api/wss/chat/${userId}/`);
+    const newSocket = new WebSocket(`wss://10.13.7.8/api/wss/chat/${userId}/`);
     
     newSocket.onopen = () => {
     };

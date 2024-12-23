@@ -28,7 +28,7 @@ export function HisProfile ({path, name, status}) {
             <img
               id="avatarButton"
               className=" rounded-full left-0 top-0 w-[60px] h-[60px] "
-              src={path ? `https://10.12.4.10/api/api${path}` : "/images/DefaultAvatar.svg"}
+              src={path ? `https://10.13.7.8/api/api${path}` : "/images/DefaultAvatar.svg"}
               alt="User dropdown"
               width={60}
               height={60}

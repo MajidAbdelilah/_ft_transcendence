@@ -1,7 +1,7 @@
 #!/bin/bash
 # cp /app/nginx.crt /etc/ssl/certs/nginx.crt
 # cp /app/nginx.key /etc/ssl/private/nginx.key
-# echo "10.12.4.10   Pong-Game-1337" >> /etc/hosts
+# echo "10.13.7.8   Pong-Game-1337" >> /etc/hosts
 python3 -m venv ../myenv
 # docker-compose up -d
 touch .env

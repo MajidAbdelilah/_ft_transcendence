@@ -34,7 +34,7 @@ services:
     ports:
       - 3000:3000
     volumes:
-      - ./env/.env:/app/.env
+      - ./env/.env:/app/frontend/.env
       - front_v:/app/frontend
     networks:
       - nat

@@ -61,7 +61,7 @@ export async function blockService(friend) {
         
     try {
         const respond = await axios.post(
-            "https://10.12.4.10/api/friend/friends-remove/",
+            "https://10.13.7.8/api/friend/friends-remove/",
             { username: friend.username },
             { withCredentials: true, headers: {} }
         );

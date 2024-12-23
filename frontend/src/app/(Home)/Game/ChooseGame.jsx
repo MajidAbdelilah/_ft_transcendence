@@ -72,7 +72,7 @@ function MainComponent() {
   useEffect(() => {
     const fetchFriends = async () => {
       try {
-        const response = await customAxios.get('https://10.12.4.10/api/friend/friends');
+        const response = await customAxios.get('https://10.13.7.8/api/friend/friends');
         if (response.data) {
           setFriends(response.data.filter(user => user.user.username !== 'bot'));
           setError(null);
@@ -108,7 +108,7 @@ function MainComponent() {
       
 
       if (showTournamentParam === 'true' && tournamentRoomParam) {
-        const bracketUpdate = await customAxios.get(`https://10.12.4.10/api/game/bracket/${tournamentRoomParam}/`); 
+        const bracketUpdate = await customAxios.get(`https://10.13.7.8/api/game/bracket/${tournamentRoomParam}/`); 
       if(bracketUpdate.data){
         setTournamentData(bracketUpdate.data);
       }
@@ -511,7 +511,7 @@ function MainComponent() {
                       <div className="flex items-center gap-4">
                         <div className="relative">
                           <img
-                            src={friend.user.image_field ? `https://10.12.4.10/api/api${friend.user.image_field}` : "/images/Default_profile.png"}
+                            src={friend.user.image_field ? `https://10.13.7.8/api/api${friend.user.image_field}` : "/images/Default_profile.png"}
                             alt={friend.user.username}
                             width={60}
                             height={60}

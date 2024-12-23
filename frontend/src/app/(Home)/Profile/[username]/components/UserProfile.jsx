@@ -32,7 +32,7 @@ const handleTextUser = (router) => {
 const handleAddFriend = async (loggedInUser, user) => {
   try {
     const respond = await axios.post(
-      "https://10.12.4.10/api/friend/friends-add/", 
+      "https://10.13.7.8/api/friend/friends-add/", 
       { username: user.username },
       { withCredentials: true, headers: {} }
     );
@@ -55,7 +55,7 @@ const handleAddFriend = async (loggedInUser, user) => {
 const handleBlockUser = async (loggedInUser, user) => {
   try {
     const respond = await axios.post(
-      "https://10.12.4.10/api/friend/friends-remove/",
+      "https://10.13.7.8/api/friend/friends-remove/",
       { username: user.username },
       { withCredentials: true, headers: {} }
     );
@@ -84,7 +84,7 @@ function Part1({loggedInUser, user, isSelf}) {
 
     <div className="flex flex-col items-center">
         <img
-            src={user?.image_field? `https://10.12.4.10/api/api/images/${user.image_field}` : "/images/DefaultAvatar.svg"} // image_feiled
+            src={user?.image_field? `https://10.13.7.8/api/api/images/${user.image_field}` : "/images/DefaultAvatar.svg"} // image_feiled
             alt="ProfileImage"
             width={60}
             height={60}
@@ -125,8 +125,8 @@ function Part2({loggedInUser, user, isSelf}) {
     const fetchXp = async () => {
       try {
         const [normalMatchesResponse, aiMatchesResponse] = await Promise.all([
-          axios.get(`https://10.12.4.10/api/game/fetch_history/${user.username}/`),
-          axios.get(`https://10.12.4.10/api/game/matches/${user.username}/`)
+          axios.get(`https://10.13.7.8/api/game/fetch_history/${user.username}/`),
+          axios.get(`https://10.13.7.8/api/game/matches/${user.username}/`)
         ]);
 
         const normalMatches = normalMatchesResponse.data || [];

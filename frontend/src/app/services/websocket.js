@@ -18,7 +18,7 @@ const connectWebSocket = () => {
     }
 
     try {
-        ws = new WebSocket('wss://10.12.4.10/api/wss/user_data/');
+        ws = new WebSocket('wss://10.13.7.8/api/wss/user_data/');
 
         ws.onopen = () => {
             reconnectAttempts = 0; // Reset reconnection attempts on successful connection

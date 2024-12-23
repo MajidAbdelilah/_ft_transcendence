@@ -4,7 +4,7 @@ import axios from 'axios';
 export const fetchOldConversation = async (loggedInUser, friend) => 
     {
         try {
-            const response = await axios.get("https://10.12.4.10/api/chat/messages",
+            const response = await axios.get("https://10.13.7.8/api/chat/messages",
             { withCredentials: true, headers: {} }
             );
             const allMessages = response.data.messages;
